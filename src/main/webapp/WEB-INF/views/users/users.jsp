@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+	pageEncoding="ISO-8859-1"%>
 
 <!DOCTYPE html>
 <html>
@@ -7,13 +7,19 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <base href="${pageContext.servletContext.contextPath}/">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<!-- Link cho Font Awesome 5.x (hỗ trợ cả phiên bản free và pro) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<!-- Link cho Font Awesome 6.x (bản beta) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <style>
 .main-content {
@@ -22,11 +28,11 @@
 }
 
 .btn i {
-	font-size: 0.8em; /* Điều chỉnh tỷ lệ thu nhỏ, ví dụ 0.8em */
+	font-size: 0.8em;
 }
 
 .custom-text {
-	color: #343a40; /* Màu xám đậm */
+	color: #343a40;
 }
 </style>
 </head>
@@ -42,7 +48,7 @@
 				style="margin-left: 0px; margin-right: 0px;">
 				<div class="row g-3 mt-3">
 					<div class="col">
-						<h2 class="h3">User management</h2>
+						<h2 class="h3">Users management</h2>
 						<p>Manage users, roles, permissions, and profile.</p>
 					</div>
 					<div class="col-auto d-none d-sm-block">
@@ -99,7 +105,7 @@
 										<th>Name</th>
 										<th width="60px">Roles</th>
 										<th width="60px" class="text-end">Status</th>
-										<th width="160px" class="text-end">Updated</th>
+										<th width="160px" class="text-center">Updated</th>
 										<th width="60px">Actions</th>
 									</tr>
 									<c:forEach var="user" items="${users}" varStatus="status">
@@ -108,7 +114,8 @@
 												id="cb${status.index}" name="cid[]" value="${user.uuid}"
 												onclick="isChecked(this.checked)"></td>
 											<td class="text-end">${(users.page - 1) * users.pageSize + status.index + 1}</td>
-											<td><a class="d-flex flex-nowrap align-items-center" style="text-decoration: none;"
+											<td><a class="d-flex flex-nowrap align-items-center"
+												style="text-decoration: none;"
 												href="saga/users/edit/${user.uuid}">
 													<div>
 														<img alt="User Avatar"
@@ -121,13 +128,11 @@
 														<div class="small custom-text">pppp@gmail.com</div>
 													</div>
 											</a></td>
-											<td><span
-												class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">admin</span>
-											</td>
-											<td class="text-end"><span
-												class="small text-uppercase ${user.isActive ? 'text-success' : 'text-danger'} bg-opacity-10 rounded px-2 py-1">
-													${user.isActive ? 'Active' : 'Inactive'} </span></td>
-											<td class="text-end">22:00 14/11/2024</td>
+											<td class="text-center align-middle"><span
+												class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">admin</span></td>
+											<td class="text-end align-middle"><span
+												class="small text-uppercase ${user.isActive ? 'text-success' : 'text-danger'} bg-opacity-10 rounded px-2 py-1">${user.isActive ? 'Active' : 'Inactive'}</span></td>
+											<td class="text-end align-middle">22:00 14/11/2024</td>
 											<td class="text-end">
 												<div class="d-flex gap-1">
 													<a class="btn btn-rounded" href="#"><i
