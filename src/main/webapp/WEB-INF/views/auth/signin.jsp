@@ -27,7 +27,7 @@
 									<p class="text-muted mt-3">Enter your email and password to access admin panel.</p>
 								</div>
 								<div class="mt-4">
-									<form id="signinform" class="needs-validation" novalidate action="${pageContext.request.contextPath}/auth/signin" method="POST">
+									<form id="signinform" class="needs-validation" novalidate action="${pageContext.request.contextPath}/signin.htm" method="POST">
 
 										<div class="mb-3">
 											<label for="email" class="form-label">Email</label>
