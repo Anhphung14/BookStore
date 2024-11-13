@@ -1,0 +1,7 @@
+INDEX VERSION 1.4+D:\App\Eclipse\bookstore\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+2694773223.index
+491026810.index
+2608250052.index
+620579017.index
+3080583518.index
+25961026.index
