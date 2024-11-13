@@ -8,11 +8,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trang Chủ</title>
 <base href="${pageContext.servletContext.contextPath}/">
+<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+<!-- <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css"> -->
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> -->
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> -->
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!-- Link cho Font Awesome 5.x (hỗ trợ cả phiên bản free và pro) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<!-- Link cho Font Awesome 6.x (bản beta) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <style>
 body {
@@ -34,7 +41,7 @@ body {
 
 .sidebar a {
     color: white;
-    padding: 15px;
+/*     padding: 15px; */
     text-decoration: none;
     display: block;
 }
@@ -73,7 +80,7 @@ body {
 <body>
     <!-- Main Content Section -->
     <div class="main-content">
-        <%@ include file="layouts/navigation.jsp"%>
+        <jsp:include page="/WEB-INF/views/layouts/navigation.jsp" />
         <!-- Gọi tệp navigation.jsp -->
         <div class="container-fluid d-flex flex-column" style="padding-left: 0px; padding-right: 0px;">
             <div class="page-nav p-2">

@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
 
 <!DOCTYPE html>
 <html>
@@ -7,20 +7,13 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <base href="${pageContext.servletContext.contextPath}/">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <!-- Link cho Font Awesome 5.x (hỗ trợ cả phiên bản free và pro) -->
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <!-- Link cho Font Awesome 6.x (bản beta) -->
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <style>
 .main-content {
@@ -115,7 +108,7 @@
 												id="cb${status.index}" name="cid[]" value="${user.uuid}"
 												onclick="isChecked(this.checked)"></td>
 											<td class="text-end">${(users.page - 1) * users.pageSize + status.index + 1}</td>
-											<td><a class="d-flex flex-nowrap align-items-center"
+											<td><a class="d-flex flex-nowrap align-items-center" style="text-decoration: none;"
 												href="saga/users/edit/${user.uuid}">
 													<div>
 														<img alt="User Avatar"
@@ -124,7 +117,7 @@
 															width="30px">
 													</div>
 													<div class="ms-3">
-														<div class="fw-semibold custom-text" style="text-decoration: none;">Vo Anh Phung</div>
+														<div class="fw-semibold custom-text">Vo Anh Phung</div>
 														<div class="small custom-text">pppp@gmail.com</div>
 													</div>
 											</a></td>
