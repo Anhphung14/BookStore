@@ -96,7 +96,7 @@
                 <span>ADMIN</span>
             </li>
             <li>
-                <a class="nav-link" href="#" style="color: #343a40;">
+                <a class="nav-link" href="users.htm" style="color: #343a40;">
                     <i class="fa fa-user"></i> <span>Users</span>
                 </a>
             </li>
