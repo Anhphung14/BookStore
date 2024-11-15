@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!DOCTYPE html>
 <html>
@@ -15,12 +16,6 @@
 
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
 <style>
 .main-content {
 	display: flex;
@@ -77,7 +72,10 @@
 								</button>
 							</div>
 							<a class="btn btn-primary text-nowrap btn-add"
-								href="saga/users/edit"><i class="fa fa-plus me-2"></i>Add</a>
+								href="${pageContext.request.contextPath}/user/new"> <i
+								class="fa fa-plus me-2"></i>Add
+							</a>
+
 						</div>
 
 						<div class="mt-3">
@@ -86,15 +84,14 @@
 								<div class="d-flex justify-content-between gap-3">
 									<div class="selected-count align-self-center"></div>
 									<div class="d-flex gap-1">
-										<a class="btn btn-rounded btn-publish"><i
-											class="fa fa-eye"></i></a> <a
-											class="btn btn-rounded btn-unpublish"><i
-											class="fa fa-eye-slash"></i></a> <a
-											class="btn btn-rounded btn-delete"><i
-											class="fa fa-trash-alt"></i></a>
+										<a class="btn btn-rounded"> <i class="fa fa-eye"></i></a> <a
+											class="btn btn-rounded"> <i class="fa fa-eye-slash"></i>
+										</a> <a class="btn btn-rounded"> <i class="fa fa-trash-alt"></i>
+										</a>
 									</div>
 								</div>
 							</div>
+
 							<div class="table-responsive">
 								<table class="table table-centered">
 									<tr>
@@ -135,8 +132,9 @@
 											<td class="text-end align-middle">22:00 14/11/2024</td>
 											<td class="text-end">
 												<div class="d-flex gap-1">
-													<a class="btn btn-rounded" href="#"><i
-														class="fa fa-pencil"></i></a> <a class="btn btn-rounded"><i
+													<a class="btn btn-rounded" href="/user/edit/${user.id}">
+														<i class="fa fa-pencil"></i>
+													</a> <a class="btn btn-rounded"><i
 														class="fa ${user.isActive ? 'fa-eye-slash' : 'fa-eye'}"></i></a>
 													<a class="btn btn-rounded"><i class="fa fa-arrow-up"></i></a>
 													<a class="btn btn-rounded"><i class="fa fa-arrow-down"></i></a>
