@@ -24,12 +24,12 @@
                             <div class="card-body p-4">
                                 <div class="text-center w-75 mx-auto">
                                     <div class="auth-logo">
-										  <img alt="Logo" src="images/ALDPT.png" class="img-fluid"> 
+										  <img alt="Logo" src="resources/images/ALDPT.png" class="img-fluid"> 
 									</div>
                                     <p class="text-muted mt-3">Enter your email address and we'll send you an email with instructions to reset your password.</p>
                                 </div>
                                 <div class="mt-4">
-                                    <form action="..." method="POST" class="needs-validation" novalidate id="forgetpasswordform">
+                                    <form action="${pageContext.servletContext.contextPath}/forgotpassword.htm" method="POST" class="needs-validation" novalidate id="forgetpasswordform">
                                         <div class="mb-3">
                                             <label for="email" class="form-label">Email</label>
                                             <input type="email" class="form-control validation" name="email" id="email" placeholder="Enter your email">
@@ -39,6 +39,8 @@
                                         </div>
 
                                         <button type="submit" class="btn btn-primary w-100 submit">Send Email</button>
+                                        
+                                        <h6 style="color: green; text-align: center;">${message}</h6>
                                     </form>
                                 </div>
                             </div>

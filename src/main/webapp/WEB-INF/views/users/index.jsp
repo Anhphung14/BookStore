@@ -100,42 +100,38 @@
 											onclick="checkAll()" /></th>
 										<th width="30px" class="text-end">#</th>
 										<th>Name</th>
-										<th width="60px">Roles</th>
-										<th width="60px" class="text-end">Status</th>
+										<th width="60px" class="text-center">Roles</th>
+										<th width="60px" class="text-center">Status</th>
 										<th width="160px" class="text-center">Updated</th>
-										<th width="60px">Actions</th>
+										<th width="60px" class="text-center">Actions</th>
 									</tr>
 									<c:forEach var="user" items="${users}" varStatus="status">
 										<tr>
-											<td><input type="checkbox" class="form-check-input"
-												id="cb${status.index}" name="cid[]" value="${user.uuid}"
-												onclick="isChecked(this.checked)"></td>
-											<td class="text-end">${(users.page - 1) * users.pageSize + status.index + 1}</td>
+											<td>
+												<input type="checkbox" class="form-check-input" id="cb${status.index}" name="cid[]" value="${user.id}" onclick="isChecked(this.checked)">
+											</td>
+<%-- 											<td class="text-end">${(users.page - 1) * users.pageSize + status.index + 1}</td> --%>
+											<td class="text-end">${user.id}</td>
 											<td><a class="d-flex flex-nowrap align-items-center"
 												style="text-decoration: none;"
-												href="saga/users/edit/${user.uuid}">
+												href="saga/users/edit/${user.id}">
 													<div>
-														<img alt="User Avatar"
-															src="resources/images/TrinhThangBinh.jpg"
-															class="rounded-circle bg-white border border-3 border-white"
-															width="30px">
+														<img alt="User Avatar" src="${user.avatar}" class="rounded-circle bg-white border border-3 border-white" width="30px">
 													</div>
 													<div class="ms-3">
-														<div class="fw-semibold custom-text">Vo Anh Phung</div>
-														<div class="small custom-text">pppp@gmail.com</div>
+														<div class="fw-semibold custom-text">${user.fullname}</div>
+														<div class="small custom-text">${user.email}</div>
 													</div>
 											</a></td>
-											<td class="text-center align-middle"><span
-												class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">admin</span></td>
-											<td class="text-end align-middle"><span
-												class="small text-uppercase ${user.isActive ? 'text-success' : 'text-danger'} bg-opacity-10 rounded px-2 py-1">${user.isActive ? 'Active' : 'Inactive'}</span></td>
+											<td class="text-center align-middle"><span class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">admin</span></td>
+<%-- 											<td class="text-end align-middle"><span class="small text-uppercase ${user.isActive ? 'text-success' : 'text-danger'} bg-opacity-10 rounded px-2 py-1">${user.isActive ? 'Active' : 'Inactive'}</span></td> --%>
+											<td class="text-end align-middle"><span class="small text-uppercase text-success bg-opacity-10 rounded px-2 py-1">Active</span></td>
 											<td class="text-end align-middle">22:00 14/11/2024</td>
 											<td class="text-end">
 												<div class="d-flex gap-1">
-													<a class="btn btn-rounded" href="/user/edit/${user.id}">
-														<i class="fa fa-pencil"></i>
-													</a> <a class="btn btn-rounded"><i
-														class="fa ${user.isActive ? 'fa-eye-slash' : 'fa-eye'}"></i></a>
+													<a class="btn btn-rounded" href="/user/edit/${user.id}"><i class="fa fa-pencil"></i></a>
+<%-- 													<a class="btn btn-rounded"><i class="fa ${user.isActive ? 'fa-eye-slash' : 'fa-eye'}"></i></a> --%>
+													<a class="btn btn-rounded"><i class="fa fa-eye-slash"></i></a>
 													<a class="btn btn-rounded"><i class="fa fa-arrow-up"></i></a>
 													<a class="btn btn-rounded"><i class="fa fa-arrow-down"></i></a>
 													<a class="btn btn-rounded"><i class="fa fa-trash-alt"></i></a>
@@ -146,7 +142,7 @@
 								</table>
 							</div>
 						</div>
-						<div>${users.links}</div>
+<%-- 						<div>${users.links}</div> --%>
 					</div>
 				</div>
 			</form>

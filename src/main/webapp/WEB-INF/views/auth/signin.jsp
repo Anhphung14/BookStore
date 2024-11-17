@@ -63,7 +63,7 @@
 				</div>
 				<div class="mt-3 row">
 					<div class="text-center col-12">
-						<p class="text-muted"><a class="text-primary fw-medium ms-1" href="#">Forgot password</a></p>
+						<p class="text-muted"><a class="text-primary fw-medium ms-1" href="forgotpassword.htm">Forgot password</a></p>
 					</div>
 				</div>
 			</div>
@@ -77,6 +77,7 @@
 <script>
     $(document).ready(function () {
         showPassword();
+        handleValidationForm();
     });
 
     function showPassword() {
@@ -98,6 +99,44 @@
             });
         });
     }
+    
+    function handleValidationForm() {
+    	$("#signinform").on("submit", function (e) {
+    		let isValid = true;
+    		
+    		const emailInput = $("#email");
+    		const passwordInput = $("#password");
+    		
+    		const emailValue = emailInput.val().trim();
+    		const passwordValue = passwordInput.val().trim();
+    		
+    		if (emailInput == "" || !validateEmail(emailValue)) {
+    			emailInput.addClass("is-invalid");
+    			isValid = false;
+    		} else {
+    			emailInput.removeClass("is-invalid");
+    		}
+    		
+    		if (passwordValue == "") {
+    			passwordInput.addClass("is-invalid");
+    			isValid = false;
+    		} else {
+    			passwordInput.removeClass("is-invalid");
+    		}
+    		
+    		if (!isValid) {
+    			e.preventDefault();
+    		}
+    	});
+    }
+    
+    
+   function validateEmail(email) {
+	   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	   return emailRegex.test(email);
+   }
+    
+    
 </script>
 </body>
 </html>

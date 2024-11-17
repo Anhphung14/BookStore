@@ -50,6 +50,11 @@ nav.navbar {
 <nav class="navbar navbar-topbar navbar-expand-lg sticky-top">
     <div class="container-fluid d-flex justify-content-between align-items-center ">
         <ul class="list-unstyled topbar-menu mb-0 d-flex align-items-center justify-content-start">
+            <li class="dropdown">
+                <button class="nav-link topbar-toggle-icon">
+                    <i class="far fa-bars topbar-icon"></i>
+                </button>
+            </li>
             <li class="dropdown d-none d-sm-block">
                 <div class="auth-logo d-flex align-items-center">
                     <img alt="Logo" src="resources/images/ALDPT.png" class="img-fluid">
@@ -67,21 +72,26 @@ nav.navbar {
             <li class="dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="avatar">
-                        <img alt="User Avatar" src="resources/images/ALDPT.png" class="rounded-circle bg-white border border-3 border-white">
+                        <img alt="User Avatar" src="${user.avatar}" class="rounded-circle bg-white border border-3 border-white">
                     </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end border-0 shadow " aria-labelledby="userDropdown">
                     <li class="text-center p-3 border-bottom mb-3">
                         <div class="avatar avatar-xxl">
-                            <img alt="User Avatar" src="resources/images/ALDPT.png" class="rounded-circle bg-white border border-3 border-white">
+                            <img alt="User Avatar" src="${user.avatar}" class="rounded-circle bg-white border border-3 border-white">
                         </div>
                         <div class="mt-3">
-                            <h5>HAHAA</h5>
-                            <div class="text-muted">p@gmail.com</div>
+                            <h5>${user.fullname}</h5>
+                            <div class="text-muted">${user.email}</div>
                         </div>
                     </li>
                     <li><a class="dropdown-item" href="#"><i class="fa fa-user"></i>Profile</a></li>
-                    <li><a class="dropdown-item" href="#"><i class="fa fa-sign-out"></i>Sign Out</a></li>
+                    <form id="signoutForm" action="${pageContext.servletContext.contextPath}/signout.htm" method="POST" style="display:none;">
+					    <!-- Bạn có thể thêm các dữ liệu cần thiết vào body của form nếu cần -->
+					    <input type="hidden" name="signout" value="true">
+					</form>
+<%--                     <li><a class="dropdown-item" href="${pageContext.servletContext.contextPath}/signout.html"><i class="fa fa-sign-out"></i>Sign Out</a></li> --%>
+                    <li><a class="dropdown-item" href="javascript:void(0);" onclick="document.getElementById('signoutForm').submit();"><i class="fa fa-sign-out"></i> Sign Out</a></li>
                 </ul>
             </li>
         </ul>
