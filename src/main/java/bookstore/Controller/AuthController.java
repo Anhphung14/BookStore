@@ -1,5 +1,7 @@
 package bookstore.Controller;
 
+import java.util.Random;
+
 import javax.mail.internet.MimeMessage;
 
 import javax.servlet.http.HttpSession;
@@ -77,27 +79,71 @@ public class AuthController {
 	
 	@Autowired
 	JavaMailSender mailer;
+	@Transactional
 	@RequestMapping(value = "/forgotpassword", method = RequestMethod.POST)
 	public String handle_forgotpassword(ModelMap model, @RequestParam("email") String email) {
-		try {
-			MimeMessage mail = mailer.createMimeMessage();
-			
-			MimeMessageHelper helper = new MimeMessageHelper(mail);
-			helper.setFrom("n21dcat014@student.ptithcm.edu.vn", "n21dcat014@student.ptithcm.edu.vn");
-			helper.setTo(email);
-			helper.setReplyTo("n21dcat014@student.ptithcm.edu.vn", "n21dcat014@student.ptithcm.edu.vn");
-			helper.setSubject("Dat lai mat khau");
-			helper.setText("Day la mat khau moi cua ban: abcdefgh123456789", true);
-			
-			mailer.send(mail);
-			model.addAttribute("message", "Gửi email thành công !");
-		} catch (Exception ex) {
-			model.addAttribute("message", "Gửi email thất bại !");
-		}
-		
-		return "auth/forgotpassword";
-		
+	    try {
+	        Session session = factory.getCurrentSession();
+
+	        String hql = "FROM UsersEntity WHERE email = :email";
+	        Query query = session.createQuery(hql);
+	        query.setParameter("email", email);
+	        UsersEntity user = (UsersEntity) query.uniqueResult();
+
+	        if (user == null) {
+	            System.out.println("No user found with email: " + email);
+	            model.addAttribute("alertMessage", "Email not found in the system!");
+	            model.addAttribute("alertType", "error");
+	            return "auth/forgotpassword";
+	        }
+  
+	        String newPassword = generateRandomPassword(); 
+
+	        String emailContent = "<html><body>"
+	                + "<h5>Hello " + user.getEmail() + ",</h5>"
+	                + "<p>We received a request to reset your password. Below is your new password:</p>"
+	                + "<h5 style=\"color: #4CAF50;\">" + newPassword + "</h5>"
+	                + "<p>If you did not request this, please ignore this email.</p>"
+	                + "<p>Regards,<br>BookStore</p>"
+	                + "<footer style=\"font-size: 0.8em; color: #777;\">This is an automated email. Please do not reply.</footer>"
+	                + "</body></html>";
+
+	        MimeMessage message = mailer.createMimeMessage();
+	        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+	        helper.setTo(user.getEmail());
+	        helper.setSubject("Password Reset Request");
+	        helper.setText(emailContent, true); 
+
+	        mailer.send(message);
+
+
+	        user.setPassword(newPassword);
+	        session.update(user);
+
+	        model.addAttribute("alertMessage", "Password reset email has been sent successfully!");
+	        model.addAttribute("alertType", "success");
+
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	        model.addAttribute("alertMessage", "An error occurred while sending the email!");
+	        model.addAttribute("alertType", "error");
+	    }
+
+	    return "auth/forgotpassword";
 	}
+
+
+	private String generateRandomPassword() {
+	    String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+	    StringBuilder password = new StringBuilder();
+	    Random random = new Random();
+	    for (int i = 0; i < 12; i++) { 
+	        password.append(chars.charAt(random.nextInt(chars.length())));
+	    }
+	    return password.toString();
+	}
+
 
 	// RESET PASSWORD
 	@RequestMapping(value = "/resetpassword", method = RequestMethod.GET)
