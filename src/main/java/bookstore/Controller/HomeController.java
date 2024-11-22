@@ -13,11 +13,12 @@ import org.springframework.web.client.HttpServerErrorException;
 import bookstore.Entity.UsersEntity;
 
 @Controller
+@Transactional
 public class HomeController {
 	@Autowired
 	SessionFactory factory;
 	
-	@Transactional
+
 	@RequestMapping(value = "/home")
 	public String home(ModelMap model, HttpSession session) {
 //		model.addAttribute("list", this.getUsers());

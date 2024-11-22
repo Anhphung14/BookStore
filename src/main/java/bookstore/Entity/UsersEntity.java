@@ -17,8 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Table(name = "Users")
 public class UsersEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Tự động tăng
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 	@Column(name = "avatar", columnDefinition = "nvarchar")
@@ -33,7 +32,7 @@ public class UsersEntity {
 	@Column(name = "fullname", columnDefinition = "nvarchar")
 	private String fullname;
 
-	@Column(name = "gender")
+	@Column(name = "gender", nullable = false, columnDefinition = "INT DEFAULT 0")
 	private Integer gender;
 
 	@Column(name = "phone", columnDefinition = "nvarchar")

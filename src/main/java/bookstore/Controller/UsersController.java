@@ -53,7 +53,7 @@ public class UsersController {
 	}
 
 	@RequestMapping(value = "/user/save.htm", method = RequestMethod.POST)
-	public String saveUser(@ModelAttribute("user") UsersEntity user, 
+	public String saveUser(@ModelAttribute("user") UsersEntity user,
 	                       @RequestParam("task") String task,
 	                       @RequestParam(value = "id", required = false) Long id, 
 	                       ModelMap model) {
@@ -67,11 +67,10 @@ public class UsersController {
 	                return "users/edit";
 	            }
 
-	            user.setId(null); 
-
 	            try {
-	                session.save(user);
-	                session.flush();
+	            	user.setGender(1);
+	            	session.save(user);
+	                
 	            } catch (Exception e) {
 	                e.printStackTrace();
 	                model.addAttribute("message", "Failed to save new user: " + e.getMessage());
@@ -106,6 +105,7 @@ public class UsersController {
 
 	    return "redirect:/users.htm";  // Trả về trang danh sách người dùng mặc định
 	}
+	
 
 	
 	/*
