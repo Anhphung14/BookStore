@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Users management</title>
 <base href="${pageContext.servletContext.contextPath}/">
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -16,6 +16,8 @@
 
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<script src="${pageContext.request.contextPath}/resources/js/app.js"
+	defer></script>
 <style>
 .main-content {
 	display: flex;
@@ -72,7 +74,7 @@
 								</button>
 							</div>
 							<a class="btn btn-primary text-nowrap btn-add"
-								href="${pageContext.request.contextPath}/user/new"> <i
+								href="${pageContext.request.contextPath}/user/new.htm"> <i
 								class="fa fa-plus me-2"></i>Add
 							</a>
 
@@ -84,9 +86,10 @@
 								<div class="d-flex justify-content-between gap-3">
 									<div class="selected-count align-self-center"></div>
 									<div class="d-flex gap-1">
-										<a class="btn btn-rounded"> <i class="fa fa-eye"></i></a> <a
+										<!-- <a class="btn btn-rounded"> <i class="fa fa-eye"></i></a> <a
 											class="btn btn-rounded"> <i class="fa fa-eye-slash"></i>
-										</a> <a class="btn btn-rounded"> <i class="fa fa-trash-alt"></i>
+										</a> -->
+										<a class="btn btn-rounded"> <i class="fa fa-trash-alt"></i>
 										</a>
 									</div>
 								</div>
@@ -107,34 +110,42 @@
 									</tr>
 									<c:forEach var="user" items="${users}" varStatus="status">
 										<tr>
-											<td>
-												<input type="checkbox" class="form-check-input" id="cb${status.index}" name="cid[]" value="${user.id}" onclick="isChecked(this.checked)">
-											</td>
-<%-- 											<td class="text-end">${(users.page - 1) * users.pageSize + status.index + 1}</td> --%>
+											<td><input type="checkbox" class="form-check-input"
+												id="cb${status.index}" name="cid[]" value="${user.id}"
+												onclick="isChecked(this.checked)"></td>
+											<%-- 											<td class="text-end">${(users.page - 1) * users.pageSize + status.index + 1}</td> --%>
 											<td class="text-end">${user.id}</td>
 											<td><a class="d-flex flex-nowrap align-items-center"
 												style="text-decoration: none;"
-												href="saga/users/edit/${user.id}">
+												href="${pageContext.request.contextPath}/user/edit/${user.id}.htm">
 													<div>
-														<img alt="User Avatar" src="${user.avatar}" class="rounded-circle bg-white border border-3 border-white" width="30px">
+														<img alt="User Avatar" src="${user.avatar}"
+															class="rounded-circle bg-white border border-3 border-white"
+															width="30px">
 													</div>
 													<div class="ms-3">
 														<div class="fw-semibold custom-text">${user.fullname}</div>
 														<div class="small custom-text">${user.email}</div>
 													</div>
 											</a></td>
-											<td class="text-center align-middle"><span class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">admin</span></td>
-<%-- 											<td class="text-end align-middle"><span class="small text-uppercase ${user.isActive ? 'text-success' : 'text-danger'} bg-opacity-10 rounded px-2 py-1">${user.isActive ? 'Active' : 'Inactive'}</span></td> --%>
-											<td class="text-end align-middle"><span class="small text-uppercase text-success bg-opacity-10 rounded px-2 py-1">Active</span></td>
+											<td class="text-center align-middle"><span
+												class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">admin</span></td>
+											<%-- 											<td class="text-end align-middle"><span class="small text-uppercase ${user.isActive ? 'text-success' : 'text-danger'} bg-opacity-10 rounded px-2 py-1">${user.isActive ? 'Active' : 'Inactive'}</span></td> --%>
+											<td class="text-end align-middle"><span
+												class="small text-uppercase text-success bg-opacity-10 rounded px-2 py-1">Active</span></td>
 											<td class="text-end align-middle">22:00 14/11/2024</td>
 											<td class="text-end">
 												<div class="d-flex gap-1">
-													<a class="btn btn-rounded" href="/user/edit/${user.id}"><i class="fa fa-pencil"></i></a>
-<%-- 													<a class="btn btn-rounded"><i class="fa ${user.isActive ? 'fa-eye-slash' : 'fa-eye'}"></i></a> --%>
-													<a class="btn btn-rounded"><i class="fa fa-eye-slash"></i></a>
+													<a class="btn btn-rounded" href="${pageContext.request.contextPath}/user/edit/${user.id}.htm"><i
+														class="fa fa-pencil"></i></a>
+													<%-- 													<a class="btn btn-rounded"><i class="fa ${user.isActive ? 'fa-eye-slash' : 'fa-eye'}"></i></a> --%>
+													<!-- <a class="btn btn-rounded"><i class="fa fa-eye-slash"></i></a>
 													<a class="btn btn-rounded"><i class="fa fa-arrow-up"></i></a>
-													<a class="btn btn-rounded"><i class="fa fa-arrow-down"></i></a>
-													<a class="btn btn-rounded"><i class="fa fa-trash-alt"></i></a>
+													<a class="btn btn-rounded"><i class="fa fa-arrow-down"></i></a> -->
+													<a class="btn btn-rounded" href="/user/delete/${user.id}"
+														onclick="return confirm('Bạn có chắc chắn muốn xóa?')">
+														<i class="fa fa-trash-alt"></i>
+													</a>
 												</div>
 											</td>
 										</tr>
@@ -142,7 +153,7 @@
 								</table>
 							</div>
 						</div>
-<%-- 						<div>${users.links}</div> --%>
+						<%-- 						<div>${users.links}</div> --%>
 					</div>
 				</div>
 			</form>

@@ -2,10 +2,10 @@ package bookstore.Entity;
 
 import java.util.Date;
 
-import javax.annotation.Generated;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -16,48 +16,49 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Table(name = "Users")
 public class UsersEntity {
-	@Id
-	@GeneratedValue
-	private Integer id;
-	
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Tự động tăng
+    @Column(name = "id")
+    private Long id;
+
 	@Column(name = "avatar", columnDefinition = "nvarchar")
 	private String avatar;
-	
+
 	@Column(name = "email", columnDefinition = "nvarchar")
 	private String email;
-	
+
 	@Column(name = "password", columnDefinition = "nvarchar")
 	private String password;
-	
+
 	@Column(name = "fullname", columnDefinition = "nvarchar")
 	private String fullname;
-	
+
 	@Column(name = "gender")
 	private Integer gender;
-	
+
 	@Column(name = "phone", columnDefinition = "nvarchar")
 	private String phone;
-	
+
 	@Column(name = "reset_token", columnDefinition = "nvarchar")
 	private String reset_token;
-	
+
 	@Column(name = "verify_token", columnDefinition = "nvarchar")
 	private String verify_token;
-	
+
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date created_at;
-	
+
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date updated_at;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setId(Long i) {
+		this.id = i;
 	}
 
 	public String getAvatar() {
@@ -139,7 +140,5 @@ public class UsersEntity {
 	public void setUpdated_at(Date updated_at) {
 		this.updated_at = updated_at;
 	}
-	
-	
-	
+
 }

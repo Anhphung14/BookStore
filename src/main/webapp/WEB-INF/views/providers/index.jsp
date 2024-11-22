@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Roles management</title>
+<title>Providers management</title>
 <base href="${pageContext.servletContext.contextPath}/">
 <script src="${pageContext.request.contextPath}/resources/js/app.js"
 	defer></script>
@@ -44,9 +44,10 @@
 				style="margin-left: 0px; margin-right: 0px;">
 				<div class="row g-3 mt-3">
 					<div class="col">
-						<h2 class="h3">Roles management</h2>
-						<p>Here you can view all roles, see the number of permissions
-							assigned to each role</p>
+						<h2 class="h3">Providers management</h2>
+						<p>This section allows you to manage your providers
+							efficiently, including adding, editing, or removing provider
+							details to streamline operations.</p>
 					</div>
 					<div class="col-auto d-none d-sm-block">
 						<img class="page-icon" src="resources/images/page.svg"
@@ -101,8 +102,9 @@
 											onclick="checkAll()" /></th>
 										<th width="30px" class="text-end">#</th>
 										<th>Name</th>
-										<th width="60px">Permissions</th>
-										<th width="60px" class="text-end">Status</th>
+										<th width="60px">Email</th>
+										<th width="120px" class="text-center">Phone</th>
+										<th width="120px" class="text-center">Company</th>
 										<th width="160px" class="text-center">Updated</th>
 										<th width="60px">Actions</th>
 									</tr>
@@ -112,17 +114,16 @@
 											id="cb1" name="cid[]" value="1"
 											onclick="isChecked(this.checked)"></td>
 										<td class="text-end">1</td>
-										<td>
-										<span class="text-decoration-underline">Admin</span>
-										<div class="text-muted small">Permission edit product</div>
+										<td><span class="text-decoration-underline">Jollibee</span>
 										</td>
-										
-
 										<td class="text-center align-middle"><span
-											class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">admin</span>
+										>phung@gmail.com</span>
 										</td>
-										<td class="text-end align-middle"><span
-											class="small text-uppercase text-success bg-opacity-10 rounded px-2 py-1">Active</span>
+										<td class="text-center align-middle"><span
+										>07983948923</span>
+										</td>
+										<td class="text-center align-middle"><span
+										>Jollibee VN</span>
 										</td>
 										<td class="text-end align-middle">22:00 14/11/2024</td>
 										<td class="text-end">
@@ -137,7 +138,6 @@
 											</div>
 										</td>
 									</tr>
-
 									<%--        </c:forEach> --%>
 								</table>
 							</div>
