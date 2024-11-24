@@ -20,6 +20,18 @@
 		<property name="maxUploadSize" value="20971520" />
 	</bean>
 	
+	<context:component-scan base-package="bookstore" />
+	
+<!--	<bean id="cloudinary" class="com.cloudinary.Cloudinary">-->
+<!--		<constructor-arg>-->
+<!--			<map>-->
+<!--				<entry key="cloud_name" value="dsqhfz3xt" />-->
+<!--				<entry key="api_key" value="338957172242134" />-->
+<!--				<entry key="api_secret" value="dRSr_lNqopyzM4u3rrRD-VnYvmc" />-->
+<!--			</map>-->
+<!--		</constructor-arg>-->
+<!--	</bean>-->
+	
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
     <property name="host" value="smtp.gmail.com" />
     <property name="port" value="587" />
