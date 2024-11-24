@@ -17,6 +17,9 @@
 	rel="stylesheet">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link
+	href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"
+	rel="stylesheet">
 
 <style>
 .main-content {
@@ -42,7 +45,6 @@
 
 		<div class="container-fluid"
 			style="margin-left: 0px; margin-right: 0px;">
-
 			<div class="row g-3 mt-3">
 				<div class="col">
 					<h2 class="h3">
@@ -51,7 +53,6 @@
 							<c:otherwise>New User</c:otherwise>
 						</c:choose>
 					</h2>
-					<p>Manage users, roles, permissions, and profile.</p>
 				</div>
 				<div class="col-auto d-none d-sm-block">
 					<img class="page-icon" src="resources/images/page.svg"
@@ -63,12 +64,11 @@
 				method="POST">
 				<input type="hidden" id="task" name="task" value="${task}">
 
-				<!-- Chỉ truyền ID khi là tác vụ chỉnh sửa -->
 				<c:if test="${task != 'new'}">
 					<input type="hidden" id="id" name="id" value="${user.id}">
 				</c:if>
 
-				<div class="card mt-3">
+				<div class="card">
 					<div class="card-body">
 						<h6 class="small text-muted">GENERAL INFORMATION</h6>
 
@@ -91,6 +91,29 @@
 								value="${user.phone}"> <label class="form-label"
 								for="phone">Phone</label>
 						</div>
+						<div class="form-floating mt-3">
+							<select class="form-control" id="gender" name="gender" required>
+								<option value="1" ${user.gender == 1 ? 'selected' : ''}>Male</option>
+								<option value="2" ${user.gender == 2 ? 'selected' : ''}>Female</option>
+								<option value="3" ${user.gender == 3 ? 'selected' : ''}>Other</option>
+							</select> <label class="form-label" for="gender">Gender <span
+								class="text-danger">*</span></label>
+						</div>
+						<div class="form-floating mt-3">
+							<div class="ms-2">Roles</div>
+							<select class="w-100 selectpicker" id="roles" name="roles[]"
+								multiple data-coreui-search="true" data-live-search="true">
+								<c:forEach var="role" items="${roles}">
+									<option value="${role.id}"
+										${user.roles != null && user.roles.contains(role) ? 'selected' : ''}>
+										${role.name} <small>(${role.description})</small>
+									</option>
+								</c:forEach>
+							</select>
+
+						</div>
+
+
 					</div>
 				</div>
 
@@ -100,33 +123,43 @@
 						class="btn btn-light btn-cancel">Cancel</a>
 				</div>
 			</form>
-
-
 		</div>
 
 	</div>
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
 	<script>
 		document.getElementById("userForm").addEventListener("submit",
 				function(event) {
 					const email = document.getElementById("email").value;
 					const phone = document.getElementById("phone").value;
 
-					// Check email format
 					const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 					if (!emailRegex.test(email)) {
 						alert("Invalid email format.");
 						event.preventDefault();
 					}
 
-					// Check phone number (optional)
 					if (phone && !/^\d{10}$/.test(phone)) {
 						alert("Phone number must be 10 digits.");
 						event.preventDefault();
 					}
 				});
 	</script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			var element = document.getElementById('roles');
+			var choices = new Choices(element, {
+				removeItemButton : true,
+				searchEnabled : true,
+				searchChoices : true
+			});
+		});
+	</script>
+
 </body>
 </html>
