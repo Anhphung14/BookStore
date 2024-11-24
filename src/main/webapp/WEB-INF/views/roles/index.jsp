@@ -74,7 +74,7 @@
 								</button>
 							</div>
 							<a class="btn btn-primary text-nowrap btn-add"
-								href="${pageContext.request.contextPath}/user/new"> <i
+								href="${pageContext.request.contextPath}/role/new.htm"> <i
 								class="fa fa-plus me-2"></i>Add
 							</a>
 						</div>
@@ -101,48 +101,47 @@
 											onclick="checkAll()" /></th>
 										<th width="30px" class="text-end">#</th>
 										<th>Name</th>
-										<th width="60px">Permissions</th>
-										<th width="60px" class="text-end">Status</th>
+										<th width="60px">Users</th>
 										<th width="160px" class="text-center">Updated</th>
 										<th width="60px">Actions</th>
 									</tr>
-									<%--          <c:forEach var="user" items="${users}" varStatus="status"> --%>
-									<tr>
-										<td><input type="checkbox" class="form-check-input"
-											id="cb1" name="cid[]" value="1"
-											onclick="isChecked(this.checked)"></td>
-										<td class="text-end">1</td>
-										<td>
-										<span class="text-decoration-underline">Admin</span>
-										<div class="text-muted small">Permission edit product</div>
-										</td>
-										
+									<c:forEach var="role" items="${roles}" varStatus="status">
+										<tr>
+											<td><input type="checkbox" class="form-check-input"
+												id="cb1" name="cid[]" value="${role.id}"
+												onclick="isChecked(this.checked)"></td>
+											<td class="text-end">${role.id}</td>
+											<td><span class="text-decoration-underline">${role.name}</span>
+												<div class="text-muted small">${role.description}</div></td>
+											<td class="text-center align-middle"><span
+												class="small text-uppercase text-success bg-opacity-10 rounded px-2 py-1">${role.userCount}</span>
+											</td> 
+											<!-- <td class="text-end align-middle"><span
+												class="small text-uppercase text-success bg-opacity-10 rounded px-2 py-1">Active</span>
+											</td> -->
+											<td class="text-center align-middle">${role.updatedAt}</td>
+											<td class="text-end">
+												<div class="d-flex gap-1">
+													<a class="btn btn-rounded"
+														href="${pageContext.request.contextPath}/role/edit/${role.id}.htm"><i
+														class="fa fa-pencil"></i></a>
+													<%-- 													<a class="btn btn-rounded"><i class="fa ${user.isActive ? 'fa-eye-slash' : 'fa-eye'}"></i></a> --%>
+													<!-- <a class="btn btn-rounded"><i class="fa fa-eye-slash"></i></a>
+													<a class="btn btn-rounded"><i class="fa fa-arrow-up"></i></a>
+													<a class="btn btn-rounded"><i class="fa fa-arrow-down"></i></a> -->
+													<a class="btn btn-rounded" href="/role/delete/${role.id}"
+														onclick="return confirm('Bạn có chắc chắn muốn xóa?')">
+														<i class="fa fa-trash-alt"></i>
+													</a>
+												</div>
+											</td>
+										</tr>
 
-										<td class="text-center align-middle"><span
-											class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">admin</span>
-										</td>
-										<td class="text-end align-middle"><span
-											class="small text-uppercase text-success bg-opacity-10 rounded px-2 py-1">Active</span>
-										</td>
-										<td class="text-end align-middle">22:00 14/11/2024</td>
-										<td class="text-end">
-											<div class="d-flex gap-1">
-												<a class="btn btn-rounded" href="/user/edit/1"> <i
-													class="fa fa-pencil"></i>
-												</a> <a class="btn btn-rounded"> <i class="fa fa-eye-slash"></i>
-												</a> <a class="btn btn-rounded"> <i class="fa fa-arrow-up"></i>
-												</a> <a class="btn btn-rounded"> <i class="fa fa-arrow-down"></i>
-												</a> <a class="btn btn-rounded"> <i class="fa fa-trash-alt"></i>
-												</a>
-											</div>
-										</td>
-									</tr>
-
-									<%--        </c:forEach> --%>
+									</c:forEach>
 								</table>
 							</div>
 						</div>
-						<div>${users.links}</div>
+						<%-- <div>${roles.links}</div> --%>
 					</div>
 				</div>
 			</form>

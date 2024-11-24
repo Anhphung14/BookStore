@@ -8,6 +8,7 @@
 <meta charset="UTF-8">
 <title>Users management</title>
 <base href="${pageContext.servletContext.contextPath}/">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -18,6 +19,10 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <script src="${pageContext.request.contextPath}/resources/js/app.js"
 	defer></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script
+	src="${pageContext.request.contextPath}/resources/js/confirmBox.js"></script>
+
 <style>
 .main-content {
 	display: flex;
@@ -103,6 +108,7 @@
 											onclick="checkAll()" /></th>
 										<th width="30px" class="text-end">#</th>
 										<th>Name</th>
+										<th>Email</th>
 										<th width="60px" class="text-center">Roles</th>
 										<th width="60px" class="text-center">Status</th>
 										<th width="160px" class="text-center">Updated</th>
@@ -125,27 +131,32 @@
 													</div>
 													<div class="ms-3">
 														<div class="fw-semibold custom-text">${user.fullname}</div>
-														<div class="small custom-text">${user.email}</div>
 													</div>
 											</a></td>
-											<td class="text-center align-middle"><span
-												class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">admin</span></td>
+											<td>
+												<div class="custom-text">${user.email}</div>
+											</td>
+											<td class="text-center align-middle"><c:forEach var="role" items="${user.roles}">
+													<span class="small text-uppercase text-success bg-opacity-10 rounded px-2 py-1">${role.name}</span>
+													<!-- Hiển thị vai trò -->
+												</c:forEach></td>
+
 											<%-- 											<td class="text-end align-middle"><span class="small text-uppercase ${user.isActive ? 'text-success' : 'text-danger'} bg-opacity-10 rounded px-2 py-1">${user.isActive ? 'Active' : 'Inactive'}</span></td> --%>
 											<td class="text-end align-middle"><span
 												class="small text-uppercase text-success bg-opacity-10 rounded px-2 py-1">Active</span></td>
-											<td class="text-end align-middle">22:00 14/11/2024</td>
+											<td class="text-center align-middle">${user.updated_at}</td>
 											<td class="text-end">
 												<div class="d-flex gap-1">
-													<a class="btn btn-rounded" href="${pageContext.request.contextPath}/user/edit/${user.id}.htm"><i
-														class="fa fa-pencil"></i></a>
-													<%-- 													<a class="btn btn-rounded"><i class="fa ${user.isActive ? 'fa-eye-slash' : 'fa-eye'}"></i></a> --%>
-													<!-- <a class="btn btn-rounded"><i class="fa fa-eye-slash"></i></a>
-													<a class="btn btn-rounded"><i class="fa fa-arrow-up"></i></a>
-													<a class="btn btn-rounded"><i class="fa fa-arrow-down"></i></a> -->
-													<a class="btn btn-rounded" href="/user/delete/${user.id}"
-														onclick="return confirm('Bạn có chắc chắn muốn xóa?')">
+													<a class="btn btn-rounded"
+														href="${pageContext.request.contextPath}/user/edit/${user.id}.htm"><i
+														class="fa fa-pencil"></i></a> <a
+														class="btn btn-rounded btn-delete"
+														href="javascript:void(0);"
+														data-url="${pageContext.request.contextPath}/user/delete/${user.id}.htm">
 														<i class="fa fa-trash-alt"></i>
 													</a>
+
+
 												</div>
 											</td>
 										</tr>

@@ -50,11 +50,6 @@ nav.navbar {
 <nav class="navbar navbar-topbar navbar-expand-lg sticky-top">
     <div class="container-fluid d-flex justify-content-between align-items-center ">
         <ul class="list-unstyled topbar-menu mb-0 d-flex align-items-center justify-content-start">
-            <li class="dropdown">
-                <button class="nav-link topbar-toggle-icon">
-                    <i class="far fa-bars topbar-icon"></i>
-                </button>
-            </li>
             <li class="dropdown d-none d-sm-block">
                 <div class="auth-logo d-flex align-items-center">
                     <img alt="Logo" src="resources/images/ALDPT.png" class="img-fluid">
@@ -87,7 +82,6 @@ nav.navbar {
                     </li>
                     <li><a class="dropdown-item" href="#"><i class="fa fa-user"></i>Profile</a></li>
                     <form id="signoutForm" action="${pageContext.servletContext.contextPath}/signout.htm" method="POST" style="display:none;">
-					    <!-- Bạn có thể thêm các dữ liệu cần thiết vào body của form nếu cần -->
 					    <input type="hidden" name="signout" value="true">
 					</form>
 <%--                     <li><a class="dropdown-item" href="${pageContext.servletContext.contextPath}/signout.html"><i class="fa fa-sign-out"></i>Sign Out</a></li> --%>

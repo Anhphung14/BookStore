@@ -73,7 +73,7 @@
 								</button>
 							</div>
 							<a class="btn btn-primary text-nowrap btn-add"
-								href="${pageContext.request.contextPath}/user/new"> <i
+								href="${pageContext.request.contextPath}/permission/new"> <i
 								class="fa fa-plus me-2"></i>Add
 							</a>
 						</div>
