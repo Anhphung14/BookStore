@@ -52,7 +52,7 @@ public class UsersController {
 		return "users/edit";
 	}
 
-	@RequestMapping(value = "/user/save.htm", method = RequestMethod.POST)
+	@RequestMapping(value = "/user/save", method = RequestMethod.POST)
 	public String saveUser(@ModelAttribute("user") UsersEntity user,
 	                       @RequestParam("task") String task,
 	                       @RequestParam(value = "id", required = false) Long id, 
