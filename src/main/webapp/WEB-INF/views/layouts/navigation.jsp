@@ -67,8 +67,8 @@
                 <span>APPLICATION</span>
             </li>
             <li>
-                <a class="nav-link" href="#" style="color: #343a40;">
-                    <i class="fa fa-cubes"></i> <span>Providers</span>
+                <a class="nav-link" href="providers.htm" style="color: #343a40;">
+                    <i class="fa fa-cubes"></i> <span>Suppliers</span>
                 </a>
             </li>
             <li>

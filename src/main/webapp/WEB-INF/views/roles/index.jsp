@@ -7,15 +7,20 @@
 <meta charset="UTF-8">
 <title>Roles management</title>
 <base href="${pageContext.servletContext.contextPath}/">
-<script src="${pageContext.request.contextPath}/resources/js/app.js"
-	defer></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<script src="${pageContext.request.contextPath}/resources/js/app.js"
+	defer></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script
+	src="${pageContext.request.contextPath}/resources/js/confirmBox.js"></script>
 
 <style>
 .main-content {
@@ -115,7 +120,7 @@
 												<div class="text-muted small">${role.description}</div></td>
 											<td class="text-center align-middle"><span
 												class="small text-uppercase text-success bg-opacity-10 rounded px-2 py-1">${role.userCount}</span>
-											</td> 
+											</td>
 											<!-- <td class="text-end align-middle"><span
 												class="small text-uppercase text-success bg-opacity-10 rounded px-2 py-1">Active</span>
 											</td> -->
@@ -124,13 +129,10 @@
 												<div class="d-flex gap-1">
 													<a class="btn btn-rounded"
 														href="${pageContext.request.contextPath}/role/edit/${role.id}.htm"><i
-														class="fa fa-pencil"></i></a>
-													<%-- 													<a class="btn btn-rounded"><i class="fa ${user.isActive ? 'fa-eye-slash' : 'fa-eye'}"></i></a> --%>
-													<!-- <a class="btn btn-rounded"><i class="fa fa-eye-slash"></i></a>
-													<a class="btn btn-rounded"><i class="fa fa-arrow-up"></i></a>
-													<a class="btn btn-rounded"><i class="fa fa-arrow-down"></i></a> -->
-													<a class="btn btn-rounded" href="/role/delete/${role.id}"
-														onclick="return confirm('Bạn có chắc chắn muốn xóa?')">
+														class="fa fa-pencil"></i></a> <a
+														class="btn btn-rounded btn-delete"
+														href="javascript:void(0);"
+														data-url="${pageContext.request.contextPath}/role/delete/${role.id}.htm">
 														<i class="fa fa-trash-alt"></i>
 													</a>
 												</div>

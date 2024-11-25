@@ -48,6 +48,7 @@ import bookstore.Service.BooksService;
 import bookstore.Service.CategoriesService;
 import bookstore.Service.InventoryService;
 import bookstore.Service.SuppliersService;
+import bookstore.Service.UploadService;
 
 @Controller
 @Transactional
@@ -72,6 +73,9 @@ public class ProductsController {
 	
 	@Autowired
 	CategoriesService categoriesService;
+	
+	@Autowired
+	UploadService uploadService;
 	
 	@Autowired
 	Cloudinary cloudinary;
@@ -138,168 +142,6 @@ public class ProductsController {
 		return "products/new";
 	}
 	
-	@RequestMapping(value = "/product/save", method = RequestMethod.POST)
-	public String productSave(ModelMap model, RedirectAttributes redirectAttributes,
-			@RequestParam("task") String task, @RequestParam(value = "id", required = false) Long id,
-			@RequestParam("title") String title, @RequestParam("author") String author,
-			@RequestParam("price") Double price, @RequestParam("description") String description,
-			@RequestParam("category") Long categoryId, @RequestParam("supplier") Long supplierId,
-			@RequestParam("quantity") int quantity, @RequestParam("publication_year") int publication_year, 
-			@RequestParam("page_count") int page_count, @RequestParam("language") String language,
-			@RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail, @RequestParam(value = "images", required = false) MultipartFile[] images) {
-		Session session = factory.getCurrentSession();
-		
-		try {
-			if (task.equals("new")) {
-				BooksEntity newBook = new BooksEntity();
-				
-				newBook.setTitle(title);
-				newBook.setAuthor(author);
-				newBook.setPrice(price);
-				newBook.setDescription(description);
-				newBook.setStock_quantity(quantity);
-				newBook.setPublication_year(publication_year);
-				newBook.setLanguage(language);
-				newBook.setPage_count(page_count);
-				newBook.setCreated_at(new Date());
-				newBook.setUpdated_at(new Date());
-				
-				CategoriesEntity category = (CategoriesEntity) session.get(CategoriesEntity.class, categoryId);
-				SuppliersEntity supplier = (SuppliersEntity) session.get(SuppliersEntity.class, supplierId);
-			
-				newBook.setCategory(category);
-				newBook.setSupplier(supplier);
-				
-				try {
-					if (!thumbnail.isEmpty()) {
-						String thumbnailPath = saveThumbnail(thumbnail, "resources/images/thumbnails/" + toSlug(title) + "/");
-						
-						newBook.setThumbnail(thumbnailPath);
-						
-						File savedFile = new File(context.getRealPath("/" + thumbnailPath));
-						while (!savedFile.exists()) {
-							Thread.sleep(100);
-						}
-					}
-					
-					if (images != null && images.length > 0) {
-						String imagesPath = "resources/images/books/" + toSlug(title) + "/";
-						StringBuilder imagePaths = new StringBuilder();
-
-						for (MultipartFile image : images) {
-							if (!image.isEmpty()) {
-								String imagePath = saveImage(image, imagesPath);
-								imagePaths.append(imagePath).append(";");
-							}
-						}
-						
-						newBook.setImages(imagePaths.toString());
-					}
-					
-				} catch (Exception e) {
-					System.out.println(e);
-				}
-				
-				session.save(newBook);
-				
-				InventoryEntity inventory = new InventoryEntity();
-				inventory.setBook(newBook);
-				inventory.setQuantity(quantity);
-				inventory.setCreated_at(new Date());
-				inventory.setUpdated_at(new Date());
-				
-				session.save(inventory);
-				
-				return "redirect:/products.htm";
-			} else if (task.equals("edit")) {
-				BooksEntity selectedBook = booksService.getBookById(id);
-				
-				if (selectedBook == null) {
-					return "redirect:/product/new.htm";
-				}
-			
-				
-				CategoriesEntity category = (CategoriesEntity) session.get(CategoriesEntity.class, categoryId);
-				SuppliersEntity supplier = (SuppliersEntity) session.get(SuppliersEntity.class, supplierId);
-				InventoryEntity inventory = inventoryService.getInventoryByBookId(id);
-				
-				selectedBook.setTitle(title);
-				selectedBook.setAuthor(author);
-				selectedBook.setPrice(price);
-				selectedBook.setDescription(description);
-				selectedBook.setPublication_year(publication_year);
-				selectedBook.setPage_count(page_count);
-				selectedBook.setLanguage(language);
-				selectedBook.setUpdated_at(new Date());
-				
-				selectedBook.setCategory(category);
-				selectedBook.setSupplier(supplier);
-				
-				try {
-					if (!thumbnail.isEmpty()) {
-						String thumbnailPath = saveThumbnail(thumbnail, "resources/images/thumbnails/" + toSlug(title) + "/");
-						selectedBook.setThumbnail(thumbnailPath);
-						
-						File savedFile = new File(context.getRealPath("/" + thumbnailPath));
-						while (!savedFile.exists()) {
-							Thread.sleep(100);
-						}
-					}
-					
-					if (images != null && images.length > 0) {
-						String imagesPath = "resources/images/books/" + toSlug(title) + "/";
-						StringBuilder imagePaths = new StringBuilder();
-
-						for (MultipartFile image : images) {
-							if (!image.isEmpty()) {
-								String imagePath = saveImage(image, imagesPath);
-								imagePaths.append(imagePath).append(";");
-							}
-						}
-						
-						if (imagePaths.length() > 0) {
-							selectedBook.setImages(imagePaths.toString());							
-						} else {
-							selectedBook.setImages(selectedBook.getImages());
-						}
-					}
-					
-				} catch (Exception e) {
-					System.out.println(e);
-				}
-				
-				try {
-					boolean is_updateQuantity = inventoryService.updateQuantityByBookId(inventory, quantity);
-					session.update(selectedBook);
-					
-					if (is_updateQuantity == true) {
-
-//						model.addAttribute("alertMessage", "Successfully updated BookID: " + id);
-//				        model.addAttribute("alertType", "success");
-						
-				        redirectAttributes.addFlashAttribute("alertMessage", "Successfully updated BookID: " + id);
-				        redirectAttributes.addFlashAttribute("alertType", "success");
-					} else {
-						redirectAttributes.addFlashAttribute("alertMessage", "An error occurred while updating the BookId: " + id);
-						redirectAttributes.addFlashAttribute("alertType", "error");
-					}
-					
-				} catch (Exception e) {
-					System.err.println("An error occurred while updating the book: " + e.getMessage());
-				}
-				
-
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("Loi roi");
-		}
-		
-        
-//        return "redirect:/product/edit/" + id + ".htm";
-		return "products/edit";
-	}
-	
 	@RequestMapping(value = "/product/edit", method = RequestMethod.POST)
 	public String productEdit (ModelMap model, RedirectAttributes redirectAttributes,
 			@RequestParam(value = "id", required = false) Long id,
@@ -339,7 +181,7 @@ public class ProductsController {
 			try {
 				if (!thumbnail.isEmpty()) {
 //					String thumbnailPath = saveThumbnail(thumbnail, "resources/images/thumbnails/" + toSlug(title) + "/");
-					String thumbnailPath = uploadByCloudinary(thumbnail, "images/thumbnails/" + toSlug(title));
+					String thumbnailPath = uploadService.uploadByCloudinary(thumbnail, "images/thumbnails/" + uploadService.toSlug(title));
 					selectedBook.setThumbnail(thumbnailPath);
 					
 //					File savedFile = new File(context.getRealPath("/" + thumbnailPath));
@@ -355,7 +197,7 @@ public class ProductsController {
 					for (MultipartFile image : images) {
 						if (!image.isEmpty()) {
 //							String imagePath = saveImage(image, imagesPath);
-							String imagePath = uploadByCloudinary(image, "images/books/" + toSlug(title));
+							String imagePath = uploadService.uploadByCloudinary(image, "images/books/" + uploadService.toSlug(title));
 							imagePaths.append(imagePath).append(";");
 						}
 					}
@@ -434,7 +276,7 @@ public class ProductsController {
 			
 			try {
 				if (!thumbnail.isEmpty()) {
-					String thumbnailPath = uploadByCloudinary(thumbnail, "images/thumbnails/" + toSlug(title));
+					String thumbnailPath = uploadService.uploadByCloudinary(thumbnail, "images/thumbnails/" + uploadService.toSlug(title));
 //					String thumbnailPath = saveThumbnail(thumbnail, "resources/images/thumbnails/" + toSlug(title) + "/");
 					newBook.setThumbnail(thumbnailPath);
 					
@@ -451,7 +293,7 @@ public class ProductsController {
 					for (MultipartFile image : images) {
 						if (!image.isEmpty()) {
 //							String imagePath = saveImage(image, imagesPath);
-							String imagePath = uploadByCloudinary(image, "images/books/" + toSlug(title));
+							String imagePath = uploadService.uploadByCloudinary(image, "images/books/" + uploadService.toSlug(title));
 							imagePaths.append(imagePath).append(";");
 						}
 					}
@@ -486,61 +328,7 @@ public class ProductsController {
 		
 	}
 	
-	public String saveThumbnail(MultipartFile thumbnail, String uploadPath) throws IOException {
-		String realPath = "D:\\Codes\\Eclipse3\\src\\main\\webapp" + "/" + uploadPath;
-		File dir = new File(realPath);
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
-		
-		String originalFilename = thumbnail.getOriginalFilename();
-		File destination = new File(dir, originalFilename);
-		thumbnail.transferTo(destination);
-		
-		return uploadPath + originalFilename;
-	}
 	
-	public String saveImage(MultipartFile image, String uploadPath) throws IOException {
-	    String realPath = "D:\\Codes\\Eclipse3\\src\\main\\webapp" + "/" + uploadPath;
-	    File dir = new File(realPath);
-	    if (!dir.exists()) {
-	        dir.mkdirs();
-	    }
-
-	    // Lưu file vào thư mục
-	    File destination = new File(dir, image.getOriginalFilename());
-	    image.transferTo(destination);
-
-	    // Trả về đường dẫn tương đối để lưu trong database
-	    return uploadPath + image.getOriginalFilename();
-	}
-	
-	public String toSlug(String input) {
-        if (input == null || input.isEmpty()) {
-            return "";
-        }
-        // Chuẩn hóa chuỗi và loại bỏ dấu
-        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
-        String noDiacritics = normalized.replaceAll("\\p{M}", ""); // Loại bỏ dấu chính xác
-
-        // Giữ lại chữ cái, số, thay Đ/đ thành d, rồi loại bỏ ký tự đặc biệt
-        noDiacritics = noDiacritics.replaceAll("[Đđ]", "d"); // Xử lý chữ Đ và đ
-        return Arrays.stream(noDiacritics.split("\\s+")) // Split theo khoảng trắng
-                     .map(word -> word.replaceAll("[^a-zA-Z0-9]", "")) // Loại bỏ ký tự đặc biệt
-                     .filter(word -> !word.isEmpty()) // Loại bỏ từ rỗng
-                     .map(String::toLowerCase) // Chuyển thành chữ thường
-                     .collect(Collectors.joining("-")); // Ghép lại bằng dấu gạch ngang
-    }
-	
-	public String uploadByCloudinary(MultipartFile thumbnail, String folderName) throws IOException {
-		Map r = cloudinary.uploader().upload(thumbnail.getBytes(), ObjectUtils.asMap("folder", folderName));
-		
-		String imagePath = (String) r.get("secure_url");
-		
-		System.out.println(imagePath);
-		
-		return imagePath;
-	}
 	
 
 }
