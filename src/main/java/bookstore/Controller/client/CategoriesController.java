@@ -68,7 +68,7 @@ public class CategoriesController {
         model.addAttribute("totalPages", totalPages); // Tổng số trang
         model.addAttribute("pageSize", pageSize);
         // Trả về trang tương ứng
-        return "client/Categories/SubCategoryBook";
+        return "client/Categories/SubCategoryBooks";
     }
     
     @RequestMapping("{idCategory}.htm")
