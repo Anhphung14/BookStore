@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class UsersController {
-	@RequestMapping("//users")
+	@RequestMapping("/users")
 	public String welcome() {
 		return "users/users";
 	}
