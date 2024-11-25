@@ -1,22 +1,17 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Roles management</title>
 <base href="${pageContext.servletContext.contextPath}/">
+<script src="${pageContext.request.contextPath}/resources/js/app.js"
+	defer></script>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<!-- Link cho Font Awesome 5.x (hỗ trợ cả phiên bản free và pro) -->
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-<!-- Link cho Font Awesome 6.x (bản beta) -->
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet"
@@ -29,11 +24,11 @@
 }
 
 .btn i {
-	font-size: 0.8em; /* Điều chỉnh tỷ lệ thu nhỏ, ví dụ 0.8em */
+	font-size: 0.8em;
 }
 
 .custom-text {
-	color: #343a40; /* Màu xám đậm */
+	color: #343a40;
 }
 </style>
 </head>
@@ -49,8 +44,9 @@
 				style="margin-left: 0px; margin-right: 0px;">
 				<div class="row g-3 mt-3">
 					<div class="col">
-						<h2 class="h3">User management</h2>
-						<p>Manage users, roles, permissions, and profile.</p>
+						<h2 class="h3">Roles management</h2>
+						<p>Here you can view all roles, see the number of permissions
+							assigned to each role</p>
 					</div>
 					<div class="col-auto d-none d-sm-block">
 						<img class="page-icon" src="resources/images/page.svg"
@@ -78,7 +74,9 @@
 								</button>
 							</div>
 							<a class="btn btn-primary text-nowrap btn-add"
-								href="saga/users/edit"><i class="fa fa-plus me-2"></i>Add</a>
+								href="${pageContext.request.contextPath}/role/new.htm"> <i
+								class="fa fa-plus me-2"></i>Add
+							</a>
 						</div>
 
 						<div class="mt-3">
@@ -87,15 +85,14 @@
 								<div class="d-flex justify-content-between gap-3">
 									<div class="selected-count align-self-center"></div>
 									<div class="d-flex gap-1">
-										<a class="btn btn-rounded btn-publish"><i
-											class="fa fa-eye"></i></a> <a
-											class="btn btn-rounded btn-unpublish"><i
-											class="fa fa-eye-slash"></i></a> <a
-											class="btn btn-rounded btn-delete"><i
-											class="fa fa-trash-alt"></i></a>
+										<a class="btn btn-rounded"> <i class="fa fa-eye"></i></a> <a
+											class="btn btn-rounded"> <i class="fa fa-eye-slash"></i>
+										</a> <a class="btn btn-rounded"> <i class="fa fa-trash-alt"></i>
+										</a>
 									</div>
 								</div>
 							</div>
+
 							<div class="table-responsive">
 								<table class="table table-centered">
 									<tr>
@@ -104,53 +101,47 @@
 											onclick="checkAll()" /></th>
 										<th width="30px" class="text-end">#</th>
 										<th>Name</th>
-										<th width="60px">Roles</th>
-										<th width="60px" class="text-end">Status</th>
-										<th width="160px" class="text-end">Updated</th>
+										<th width="60px">Users</th>
+										<th width="160px" class="text-center">Updated</th>
 										<th width="60px">Actions</th>
 									</tr>
-									<c:forEach var="user" items="${users}" varStatus="status">
+									<c:forEach var="role" items="${roles}" varStatus="status">
 										<tr>
 											<td><input type="checkbox" class="form-check-input"
-												id="cb${status.index}" name="cid[]" value="${user.uuid}"
+												id="cb1" name="cid[]" value="${role.id}"
 												onclick="isChecked(this.checked)"></td>
-											<td class="text-end">${(users.page - 1) * users.pageSize + status.index + 1}</td>
-											<td><a class="d-flex flex-nowrap align-items-center"
-												href="saga/users/edit/${user.uuid}">
-													<div>
-														<img alt="User Avatar"
-															src="resources/images/TrinhThangBinh.jpg"
-															class="rounded-circle bg-white border border-3 border-white"
-															width="30px">
-													</div>
-													<div class="ms-3">
-														<div class="fw-semibold custom-text" style="text-decoration: none;">Vo Anh Phung</div>
-														<div class="small custom-text">pppp@gmail.com</div>
-													</div>
-											</a></td>
-											<td><span
-												class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">admin</span>
-											</td>
-											<td class="text-end"><span
-												class="small text-uppercase ${user.isActive ? 'text-success' : 'text-danger'} bg-opacity-10 rounded px-2 py-1">
-													${user.isActive ? 'Active' : 'Inactive'} </span></td>
-											<td class="text-end">22:00 14/11/2024</td>
+											<td class="text-end">${role.id}</td>
+											<td><span class="text-decoration-underline">${role.name}</span>
+												<div class="text-muted small">${role.description}</div></td>
+											<td class="text-center align-middle"><span
+												class="small text-uppercase text-success bg-opacity-10 rounded px-2 py-1">${role.userCount}</span>
+											</td> 
+											<!-- <td class="text-end align-middle"><span
+												class="small text-uppercase text-success bg-opacity-10 rounded px-2 py-1">Active</span>
+											</td> -->
+											<td class="text-center align-middle">${role.updatedAt}</td>
 											<td class="text-end">
 												<div class="d-flex gap-1">
-													<a class="btn btn-rounded" href="#"><i
-														class="fa fa-pencil"></i></a> <a class="btn btn-rounded"><i
-														class="fa ${user.isActive ? 'fa-eye-slash' : 'fa-eye'}"></i></a>
+													<a class="btn btn-rounded"
+														href="${pageContext.request.contextPath}/role/edit/${role.id}.htm"><i
+														class="fa fa-pencil"></i></a>
+													<%-- 													<a class="btn btn-rounded"><i class="fa ${user.isActive ? 'fa-eye-slash' : 'fa-eye'}"></i></a> --%>
+													<!-- <a class="btn btn-rounded"><i class="fa fa-eye-slash"></i></a>
 													<a class="btn btn-rounded"><i class="fa fa-arrow-up"></i></a>
-													<a class="btn btn-rounded"><i class="fa fa-arrow-down"></i></a>
-													<a class="btn btn-rounded"><i class="fa fa-trash-alt"></i></a>
+													<a class="btn btn-rounded"><i class="fa fa-arrow-down"></i></a> -->
+													<a class="btn btn-rounded" href="/role/delete/${role.id}"
+														onclick="return confirm('Bạn có chắc chắn muốn xóa?')">
+														<i class="fa fa-trash-alt"></i>
+													</a>
 												</div>
 											</td>
 										</tr>
+
 									</c:forEach>
 								</table>
 							</div>
 						</div>
-						<div>${users.links}</div>
+						<%-- <div>${roles.links}</div> --%>
 					</div>
 				</div>
 			</form>

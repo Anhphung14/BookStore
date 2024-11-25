@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<base href="${pageContext.servletContext.contextPath}/">
 <style>
 .nav-link .fa {
     display: inline;
@@ -81,7 +82,7 @@
                 </a>
             </li>
             <li>
-                <a class="nav-link" href="#" style="color: #343a40;">
+                <a class="nav-link" href="products.htm" style="color: #343a40;">
                     <i class="fa fa-book"></i> <span>Products</span>
                 </a>
             </li>
@@ -101,12 +102,12 @@
                 </a>
             </li>
             <li>
-                <a class="nav-link" href="#" style="color: #343a40;">
+                <a class="nav-link" href="roles.htm" style="color: #343a40;">
                    <i class="fa fa-user-check"></i><span>Roles</span>
                 </a>
             </li>
             <li>
-                <a class="nav-link" href="#" style="color: #343a40;">
+                <a class="nav-link" href="permissions.htm" style="color: #343a40;">
                     <i class="fa fa-shield-alt fa-fw"></i>
 <span>Permissions</span>
                 </a>
