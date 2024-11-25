@@ -25,8 +25,12 @@
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver"/>
    	
    	<!-- Cấu hình package chứa các controller -->
-	<context:component-scan base-package="bookstore.Controller"/>
+	<context:component-scan base-package="bookstore.Controller, bookstore.Controller.client, bookstore.DAO, bookstore.Repository, bookstore.service"/>
 	
 	<mvc:resources mapping="/images/**" location="/images/"></mvc:resources>
+	<mvc:resources mapping="/resources/**" location="/resources/assets/css/" />
+	<mvc:resources mapping="/resources/**" location="/resources/assets/js/" />
+	<mvc:resources mapping="/resources/**" location="/resources/assets/images/" />
+
 
 </beans>
