@@ -15,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -63,6 +65,9 @@ public class UsersEntity {
     @Column(name = "updated_at", nullable = false)
     private Date updated_at;
     
+    @OneToOne(mappedBy = "user")
+    private CartsEntity cart;
+    
     
     @Transient
     private Set<Long> roleIds;
@@ -76,7 +81,7 @@ public class UsersEntity {
     }
     
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
     		name = "user_roles",
     		joinColumns = @JoinColumn(name = "user_id"),
@@ -180,4 +185,14 @@ public class UsersEntity {
     public void setUpdated_at(Date updated_at) {
         this.updated_at = updated_at;
     }
+
+	public CartsEntity getCart() {
+		return cart;
+	}
+
+	public void setCart(CartsEntity cart) {
+		this.cart = cart;
+	}
+    
+    
 }

@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,9 +35,9 @@ public class BooksEntity {
 	@Column(name = "description", columnDefinition = "nvarchar")
     private String description;
 	
-	@ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private CategoriesEntity category;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "subcategory_id", nullable = false)
+	private SubcategoriesEntity subcategoriesEntity;
 	
 	@ManyToOne
     @JoinColumn(name = "supplier_id")
@@ -69,13 +70,16 @@ public class BooksEntity {
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     @Column(name = "updated_at", nullable = false)
     private Date updated_at;
+    
+    @Column(name = "status", columnDefinition = "bit")
+    private String status;
 
-	public CategoriesEntity getCategory() {
-		return category;
+	public SubcategoriesEntity getSubcategoriesEntity() {
+		return subcategoriesEntity;
 	}
 
-	public void setCategory(CategoriesEntity category) {
-		this.category = category;
+	public void setSubcategoriesEntity(SubcategoriesEntity subcategoriesEntity) {
+		this.subcategoriesEntity = subcategoriesEntity;
 	}
 
 	public SuppliersEntity getSupplier() {
@@ -190,6 +194,13 @@ public class BooksEntity {
 	public void setUpdated_at(Date updated_at) {
 		this.updated_at = updated_at;
 	}
-    
-    
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
 }

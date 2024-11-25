@@ -17,7 +17,7 @@ import bookstore.DAO.CategoryDAO;
 import bookstore.DAO.SubcategoryDAO;
 import bookstore.Entity.Book;
 import bookstore.Entity.Category;
-import bookstore.Entity.Subcategory;
+import bookstore.Entity.SubcategoriesEntity;
 
 @Controller
 @RequestMapping("/categories/")
@@ -35,7 +35,7 @@ public class CategoriesController {
         //List<Object[]> danhMuc = new ArrayList<>();
         Object[] danhMuc = new Object[4]; 
         for (Category cg : listCategories) {
-            for (Subcategory scg : cg.getSubcategories()) {
+            for (SubcategoriesEntity scg : cg.getSubcategories()) {
                 if (scg.getSlug().equals(slugSub)) {
                 	danhMuc[0] = cg.getName();       
                 	danhMuc[1] = scg.getName();      
@@ -55,7 +55,7 @@ public class CategoriesController {
         
         
      
-        List<Subcategory> listSubCategories = subcategoryDAO.findAll();
+        List<SubcategoriesEntity> listSubCategories = subcategoryDAO.findAll();
 
         model.addAttribute("Categories", listCategories);
         model.addAttribute("SubCategories", listSubCategories);
@@ -83,7 +83,7 @@ public class CategoriesController {
          
          
       
-	     List<Subcategory> listSubCategories = subcategoryDAO.findAll();
+	     List<SubcategoriesEntity> listSubCategories = subcategoryDAO.findAll();
 	
 	     model.addAttribute("danhMuc", danhMuc);
 	     model.addAttribute("Categories", listCategories);

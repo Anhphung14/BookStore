@@ -123,7 +123,7 @@
 												style="text-decoration: none;"
 												href="product/edit/${book.id}.htm">
 													<div>
-														<img alt="Product Thumbnail" src="${book.thumbnail}" class="rounded-circle bg-white border border-3 border-white" width="50px">
+														<img alt="Product Thumbnail" src="${book.thumbnail}" class="bg-white border border-3 border-white" width="50px">
 													</div>
 													<div class="ms-3">
 														<div class="fw-semibold custom-text">${book.title}</div>

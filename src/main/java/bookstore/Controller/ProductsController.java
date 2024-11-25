@@ -175,7 +175,7 @@ public class ProductsController {
 			selectedBook.setLanguage(language);
 			selectedBook.setUpdated_at(new Date());
 			
-			selectedBook.setCategory(category);
+//			selectedBook.setSubcategoriesEntity(category);
 			selectedBook.setSupplier(supplier);
 			
 			try {
@@ -271,7 +271,7 @@ public class ProductsController {
 			CategoriesEntity category = (CategoriesEntity) session.get(CategoriesEntity.class, categoryId);
 			SuppliersEntity supplier = (SuppliersEntity) session.get(SuppliersEntity.class, supplierId);
 			
-			newBook.setCategory(category);
+//			newBook.setCategory(category);
 			newBook.setSupplier(supplier);
 			
 			try {

@@ -11,7 +11,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "Subcategories")
-public class Subcategory{
+public class SubcategoriesEntity{
 
     @Id
     @GeneratedValue()
@@ -34,17 +34,26 @@ public class Subcategory{
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "subcategory", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Collection<Book> books;
+    @OneToMany(mappedBy = "subcategoriesEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Collection<BooksEntity> books;
+
+    // Getter and Setter
+    public Collection<BooksEntity> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Collection<BooksEntity> books) {
+        this.books = books;
+    }
     
     @Transient
     private String slug;
 
     // Constructors
-    public Subcategory() {
+    public SubcategoriesEntity() {
     }
 
-    public Subcategory(String name, Category category, String slug) {
+    public SubcategoriesEntity(String name, Category category, String slug) {
         this.name = name;
         this.category = category;
         this.createdAt =  new Date();

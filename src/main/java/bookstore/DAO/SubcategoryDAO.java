@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 
-import bookstore.Entity.Subcategory;
+import bookstore.Entity.SubcategoriesEntity;
 
 @Repository
 @Transactional
@@ -21,11 +21,11 @@ public class SubcategoryDAO {
 
     // Lấy danh sách tất cả danh mục
     
-    public List<Subcategory> findAll() {
+    public List<SubcategoriesEntity> findAll() {
         Session session = sessionFactory.getCurrentSession();
-        String hql = "FROM Subcategory";
+        String hql = "FROM SubcategoriesEntity";
         Query query = session.createQuery(hql);
-        List<Subcategory> list = query.list();
+        List<SubcategoriesEntity> list = query.list();
         return list;
     }
 }

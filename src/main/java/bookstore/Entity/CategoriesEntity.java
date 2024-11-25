@@ -1,7 +1,10 @@
 package bookstore.Entity;
 
+import java.text.Normalizer;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Generated;
 import javax.persistence.CascadeType;
@@ -15,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -39,17 +43,8 @@ public class CategoriesEntity {
 	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	private Date updated_at;
 	
-	@OneToMany(mappedBy = "category", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BooksEntity> books;
-
-	
-	public List<BooksEntity> getBooks() {
-		return books;
-	}
-
-	public void setBooks(List<BooksEntity> books) {
-		this.books = books;
-	}
+	@Transient
+    private String slug;
 
 	public Long getId() {
 		return id;
@@ -82,5 +77,38 @@ public class CategoriesEntity {
 	public void setUpdated_at(Date updated_at) {
 		this.updated_at = updated_at;
 	}
+	
+	public String getSlug() {
+        if (slug == null) {
+            // Tính toán slug nếu chưa có
+            slug = toSlug(name);
+        }
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+    
+    @Override
+    public String toString() {
+    	return "id: " + id + " name: " + name ;
+    }
+    
+    private String toSlug(String input) {
+        if (input == null || input.isEmpty()) {
+            return "";
+        }
+        // Loại bỏ dấu
+        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+        String noDiacritics = normalized.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+
+        // Tách chuỗi thành các từ, xử lý từng từ và nối lại bằng dấu gạch ngang
+        return Arrays.stream(noDiacritics.split("[\\s/]+")) // Split theo khoảng trắng
+                     .map(word -> word.replaceAll("[^a-zA-Z0-9]", "")) // Loại bỏ ký tự đặc biệt
+                     .filter(word -> !word.isEmpty()) // Loại bỏ từ rỗng
+                     .map(String::toLowerCase) // Chuyển thành chữ thường
+                     .collect(Collectors.joining("-")); // Ghép lại bằng dấu gạch ngang
+    }
 	
 }

@@ -35,7 +35,7 @@ public class Category{
 
     // Quan hệ 1-N với Subcategories
     @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
-    private Collection<Subcategory> subcategories;
+    private Collection<SubcategoriesEntity> subcategoriesEntities;
 
     @Transient
     private String slug;
@@ -86,15 +86,15 @@ public class Category{
 		this.updatedAt = updatedAt;
 	}
 
-	public void setSubcategories(Collection<Subcategory> subcategories) {
-		this.subcategories = subcategories;
+	public void setSubcategories(Collection<SubcategoriesEntity> subcategoriesEntities) {
+		this.subcategoriesEntities = subcategoriesEntities;
 	}
 
-	public Collection<Subcategory> getSubcategories() {
-		return subcategories;
+	public Collection<SubcategoriesEntity> getSubcategories() {
+		return subcategoriesEntities;
 	}
 	
-	 public String getSlug() {
+	public String getSlug() {
         if (slug == null) {
             // Tính toán slug nếu chưa có
             slug = toSlug(name);

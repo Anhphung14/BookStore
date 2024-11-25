@@ -19,35 +19,7 @@ public class UploadService {
 	
 	@Autowired
 	Cloudinary cloudinary;
-	
-	public String saveThumbnail(MultipartFile thumbnail, String uploadPath) throws IOException {
-		String realPath = "D:\\Codes\\Eclipse3\\src\\main\\webapp" + "/" + uploadPath;
-		File dir = new File(realPath);
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
-		
-		String originalFilename = thumbnail.getOriginalFilename();
-		File destination = new File(dir, originalFilename);
-		thumbnail.transferTo(destination);
-		
-		return uploadPath + originalFilename;
-	}
-	
-	public String saveImage(MultipartFile image, String uploadPath) throws IOException {
-	    String realPath = "D:\\Codes\\Eclipse3\\src\\main\\webapp" + "/" + uploadPath;
-	    File dir = new File(realPath);
-	    if (!dir.exists()) {
-	        dir.mkdirs();
-	    }
 
-	    // Lưu file vào thư mục
-	    File destination = new File(dir, image.getOriginalFilename());
-	    image.transferTo(destination);
-
-	    // Trả về đường dẫn tương đối để lưu trong database
-	    return uploadPath + image.getOriginalFilename();
-	}
 	
 	public String toSlug(String input) {
         if (input == null || input.isEmpty()) {

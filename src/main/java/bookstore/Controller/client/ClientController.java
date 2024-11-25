@@ -14,7 +14,7 @@ import bookstore.DAO.CategoryDAO;
 import bookstore.DAO.SubcategoryDAO;
 import bookstore.Entity.Book;
 import bookstore.Entity.Category;
-import bookstore.Entity.Subcategory;
+import bookstore.Entity.SubcategoriesEntity;
 
 
 @Controller
@@ -32,7 +32,7 @@ public class ClientController {
     @RequestMapping(value = "/index")
 	public String index(ModelMap model) {
 		List<Category> listCategories = categoryDAO.findAllCategories();
-        List<Subcategory> listSubCategories = subcategoryDAO.findAll();
+        List<SubcategoriesEntity> listSubCategories = subcategoryDAO.findAll();
 
         model.addAttribute("Categories", listCategories);
         model.addAttribute("SubCategories", listSubCategories);
@@ -53,7 +53,7 @@ public class ClientController {
         
         
         List<Category> listCategories = categoryDAO.findAllCategories();
-        List<Subcategory> listSubCategories = subcategoryDAO.findAll();
+        List<SubcategoriesEntity> listSubCategories = subcategoryDAO.findAll();
 
         model.addAttribute("Categories", listCategories);
         model.addAttribute("SubCategories", listSubCategories);

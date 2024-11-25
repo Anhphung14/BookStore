@@ -28,7 +28,7 @@ public class Book {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "subcategory_id", nullable = false)
-    private Subcategory subcategory;
+    private SubcategoriesEntity subcategoriesEntity;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "supplier_id")
@@ -55,13 +55,13 @@ public class Book {
     public Book() {
     }
 
-    public Book(String title, String author, BigDecimal price, String description, Subcategory subcategory,
+    public Book(String title, String author, BigDecimal price, String description, SubcategoriesEntity subcategoriesEntity,
                 Supplier supplier, Integer stockQuantity, String thumbnail, String images, Date createdAt, Date updatedAt) {
         this.title = title;
         this.author = author;
         this.price = price;
         this.description = description;
-        this.subcategory = subcategory;
+        this.subcategoriesEntity = subcategoriesEntity;
         this.supplier = supplier;
         this.stockQuantity = stockQuantity;
         this.thumbnail = thumbnail;
@@ -111,12 +111,12 @@ public class Book {
         this.description = description;
     }
 
-    public Subcategory getSubcategory() {
-        return subcategory;
+    public SubcategoriesEntity getSubcategory() {
+        return subcategoriesEntity;
     }
 
-    public void setSubcategory(Subcategory subcategory) {
-        this.subcategory = subcategory;
+    public void setSubcategory(SubcategoriesEntity subcategoriesEntity) {
+        this.subcategoriesEntity = subcategoriesEntity;
     }
 
     public Supplier getSupplier() {
@@ -174,7 +174,7 @@ public class Book {
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 ", price=" + price +
-                ", subcategory=" + (subcategory != null ? subcategory.getName() : "null") +
+                ", subcategory=" + (subcategoriesEntity != null ? subcategoriesEntity.getName() : "null") +
                 ", supplier=" + (supplier != null ? supplier.getName() : "null") +
                 ", stockQuantity=" + stockQuantity +
                 ", thumbnail='" + thumbnail + '\'' +
