@@ -20,7 +20,7 @@
 			p:driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
 			p:url="jdbc:sqlserver://localhost:1433; Database=BookStore;trustServerCertificate=true"
 			p:username="sa"
-			p:password="123">
+			p:password="12345">
 	</bean>
 	
 	<!-- Cấu hình Hibernate -->

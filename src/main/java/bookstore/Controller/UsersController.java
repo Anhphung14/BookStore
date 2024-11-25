@@ -126,6 +126,7 @@ public class UsersController {
 				existingUser.setFullname(user.getFullname());
 				existingUser.setEmail(user.getEmail());
 				existingUser.setPhone(user.getPhone());
+				existingUser.setGender(user.getGender());
 
 				Date currentDate = new Date(System.currentTimeMillis());
 				existingUser.setUpdated_at(currentDate);

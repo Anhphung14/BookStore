@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import bookstore.Entity.RolesEntity;
+import bookstore.Entity.UsersEntity;
 
 @Transactional
 @Controller
@@ -138,6 +139,15 @@ public class RolesController {
 	    return "redirect:/roles.htm";
 	}
 
+	@RequestMapping(value = "/role/delete/{id}.htm", method = RequestMethod.GET)
+	public String deleteRole(@PathVariable("id") Long id) {
+		Session session = factory.getCurrentSession();
+		RolesEntity role = (RolesEntity) session.get(RolesEntity.class, id);
+		if (role != null) {
+			session.delete(role);
+		}
+		return "redirect:/roles.htm";
+	}
 
 	private RolesEntity getRoleByName(String name) {
 		Session session = factory.getCurrentSession();
