@@ -28,5 +28,9 @@
 	<context:component-scan base-package="bookstore"/>
 	
 	<mvc:resources mapping="/images/**" location="/images/"></mvc:resources>
+	<mvc:resources mapping="/resources/**" location="/resources/assets/css/" />
+	<mvc:resources mapping="/resources/**" location="/resources/assets/js/" />
+	<mvc:resources mapping="/resources/**" location="/resources/assets/images/" />
+
 
 </beans>
