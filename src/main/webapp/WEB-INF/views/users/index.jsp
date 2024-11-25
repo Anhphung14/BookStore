@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!DOCTYPE html>
@@ -136,9 +135,10 @@
 											<td>
 												<div class="custom-text">${user.email}</div>
 											</td>
-											<td class="text-center align-middle"><c:forEach var="role" items="${user.roles}">
+											<td class="text-center align-middle">
+											<c:forEach var="role" items="${user.roles}">
 													<span class="small text-uppercase text-success bg-opacity-10 rounded px-2 py-1">${role.name}</span>
-													<!-- Hiển thị vai trò -->
+													<!-- Hiá»n thá» vai trÃ² -->
 												</c:forEach></td>
 
 											<%-- 											<td class="text-end align-middle"><span class="small text-uppercase ${user.isActive ? 'text-success' : 'text-danger'} bg-opacity-10 rounded px-2 py-1">${user.isActive ? 'Active' : 'Inactive'}</span></td> --%>

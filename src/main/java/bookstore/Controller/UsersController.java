@@ -40,6 +40,10 @@ public class UsersController {
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
 	public String users(ModelMap model) {
 		List<UsersEntity> users = ListUsers();
+		
+		for (UsersEntity user : users) {
+			System.out.println(user.getFullname());
+		}
 
 		for (UsersEntity user : users) {
 			Set<RolesEntity> roles = user.getRoles();
@@ -68,13 +72,14 @@ public class UsersController {
 		return "users/edit";
 	}
 
-	@RequestMapping(value = "/user/save.htm", method = RequestMethod.POST)
+	@RequestMapping(value = "/user/save", method = RequestMethod.POST)
 	public String saveUser(@ModelAttribute("user") UsersEntity user, @RequestParam("task") String task,
 			@RequestParam(value = "id", required = false) Long id,
-			@RequestParam(value = "roles[]", required = false) Long[] roleIds, // Nhận mảng các ID
+			@RequestParam(value = "roleIds", required = false) Set<Long> roleIds, // Nhận mảng các ID
 			ModelMap model) {
 		Session session = factory.getCurrentSession();
-
+		
+	
 		try {
 			if ("new".equals(task)) {
 				// Kiểm tra email đã tồn tại chưa
@@ -97,7 +102,7 @@ public class UsersController {
 				session.save(user); // Lưu người dùng
 
 				// Xử lý roles cho người dùng mới (dùng role_id)
-				if (roleIds != null && roleIds.length > 0) {
+				if (roleIds != null && roleIds.size() > 0) {
 					Set<RolesEntity> roles = new HashSet<>();
 					for (Long roleId : roleIds) {
 						RolesEntity role = (RolesEntity) session.get(RolesEntity.class, roleId); // Lấy role từ DB
@@ -133,7 +138,7 @@ public class UsersController {
 				}
 
 				// Cập nhật roles cho người dùng
-				if (roleIds != null && roleIds.length > 0) {
+				if (roleIds != null && roleIds.size() > 0) {
 					Set<RolesEntity> roles = new HashSet<>();
 					for (Long roleId : roleIds) {
 						RolesEntity role = (RolesEntity) session.get(RolesEntity.class, roleId); // Lấy role từ DB
@@ -177,7 +182,7 @@ public class UsersController {
 	@SuppressWarnings("unchecked")
 	private List<UsersEntity> ListUsers() {
 		Session session = factory.getCurrentSession();
-		String hql = "FROM UsersEntity u LEFT JOIN FETCH u.roles";
+		String hql = "SELECT DISTINCT u FROM UsersEntity u LEFT JOIN FETCH u.roles";
 		Query query = session.createQuery(hql);
 		return query.list();
 

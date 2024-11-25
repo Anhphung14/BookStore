@@ -2,6 +2,7 @@ package bookstore.Entity;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -17,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -61,14 +63,27 @@ public class UsersEntity {
     @Column(name = "updated_at", nullable = false)
     private Date updated_at;
     
+    
+    @Transient
+    private Set<Long> roleIds;
+
+    public Set<Long> getRoleIds() {
+        return roleIds;
+    }
+
+    public void setRoleIds(Set<Long> roleIds) {
+        this.roleIds = roleIds;
+    }
+    
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-        name = "user_roles",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
+    		name = "user_roles",
+    		joinColumns = @JoinColumn(name = "user_id"),
+    		inverseJoinColumns = @JoinColumn(name = "role_id")
+    		)
+    
     private Set<RolesEntity> roles = new HashSet<>();
-
     
     public Set<RolesEntity> getRoles() {
         return roles;
