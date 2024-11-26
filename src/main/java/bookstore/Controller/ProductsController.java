@@ -259,6 +259,15 @@ public class ProductsController {
 			@RequestParam("quantity") int quantity, @RequestParam("publication_year") int publication_year, 
 			@RequestParam("page_count") int page_count, @RequestParam("language") String language,
 			@RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail, @RequestParam(value = "images", required = false) MultipartFile[] images) {
+		System.out.println("title: " + title);
+		System.out.println("author: " + author);
+		System.out.println("price: " + price);
+		System.out.println("description: " + description);
+		System.out.println("category: " + categoryId);
+		System.out.println("supplier: " + supplierId);
+		System.out.println("quantity: " + quantity);
+		System.out.println("publication_year: " + publication_year);
+		System.out.println("page_count: " + page_count);
 		
 		Session session = factory.getCurrentSession();
 		

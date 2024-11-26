@@ -24,7 +24,7 @@ public class BooksDAO {
 	 public List<BooksEntity> listBookOfSubCategory(String danhMuc, String danhMucCon, int pageNumber, int pageSize){
 		Session session = sessionFactory.getCurrentSession();
 		// HQL query để lọc sách theo tên danh mục con
-		String hql = "FROM Book b WHERE b.subcategory.name = :subcategoryName";
+		String hql = "FROM BooksEntity b WHERE b.subcategoriesEntity.name = :subcategoryName";
 		Query query = session.createQuery(hql);
 		query.setParameter("subcategoryName", danhMucCon);
 		
@@ -48,9 +48,9 @@ public class BooksDAO {
 
 		    // HQL query để lấy sách theo danh mục
 		    String hql = "SELECT b " +
-		                 "FROM Book b " +
-		                 "JOIN b.subcategory sc " +
-		                 "JOIN sc.category c " +
+		                 "FROM BooksEntity b " +
+		                 "JOIN b.subcategoriesEntity sc " +
+		                 "JOIN sc.categoriesEntity c " +
 		                 "WHERE c.id = :categoryId " +
 		                 "ORDER BY b.title ASC"; // Sắp xếp theo tên sách tăng dần
 
@@ -68,7 +68,7 @@ public class BooksDAO {
 	 
 	 public int getTotalPagesOfSubBook(String danhMucCon, int pageSize) {
 		    Session session = sessionFactory.getCurrentSession();
-		    String hql = "SELECT COUNT(b.id) FROM Book b WHERE b.subcategory.name = :subcategoryName";
+		    String hql = "SELECT COUNT(b.id) FROM BooksEntity b WHERE b.subcategoriesEntity.name = :subcategoryName";
 		    Query query = session.createQuery(hql);
 		    query.setParameter("subcategoryName", danhMucCon);
 
@@ -82,7 +82,7 @@ public class BooksDAO {
 	 
 	 public int getTotalPagesOfCateBook(Long idCategoriesEntity, int pageSize) {
 		    Session session = sessionFactory.getCurrentSession();
-		    String hql = "SELECT COUNT(b.id) FROM Book b JOIN b.subcategory sc JOIN sc.category c WHERE c.id = :categoryId";
+		    String hql = "SELECT COUNT(b.id) FROM BooksEntity b JOIN b.subcategoriesEntity sc JOIN sc.categoriesEntity c WHERE c.id = :categoryId";
 		    Query query = session.createQuery(hql);
 		    query.setParameter("categoryId", idCategoriesEntity);
 
@@ -99,7 +99,7 @@ public class BooksDAO {
 		    Session session = sessionFactory.getCurrentSession();
 		    String hql = "SELECT c.id, c.name AS categoryName, COALESCE(COUNT(b.id), 0) AS totalBooks " +
 		                 "FROM CategoriesEntity c " +
-		                 "LEFT JOIN c.subcategories sc " +
+		                 "LEFT JOIN c.subcategoriesEntities sc " +
 		                 "LEFT JOIN sc.books b " +
 		                 "GROUP BY c.id, c.name " +
 		                 "ORDER BY c.id"; // Sắp xếp theo id của CategoriesEntity
@@ -148,7 +148,7 @@ public class BooksDAO {
 		    
 		    
 		    // HQL query để tìm kiếm dữ liệu phù hợp với searchQuery
-		    String hql = "FROM Book b " +
+		    String hql = "FROM BooksEntity b " +
 		                 "LEFT JOIN FETCH b.supplier s " +
 		                 "WHERE LOWER(b.title) LIKE :searchQuery " + // Tìm theo tên sách
 		                 "   OR LOWER(b.author) LIKE :searchQuery " + // Tìm theo tên tác giả
@@ -202,7 +202,7 @@ public class BooksDAO {
 
 		    // HQL để đếm tổng số sách phù hợp với searchQuery
 		    String hql = "SELECT COUNT(b.id) " +
-		                 "FROM Book b " +
+		                 "FROM BooksEntity b " +
 		                 "LEFT JOIN b.supplier s " +
 		                 "WHERE LOWER(b.title) LIKE :searchQuery " +
 		                 "   OR LOWER(b.author) LIKE :searchQuery " +
