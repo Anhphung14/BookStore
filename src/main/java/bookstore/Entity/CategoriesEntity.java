@@ -114,13 +114,16 @@ public class CategoriesEntity {
         if (input == null || input.isEmpty()) {
             return "";
         }
+        
+        input = input.replace("/", "-");
+        
         // Loại bỏ dấu
         String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
         String noDiacritics = normalized.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
 
         // Tách chuỗi thành các từ, xử lý từng từ và nối lại bằng dấu gạch ngang
         return Arrays.stream(noDiacritics.split("[\\s/]+")) // Split theo khoảng trắng
-                     .map(word -> word.replaceAll("[^a-zA-Z0-9]", "")) // Loại bỏ ký tự đặc biệt
+                     .map(word -> word.replaceAll("[^a-zA-Z0-9-]", "")) // Loại bỏ ký tự đặc biệt
                      .filter(word -> !word.isEmpty()) // Loại bỏ từ rỗng
                      .map(String::toLowerCase) // Chuyển thành chữ thường
                      .collect(Collectors.joining("-")); // Ghép lại bằng dấu gạch ngang

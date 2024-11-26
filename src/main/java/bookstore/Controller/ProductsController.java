@@ -345,17 +345,17 @@ public class ProductsController {
 		
 	}
 	
-	@PostMapping("/product/delete")
-    public String deleteBook(@RequestParam("bookId") Long bookId, RedirectAttributes redirectAttributes) {
-        try {
-            // Gọi service để xóa sách
-            bookService.deleteBookById(bookId);
-            redirectAttributes.addFlashAttribute("successMessage", "Sách đã được xóa thành công!");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Không thể xóa sách. Vui lòng thử lại!");
-        }
-        return "redirect:/product/list"; // Quay lại danh sách sản phẩm
-    }
+//	@PostMapping("/product/delete")
+//    public String deleteBook(@RequestParam("bookId") Long bookId, RedirectAttributes redirectAttributes) {
+//        try {
+//            // Gọi service để xóa sách
+//            bookService.deleteBookById(bookId);
+//            redirectAttributes.addFlashAttribute("successMessage", "Sách đã được xóa thành công!");
+//        } catch (Exception e) {
+//            redirectAttributes.addFlashAttribute("errorMessage", "Không thể xóa sách. Vui lòng thử lại!");
+//        }
+//        return "redirect:/product/list"; // Quay lại danh sách sản phẩm
+//    }
 	
 	
 	@RequestMapping(value = "/product/getSubcategories", method = RequestMethod.GET, produces = "text/html; charset=UTF-8")
