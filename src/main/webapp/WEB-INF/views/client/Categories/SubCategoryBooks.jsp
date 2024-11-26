@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -152,8 +155,8 @@
 													<div class="tg-postbook">
 														<figure class="tg-featureimg">
 															<div class="tg-bookimg">
-																<div class="tg-frontcover"><img src="${book.images }" alt="image description"></div>
-																<div class="tg-backcover"><img src="${book.images }" alt="image description"></div>
+																<div class="tg-frontcover"><img src="${book.thumbnail }" alt="image description"></div>
+																<div class="tg-backcover"><img src="${book.thumbnail }" alt="image description"></div>
 															</div>
 															<a class="tg-btnaddtowishlist" href="javascript:void(0);">
 																<i class="fa-solid fa-heart"></i>

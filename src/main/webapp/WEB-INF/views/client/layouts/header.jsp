@@ -202,10 +202,10 @@
 							</div>
 							
 							<div class="tg-searchbox">
-							    <form class="tg-formtheme tg-formsearch" action="${pageContext.servletContext.contextPath}/search.htm" method="GET">
+							    <form class="tg-formtheme tg-formsearch" action="${pageContext.servletContext.contextPath}/search.htm" method="GET" onsubmit="return validateSearch();">
 							        <fieldset>
 							            <!-- Ô nhập liệu tìm kiếm -->
-							            <input type="text" name="q" class="typeahead form-control" placeholder="Search by title, author, keyword, ISBN...">
+							            <input id="searchInput" type="text" name="q" class="typeahead form-control" placeholder="">
 							            <!-- Nút tìm kiếm -->
 							            <button type="submit">
 							                <i class="fa-solid fa-magnifying-glass"></i>
@@ -411,6 +411,14 @@
 	        const toggleMenu = document.querySelector(".menu");
 	        toggleMenu.classList.toggle("active");
 	      }
+		
+		function validateSearch() {
+	        const searchInput = document.getElementById("searchInput").value.trim();
+	        if (searchInput === "") {
+	            return false; // Ngăn form gửi request
+	        }
+	        return true; // Cho phép gửi request
+	    }
 		</script>	
 </body>
 </html>
