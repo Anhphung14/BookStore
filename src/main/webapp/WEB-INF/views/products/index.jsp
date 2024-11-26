@@ -205,7 +205,7 @@
 			            </div>
 			            <div class="modal-body">
 			                <!-- Form used to send POST request -->
-			                <form id="deleteForm" method="POST" action="/bookstore/product/delete">
+			                <form id="deleteForm" method="POST" action="/bookstore/product/delete.htm">
 			                    <p>Are you sure you want to delete this book?</p>
 			                    <p><strong>Book Id:</strong> <span id="bookIdToDelete"></span></p>
 			                    <p><strong>Book title:</strong> <span id="bookTitleToDelete"></span></p>

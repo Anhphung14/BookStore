@@ -30,4 +30,14 @@ public class BooksService {
 	public Object[] getBookWithQuantityById(Long id) {
 	    return booksDAO.getBookWithQuantityById(id);
 	}
+	
+	// Cach 1
+	public boolean deleteBookById(Long id) {
+		return booksDAO.deleteBookById(id);
+	}
+	
+	// Cach 2
+	public boolean deleteBookById2(Long id) {
+		return booksDAO.deleteBookById2(id);
+	}
 }

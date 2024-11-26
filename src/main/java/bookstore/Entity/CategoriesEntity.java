@@ -110,20 +110,18 @@ public class CategoriesEntity {
     	return "id: " + id + " name: " + name ;
     }
     
-    private String toSlug(String input) {
+    public String toSlug(String input) {
         if (input == null || input.isEmpty()) {
             return "";
         }
-        
-        input = input.replace("/", "-");
-        
-        // Loại bỏ dấu
+        // Chuẩn hóa chuỗi và loại bỏ dấu
         String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
-        String noDiacritics = normalized.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        String noDiacritics = normalized.replaceAll("\\p{M}", ""); // Loại bỏ dấu chính xác
 
-        // Tách chuỗi thành các từ, xử lý từng từ và nối lại bằng dấu gạch ngang
-        return Arrays.stream(noDiacritics.split("[\\s/]+")) // Split theo khoảng trắng
-                     .map(word -> word.replaceAll("[^a-zA-Z0-9-]", "")) // Loại bỏ ký tự đặc biệt
+        // Giữ lại chữ cái, số, thay Đ/đ thành d, rồi loại bỏ ký tự đặc biệt
+        noDiacritics = noDiacritics.replaceAll("[Đđ]", "d"); // Xử lý chữ Đ và đ
+        return Arrays.stream(noDiacritics.split("\\s+")) // Split theo khoảng trắng
+                     .map(word -> word.replaceAll("[^a-zA-Z0-9]", "")) // Loại bỏ ký tự đặc biệt
                      .filter(word -> !word.isEmpty()) // Loại bỏ từ rỗng
                      .map(String::toLowerCase) // Chuyển thành chữ thường
                      .collect(Collectors.joining("-")); // Ghép lại bằng dấu gạch ngang
