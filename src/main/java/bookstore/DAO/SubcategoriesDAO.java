@@ -15,7 +15,7 @@ import bookstore.Entity.SubcategoriesEntity;
 
 @Repository
 @Transactional
-public class SubcategoryDAO {
+public class SubcategoriesDAO {
 	@Autowired
     private SessionFactory sessionFactory;
 

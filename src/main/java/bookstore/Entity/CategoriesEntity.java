@@ -35,13 +35,19 @@ public class CategoriesEntity {
 	private String name;
 	
 	
+	@Column(name = "created_at", updatable = false)
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	private Date created_at;
 	
+	@Column(name = "updated_at")
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	private Date updated_at;
+	
+	@OneToMany(mappedBy = "categoriesEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<SubcategoriesEntity> subcategoriesEntities;
+
 	
 	@Transient
     private String slug;
@@ -62,6 +68,7 @@ public class CategoriesEntity {
 		this.name = name;
 	}
 
+
 	public Date getCreated_at() {
 		return created_at;
 	}
@@ -77,7 +84,15 @@ public class CategoriesEntity {
 	public void setUpdated_at(Date updated_at) {
 		this.updated_at = updated_at;
 	}
-	
+
+	public List<SubcategoriesEntity> getSubcategoriesEntities() {
+		return subcategoriesEntities;
+	}
+
+	public void setSubcategoriesEntities(List<SubcategoriesEntity> subcategoriesEntities) {
+		this.subcategoriesEntities = subcategoriesEntities;
+	}
+
 	public String getSlug() {
         if (slug == null) {
             // Tính toán slug nếu chưa có

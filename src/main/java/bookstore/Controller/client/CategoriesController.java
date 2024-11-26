@@ -12,30 +12,30 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import bookstore.DAO.BookDAO;
-import bookstore.DAO.CategoryDAO;
-import bookstore.DAO.SubcategoryDAO;
-import bookstore.Entity.Book;
-import bookstore.Entity.Category;
+import bookstore.DAO.BooksDAO;
+import bookstore.DAO.CategoriesDAO;
+import bookstore.DAO.SubcategoriesDAO;
+import bookstore.Entity.BooksEntity;
+import bookstore.Entity.CategoriesEntity;
 import bookstore.Entity.SubcategoriesEntity;
 
 @Controller
 @RequestMapping("/categories/")
 public class CategoriesController {
 	@Autowired
-    private CategoryDAO categoryDAO;
+    private CategoriesDAO categoriesDAO;
     @Autowired
-    private SubcategoryDAO subcategoryDAO;
+    private SubcategoriesDAO subcategoriesDAO;
 	@Autowired
-    private BookDAO bookDAO;
+    private BooksDAO booksDAO;
     
     @RequestMapping("/{slug}/{slugSub}.htm")
     public String getSubCategoryPage(@PathVariable("slug") String slug, @PathVariable("slugSub") String slugSub,  @RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pageSize", defaultValue = "1") int pageSize, ModelMap model) {
-        List<Category> listCategories = categoryDAO.findAllCategories();
+        List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
         //List<Object[]> danhMuc = new ArrayList<>();
         Object[] danhMuc = new Object[4]; 
-        for (Category cg : listCategories) {
-            for (SubcategoriesEntity scg : cg.getSubcategories()) {
+        for (CategoriesEntity cg : listCategories) {
+            for (SubcategoriesEntity scg : cg.getSubcategoriesEntities()) {
                 if (scg.getSlug().equals(slugSub)) {
                 	danhMuc[0] = cg.getName();       
                 	danhMuc[1] = scg.getName();      
@@ -47,15 +47,15 @@ public class CategoriesController {
             }
         }
 
-        List<Object[]> countBookEachCategory = bookDAO.countBookEachCategory();
+        List<Object[]> countBookEachCategory = booksDAO.countBookEachCategory();
         //Phân trang
         //int pageSize = 1;
-        List<Book> bookList = bookDAO.listBookOfSubCategory((String) danhMuc[0], (String) danhMuc[1], page, pageSize);
-        int totalPages = bookDAO.getTotalPagesOfSubBook((String) danhMuc[1], pageSize);
+        List<BooksEntity> bookList = booksDAO.listBookOfSubCategory((String) danhMuc[0], (String) danhMuc[1], page, pageSize);
+        int totalPages = booksDAO.getTotalPagesOfSubBook((String) danhMuc[1], pageSize);
         
         
      
-        List<SubcategoriesEntity> listSubCategories = subcategoryDAO.findAll();
+        List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
 
         model.addAttribute("Categories", listCategories);
         model.addAttribute("SubCategories", listSubCategories);
@@ -73,17 +73,17 @@ public class CategoriesController {
     
     @RequestMapping("{idCategory}.htm")
     public String getCategoryPage(@PathVariable("idCategory") Long idCategory,  @RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pageSize", defaultValue = "1") int pageSize, ModelMap model) {
-		List<Book> bookList = bookDAO.listBookOfCategory(idCategory, page, pageSize);
-		List<Category> listCategories = categoryDAO.findAllCategories();
-		List<Object[]> countBookEachCategory = bookDAO.countBookEachCategory();
-		Category danhMuc = categoryDAO.findCategoryById(idCategory);
+		List<BooksEntity> bookList = booksDAO.listBookOfCategory(idCategory, page, pageSize);
+		List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
+		List<Object[]> countBookEachCategory = booksDAO.countBookEachCategory();
+		CategoriesEntity danhMuc = categoriesDAO.findCategoryById(idCategory);
 		//Phân trang
 		//int pageSize = 1;
-		int totalPages = bookDAO.getTotalPagesOfCateBook( idCategory , pageSize);
+		int totalPages = booksDAO.getTotalPagesOfCateBook( idCategory , pageSize);
          
          
       
-	     List<SubcategoriesEntity> listSubCategories = subcategoryDAO.findAll();
+	     List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
 	
 	     model.addAttribute("danhMuc", danhMuc);
 	     model.addAttribute("Categories", listCategories);

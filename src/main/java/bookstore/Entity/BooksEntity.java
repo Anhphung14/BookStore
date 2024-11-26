@@ -1,24 +1,17 @@
 package bookstore.Entity;
 
-import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 @Entity
 @Table(name = "Books")
 public class BooksEntity {
+
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -64,12 +57,12 @@ public class BooksEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     @Column(name = "created_at", columnDefinition = "DATETIME DEFAULT GETDATE()", nullable = false)
-    private Date created_at;
+    private Date createdAt;
 
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     @Column(name = "updated_at", nullable = false)
-    private Date updated_at;
+    private Date updatedAt;
     
     @Column(name = "status", columnDefinition = "bit")
     private String status;
@@ -90,6 +83,8 @@ public class BooksEntity {
 		this.supplier = supplier;
 	}
 
+	
+	
 	public Long getId() {
 		return id;
 	}
@@ -179,20 +174,21 @@ public class BooksEntity {
 		this.page_count = page_count;
 	}
 
-	public Date getCreated_at() {
-		return created_at;
+	
+	public Date getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setCreated_at(Date created_at) {
-		this.created_at = created_at;
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 
-	public Date getUpdated_at() {
-		return updated_at;
+	public Date getUpdatedAt() {
+		return updatedAt;
 	}
 
-	public void setUpdated_at(Date updated_at) {
-		this.updated_at = updated_at;
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 	public String getStatus() {
@@ -202,5 +198,21 @@ public class BooksEntity {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", price=" + price +
+                ", subcategory=" + (subcategoriesEntity != null ? subcategoriesEntity.getName() : "null") +
+                ", supplier=" + (supplier != null ? supplier.getName() : "null") +
+                ", stockQuantity=" + stock_quantity +
+                ", thumbnail='" + thumbnail + '\'' +
+                ", images='" + images + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

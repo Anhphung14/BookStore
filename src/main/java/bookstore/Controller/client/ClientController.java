@@ -9,30 +9,30 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import bookstore.DAO.BookDAO;
-import bookstore.DAO.CategoryDAO;
-import bookstore.DAO.SubcategoryDAO;
-import bookstore.Entity.Book;
-import bookstore.Entity.Category;
+import bookstore.DAO.BooksDAO;
+import bookstore.DAO.CategoriesDAO;
+import bookstore.DAO.SubcategoriesDAO;
+import bookstore.Entity.BooksEntity;
+import bookstore.Entity.CategoriesEntity;
 import bookstore.Entity.SubcategoriesEntity;
 
 
 @Controller
 public class ClientController {
     @Autowired
-    private CategoryDAO categoryDAO;
+    private CategoriesDAO categoriesDAO;
     @Autowired
-    private SubcategoryDAO subcategoryDAO;
+    private SubcategoriesDAO subcategoriesDAO;
     @Autowired
-    private BookDAO bookDAO;
+    private BooksDAO booksDAO;
     
     
     
     
     @RequestMapping(value = "/index")
 	public String index(ModelMap model) {
-		List<Category> listCategories = categoryDAO.findAllCategories();
-        List<SubcategoriesEntity> listSubCategories = subcategoryDAO.findAll();
+		List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
+        List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
 
         model.addAttribute("Categories", listCategories);
         model.addAttribute("SubCategories", listSubCategories);
@@ -44,16 +44,16 @@ public class ClientController {
     public String searchBooks(@RequestParam(value = "q", required = false) String searchQuery, @RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pageSize", defaultValue = "1") int pageSize, ModelMap model) {
     	//System.out.println("pageSize: " + pageSize);
         //System.out.println("Search Query: " + searchQuery);
-        List<Book> bookList = bookDAO.search(searchQuery, page, pageSize);
+        List<BooksEntity> bookList = booksDAO.search(searchQuery, page, pageSize);
         //System.out.println(bookList.size());
-        int totalPages = bookDAO.getTotalPagesOfSearch(searchQuery, pageSize);
+        int totalPages = booksDAO.getTotalPagesOfSearch(searchQuery, pageSize);
         //System.out.println(totalPages);
-        List<Object[]> countBookEachCategory = bookDAO.countBookEachCategory();
+        List<Object[]> countBookEachCategory = booksDAO.countBookEachCategory();
         
         
         
-        List<Category> listCategories = categoryDAO.findAllCategories();
-        List<SubcategoriesEntity> listSubCategories = subcategoryDAO.findAll();
+        List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
+        List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
 
         model.addAttribute("Categories", listCategories);
         model.addAttribute("SubCategories", listSubCategories);

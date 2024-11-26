@@ -364,6 +364,24 @@
 	        }
 	    });
 	}
+	
+	function validateYearInput(input) {
+	    let value = input.value.replace(/[^0-9]/g, '');
+
+	    if (!value) {
+	        input.value = "0";
+	        return;
+	    }
+
+	    value = value.replace(/^0+/, '') || "0";
+
+	    if (parseInt(value) > 2024) {
+	        value = new Date().getFullYear().toString();
+	    }
+	    
+	    input.value = value;
+	}
+
 	</script>
 </body>
 </html>

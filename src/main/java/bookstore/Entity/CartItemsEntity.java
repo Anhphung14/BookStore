@@ -38,7 +38,7 @@ public class CartItemsEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "book_id", nullable = false)
-    private Book book;
+    private BooksEntity booksEntity;
 
     @Column(name = "quantity", nullable = false)
     private int quantity;
@@ -58,12 +58,12 @@ public class CartItemsEntity {
     	
     }
 
-    public CartItemsEntity(Long id, CartsEntity cart, Book book, int quantity, Double price, Date createdAt,
+    public CartItemsEntity(Long id, CartsEntity cart, BooksEntity booksEntity, int quantity, Double price, Date createdAt,
 			Date updatedAt) {
 		super();
 		this.id = id;
 		this.cart = cart;
-		this.book = book;
+		this.booksEntity = booksEntity;
 		this.quantity = quantity;
 		this.price = price;
 		this.createdAt = createdAt;
@@ -86,12 +86,12 @@ public class CartItemsEntity {
 		this.cart = cart;
 	}
 
-	public Book getBook() {
-		return book;
+	public BooksEntity getBook() {
+		return booksEntity;
 	}
 
-	public void setBook(Book book) {
-		this.book = book;
+	public void setBook(BooksEntity booksEntity) {
+		this.booksEntity = booksEntity;
 	}
 
 	public int getQuantity() {
@@ -138,9 +138,9 @@ public class CartItemsEntity {
     
  // Tính và cập nhật tổng giá cho CartItem
     public void setTotalPrice() {
-        if (this.quantity > 0 && this.book != null && this.book.getPrice() != null) {
+        if (this.quantity > 0 && this.booksEntity != null && this.booksEntity.getPrice() != null) {
             // Tính tổng giá bằng cách nhân trực tiếp với kiểu double
-            this.price = this.book.getPrice().doubleValue() * this.quantity;
+            this.price = this.booksEntity.getPrice().doubleValue() * this.quantity;
         } else {
             this.price = 0.0; // Giá trị mặc định nếu không hợp lệ
         }

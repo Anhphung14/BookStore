@@ -17,7 +17,6 @@
 	rel="stylesheet">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
 <style>
 .main-content {
 	display: flex;
@@ -57,7 +56,7 @@
 
 .form-floating:hover {
     box-shadow: 0 8px 10px rgba(0, 0, 0, 0.15); /* Shadow đậm hơn khi hover */
-    transform: translateY(-2px); /* Nâng nhẹ div khi hover */
+    transform: none;
 }
 
 .card {
@@ -82,6 +81,13 @@
     border-color: #b8b8b8; /* Đường viền khi hover */
     color: #000; /* Màu chữ đậm hơn khi hover */
 }
+
+select.form-control {
+    max-width: 100%; /* Không vượt quá kích thước container */
+    width: 100%; /* Chiếm toàn bộ không gian của form-floating */
+    transition: none; /* Loại bỏ hiệu ứng hover */
+}
+
 
 </style>
 </head>
@@ -147,7 +153,7 @@
 								
 								<div class="form-floating mt-3 position-relative">
 									<input class="form-control pr-4" id="publication_year" name="publication_year"
-										type="text" value="" max="2024" required> <label
+										type="text" value="0" max="2024" oninput="validateYearInput(this)" required> <label
 										class="form-label" for="publication_year">Publication year <span class="text-danger">*</span>
 									</label>
 								</div>
@@ -160,10 +166,16 @@
 								</div>
 								
 								<div class="form-floating mt-3">
+									<input class="form-control" id="language" name="language" value="" required> <label
+										class="form-label" for="title">Language <span
+										class="text-danger">*</span></label>
+								</div>
+								
+								<div class="form-floating mt-3">
 								    <input class="form-control" id="thumbnail" name="thumbnail" type="file" accept="image/*">
 								    <label class="form-label" for="thumbnail">Thumbnail</label>
 								</div>
-								
+	
 							</div>
 
 							<!-- Cột 2 -->
@@ -174,16 +186,29 @@
 <!-- 										class="form-label" for="category">Category <span class="text-danger">*</span></label> -->
 <!-- 								</div> -->
 <div class="form-floating mt-3">
-    <select class="form-control" id="category" name="category">
-        <option value="" disabled selected>Chọn danh mục</option>
+    <select class="form-control" id="category" name="category" onchange="loadSubcategories(this.value)">
+        <option value="" disabled selected>Select an option</option>
         <!-- Lặp qua danh sách danh mục từ server -->
         <c:forEach var="category" items="${listCategories}">
-            <option value="${category.id}" ${category.id == book.category.id ? 'selected' : ''}>
+            <option value="${category.id}">
                 ${category.name}
             </option>
         </c:forEach>
     </select>
     <label class="form-label" for="category">Category <span class="text-danger">*</span></label>
+</div>
+
+<div class="form-floating mt-3">
+    <select class="form-control" id="subcategory" name="subcategory" onchange="loadCategory(this.value)">
+        <option value="" disabled selected>Select an option</option>
+        <!-- Lặp qua danh sách danh mục từ server -->
+        <c:forEach var="subcategory" items="${listSubcategories}">
+            <option value="${subcategory.id}">
+                ${subcategory.name}
+            </option>
+        </c:forEach>
+    </select>
+    <label class="form-label" for="category">Subcategory <span class="text-danger">*</span></label>
 </div>
 
 <!-- 								<div class="form-floating mt-3"> -->
@@ -194,7 +219,7 @@
 
 <div class="form-floating mt-3">
     <select class="form-control" id="supplier" name="supplier">
-        <option value="" disabled selected>Chọn danh mục</option>
+        <option value="" disabled selected>Select an option</option>
         <!-- Lặp qua danh sách danh mục từ server -->
         <c:forEach var="supplier" items="${listSuppliers}">
             <option value="${supplier.id}" ${supplier.id == book.supplier.id ? 'selected' : ''}>
@@ -211,19 +236,22 @@
 										class="form-label" for="quantity">Stock quantity <span class="text-danger">*</span></label>
 								</div>
 								
-								<div class="form-floating mt-3">
-									<input class="form-control" id="language" name="language"
-										value="" required> <label
-										class="form-label" for="title">Language <span
-										class="text-danger">*</span></label>
-								</div>
-								
 								<div class="form-floating mt-3 position-relative">
 									<input class="form-control pr-4 numeric-input" id="page_count" name="page_count" oninput="validateNumberInput(this)"
 										type="text" value="0" required> <label
 										class="form-label" for="price">Page count <span class="text-danger">*</span>
 									</label>
 								</div>
+								
+								<div class="form-floating mt-3">
+								    <select class="form-control" id="status" name="status">
+								        <option value="" disabled selected>Select an option</option>
+								            <option value="0">Disable</option>
+								            <option value="1">Enable</option>
+								    </select>
+								    <label class="form-label" for="category">Status <span class="text-danger">*</span></label>
+								</div>
+								
 								
 								<div class="form-floating mt-3">
 								    <input class="form-control" id="images" name="images" type="file" accept="image/*" multiple>
@@ -247,70 +275,127 @@
 
 	</div>
 
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	
 	<script>
+		let initialInput = true;
+	
+		function validateNumberInput(input) {
+		    // Loại bỏ tất cả ký tự không phải số
+		    let value = input.value.replace(/[^0-9]/g, '');
 
-	let initialInput = true;
+		    // Nếu trống, đặt về "0"
+		    if (value === "") {
+		        input.value = "0"; // Đặt lại giá trị input thành "0"
+		        return; // Dừng hàm
+		    }
 
-	function validateNumberInput(input) {
+		    // Loại bỏ số 0 ở đầu nếu không phải chỉ là "0"
+		    value = value.replace(/^0+/, '') || "0";
 
-	    let value = input.value.replace(/[^0-9]/g, '');
+		    // Thêm định dạng phân cách hàng nghìn
+		    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
-	    if (value === "") {
-	        input.value = "0";
-	        initialInput = true;
-	        return;
-	    }
+		    // Cập nhật lại giá trị input
+		    input.value = value;
+		}
+	
+		function resetInitialInputFlag(event) {
+		    initialInput = true;
+		}
+	
+		function formatNumberInputsOnLoad() {
+	
+		    let numericInputs = document.querySelectorAll('.numeric-input');
+	
+		    numericInputs.forEach(input => {
+		        let priceValue = input.value;
+	
+		        priceValue = priceValue.split('.')[0]; 
+	
+		        priceValue = parseInt(priceValue, 10).toString();
+	
+		        priceValue = priceValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+	
+		        input.value = priceValue;
+		    });
+		}
+	
+		window.onload = function() {
+		    formatNumberInputsOnLoad();
+	
+		    let numericInputs = document.querySelectorAll('.numeric-input');
+		    numericInputs.forEach(input => {
+		        input.addEventListener('focus', resetInitialInputFlag);
+		    });
+		};
+	
+		document.getElementById('productForm').onsubmit = function() {
+		    let numericInputs = document.querySelectorAll('.numeric-input');
+	
+		    numericInputs.forEach(input => {
+		        input.value = input.value.replace(/\./g, '');
+		    });
+		}
+		
+		function validateYearInput(input) {
+		    let value = input.value.replace(/[^0-9]/g, '');
 
-	    if (initialInput) {
-	        value = value.replace(/^0+/, '');
-	        initialInput = false;
-	    }
+		    if (!value) {
+		        input.value = "0";
+		        return;
+		    }
 
-	    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+		    value = value.replace(/^0+/, '') || "0";
 
-	    input.value = value;
-	}
+		    if (parseInt(value) > 2024) {
+		        value = new Date().getFullYear().toString();
+		    }
+		    
+		    input.value = value;
+		}
+		
+		function loadSubcategories(categoryId) {
+		    if (!categoryId) {
+		        document.getElementById('subcategory').innerHTML = '<option value="" disabled selected>Select a subcategory</option>';
+		        return;
+		    }
 
-	function resetInitialInputFlag(event) {
-	    initialInput = true;
-	}
+		    // Gửi yêu cầu AJAX đến server
+		    fetch('/bookstore/product/getSubcategories.htm?categoryId=' + categoryId)
+		    .then(response => response.text())
+		    .then(data => {
+		        const subcategorySelect = document.getElementById('subcategory');
+		        subcategorySelect.innerHTML = data; // Thêm trực tiếp HTML trả về vào dropdown
+		    })
+		    .catch(error => console.error('Error:', error));
 
-	function formatNumberInputsOnLoad() {
+		}
+		
+		function loadCategory(subcategoryId) {
+		    if (!subcategoryId) return;
 
-	    let numericInputs = document.querySelectorAll('.numeric-input');
+		    fetch(`/bookstore/product/getCategory.htm?subcategoryId=` + subcategoryId)
+		        .then(response => response.text()) // Đọc response dạng text
+		        .then(data => {
+		            const parser = new DOMParser();
+		            const doc = parser.parseFromString(data, 'text/html');
+		            const categoryId = doc.querySelector('#categoryId')?.textContent; // Lấy ID từ HTML
 
-	    numericInputs.forEach(input => {
-	        let priceValue = input.value;
+		            if (categoryId) {
+		                const categorySelect = document.getElementById('category');
+		                const options = categorySelect.options;
 
-	        priceValue = priceValue.split('.')[0]; 
-
-	        priceValue = parseInt(priceValue, 10).toString();
-
-	        priceValue = priceValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-	        input.value = priceValue;
-	    });
-	}
-
-	window.onload = function() {
-	    formatNumberInputsOnLoad();
-
-	    let numericInputs = document.querySelectorAll('.numeric-input');
-	    numericInputs.forEach(input => {
-	        input.addEventListener('focus', resetInitialInputFlag);
-	    });
-	};
-
-	document.getElementById('productForm').onsubmit = function() {
-	    let numericInputs = document.querySelectorAll('.numeric-input');
-
-	    numericInputs.forEach(input => {
-	        input.value = input.value.replace(/\./g, '');
-	    });
-	}
-
+		                for (let i = 0; i < options.length; i++) {
+		                    if (options[i].value === categoryId) {
+		                        options[i].selected = true; // Đặt trạng thái selected
+		                        break;
+		                    }
+		                }
+		            }
+		        })
+		        .catch(error => console.error('Error:', error));
+		}
 
 		
 	</script>

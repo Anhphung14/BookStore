@@ -23,16 +23,16 @@ public class SubcategoriesEntity{
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
-    private Category category;
+    private CategoriesEntity categoriesEntity;
 
 
     @Column(name = "created_at", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    private Date created_at;
 
     @Column(name = "updated_at")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedAt;
+    private Date updated_at;
 
     @OneToMany(mappedBy = "subcategoriesEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Collection<BooksEntity> books;
@@ -53,11 +53,11 @@ public class SubcategoriesEntity{
     public SubcategoriesEntity() {
     }
 
-    public SubcategoriesEntity(String name, Category category, String slug) {
+    public SubcategoriesEntity(String name, CategoriesEntity categoriesEntity, String slug) {
         this.name = name;
-        this.category = category;
-        this.createdAt =  new Date();
-        this.updatedAt =  new Date();
+        this.categoriesEntity = categoriesEntity;
+        this.created_at =  new Date();
+        this.updated_at =  new Date();
     }
 
     public String getSlug() {
@@ -88,34 +88,35 @@ public class SubcategoriesEntity{
     public void setName(String name) {
         this.name = name;
     }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
     
-    public Date getCreatedAt() {
-		return createdAt;
+	public CategoriesEntity getCategoriesEntity() {
+		return categoriesEntity;
 	}
 
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
+	public void setCategoriesEntity(CategoriesEntity categoriesEntity) {
+		this.categoriesEntity = categoriesEntity;
 	}
 
-	public Date getUpdatedAt() {
-		return updatedAt;
+
+	public Date getCreated_at() {
+		return created_at;
 	}
 
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
+	public void setCreated_at(Date created_at) {
+		this.created_at = created_at;
+	}
+
+	public Date getUpdated_at() {
+		return updated_at;
+	}
+
+	public void setUpdated_at(Date updated_at) {
+		this.updated_at = updated_at;
 	}
 
 	@Override
     public String toString() {
-    	return "id: " + id + " name: " + name + " category: " + category;
+    	return "id: " + id + " name: " + name + " categoryEntity: " + categoriesEntity;
     }
 	
 	public String toSlug(String input) {

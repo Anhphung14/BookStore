@@ -8,6 +8,7 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.core.io.Resource;
@@ -43,10 +45,12 @@ import com.cloudinary.utils.ObjectUtils;
 import bookstore.Entity.BooksEntity;
 import bookstore.Entity.CategoriesEntity;
 import bookstore.Entity.InventoryEntity;
+import bookstore.Entity.SubcategoriesEntity;
 import bookstore.Entity.SuppliersEntity;
 import bookstore.Service.BooksService;
 import bookstore.Service.CategoriesService;
 import bookstore.Service.InventoryService;
+import bookstore.Service.SubcategoriesService;
 import bookstore.Service.SuppliersService;
 import bookstore.Service.UploadService;
 
@@ -73,6 +77,9 @@ public class ProductsController {
 	
 	@Autowired
 	CategoriesService categoriesService;
+	
+	@Autowired
+	SubcategoriesService subcategoriesService;
 	
 	@Autowired
 	UploadService uploadService;
@@ -138,6 +145,7 @@ public class ProductsController {
 		model.addAttribute("task", "new");
 		model.addAttribute("listCategories", categoriesService.getAllCategories());
 		model.addAttribute("listSuppliers", suppliersService.getAllSuppliers());
+		model.addAttribute("listSubcategories", subcategoriesService.getAllSubcategories());
 		
 		return "products/new";
 	}
@@ -173,7 +181,7 @@ public class ProductsController {
 			selectedBook.setPublication_year(publication_year);
 			selectedBook.setPage_count(page_count);
 			selectedBook.setLanguage(language);
-			selectedBook.setUpdated_at(new Date());
+			selectedBook.setUpdatedAt(new Date());
 			
 //			selectedBook.setSubcategoriesEntity(category);
 			selectedBook.setSupplier(supplier);
@@ -265,8 +273,8 @@ public class ProductsController {
 			newBook.setPublication_year(publication_year);
 			newBook.setLanguage(language);
 			newBook.setPage_count(page_count);
-			newBook.setCreated_at(new Date());
-			newBook.setUpdated_at(new Date());
+			newBook.setCreatedAt(new Date());
+			newBook.setUpdatedAt(new Date());
 			
 			CategoriesEntity category = (CategoriesEntity) session.get(CategoriesEntity.class, categoryId);
 			SuppliersEntity supplier = (SuppliersEntity) session.get(SuppliersEntity.class, supplierId);
@@ -329,6 +337,33 @@ public class ProductsController {
 	}
 	
 	
+	@RequestMapping(value = "/product/getSubcategories", method = RequestMethod.GET, produces = "text/html; charset=UTF-8")
+	@ResponseBody
+	public String getSubcategories(@RequestParam("categoryId") Long categoryId) {
+	    List<SubcategoriesEntity> subcategories = subcategoriesService.getSubcategoriesByCategoryId(categoryId);
+	    StringBuilder html = new StringBuilder();
+	    html.append("<option value=\"\" disabled selected>Select an option</option>");
+	    for (SubcategoriesEntity subcategory : subcategories) {
+	        html.append("<option value=\"").append(subcategory.getId()).append("\">")
+	            .append(subcategory.getName())
+	            .append("</option>");
+	    }
+	    return html.toString();
+	}
 	
+	@RequestMapping(value = "/product/getCategory", method = RequestMethod.GET, produces = "text/html; charset=UTF-8")
+	@ResponseBody
+	public String getCategory(@RequestParam("subcategoryId") Long subcategoryId) {
+	    try {
+	        // Lấy Category từ Subcategory ID
+	        CategoriesEntity category = subcategoriesService.getCategoryBySubcategoryId(subcategoryId);
+	        if (category != null) {
+	            return "<span id='categoryId'>" + category.getId() + "</span>"; // Trả về ID dạng HTML
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return "<span id='categoryId'>No category found</span>"; // Trả về nếu không tìm thấy
+	}
 
 }

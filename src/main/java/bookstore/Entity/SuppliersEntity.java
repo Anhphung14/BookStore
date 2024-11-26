@@ -1,26 +1,18 @@
 package bookstore.Entity;
 
-import java.util.Date;
-import java.util.List;
 
-import javax.annotation.Generated;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
+import javax.persistence.*;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "Suppliers")
 public class SuppliersEntity {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -29,7 +21,7 @@ public class SuppliersEntity {
 	private String name;
 	
 	@Column(name = "contact_person", columnDefinition = "nvarchar")
-	private String contact_person;
+	private String contactPerson;
 	
 	@Column(name = "email", columnDefinition = "nvarchar")
 	private String email;
@@ -40,13 +32,15 @@ public class SuppliersEntity {
 	@Column(name = "address", columnDefinition = "nvarchar")
 	private String address;
 	
+	@Column(name = "created_at", updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date created_at;
+    private Date createdAt;
 	
+	@Column(name = "updated_at")
 	@Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updated_at;
+    private Date updatedAt;
 
 	@OneToMany(mappedBy = "supplier", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BooksEntity> books;
@@ -67,12 +61,20 @@ public class SuppliersEntity {
 		this.name = name;
 	}
 
-	public String getContact_person() {
-		return contact_person;
+	public String getContactPerson() {
+		return contactPerson;
 	}
 
-	public void setContact_person(String contact_person) {
-		this.contact_person = contact_person;
+	public void setContactPerson(String contactPerson) {
+		this.contactPerson = contactPerson;
+	}
+
+	public List<BooksEntity> getBooks() {
+		return books;
+	}
+
+	public void setBooks(List<BooksEntity> books) {
+		this.books = books;
 	}
 
 	public String getEmail() {
@@ -99,21 +101,33 @@ public class SuppliersEntity {
 		this.address = address;
 	}
 
-	public Date getCreated_at() {
-		return created_at;
+    public Date getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setCreated_at(Date created_at) {
-		this.created_at = created_at;
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 
-	public Date getUpdated_at() {
-		return updated_at;
+	public Date getUpdatedAt() {
+		return updatedAt;
 	}
 
-	public void setUpdated_at(Date updated_at) {
-		this.updated_at = updated_at;
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
 	}
-	
-	
+
+	@Override
+    public String toString() {
+        return "Supplier{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", contactPerson='" + contactPerson + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

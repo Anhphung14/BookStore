@@ -105,7 +105,7 @@
 									                            </div>
 									                            <ul>
 									                                <c:forEach var="subcategory" items="${SubCategories}">
-									                                    <c:if test="${subcategory.category.id == category.id}">
+									                                    <c:if test="${subcategory.categoriesEntity.id == category.id}">
 									                                        <li style="list-style: none;"><a href="http://localhost:8080/bookstore/categories/${category.slug }/${subcategory.slug }.htm">${subcategory.name}</a></li>
 									                                    </c:if>
 									                                </c:forEach>
