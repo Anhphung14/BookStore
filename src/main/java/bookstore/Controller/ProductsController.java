@@ -113,28 +113,24 @@ public class ProductsController {
 		model.addAttribute("listBooks", books); 
 		model.addAttribute("quantities", quantities);
 		
-//		System.out.println(servletContext.getRealPath("/"));
-		
-//		System.out.println(new File(this.getClass().getClassLoader().getResource("").getPath()).getParentFile().getParentFile().getPath());
-		
 		return "products/index";
 		
 	}
 	
 	@RequestMapping("/product/edit/{id}")
 	public String productEdit(@PathVariable("id") Long id, ModelMap model) {
-//		BooksEntity book = getBookById(id);
 		
 		model.addAttribute("task", "edit");
-//		model.addAttribute("book", book);
-//		model.addAttribute("stock_quantity", getStockQuantityById(id));
+
 		Object[] bookWithQuantity = booksService.getBookWithQuantityById(id);
 		
-		BooksEntity book = (BooksEntity) bookWithQuantity[0]; 
+		BooksEntity book = (BooksEntity) bookWithQuantity[0];
+		
 		Integer quantity = (Integer) bookWithQuantity[1]; 
 		model.addAttribute("book", book); 
 		model.addAttribute("quantity", quantity);
 		model.addAttribute("listCategories", categoriesService.getAllCategories());
+		model.addAttribute("listSubcategories", subcategoriesService.getAllSubcategories());
 		model.addAttribute("listSuppliers", suppliersService.getAllSuppliers());
 		return "products/edit";
 	}
@@ -155,9 +151,9 @@ public class ProductsController {
 			@RequestParam(value = "id", required = false) Long id,
 			@RequestParam("title") String title, @RequestParam("author") String author,
 			@RequestParam("price") Double price, @RequestParam("description") String description,
-			@RequestParam("category") Long categoryId, @RequestParam("supplier") Long supplierId,
+			@RequestParam("category") Long categoryId, @RequestParam("subcategory") Long subcategoryId, @RequestParam("supplier") Long supplierId,
 			@RequestParam("quantity") int quantity, @RequestParam("publication_year") int publication_year, 
-			@RequestParam("page_count") int page_count, @RequestParam("language") String language,
+			@RequestParam("page_count") int page_count, @RequestParam("language") String language, @RequestParam("status") int status,
 			@RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail, @RequestParam(value = "images", required = false) MultipartFile[] images) {
 		
 		Session session = factory.getCurrentSession();
@@ -172,6 +168,7 @@ public class ProductsController {
 			
 			CategoriesEntity category = (CategoriesEntity) session.get(CategoriesEntity.class, categoryId);
 			SuppliersEntity supplier = (SuppliersEntity) session.get(SuppliersEntity.class, supplierId);
+			SubcategoriesEntity subcategory = (SubcategoriesEntity) session.get(SubcategoriesEntity.class, subcategoryId);
 			InventoryEntity inventory = inventoryService.getInventoryByBookId(id);
 			
 			selectedBook.setTitle(title);
@@ -181,9 +178,10 @@ public class ProductsController {
 			selectedBook.setPublication_year(publication_year);
 			selectedBook.setPage_count(page_count);
 			selectedBook.setLanguage(language);
+			selectedBook.setStatus(status);
 			selectedBook.setUpdatedAt(new Date());
 			
-//			selectedBook.setSubcategoriesEntity(category);
+			selectedBook.setSubcategoriesEntity(subcategory);
 			selectedBook.setSupplier(supplier);
 			
 			try {
@@ -255,9 +253,9 @@ public class ProductsController {
 			@RequestParam(value = "id", required = false) Long id,
 			@RequestParam("title") String title, @RequestParam("author") String author,
 			@RequestParam("price") Double price, @RequestParam("description") String description,
-			@RequestParam("category") Long categoryId, @RequestParam("supplier") Long supplierId,
+			@RequestParam("category") Long categoryId, @RequestParam("subcategory") Long subcategoryId, @RequestParam("supplier") Long supplierId,
 			@RequestParam("quantity") int quantity, @RequestParam("publication_year") int publication_year, 
-			@RequestParam("page_count") int page_count, @RequestParam("language") String language,
+			@RequestParam("page_count") int page_count, @RequestParam("language") String language, @RequestParam("status") int status,
 			@RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail, @RequestParam(value = "images", required = false) MultipartFile[] images) {
 		System.out.println("title: " + title);
 		System.out.println("author: " + author);
@@ -282,13 +280,15 @@ public class ProductsController {
 			newBook.setPublication_year(publication_year);
 			newBook.setLanguage(language);
 			newBook.setPage_count(page_count);
+			newBook.setStatus(status);
 			newBook.setCreatedAt(new Date());
 			newBook.setUpdatedAt(new Date());
 			
 			CategoriesEntity category = (CategoriesEntity) session.get(CategoriesEntity.class, categoryId);
+			SubcategoriesEntity subcategory = (SubcategoriesEntity) session.get(SubcategoriesEntity.class, subcategoryId);
 			SuppliersEntity supplier = (SuppliersEntity) session.get(SuppliersEntity.class, supplierId);
 			
-//			newBook.setCategory(category);
+			newBook.setSubcategoriesEntity(subcategory);
 			newBook.setSupplier(supplier);
 			
 			try {
@@ -344,6 +344,18 @@ public class ProductsController {
 		return "redirect:/products.htm";
 		
 	}
+	
+	@PostMapping("/product/delete")
+    public String deleteBook(@RequestParam("bookId") Long bookId, RedirectAttributes redirectAttributes) {
+        try {
+            // Gọi service để xóa sách
+            bookService.deleteBookById(bookId);
+            redirectAttributes.addFlashAttribute("successMessage", "Sách đã được xóa thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Không thể xóa sách. Vui lòng thử lại!");
+        }
+        return "redirect:/product/list"; // Quay lại danh sách sản phẩm
+    }
 	
 	
 	@RequestMapping(value = "/product/getSubcategories", method = RequestMethod.GET, produces = "text/html; charset=UTF-8")

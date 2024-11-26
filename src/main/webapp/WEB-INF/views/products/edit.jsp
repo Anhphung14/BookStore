@@ -194,16 +194,29 @@
 <!-- 										class="form-label" for="category">Category <span class="text-danger">*</span></label> -->
 <!-- 								</div> -->
 <div class="form-floating mt-3">
-    <select class="form-control" id="category" name="category">
+    <select class="form-control" id="category" name="category" onchange="loadSubcategories(this.value)">
         <option value="" disabled selected>Chọn danh mục</option>
         <!-- Lặp qua danh sách danh mục từ server -->
         <c:forEach var="category" items="${listCategories}">
-            <option value="${category.id}" ${category.id == book.category.id ? 'selected' : ''}>
+            <option value="${category.id}" ${category.id == book.subcategoriesEntity.categoriesEntity.id ? 'selected' : ''}>
                 ${category.name}
             </option>
         </c:forEach>
     </select>
     <label class="form-label" for="category">Category <span class="text-danger">*</span></label>
+</div>
+
+<div class="form-floating mt-3">
+    <select class="form-control" id="subcategory" name="subcategory" onchange="loadCategory(this.value)">
+        <option value="" disabled selected>Select an option</option>
+        <!-- Lặp qua danh sách danh mục từ server -->
+        <c:forEach var="subcategory" items="${listSubcategories}">
+            <option value="${subcategory.id}" ${subcategory.id == book.subcategoriesEntity.id ? 'selected' : ''}>
+                ${subcategory.name}
+            </option>
+        </c:forEach>
+    </select>
+    <label class="form-label" for="category">Subcategory <span class="text-danger">*</span></label>
 </div>
 
 <!-- 								<div class="form-floating mt-3"> -->
@@ -239,17 +252,30 @@
 								</div>
 
 								<div class="form-floating mt-3">
-									<input class="form-control" id="create_at" name="create_at" 
-										value="<fmt:formatDate value='${book.created_at}' pattern='dd-MM-yyyy HH:mm' />"
+									<select class="form-control" id="status" name="status">
+										<option value="" disabled selected>Select an option</option>
+											<option value="0" ${book.status == 0 ? 'selected' : ''}>
+												Disable
+											</option>
+											<option value="1" ${book.status == 1 ? 'selected' : ''}>
+												Enable
+											</option>
+									</select>
+									<label class="form-label" for="category">Category <span class="text-danger">*</span></label>
+								</div>
+
+								<div class="form-floating mt-3">
+									<input class="form-control" id="createdAt" name="createdAt" 
+										value="<fmt:formatDate value='${book.createdAt}' pattern='dd-MM-yyyy HH:mm' />"
 										disabled="disabled"> <label class="form-label"
-										for="create_at">Create at</label>
+										for="createdAt">Created at</label>
 								</div>
 								
 								<div class="form-floating mt-3">
-									<input class="form-control" id="updated_at" name="updated_at" 
-										value="<fmt:formatDate value='${book.updated_at}' pattern='dd-MM-yyyy HH:mm' />"
+									<input class="form-control" id="updatedAt" name="updatedAt" 
+										value="<fmt:formatDate value='${book.updatedAt}' pattern='dd-MM-yyyy HH:mm' />"
 										disabled="disabled"> <label class="form-label"
-										for="updated_at">Update at</label>
+										for="updatedAt">Updated at</label>
 								</div>
 								
 								<div class="form-floating mt-3">
@@ -381,6 +407,48 @@
 	    
 	    input.value = value;
 	}
+
+	function loadSubcategories(categoryId) {
+		    if (!categoryId) {
+		        document.getElementById('subcategory').innerHTML = '<option value="" disabled selected>Select a subcategory</option>';
+		        return;
+		    }
+
+		    // Gửi yêu cầu AJAX đến server
+		    fetch('/bookstore/product/getSubcategories.htm?categoryId=' + categoryId)
+		    .then(response => response.text())
+		    .then(data => {
+		        const subcategorySelect = document.getElementById('subcategory');
+		        subcategorySelect.innerHTML = data; // Thêm trực tiếp HTML trả về vào dropdown
+		    })
+		    .catch(error => console.error('Error:', error));
+
+		}
+		
+		function loadCategory(subcategoryId) {
+		    if (!subcategoryId) return;
+
+		    fetch(`/bookstore/product/getCategory.htm?subcategoryId=` + subcategoryId)
+		        .then(response => response.text()) // Đọc response dạng text
+		        .then(data => {
+		            const parser = new DOMParser();
+		            const doc = parser.parseFromString(data, 'text/html');
+		            const categoryId = doc.querySelector('#categoryId')?.textContent; // Lấy ID từ HTML
+
+		            if (categoryId) {
+		                const categorySelect = document.getElementById('category');
+		                const options = categorySelect.options;
+
+		                for (let i = 0; i < options.length; i++) {
+		                    if (options[i].value === categoryId) {
+		                        options[i].selected = true; // Đặt trạng thái selected
+		                        break;
+		                    }
+		                }
+		            }
+		        })
+		        .catch(error => console.error('Error:', error));
+		}
 
 	</script>
 </body>

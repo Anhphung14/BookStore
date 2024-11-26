@@ -65,7 +65,7 @@ public class BooksEntity {
     private Date updatedAt;
     
     @Column(name = "status", columnDefinition = "bit")
-    private String status;
+    private int status;
 
 	public SubcategoriesEntity getSubcategoriesEntity() {
 		return subcategoriesEntity;
@@ -191,15 +191,15 @@ public class BooksEntity {
 		this.updatedAt = updatedAt;
 	}
 
-	public String getStatus() {
+    public int getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 
-    @Override
+	@Override
     public String toString() {
         return "Book{" +
                 "id=" + id +

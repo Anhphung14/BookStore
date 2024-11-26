@@ -25,7 +25,6 @@ public class SubcategoriesEntity{
     @JoinColumn(name = "category_id")
     private CategoriesEntity categoriesEntity;
 
-
     @Column(name = "created_at", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created_at;

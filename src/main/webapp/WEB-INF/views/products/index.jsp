@@ -2,6 +2,8 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,6 +37,14 @@
 }
 
 .table-centered tbody tr:hover { background-color: #f0f0f0;}
+
+.ellipsis {
+    white-space: nowrap;          /* Không xuống dòng */
+    overflow: hidden;             /* Ẩn phần văn bản vượt quá vùng chứa */
+    text-overflow: ellipsis;      /* Thêm dấu "..." khi văn bản bị cắt */
+    max-width: 200px;             /* Đặt chiều rộng tối đa của vùng chứa */
+    display: block;               /* Đảm bảo nó là một khối để áp dụng được */
+}
 </style>
 </head>
 <body>
@@ -107,8 +117,10 @@
 										<th width="30px" class="text-start">#</th>
 										<th width="200x" class="text-center">Product</th>
 										<th width="30px" class="text-center">Status</th>
-										<th width="50px" class="text-center">Inventory</th>
+										<th width="100px" class="text-center">Stock quantity</th>
+										<!-- <th width="50px" class="text-center">Inventory</th> -->
 										<th width="160px" class="text-center">Category</th>
+										<th width="50px" class="text-center">Price</th>
 										<th width="80px" class="text-center">Update at</th>
 										<th width="60px" class="text-center">Action</th>
 									</tr>
@@ -125,32 +137,51 @@
 													<div>
 														<img alt="Product Thumbnail" src="${book.thumbnail}" class="bg-white border border-3 border-white" width="50px">
 													</div>
-													<div class="ms-3">
-														<div class="fw-semibold custom-text">${book.title}</div>
-<%-- 														<div class="small custom-text">${user.email}</div> --%>
+													<div class="ms-3 ">
+														<div class="fw-semibold custom-text ellipsis">${book.title}</div>
 													</div>
 											</a></td>
-											<td class="text-center align-middle"><span class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">active</span></td>
-<%-- 											<td class="text-end align-middle"><span class="small text-uppercase ${user.isActive ? 'text-success' : 'text-danger'} bg-opacity-10 rounded px-2 py-1">${user.isActive ? 'Active' : 'Inactive'}</span></td> --%>
 											<c:choose>
-												<c:when test="${quantities[status.index] > 10}">
-													<td class="text-center align-middle"><span class="small text-success bg-opacity-10 rounded px-2 py-1">${quantities[status.index]} in stock</span></td>												
+												<c:when test="${book.status == 1}">
+													<td class="text-center align-middle"><span class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">active</span></td>
 												</c:when>
 												<c:otherwise>
-													<td class="text-center align-middle"><span class="small text-danger bg-opacity-10 rounded px-2 py-1">${quantities[status.index]} in stock</span></td>
+													<td class="text-center align-middle"><span class="small text-uppercase text-danger bg-danger bg-opacity-10 rounded px-2 py-1">disable</span></td>
+												</c:otherwise>
+											</c:choose></title>
+<!-- 											<td class="text-center align-middle"><span class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">active</span></td> -->
+<%-- 											<td class="text-end align-middle"><span class="small text-uppercase ${user.isActive ? 'text-success' : 'text-danger'} bg-opacity-10 rounded px-2 py-1">${user.isActive ? 'Active' : 'Inactive'}</span></td> --%>
+											
+											<!-- <td class="text-center align-middle">${book.stock_quantity}</td> -->
+											
+											<c:choose>
+												<c:when test="${quantities[status.index] > 10}">
+													<td class="text-center align-middle"><span class="small text-success bg-opacity-10 rounded px-2 py-1">${book.stock_quantity} in stock</span></td>												
+												</c:when>
+												<c:otherwise>
+													<td class="text-center align-middle"><span class="small text-danger bg-opacity-10 rounded px-2 py-1">${book.stock_quantity} in stock</span></td>
 												</c:otherwise>
 											</c:choose>
 											
 											
-											<td class="text-center align-middle">${book.category.name}</td>
-											<td class="text-center align-middle"><fmt:formatDate value='${book.updated_at}' pattern='dd-MM-yyyy HH:mm' /></td>
+											<td class="text-center align-middle">${book.subcategoriesEntity.name}</td>
+											<td class="text-center align-middle">
+												
+												<fmt:formatNumber value="${book.price}" type="currency" maxFractionDigits="0" currencySymbol="₫"/>
+											</td>
+											<td class="text-center align-middle"><fmt:formatDate value='${book.updatedAt}' pattern='dd-MM-yyyy HH:mm' /></td>
 											<td class="text-center">
 												<div class="d-flex justify-content-center align-items-center gap-1">
 													<a class="btn btn-rounded" href="product/edit/${book.id}.htm"><i class="fa fa-pencil"></i></a>
 <%-- 													<a class="btn btn-rounded"><i class="fa ${user.isActive ? 'fa-eye-slash' : 'fa-eye'}"></i></a> --%>
-													<a class="btn btn-rounded"><i class="fa fa-eye-slash"></i></a>
-													<a class="btn btn-rounded"><i class="fa fa-search"></i></a>
-													<a class="btn btn-rounded"><i class="fa fa-trash-alt"></i></a>
+													<!-- <a class="btn btn-rounded"><i class="fa fa-eye-slash"></i></a> -->
+													<!-- <a class="btn btn-rounded"><i class="fa fa-search"></i></a> -->
+													<a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#exampleModal">
+													    <i class="fa fa-plus-circle" aria-hidden="true"></i>
+													</a>
+													<a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="prepareDelete(${book.id}, '${book.title}')">
+														<i class="fa fa-trash-alt"></i>
+													</a>
 												</div>
 											</td>
 										</tr>
@@ -164,6 +195,34 @@
 					</div>
 				</div>
 			</form>
+
+			<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+			    <div class="modal-dialog">
+			        <div class="modal-content">
+			            <div class="modal-header">
+			                <h5 class="modal-title" id="deleteModalLabel">Confirm Book Deletion</h5>
+			                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			            </div>
+			            <div class="modal-body">
+			                <!-- Form used to send POST request -->
+			                <form id="deleteForm" method="POST" action="/bookstore/product/delete">
+			                    <p>Are you sure you want to delete this book?</p>
+			                    <p><strong>Book Id:</strong> <span id="bookIdToDelete"></span></p>
+			                    <p><strong>Book title:</strong> <span id="bookTitleToDelete"></span></p>
+			                    <!-- Hidden input to send bookId -->
+			                    <input type="hidden" name="bookId" id="bookIdInput">
+			                </form>
+			            </div>
+			            <div class="modal-footer">
+			                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+			                <!-- Submit button to send form -->
+			                <button type="submit" class="btn btn-danger" form="deleteForm">Delete</button>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+
+
 
 		</div>
 
@@ -187,6 +246,14 @@
 		            window.location.href = '${pageContext.servletContext.contextPath}/products.htm';
 		        }
 		    });
+		}
+		
+		function prepareDelete(bookId, bookTitle) {
+		    // Hiển thị ID của sách trong modal
+		    document.getElementById("bookIdToDelete").textContent = bookId;
+		    document.getElementById("bookTitleToDelete").textContent = bookTitle;
+		    document.getElementById("bookIdInput").value = bookId;
+
 		}
 	</script>
 </body>
