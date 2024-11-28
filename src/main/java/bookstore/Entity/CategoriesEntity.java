@@ -46,7 +46,7 @@ public class CategoriesEntity {
 	private Date updated_at;
 	
 	@OneToMany(mappedBy = "categoriesEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<SubcategoriesEntity> subcategoriesEntities;
+	private List<SubcategoriesEntity> subcategoriesEntity;
 
 	
 	@Transient
@@ -85,12 +85,12 @@ public class CategoriesEntity {
 		this.updated_at = updated_at;
 	}
 
-	public List<SubcategoriesEntity> getSubcategoriesEntities() {
-		return subcategoriesEntities;
+	public List<SubcategoriesEntity> getSubcategoriesEntity() {
+		return subcategoriesEntity;
 	}
 
-	public void setSubcategoriesEntities(List<SubcategoriesEntity> subcategoriesEntities) {
-		this.subcategoriesEntities = subcategoriesEntities;
+	public void setSubcategoriesEntity(List<SubcategoriesEntity> subcategoriesEntity) {
+		this.subcategoriesEntity = subcategoriesEntity;
 	}
 
 	public String getSlug() {

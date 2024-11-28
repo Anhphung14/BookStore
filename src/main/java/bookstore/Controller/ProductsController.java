@@ -89,46 +89,24 @@ public class ProductsController {
 	
 	
 	@RequestMapping("/products")
-	public String products(ModelMap model, HttpServletResponse response) throws IOException {
+	public String products(ModelMap model) {
 		
-		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-	    response.setHeader("Pragma", "no-cache");
-	    response.setDateHeader("Expires", 0);
-		
-		List<BooksEntity> listBooks = booksService.getAllBooks();
-//        model.addAttribute("listBooks", listBooks);
-		List<Long> ids = new ArrayList<Long>();
-		for (BooksEntity book : listBooks) {
-			ids.add(book.getId());
-		}
-		
-		List<Object[]> booksWithQuantities = booksService.getBooksWithQuantitiesByIds(ids);
-		List<BooksEntity> books = new ArrayList<>(); 
-		List<Integer> quantities = new ArrayList<>(); 
-		for (Object[] result : booksWithQuantities) { 
-			books.add((BooksEntity) result[0]); 
-			quantities.add((Integer) result[1]); 
-		} 
+		List<BooksEntity> books = booksService.getAllBooks();
 		
 		model.addAttribute("listBooks", books); 
-		model.addAttribute("quantities", quantities);
 		
 		return "products/index";
-		
 	}
 	
 	@RequestMapping("/product/edit/{id}")
 	public String productEdit(@PathVariable("id") Long id, ModelMap model) {
 		
 		model.addAttribute("task", "edit");
-
-		Object[] bookWithQuantity = booksService.getBookWithQuantityById(id);
+	
+		BooksEntity book = booksService.getBookById(id);
 		
-		BooksEntity book = (BooksEntity) bookWithQuantity[0];
-		
-		Integer quantity = (Integer) bookWithQuantity[1]; 
 		model.addAttribute("book", book); 
-		model.addAttribute("quantity", quantity);
+		
 		model.addAttribute("listCategories", categoriesService.getAllCategories());
 		model.addAttribute("listSubcategories", subcategoriesService.getAllSubcategories());
 		model.addAttribute("listSuppliers", suppliersService.getAllSuppliers());
@@ -152,7 +130,7 @@ public class ProductsController {
 			@RequestParam("title") String title, @RequestParam("author") String author,
 			@RequestParam("price") Double price, @RequestParam("description") String description,
 			@RequestParam("category") Long categoryId, @RequestParam("subcategory") Long subcategoryId, @RequestParam("supplier") Long supplierId,
-			@RequestParam("quantity") int quantity, @RequestParam("publication_year") int publication_year, 
+			@RequestParam("stock_quantity") int stock_quantity, @RequestParam("publication_year") int publication_year, 
 			@RequestParam("page_count") int page_count, @RequestParam("language") String language, @RequestParam("status") int status,
 			@RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail, @RequestParam(value = "images", required = false) MultipartFile[] images) {
 		
@@ -177,6 +155,7 @@ public class ProductsController {
 			selectedBook.setDescription(description);
 			selectedBook.setPublication_year(publication_year);
 			selectedBook.setPage_count(page_count);
+			selectedBook.setStock_quantity(stock_quantity);
 			selectedBook.setLanguage(language);
 			selectedBook.setStatus(status);
 			selectedBook.setUpdatedAt(new Date());
@@ -220,25 +199,20 @@ public class ProductsController {
 			}
 			
 			try {
-				boolean is_updateQuantity = inventoryService.updateQuantityByBookId(inventory, quantity);
 				session.update(selectedBook);
 				
-				if (is_updateQuantity == true) {
-					
 //				model.addAttribute("alertMessage", "Successfully updated BookID: " + id);
 //		        model.addAttribute("alertType", "success");
 					
-					redirectAttributes.addFlashAttribute("alertMessage", "Successfully updated BookID: " + id);
-					redirectAttributes.addFlashAttribute("alertType", "success");
-				} else {
-					model.addAttribute("alertMessage", "An error occurred while updating the BookId: " + id);
-					model.addAttribute("alertType", "error");
-					
-					return "products/edit";
-				}
+				redirectAttributes.addFlashAttribute("alertMessage", "Successfully updated BookID: " + id);
+				redirectAttributes.addFlashAttribute("alertType", "success");
+		
 				
 			} catch (Exception e) {
 				System.err.println("An error occurred while updating the book: " + e.getMessage());
+				model.addAttribute("alertMessage", "An error occurred while updating the BookId: " + id);
+				model.addAttribute("alertType", "error");
+				return "products/edit";
 			}
 		} catch (Exception e) {
 			// TODO: handle exception

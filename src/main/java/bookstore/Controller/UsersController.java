@@ -53,7 +53,22 @@ public class UsersController {
 		model.addAttribute("users", users);
 		return "users/index";
 	}
+	
+	@RequestMapping(value = "/user/new", method = RequestMethod.GET)
+	public String userNew(ModelMap model) {
+	    model.addAttribute("user", new UsersEntity());
+	    model.addAttribute("task", "new");
 
+	    Session session = factory.getCurrentSession();
+	    Query query = session.createQuery("FROM RolesEntity");
+	    List<RolesEntity> roles = query.list();
+
+	    model.addAttribute("roles", roles);
+
+	    return "users/edit"; 
+	}
+
+	
 	@RequestMapping(value = "/user/edit/{id}", method = RequestMethod.GET)
 	public String userEdit(@PathVariable("id") Long id, ModelMap model) {
 		UsersEntity user = getUserById(id);
@@ -74,93 +89,95 @@ public class UsersController {
 
 	@RequestMapping(value = "/user/save", method = RequestMethod.POST)
 	public String saveUser(@ModelAttribute("user") UsersEntity user, @RequestParam("task") String task,
-			@RequestParam(value = "id", required = false) Long id,
-			@RequestParam(value = "roleIds", required = false) Set<Long> roleIds, // Nhận mảng các ID
-			ModelMap model) {
-		Session session = factory.getCurrentSession();
-		
-	
-		try {
-			if ("new".equals(task)) {
-				// Kiểm tra email đã tồn tại chưa
-				if (getUserByEmail(user.getEmail()) != null) {
-					model.addAttribute("message", "This email is already registered.");
-					return "users/edit";
-				}
+	        @RequestParam(value = "id", required = false) Long id,
+	        @RequestParam(value = "roleIds", required = false) Set<Long> roleIds, // Nhận mảng các ID
+	        ModelMap model) {
+	    Session session = factory.getCurrentSession();
+	    
+	    try {
+	        if ("new".equals(task)) {
+	            // Kiểm tra email đã tồn tại chưa
+	            if (getUserByEmail(user.getEmail()) != null) {
+	                model.addAttribute("message", "This email is already registered.");
+	                return "users/edit";
+	            }
 
-				// Lưu người dùng mới
-				user.setAvatar("resources/images/default-avatar.png");
+	            // Lưu người dùng mới
+	            user.setAvatar("resources/images/default-avatar.png");
 
-				String hashedPassword = PasswordUtil.hashPassword("bookstore");
-				user.setPassword(hashedPassword);
+	            String hashedPassword = PasswordUtil.hashPassword("bookstore");
+	            user.setPassword(hashedPassword);
 
-				LocalDateTime now = LocalDateTime.now();
-				Timestamp currentDate = Timestamp.valueOf(now);
-				user.setCreated_at(currentDate);
-				user.setUpdated_at(currentDate);
+	            LocalDateTime now = LocalDateTime.now();
+	            Timestamp currentDate = Timestamp.valueOf(now);
+	            user.setCreated_at(currentDate);
+	            user.setUpdated_at(currentDate);
 
-				session.save(user); // Lưu người dùng
+	            session.save(user); // Lưu người dùng
 
-				// Xử lý roles cho người dùng mới (dùng role_id)
-				if (roleIds != null && roleIds.size() > 0) {
-					Set<RolesEntity> roles = new HashSet<>();
-					for (Long roleId : roleIds) {
-						RolesEntity role = (RolesEntity) session.get(RolesEntity.class, roleId); // Lấy role từ DB
-						if (role != null) {
-							roles.add(role); // Thêm role vào Set
-						}
-					}
-					user.setRoles(roles); // Gán roles cho người dùng
-					session.update(user); // Cập nhật người dùng với các roles
-				}
+	            // Xử lý roles cho người dùng mới (dùng role_id)
+	            if (roleIds != null && roleIds.size() > 0) {
+	                Set<RolesEntity> roles = new HashSet<>();
+	                for (Long roleId : roleIds) {
+	                    RolesEntity role = (RolesEntity) session.get(RolesEntity.class, roleId); // Lấy role từ DB
+	                    if (role != null) {
+	                        roles.add(role); // Thêm role vào Set
+	                    }
+	                }
+	                user.setRoles(roles); // Gán roles cho người dùng
+	                session.update(user); // Cập nhật người dùng với các roles
+	            }
 
-			} else if ("edit".equals(task)) {
-				UsersEntity existingUser = getUserById(id);
+	        } else if ("edit".equals(task)) {
+	            UsersEntity existingUser = getUserById(id);
 
-				if (existingUser == null) {
-					model.addAttribute("message", "User not found.");
-					return "redirect:/users.htm";
-				}
+	            if (existingUser == null) {
+	                model.addAttribute("message", "User not found.");
+	                return "redirect:/users.htm";
+	            }
 
-				// Cập nhật thông tin người dùng
-				existingUser.setFullname(user.getFullname());
-				existingUser.setEmail(user.getEmail());
-				existingUser.setPhone(user.getPhone());
-				existingUser.setGender(user.getGender());
+	            // Cập nhật thông tin người dùng
+	            existingUser.setFullname(user.getFullname());
+	            existingUser.setEmail(user.getEmail());
+	            existingUser.setPhone(user.getPhone());
+	            existingUser.setGender(user.getGender());
 
-				Date currentDate = new Date(System.currentTimeMillis());
-				existingUser.setUpdated_at(currentDate);
+	            Date currentDate = new Date(System.currentTimeMillis());
+	            existingUser.setUpdated_at(currentDate);
 
-				// Kiểm tra email
-				UsersEntity emailCheck = getUserByEmail(user.getEmail());
-				if (emailCheck != null && !emailCheck.getId().equals(existingUser.getId())) {
-					model.addAttribute("message", "This email is already registered.");
-					return "users/edit";
-				}
+	            // Kiểm tra email
+	            UsersEntity emailCheck = getUserByEmail(user.getEmail());
+	            if (emailCheck != null && !emailCheck.getId().equals(existingUser.getId())) {
+	                model.addAttribute("message", "This email is already registered.");
+	                return "users/edit";
+	            }
 
-				// Cập nhật roles cho người dùng
-				if (roleIds != null && roleIds.size() > 0) {
-					Set<RolesEntity> roles = new HashSet<>();
-					for (Long roleId : roleIds) {
-						RolesEntity role = (RolesEntity) session.get(RolesEntity.class, roleId); // Lấy role từ DB
-						if (role != null) {
-							roles.add(role); // Thêm role vào Set
-						}
-					}
-					existingUser.setRoles(roles); // Cập nhật roles cho người dùng
-				}
+	            // Cập nhật roles cho người dùng
+	            if (roleIds != null) {
+	                Set<RolesEntity> roles = new HashSet<>();
+	                for (Long roleId : roleIds) {
+	                    RolesEntity role = (RolesEntity) session.get(RolesEntity.class, roleId); // Lấy role từ DB
+	                    if (role != null) {
+	                        roles.add(role); // Thêm role vào Set
+	                    }
+	                }
+	                existingUser.setRoles(roles); // Cập nhật roles cho người dùng
+	            } else {
+	                existingUser.setRoles(new HashSet<>()); // Nếu không chọn quyền nào thì xóa hết roles
+	            }
 
-				session.merge(existingUser); // Cập nhật người dùng
-				return "redirect:/users.htm";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			model.addAttribute("message", "An error occurred: " + e.getMessage());
-			return "redirect:/users.htm";
-		}
+	            session.merge(existingUser); // Cập nhật người dùng
+	            return "redirect:/users.htm";
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        model.addAttribute("message", "An error occurred: " + e.getMessage());
+	        return "redirect:/users.htm";
+	    }
 
-		return "redirect:/users.htm";
+	    return "redirect:/users.htm";
 	}
+
 
 	public UsersEntity getUserByEmail(String email) {
 		Session session = factory.getCurrentSession();

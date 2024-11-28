@@ -100,7 +100,7 @@ public class BooksDAO {
 			    Session session = sessionFactory.getCurrentSession();
 			    String hql = "SELECT c.id, c.name AS categoryName, COALESCE(COUNT(b.id), 0) AS totalBooks " +
 		                 "FROM CategoriesEntity c " +
-		                 "LEFT JOIN c.subcategoriesEntities sc " +
+		                 "LEFT JOIN c.subcategoriesEntity sc " +
 		                 "LEFT JOIN sc.books b " +
 		                 "GROUP BY c.id, c.name " +
 		                 "ORDER BY c.id"; // Sắp xếp theo id của CategoriesEntity
@@ -329,5 +329,21 @@ public class BooksDAO {
 		    return result > 0;
 		}
 
+		public BooksEntity getBookByIdHQL(Long id) {
+	        Session session = sessionFactory.getCurrentSession();
+	        BooksEntity book = (BooksEntity) session.createQuery("FROM BooksEntity WHERE id = :id").setParameter("id", id).uniqueResult();
+	        return book;
+	    }
+		
+		
+		public List<BooksEntity> getBooksBySubcategory(Long subcategoryId) {
+		    Session session = sessionFactory.getCurrentSession();
+		    
+		    String hql = "FROM BooksEntity WHERE subcategoriesEntity.id = :subcategoryId ORDER BY rand()";
+		    
+		    List<BooksEntity> books = session.createQuery(hql).setParameter("subcategoryId", subcategoryId).setMaxResults(7).list();
+
+		    return books;
+		}
 
 }

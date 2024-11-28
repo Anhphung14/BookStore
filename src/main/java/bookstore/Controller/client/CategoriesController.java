@@ -35,7 +35,7 @@ public class CategoriesController {
         //List<Object[]> danhMuc = new ArrayList<>();
         Object[] danhMuc = new Object[4]; 
         for (CategoriesEntity cg : listCategories) {
-            for (SubcategoriesEntity scg : cg.getSubcategoriesEntities()) {
+            for (SubcategoriesEntity scg : cg.getSubcategoriesEntity()) {
                 if (scg.getSlug().equals(slugSub)) {
                 	danhMuc[0] = cg.getName();       
                 	danhMuc[1] = scg.getName();      

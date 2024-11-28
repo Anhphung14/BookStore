@@ -239,9 +239,9 @@
 </div>
 
 								<div class="form-floating mt-3">
-									<input class="form-control numeric-input" id="quantity" oninput="validateNumberInput(this)"
-										name="quantity" value="${quantity}"> <label
-										class="form-label" for="quantity">Stock quantity <span class="text-danger">*</span></label>
+									<input class="form-control numeric-input" id="stock_quantity" oninput="validateNumberInput(this)"
+										name="stock_quantity" value="${book.stock_quantity}"> <label
+										class="form-label" for="stock_quantity">Stock quantity <span class="text-danger">*</span></label>
 								</div>
 								
 								<div class="form-floating mt-3">
