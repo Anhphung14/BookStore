@@ -135,9 +135,7 @@
 									</li>
 								</ul>
 							</div>
-							
-							
-							
+
 							<div class="tg-wishlistandcart">
 								<div class="dropdown tg-themedropdown tg-wishlistdropdown">
 									<a href="javascript:void(0);" id="tg-wishlisst" class="tg-btnthemedropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -202,11 +200,12 @@
 									</div>
 								</div>
 							</div>
+							
 							<div class="tg-searchbox">
-							    <form class="tg-formtheme tg-formsearch" action="${pageContext.servletContext.contextPath}/search.htm" method="GET">
+							    <form class="tg-formtheme tg-formsearch" action="${pageContext.servletContext.contextPath}/search.htm" method="GET" onsubmit="return validateSearch();">
 							        <fieldset>
 							            <!-- Ô nhập liệu tìm kiếm -->
-							            <input type="text" name="q" class="typeahead form-control" placeholder="Search by title, author, keyword, ISBN...">
+							            <input id="searchInput" type="text" name="q" class="typeahead form-control" placeholder="">
 							            <!-- Nút tìm kiếm -->
 							            <button type="submit">
 							                <i class="fa-solid fa-magnifying-glass"></i>
@@ -215,6 +214,30 @@
 							       
 							    </form>
 							</div>
+							
+							<div class="action">
+							     <div class="profile" onclick="menuToggle();">
+							    <img src="https://i.pinimg.com/474x/90/57/0a/90570addee2645866a597530721f37fd.jpg" style="width: 60px; height: 60px"/>
+							  </div>
+							  <div class="menu">
+							    <h3>Nhìn đoé gì<br /><span>Hội viên siêu cấp vjp pro</span></h3>
+							    <ul>
+							      <li>
+							        <i class="fa-solid fa-user"></i>&nbsp;&nbsp;<a href="#">My profile</a>
+							      </li>
+							      <li>
+							        <i class="fa-solid fa-shop"></i>&nbsp;&nbsp;<a href="#">My Orders</a>
+							      </li>
+							      <li>
+							        <i class="fa-solid fa-inbox"></i>&nbsp;&nbsp;<a href="#">Inbox</a>
+							      </li>
+							      <li>
+							        <i class="fa-solid fa-right-from-bracket"></i>&nbsp;&nbsp;<a href="#">Logout</a>
+							      </li>
+							    </ul>
+							  </div>
+							</div>
+													
 						</div>
 					</div>
 				</div>
@@ -384,7 +407,18 @@
 		});
 
 		
+		function menuToggle() {
+	        const toggleMenu = document.querySelector(".menu");
+	        toggleMenu.classList.toggle("active");
+	      }
 		
+		function validateSearch() {
+	        const searchInput = document.getElementById("searchInput").value.trim();
+	        if (searchInput === "") {
+	            return false; // Ngăn form gửi request
+	        }
+	        return true; // Cho phép gửi request
+	    }
 		</script>	
 </body>
 </html>

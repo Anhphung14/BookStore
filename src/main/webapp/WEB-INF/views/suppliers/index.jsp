@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
@@ -7,6 +6,8 @@
 <meta charset="UTF-8">
 <title>Providers management</title>
 <base href="${pageContext.servletContext.contextPath}/">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script src="${pageContext.request.contextPath}/resources/js/app.js"
 	defer></script>
 <link
@@ -16,7 +17,9 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script
+	src="${pageContext.request.contextPath}/resources/js/confirmBox.js"></script>
 <style>
 .main-content {
 	display: flex;
@@ -44,10 +47,10 @@
 				style="margin-left: 0px; margin-right: 0px;">
 				<div class="row g-3 mt-3">
 					<div class="col">
-						<h2 class="h3">Providers management</h2>
-						<p>This section allows you to manage your providers
-							efficiently, including adding, editing, or removing provider
-							details to streamline operations.</p>
+						<h2 class="h3">Suppliers management</h2>
+						<p>Manage your suppliers efficiently by adding, editing, or
+							removing details to streamline operations.</p>
+
 					</div>
 					<div class="col-auto d-none d-sm-block">
 						<img class="page-icon" src="resources/images/page.svg"
@@ -75,8 +78,8 @@
 								</button>
 							</div>
 							<a class="btn btn-primary text-nowrap btn-add"
-								href="${pageContext.request.contextPath}/user/new"> <i
-								class="fa fa-plus me-2"></i>Add
+								href="${pageContext.request.contextPath}/supplier/new.htm">
+								<i class="fa fa-plus me-2"></i>Add
 							</a>
 						</div>
 
@@ -86,9 +89,7 @@
 								<div class="d-flex justify-content-between gap-3">
 									<div class="selected-count align-self-center"></div>
 									<div class="d-flex gap-1">
-										<a class="btn btn-rounded"> <i class="fa fa-eye"></i></a> <a
-											class="btn btn-rounded"> <i class="fa fa-eye-slash"></i>
-										</a> <a class="btn btn-rounded"> <i class="fa fa-trash-alt"></i>
+										<a class="btn btn-rounded"> <i class="fa fa-trash-alt"></i>
 										</a>
 									</div>
 								</div>
@@ -102,47 +103,46 @@
 											onclick="checkAll()" /></th>
 										<th width="30px" class="text-end">#</th>
 										<th>Name</th>
-										<th width="60px">Email</th>
-										<th width="120px" class="text-center">Phone</th>
-										<th width="120px" class="text-center">Company</th>
+										<th>Contact Person</th>
+										<th>Email</th>
+										<th class="text-center">Phone</th>
+										<th>Address</th>
 										<th width="160px" class="text-center">Updated</th>
 										<th width="60px">Actions</th>
 									</tr>
-									<%--          <c:forEach var="user" items="${users}" varStatus="status"> --%>
-									<tr>
-										<td><input type="checkbox" class="form-check-input"
-											id="cb1" name="cid[]" value="1"
-											onclick="isChecked(this.checked)"></td>
-										<td class="text-end">1</td>
-										<td><span class="text-decoration-underline">Jollibee</span>
-										</td>
-										<td class="text-center align-middle"><span
-										>phung@gmail.com</span>
-										</td>
-										<td class="text-center align-middle"><span
-										>07983948923</span>
-										</td>
-										<td class="text-center align-middle"><span
-										>Jollibee VN</span>
-										</td>
-										<td class="text-end align-middle">22:00 14/11/2024</td>
-										<td class="text-end">
-											<div class="d-flex gap-1">
-												<a class="btn btn-rounded" href="/user/edit/1"> <i
-													class="fa fa-pencil"></i>
-												</a> <a class="btn btn-rounded"> <i class="fa fa-eye-slash"></i>
-												</a> <a class="btn btn-rounded"> <i class="fa fa-arrow-up"></i>
-												</a> <a class="btn btn-rounded"> <i class="fa fa-arrow-down"></i>
-												</a> <a class="btn btn-rounded"> <i class="fa fa-trash-alt"></i>
-												</a>
-											</div>
-										</td>
-									</tr>
-									<%--        </c:forEach> --%>
+									<c:forEach var="supplier" items="${suppliers}"
+										varStatus="status">
+										<tr>
+											<td class="align-middle"><input type="checkbox"
+												class="form-check-input" id="cb1" name="cid[]" value="1"
+												onclick="isChecked(this.checked)"></td>
+											<td class="text-end align-middle">${supplier.id}</td>
+											<td class="align-middle"><span>${supplier.name}</span></td>
+											<td class="align-middle"><span>${supplier.contactPerson}</span></td>
+											<td class=" align-middle"><span>${supplier.email}</span>
+											</td>
+											<td class="text-center align-middle"><span>${supplier.phone}</span>
+											</td>
+											<td class=" align-middle"><span>${supplier.address}</span>
+											</td>
+											<td class="text-center align-middle">${supplier.updatedAt}</td>
+											<td class="text-end">
+												<div class="d-flex gap-1">
+													<a class="btn btn-rounded"
+														href="${pageContext.request.contextPath}/supplier/edit/${supplier.id}.htm">
+														<i class="fa fa-pencil"></i>
+													</a> <a class="btn btn-rounded btn-delete"
+														href="javascript:void(0);"
+														data-url="${pageContext.request.contextPath}/supplier/delete/${supplier.id}.htm">
+														<i class="fa fa-trash-alt"></i>
+													</a>
+												</div>
+											</td>
+										</tr>
+									</c:forEach>
 								</table>
 							</div>
 						</div>
-						<div>${users.links}</div>
 					</div>
 				</div>
 			</form>

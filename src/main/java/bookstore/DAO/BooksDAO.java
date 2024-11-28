@@ -11,7 +11,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.jsf.FacesContextUtils;
 
 import bookstore.Entity.BooksEntity;
 import bookstore.Entity.CategoriesEntity;
