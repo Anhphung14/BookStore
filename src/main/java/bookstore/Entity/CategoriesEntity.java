@@ -47,15 +47,6 @@ public class CategoriesEntity {
 	
 	@OneToMany(mappedBy = "categoriesEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<SubcategoriesEntity> subcategoriesEntity;
-
-	public List<SubcategoriesEntity> getSubcategories() {
-		return subcategoriesEntities;
-	}
-
-	public void setSubcategories(List<SubcategoriesEntity> subcategories) {
-		this.subcategoriesEntities = subcategories;
-	}
-
 	
 	@Transient
     private String slug;
