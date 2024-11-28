@@ -72,7 +72,7 @@
 			<li><a class="nav-link" href="providers.htm"
 				style="color: #343a40;"> <i class="fa fa-cubes"></i> <span>Suppliers</span>
 			</a></li>
-			<li><a class="nav-link" href="#" style="color: #343a40;"> <i
+			<li><a class="nav-link" href="categories.htm" style="color: #343a40;"> <i
 					class="fa fa-th-list"></i> <span>Categories</span>
 			</a></li>
 			<li><a class="nav-link" href="products.htm"

@@ -45,8 +45,16 @@ public class CategoriesEntity {
 	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	private Date updated_at;
 	
-	@OneToMany(mappedBy = "categoriesEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "categoriesEntity", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<SubcategoriesEntity> subcategoriesEntities;
+
+	public List<SubcategoriesEntity> getSubcategories() {
+		return subcategoriesEntities;
+	}
+
+	public void setSubcategories(List<SubcategoriesEntity> subcategories) {
+		this.subcategoriesEntities = subcategories;
+	}
 
 	
 	@Transient
