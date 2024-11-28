@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
@@ -90,9 +89,7 @@
 								<div class="d-flex justify-content-between gap-3">
 									<div class="selected-count align-self-center"></div>
 									<div class="d-flex gap-1">
-										<a class="btn btn-rounded"> <i class="fa fa-eye"></i></a> <a
-											class="btn btn-rounded"> <i class="fa fa-eye-slash"></i>
-										</a> <a class="btn btn-rounded"> <i class="fa fa-trash-alt"></i>
+										<a class="btn btn-rounded"> <i class="fa fa-trash-alt"></i>
 										</a>
 									</div>
 								</div>
