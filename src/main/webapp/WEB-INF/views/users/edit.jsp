@@ -105,10 +105,11 @@
 								<c:forEach var="role" items="${roles}">
 									<option value="${role.id}"
 										${user.roles != null && user.roles.contains(role) ? 'selected' : ''}>
-										${role.name} <small>(${role.description})</small>
+										${role.name}
 									</option>
 								</c:forEach>
 							</select>
+
 
 						</div>
 
