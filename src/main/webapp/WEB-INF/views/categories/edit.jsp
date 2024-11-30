@@ -26,9 +26,11 @@
 	display: flex;
 	flex: 1;
 }
+
 .btn i {
 	font-size: 0.8em;
 }
+
 .custom-text {
 	color: #343a40;
 }
@@ -37,6 +39,7 @@
 	display: none;
 	margin-top: 10px;
 }
+
 .action-buttons button {
 	margin-right: 10px;
 }
@@ -82,25 +85,30 @@
 							<h6 class="small text-muted mt-4">Subcategories</h6>
 							<div class="mt-3">
 								<ul id="subcategoryList">
-									<c:forEach var="subcategory" items="${category.subcategoriesEntity}">
+									<c:forEach var="subcategory"
+										items="${category.subcategoriesEntity}">
 										<li><input type="checkbox" class="subcategoryCheckbox"
 											name="subcategoryIdsToEdit" value="${subcategory.id}"
-											data-name="${subcategory.name}"> ${subcategory.name}</li>
+											data-name="${subcategory.name}"> ${subcategory.name}
+											<a href="javascript:void(0);"
+											class="btn btn-rounded edit-button"
+											data-id="${subcategory.id}" data-name="${subcategory.name}">
+												<i class="fa fa-pencil"></i>
+										</a></li>
 									</c:forEach>
 								</ul>
-								<!-- Action Buttons: Edit & Delete -->
-								<div id="editDeleteButtons" class="action-buttons">
-									<button id="editBtn" type="button" class="btn btn-warning"
-										style="display: none;" onclick="confirmEdit()">Edit</button>
+								<div id="deleteButtons" class="action-buttons">
 									<button id="deleteBtn" type="button" class="btn btn-danger"
 										style="display: none;" onclick="confirmDelete()">Delete</button>
 								</div>
 							</div>
 						</c:if>
-						<label for="subcategoryNames">Subcategories</label> <input
-							type="text" id="subcategoryNames" name="subcategoryNames"
-							class="form-control"
-							placeholder="Enter subcategory names, separated by commas">
+						<div class="form-floating mt-3">
+							<input class="form-control" id="subcategoryNames"
+								name="subcategoryNames"> <label
+								class="form-label" for="Subcategories">Subcategories<span
+								class="text-danger">*</span></label>
+						</div>
 					</div>
 				</div>
 				<div class="mt-3">
@@ -109,6 +117,28 @@
 						class="btn btn-light btn-cancel">Cancel</a>
 				</div>
 			</form>
+			<div id="editSubcategoryFormContainer" style="display: none;"
+				class="mt-3">
+				<hr>
+				<h6>Edit Subcategory</h6>
+				<form id="editSubcategoryForm"
+					action="${pageContext.servletContext.contextPath}/category/saveSubcategory.htm"
+					method="POST">
+					<input type="hidden" id="editSubcategoryId" name="subcategoryId">
+					<div class="form-floating mt-3">
+						<input class="form-control" id="editSubcategoryName" name="name"
+							required> <label for="editSubcategoryName">Subcategory
+							Name</label>
+					</div>
+					<div class="mt-3">
+						<button type="submit" class="btn btn-primary">Save</button>
+						<button type="button" class="btn btn-secondary"
+							id="cancelEditButton">Cancel</button>
+					</div>
+				</form>
+			</div>
+
+
 		</div>
 	</div>
 	<script>
@@ -119,51 +149,13 @@
     });
     function toggleActionButtons() {
         const selectedCheckboxes = document.querySelectorAll('.subcategoryCheckbox:checked');
-        const actionButtons = document.getElementById('editDeleteButtons');
-        const editBtn = document.getElementById("editBtn");
+        const actionButtons = document.getElementById('deleteButtons');
         const deleteBtn = document.getElementById("deleteBtn");
         if (selectedCheckboxes.length > 0) {
             actionButtons.style.display = 'block';
-            editBtn.style.display = 'inline-block';
             deleteBtn.style.display = 'inline-block';
         } else {
             actionButtons.style.display = 'none';
-        }
-    }
-    function confirmEdit() {
-        const selectedIds = [];
-        const selectedNames = [];
-        // Lấy các ID và tên của các checkbox đã chọn
-        document.querySelectorAll('.subcategoryCheckbox:checked').forEach(function(checkbox) {
-            selectedIds.push(checkbox.value); 
-            selectedNames.push(checkbox.getAttribute('data-name')); 
-        });
-        // Kiểm tra xem có bất kỳ subcategory nào được chọn không
-        if (selectedIds.length > 0) {
-            Swal.fire({
-                title: 'Edit Subcategories',
-                text: "You are about to edit selected subcategories.",
-                input: 'text',
-                inputValue: selectedNames.join(", "), // Hiển thị tên các subcategory đã chọn
-                showCancelButton: true,
-                confirmButtonText: 'Save Changes',
-                cancelButtonText: 'Cancel',
-                preConfirm: (newNames) => {
-                    // Kiểm tra xem người dùng có nhập tên mới hay không
-                    if (!newNames) {
-                        Swal.showValidationMessage('You need to enter new names');
-                    } else {
-                        const form = document.getElementById("categoryForm");
-                        // Thêm ID của các subcategory vào form
-                        const editInput = document.createElement("input");
-                        editInput.setAttribute("type", "hidden");
-                        editInput.setAttribute("name", "subcategoryIdsToEdit");
-                        editInput.setAttribute("value", selectedIds.join(","));
-                        form.appendChild(editInput);
-                        form.submit();
-                    }
-                }
-            });
         }
     }
     function confirmDelete() {
@@ -191,6 +183,25 @@
             });
         }
     }
+    
+    
     </script>
+
+	<script>
+    document.querySelectorAll('.edit-button').forEach(function(editButton) {
+        editButton.addEventListener('click', function() {
+            var subcategoryId = this.getAttribute('data-id');
+            var subcategoryName = this.getAttribute('data-name');
+            document.getElementById('editSubcategoryId').value = subcategoryId;
+            document.getElementById('editSubcategoryName').value = subcategoryName;
+            document.getElementById('editSubcategoryFormContainer').style.display = 'block';
+        });
+    });
+
+    document.getElementById('cancelEditButton').addEventListener('click', function() {
+        document.getElementById('editSubcategoryFormContainer').style.display = 'none';
+    });
+</script>
+
 </body>
 </html>

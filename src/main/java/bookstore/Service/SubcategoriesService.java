@@ -19,6 +19,7 @@ import bookstore.Entity.SubcategoriesEntity;
 public class SubcategoriesService {
 	
 	@Autowired
+	static
 	SessionFactory factory;
 	
 	@Autowired
@@ -38,13 +39,12 @@ public class SubcategoriesService {
 		return query.list();
 	}
 	
-	public CategoriesEntity getCategoryBySubcategoryId(Long id) {
+	public static CategoriesEntity getCategoryBySubcategoryId(Long id) {
 		Session session = factory.getCurrentSession();
 		String hql = "SELECT s.categoriesEntity FROM SubcategoriesEntity s WHERE s.id = :subcategoryId";
 	    Query query = session.createQuery(hql);
 	    query.setParameter("subcategoryId", id);
 
-	    // Trả về Category, hoặc null nếu không tìm thấy
 	    return (CategoriesEntity) query.uniqueResult();
 	}
 }

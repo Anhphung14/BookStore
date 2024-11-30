@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.util.Arrays;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -50,7 +51,7 @@ public class CategoriesController {
 	public String deleteCategory(@PathVariable("id") Long id) {
 		Session session = factory.getCurrentSession();
 		CategoriesEntity category = (CategoriesEntity) session.get(CategoriesEntity.class, id);
-		if(category != null) {
+		if (category != null) {
 			session.delete(category);
 		}
 
@@ -61,7 +62,7 @@ public class CategoriesController {
 	public String categoryEdit(@PathVariable("id") Long id, ModelMap model) {
 		CategoriesEntity category = getCategoryById(id);
 
-		Hibernate.initialize(category.getSubcategoriesEntity());
+		Hibernate.initialize(((CategoriesEntity) category).getSubcategoriesEntity());
 
 		List<CategoriesEntity> categories = categoriesService.getAllCategoriesWithSubcategories();
 
@@ -84,7 +85,6 @@ public class CategoriesController {
 			@RequestParam(value = "id", required = false) Long id,
 			@RequestParam(value = "subcategoryNames", required = false) String subcategoryNames,
 			@RequestParam(value = "subcategoryIdsToDelete", required = false) String[] subcategoryIdsToDelete,
-			@RequestParam(value = "subcategoryIdsToEdit", required = false) String[] subcategoryIdsToEdit,
 			ModelMap model, HttpServletRequest request) {
 		Session session = factory.getCurrentSession();
 
@@ -114,33 +114,15 @@ public class CategoriesController {
 				existingCategory.setUpdated_at(new Date(System.currentTimeMillis()));
 
 				if (subcategoryIdsToDelete != null && subcategoryIdsToDelete.length > 0) {
-				    for (String subcategoryIdToDelete : subcategoryIdsToDelete) {
-				        Long subcategoryId = Long.valueOf(subcategoryIdToDelete);
-				        SubcategoriesEntity subcategoryToDelete = (SubcategoriesEntity) session.get(SubcategoriesEntity.class, subcategoryId);
-				        if (subcategoryToDelete != null) {
-				            existingCategory.getSubcategoriesEntity().remove(subcategoryToDelete);
-				            session.delete(subcategoryToDelete);
-				        }
-				    }
-				}
-
-				if (subcategoryIdsToEdit != null && subcategoryIdsToEdit.length > 0) {
-				    for (int i = 0; i < subcategoryIdsToEdit.length; i++) {
-				        Long subcategoryId = Long.valueOf(subcategoryIdsToEdit[i]);
-				        
-				        String newSubcategoryName = subcategoryIdsToEdit[i].trim();
-				        if (!newSubcategoryName.isEmpty()) {
-				            try {
-				                SubcategoriesEntity subcategoryToEdit = (SubcategoriesEntity) session
-				                        .get(SubcategoriesEntity.class, subcategoryId);
-				                if (subcategoryToEdit != null) {
-				                    subcategoryToEdit.setName(newSubcategoryName);
-				                }
-				            } catch (Exception e) {
-				                e.printStackTrace();
-				            }
-				        }
-				    }
+					for (String subcategoryIdToDelete : subcategoryIdsToDelete) {
+						Long subcategoryId = Long.valueOf(subcategoryIdToDelete);
+						SubcategoriesEntity subcategoryToDelete = (SubcategoriesEntity) session
+								.get(SubcategoriesEntity.class, subcategoryId);
+						if (subcategoryToDelete != null) {
+							existingCategory.getSubcategoriesEntity().remove(subcategoryToDelete);
+							session.delete(subcategoryToDelete);
+						}
+					}
 				}
 
 				if (subcategoryNames != null && !subcategoryNames.isEmpty()) {
@@ -152,9 +134,8 @@ public class CategoriesController {
 						subcategory.setCategoriesEntity(category);
 						subcategories.add(subcategory);
 					}
-					category.setSubcategoriesEntity(subcategories);
+					existingCategory.setSubcategoriesEntity(subcategories);
 				}
-
 
 				session.merge(existingCategory);
 			}
@@ -166,6 +147,32 @@ public class CategoriesController {
 
 		return "redirect:/categories.htm";
 	}
+	
+	@RequestMapping(value = "/category/saveSubcategory", method = RequestMethod.POST)
+	public String saveSubcategory(@RequestParam("subcategoryId") Long subcategoryId, @RequestParam("name") String name,
+	                               ModelMap model, HttpServletRequest request) {
+	    Session session = factory.getCurrentSession();
+	    
+	    try {
+	        SubcategoriesEntity subcategory = (SubcategoriesEntity) session.get(SubcategoriesEntity.class, subcategoryId);
+	        
+	        if (subcategory != null) {
+	            subcategory.setName(name);
+	            session.update(subcategory);
+	        } else {
+	            model.addAttribute("message", "Subcategory not found.");
+	            return "redirect:/categories.htm"; 
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        model.addAttribute("message", "An error occurred: " + e.getMessage());
+	        return "redirect:/categories.htm";
+	    }
+	    
+	    String referer = request.getHeader("Referer");
+	    return "redirect:" + referer;
+	}
+
 
 	public CategoriesEntity getCategoryById(Long id) {
 		Session session = factory.getCurrentSession();
