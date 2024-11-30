@@ -27,8 +27,8 @@ public class InventoryEntity {
     @JoinColumn(name = "book_id", referencedColumnName = "id", nullable = false)
     private BooksEntity book;
 
-    @Column(name = "quantity", nullable = false)
-    private Integer quantity;
+    @Column(name = "stock_quantity", nullable = false)
+    private Integer stock_quantity;
 
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -56,12 +56,12 @@ public class InventoryEntity {
 		this.book = book;
 	}
 
-	public Integer getQuantity() {
-		return quantity;
+	public Integer getStock_quantity() {
+		return stock_quantity;
 	}
 
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
+	public void setStock_quantity(Integer stock_quantity) {
+		this.stock_quantity = stock_quantity;
 	}
 
 	public Date getCreated_at() {

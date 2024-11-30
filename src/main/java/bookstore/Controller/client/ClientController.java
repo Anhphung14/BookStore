@@ -6,11 +6,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import bookstore.DAO.BooksDAO;
 import bookstore.DAO.CategoriesDAO;
+import bookstore.DAO.DiscountsDAO;
 import bookstore.DAO.SubcategoriesDAO;
 import bookstore.Entity.BooksEntity;
 import bookstore.Entity.CategoriesEntity;
@@ -25,7 +28,8 @@ public class ClientController {
     private SubcategoriesDAO subcategoriesDAO;
     @Autowired
     private BooksDAO booksDAO;
-    
+    @Autowired
+    private DiscountsDAO discountsDAO;
     
     
     
@@ -68,4 +72,19 @@ public class ClientController {
         return "client/search";
     }
 
+    @RequestMapping(value = "productdetail/{productId}", method = RequestMethod.GET)
+	public String productdetail(ModelMap model, @PathVariable("productId") Long id) {
+		BooksEntity book = booksDAO.getBookByIdHQL(id);
+        model.addAttribute("book", book);
+        Double discount = discountsDAO.getDiscountValueByBookId(id);
+        model.addAttribute("discount",discount);
+		System.out.println(discount); 
+		List<BooksEntity> books_category = booksDAO.getBooksBySubcategory(book.getSubcategoriesEntity().getId());
+		System.out.println(books_category); 
+		model.addAttribute("books_category", books_category); 
+		List<Double> discounts = discountsDAO.getDiscountsValueByBookId(books_category);
+		model.addAttribute("discounts",discounts);
+		 
+		return "client/productdetail";
+	}
 }

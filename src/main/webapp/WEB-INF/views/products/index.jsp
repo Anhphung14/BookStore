@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html>
@@ -117,7 +118,7 @@
 										<th width="30px" class="text-start">#</th>
 										<th width="200x" class="text-center">Product</th>
 										<th width="30px" class="text-center">Status</th>
-										<th width="100px" class="text-center">Stock quantity</th>
+										<th width="100px" class="text-center">Total quantity</th>
 										<!-- <th width="50px" class="text-center">Inventory</th> -->
 										<th width="160px" class="text-center">Category</th>
 										<th width="50px" class="text-center">Price</th>
@@ -131,16 +132,34 @@
 											</td>
 <%-- 											<td class="text-end">${(users.page - 1) * users.pageSize + status.index + 1}</td> --%>
 											<td class="text-start align-middle">${book.id}</td>
-											<td><a class="d-flex flex-nowrap align-items-center"
-												style="text-decoration: none;"
-												href="product/edit/${book.id}.htm">
-													<div>
-														<img alt="Product Thumbnail" src="${book.thumbnail}" class="bg-white border border-3 border-white" width="50px">
-													</div>
-													<div class="ms-3 ">
-														<div class="fw-semibold custom-text ellipsis">${book.title}</div>
-													</div>
-											</a></td>
+											<td>
+    <a class="d-flex flex-nowrap align-items-center" style="text-decoration: none;" href="javascript:void(0);" 
+       data-id="${book.id}"
+       data-title="${book.title}"
+       data-author="${book.author}"
+       data-category="${book.subcategoriesEntity.categoriesEntity.name}"
+       data-subcategory="${book.subcategoriesEntity.name}"
+       data-supplier="${book.supplier.name}"
+       data-publicationYear="${book.publication_year}"
+       data-pageCount="${book.page_count} pages"
+       data-language="${book.language}"
+       data-status="${book.status == 0 ? 'Disable' : 'Enable'}"
+       data-createdAt="<fmt:formatDate value='${book.updatedAt}' pattern='dd-MM-yyyy HH:mm' />"
+       data-updatedAt="<fmt:formatDate value='${book.createdAt}' pattern='dd-MM-yyyy HH:mm' />"
+       data-price=<fmt:formatNumber value="${book.price}" type="currency" maxFractionDigits="0" currencySymbol="₫"/>
+       data-description="${fn:escapeXml(book.description)}" 
+       data-thumbnail="${book.thumbnail}"
+       data-images="${book.images}"
+       data-quantity="${book.quantity} in stock"
+       onclick="showProductDetails(this)">
+        <div>
+            <img alt="Product Thumbnail" src="${book.thumbnail}" class="bg-white border border-3 border-white" width="50px">
+        </div>
+        <div class="ms-3">
+            <div class="fw-semibold custom-text ellipsis">${book.title}</div>
+        </div>
+    </a>
+</td>
 											<c:choose>
 												<c:when test="${book.status == 1}">
 													<td class="text-center align-middle"><span class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">active</span></td>
@@ -152,18 +171,18 @@
 <!-- 											<td class="text-center align-middle"><span class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">active</span></td> -->
 <%-- 											<td class="text-end align-middle"><span class="small text-uppercase ${user.isActive ? 'text-success' : 'text-danger'} bg-opacity-10 rounded px-2 py-1">${user.isActive ? 'Active' : 'Inactive'}</span></td> --%>
 											
-											<!-- <td class="text-center align-middle">${book.stock_quantity}</td> -->
+											<!-- <td class="text-center align-middle">${book.quantity}</td> -->
 											
-											<c:choose>
-												<c:when test="${quantities[status.index] > 10}">
-													<td class="text-center align-middle"><span class="small text-success bg-opacity-10 rounded px-2 py-1">${book.stock_quantity} in stock</span></td>												
-												</c:when>
-												<c:otherwise>
-													<td class="text-center align-middle"><span class="small text-danger bg-opacity-10 rounded px-2 py-1">${book.stock_quantity} in stock</span></td>
-												</c:otherwise>
-											</c:choose>
+<%-- 											<c:choose> --%>
+<%-- 												<c:when test="${book.quantity > 10}"> --%>
+<%-- 													<td class="text-center align-middle"><span class="small text-success bg-opacity-10 rounded px-2 py-1">${book.quantity} in stock</span></td>												 --%>
+<%-- 												</c:when> --%>
+<%-- 												<c:otherwise> --%>
+<%-- 													<td class="text-center align-middle"><span class="small text-danger bg-opacity-10 rounded px-2 py-1">${book.quantity} in stock</span></td> --%>
+<%-- 												</c:otherwise> --%>
+<%-- 											</c:choose> --%>
 											
-											
+											<td class="text-center align-middle">${book.quantity}</td>
 											<td class="text-center align-middle">${book.subcategoriesEntity.name}</td>
 											<td class="text-center align-middle">
 												
@@ -205,7 +224,7 @@
 			            </div>
 			            <div class="modal-body">
 			                <!-- Form used to send POST request -->
-			                <form id="deleteForm" method="POST" action="/bookstore/product/delete.htm">
+			                <form id="deleteForm" method="POST" action="product/delete.htm">
 			                    <p>Are you sure you want to delete this book?</p>
 			                    <p><strong>Book Id:</strong> <span id="bookIdToDelete"></span></p>
 			                    <p><strong>Book title:</strong> <span id="bookTitleToDelete"></span></p>
@@ -217,6 +236,110 @@
 			                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 			                <!-- Submit button to send form -->
 			                <button type="submit" class="btn btn-danger" form="deleteForm">Delete</button>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+			
+			
+			<div class="modal fade" id="productDetailModal" tabindex="-1" aria-labelledby="productDetailModalLabel" aria-hidden="true">
+			    <div class="modal-dialog">
+			        <div class="modal-content">
+			            <div class="modal-header">
+			                <h5 class="modal-title" id="productDetailModalLabel">Product Details</h5>
+			                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			            </div>
+			            <div class="modal-body">
+			            	<div class="d-flex">
+			                    <div class="mb-3 me-3" style="flex: 1;">
+				                    <label for="productTitle" class="form-label">Title</label>
+				                    <input type="text" class="form-control" id="productTitle" disabled>
+			                	</div>
+			                    <div class="mb-3" style="flex: 1;">
+			                        <label for="productAuthor" class="form-label">Author</label>
+			                        <input type="text" class="form-control" id="productAuthor" disabled>
+			                    </div>
+			                </div>
+			                
+			                <div class="mb-3">
+			                    <label for="productDescription" class="form-label">Description</label>
+			                    <textarea class="form-control" id="productDescription" rows="3" disabled></textarea>
+			                </div>
+			                
+			                <div class="d-flex">
+			                    <div class="mb-3 me-3" style="flex: 1;">
+			                        <label for="productPrice" class="form-label">Category</label>
+			                        <input type="text" class="form-control" id="productCategory" disabled>
+			                    </div>
+			                    <div class="mb-3" style="flex: 1;">
+			                        <label for="productSubcategory" class="form-label">Subcategory</label>
+			                        <input type="text" class="form-control" id="productSubcategory" disabled>
+			                    </div>
+			                </div>
+			                
+			                <div class="d-flex">
+			                    <div class="mb-3 me-3" style="flex: 1;">
+			                        <label for="productPrice" class="form-label">Supplier</label>
+			                        <input type="text" class="form-control" id="productSupplier" disabled>
+			                    </div>
+			                    <div class="mb-3" style="flex: 1;">
+			                        <label for="productPublicationYear" class="form-label">Publication year</label>
+			                        <input type="text" class="form-control" id="productPublicationYear" disabled>
+			                    </div>
+			                </div>
+			                
+			                <div class="d-flex">
+							    <div class="mb-3 me-3" style="flex: 1;">
+							        <label for="productPrice" class="form-label">Price</label>
+							        <input type="text" class="form-control" id="productPrice" disabled>
+							    </div>
+							    <div class="mb-3 me-3" style="flex: 1;">
+							        <label for="productQuantity" class="form-label">Total quantity</label>
+							        <input type="text" class="form-control" id="productQuantity" disabled>
+							    </div>
+							    <div class="mb-3" style="flex: 1;">
+							        <label for="productCategory" class="form-label">Page count</label>
+							        <input type="text" class="form-control" id="productPageCount" disabled>
+							    </div>
+							</div>
+							
+							<div class="d-flex">
+			                    <div class="mb-3 me-3" style="flex: 1;">
+			                        <label for="productPrice" class="form-label">Created at</label>
+			                        <input type="text" class="form-control" id="productCreatedAt" disabled>
+			                    </div>
+			                    <div class="mb-3" style="flex: 1;">
+			                        <label for="productUpdatedAt" class="form-label">Updated at</label>
+			                        <input type="text" class="form-control" id="productUpdatedAt" disabled>
+			                    </div>
+			                </div>
+			                
+			                <div class="d-flex">
+			                    <div class="mb-3 me-3" style="flex: 1;">
+			                        <label for="productPrice" class="form-label">Language</label>
+			                        <input type="text" class="form-control" id="productLanguage" disabled>
+			                    </div>
+			                    <div class="mb-3" style="flex: 1;">
+			                        <label for="productStatus" class="form-label">Status</label>
+			                        <input type="text" class="form-control" id="productStatus" disabled>
+			                    </div>
+			                </div>
+			                
+			                <div class="d-flex">
+			                    <div class="mb-3 me-3" style="flex: 1;">
+			                        <label for="productPrice" class="form-label">Thumbnail</label>
+			                        <img id="productThumbnail" src="" alt="Product Image" class="img-fluid" style="max-width: 100px; max-height: 100px; display: block;">
+			                    </div>
+			                    <div class="mb-3" style="flex: 1;">
+        <label for="productImages" class="form-label">Images</label>
+        <div id="productImages" class="d-flex flex-wrap"></div>
+    </div>
+			                </div>
+			                
+			                <!-- Add more fields if needed -->
+			            </div>
+			            <div class="modal-footer">
+			                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 			            </div>
 			        </div>
 			    </div>
@@ -255,6 +378,65 @@
 		    document.getElementById("bookIdInput").value = bookId;
 
 		}
+		
+		function showProductDetails(link) {
+		    // Lấy thông tin từ thuộc tính data của link
+		    var productId = link.getAttribute('data-id');
+		    var productTitle = link.getAttribute('data-title');
+		    var productAuthor = link.getAttribute('data-author');
+		    var productDescription = link.getAttribute('data-description');
+		    var productCategory = link.getAttribute('data-category');
+		    var productSubcategory = link.getAttribute('data-subcategory');
+		    var productSupplier = link.getAttribute('data-supplier');
+		    var productPublicationYear = link.getAttribute('data-publicationYear');
+		    var productPageCount = link.getAttribute('data-pageCount');
+		    var productPrice = link.getAttribute('data-price');
+		    var productLanguage = link.getAttribute('data-language');
+		    var productStatus = link.getAttribute('data-status');
+		    var productCreatedAt = link.getAttribute('data-createdAt');
+		    var productUpdatedAt = link.getAttribute('data-updatedAt');
+		    var productThumbnail = link.getAttribute('data-thumbnail');
+		    var productImages = link.getAttribute('data-images');
+		    var productQuantity = link.getAttribute('data-quantity');
+			
+		    
+		    
+		    // Điền thông tin vào modal
+		    document.getElementById('productTitle').value = productTitle;
+		    document.getElementById('productAuthor').value = productAuthor;
+		    document.getElementById('productDescription').value = productDescription;
+		    document.getElementById('productPrice').value = productPrice;
+		    document.getElementById('productCategory').value = productCategory;
+		    document.getElementById('productSubcategory').value = productSubcategory;
+		    document.getElementById('productSupplier').value = productSupplier;
+		    document.getElementById('productPublicationYear').value = productPublicationYear;
+		    document.getElementById('productPageCount').value = productPageCount;
+		    document.getElementById('productLanguage').value = productLanguage;
+		    document.getElementById('productStatus').value = productStatus;
+		    document.getElementById('productCreatedAt').value = productCreatedAt;
+		    document.getElementById('productUpdatedAt').value = productUpdatedAt;
+		    document.getElementById('productQuantity').value = productQuantity;
+		    
+		    document.getElementById('productThumbnail').src = productThumbnail;
+		    
+		    var images = productImages.split(';'); // Tách chuỗi URL bằng dấu ";"
+		    var imagesContainer = document.getElementById('productImages');
+		    imagesContainer.innerHTML = ''; // Xóa hết các thẻ img cũ
+
+		    images.forEach(function(imageUrl) {
+		        var imgElement = document.createElement('img');
+		        imgElement.src = imageUrl.trim(); // Loại bỏ khoảng trắng
+		        imgElement.classList.add('img-fluid');
+		        imgElement.style.maxWidth = '100px';
+		        imgElement.style.maxHeight = '100px';
+		        imagesContainer.appendChild(imgElement);
+		    });
+
+		    // Mở modal
+		    var modal = new bootstrap.Modal(document.getElementById('productDetailModal'));
+		    modal.show();
+		}
+
 	</script>
 </body>
 </html>

@@ -36,7 +36,6 @@ public class Book_DiscountsEntity {
 		return id;
 	}
 
-
 	public void setId(Long id) {
 		this.id = id;
 	}

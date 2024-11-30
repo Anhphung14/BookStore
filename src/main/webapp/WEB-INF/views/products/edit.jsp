@@ -240,8 +240,8 @@
 
 								<div class="form-floating mt-3">
 									<input class="form-control numeric-input" id="quantity" oninput="validateNumberInput(this)"
-										name="quantity" value="${quantity}"> <label
-										class="form-label" for="quantity">Stock quantity <span class="text-danger">*</span></label>
+										name="quantity" value="${book.quantity}"> <label
+										class="form-label" for="quantity">Total quantity <span class="text-danger">*</span></label>
 								</div>
 								
 								<div class="form-floating mt-3">

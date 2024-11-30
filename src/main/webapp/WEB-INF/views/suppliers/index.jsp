@@ -4,23 +4,22 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Roles management</title>
+<title>Providers management</title>
 <base href="${pageContext.servletContext.contextPath}/">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="${pageContext.request.contextPath}/resources/js/app.js"
+	defer></script>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<script src="${pageContext.request.contextPath}/resources/js/app.js"
-	defer></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script
 	src="${pageContext.request.contextPath}/resources/js/confirmBox.js"></script>
-
 <style>
 .main-content {
 	display: flex;
@@ -48,9 +47,10 @@
 				style="margin-left: 0px; margin-right: 0px;">
 				<div class="row g-3 mt-3">
 					<div class="col">
-						<h2 class="h3">Roles management</h2>
-						<p>Here you can view all roles, see the number of permissions
-							assigned to each role</p>
+						<h2 class="h3">Suppliers management</h2>
+						<p>Manage your suppliers efficiently by adding, editing, or
+							removing details to streamline operations.</p>
+
 					</div>
 					<div class="col-auto d-none d-sm-block">
 						<img class="page-icon" src="resources/images/page.svg"
@@ -78,8 +78,8 @@
 								</button>
 							</div>
 							<a class="btn btn-primary text-nowrap btn-add"
-								href="${pageContext.request.contextPath}/role/new.htm"> <i
-								class="fa fa-plus me-2"></i>Add
+								href="${pageContext.request.contextPath}/supplier/new.htm">
+								<i class="fa fa-plus me-2"></i>Add
 							</a>
 						</div>
 
@@ -103,44 +103,46 @@
 											onclick="checkAll()" /></th>
 										<th width="30px" class="text-end">#</th>
 										<th>Name</th>
-										<th width="60px">Users</th>
+										<th>Contact Person</th>
+										<th>Email</th>
+										<th class="text-center">Phone</th>
+										<th>Address</th>
 										<th width="160px" class="text-center">Updated</th>
 										<th width="60px">Actions</th>
 									</tr>
-									<c:forEach var="role" items="${roles}" varStatus="status">
+									<c:forEach var="supplier" items="${suppliers}"
+										varStatus="status">
 										<tr>
-											<td><input type="checkbox" class="form-check-input"
-												id="cb1" name="cid[]" value="${role.id}"
+											<td class="align-middle"><input type="checkbox"
+												class="form-check-input" id="cb1" name="cid[]" value="1"
 												onclick="isChecked(this.checked)"></td>
-											<td class="text-end">${role.id}</td>
-											<td><span class="text-decoration-underline">${role.name}</span>
-												<div class="text-muted small">${role.description}</div></td>
-											<td class="text-center align-middle"><span
-												class="small text-uppercase text-success bg-opacity-10 rounded px-2 py-1">${role.userCount}</span>
+											<td class="text-end align-middle">${supplier.id}</td>
+											<td class="align-middle"><span>${supplier.name}</span></td>
+											<td class="align-middle"><span>${supplier.contactPerson}</span></td>
+											<td class=" align-middle"><span>${supplier.email}</span>
 											</td>
-											<!-- <td class="text-end align-middle"><span
-												class="small text-uppercase text-success bg-opacity-10 rounded px-2 py-1">Active</span>
-											</td> -->
-											<td class="text-center align-middle">${role.updatedAt}</td>
+											<td class="text-center align-middle"><span>${supplier.phone}</span>
+											</td>
+											<td class=" align-middle"><span>${supplier.address}</span>
+											</td>
+											<td class="text-center align-middle">${supplier.updatedAt}</td>
 											<td class="text-end">
 												<div class="d-flex gap-1">
 													<a class="btn btn-rounded"
-														href="${pageContext.request.contextPath}/role/edit/${role.id}.htm"><i
-														class="fa fa-pencil"></i></a> <a
-														class="btn btn-rounded btn-delete"
+														href="${pageContext.request.contextPath}/supplier/edit/${supplier.id}.htm">
+														<i class="fa fa-pencil"></i>
+													</a> <a class="btn btn-rounded btn-delete"
 														href="javascript:void(0);"
-														data-url="${pageContext.request.contextPath}/role/delete/${role.id}.htm">
+														data-url="${pageContext.request.contextPath}/supplier/delete/${supplier.id}.htm">
 														<i class="fa fa-trash-alt"></i>
 													</a>
 												</div>
 											</td>
 										</tr>
-
 									</c:forEach>
 								</table>
 							</div>
 						</div>
-						<%-- <div>${roles.links}</div> --%>
 					</div>
 				</div>
 			</form>

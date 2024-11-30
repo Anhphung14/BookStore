@@ -69,10 +69,10 @@
 		</ul>
 		<ul class="side-menu" style="list-style-type: none; padding-left: 0;">
 			<li class="menu-title"><span>APPLICATION</span></li>
-			<li><a class="nav-link" href="providers.htm"
+			<li><a class="nav-link" href="suppliers.htm"
 				style="color: #343a40;"> <i class="fa fa-cubes"></i> <span>Suppliers</span>
 			</a></li>
-			<li><a class="nav-link" href="#" style="color: #343a40;"> <i
+			<li><a class="nav-link" href="categories.htm" style="color: #343a40;"> <i
 					class="fa fa-th-list"></i> <span>Categories</span>
 			</a></li>
 			<li><a class="nav-link" href="products.htm"
@@ -84,7 +84,7 @@
 			<li><a class="nav-link" href="#" style="color: #343a40;"> <i
 					class="fa fa-shopping-cart"></i> <span>Orders</span>
 			</a></li>
-			<li><a class="nav-link" href="#" style="color: #343a40;"> <i
+			<li><a class="nav-link" href="inventories.htm" style="color: #343a40;"> <i
 					class="fa fa-archive"></i> <span>Inventories</span>
 			</a></li>
 		</ul>
@@ -110,5 +110,4 @@
 		sidebar.classList.toggle("collapsed");
 	}
 </script>
-
 

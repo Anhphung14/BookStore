@@ -89,46 +89,28 @@ public class ProductsController {
 	
 	
 	@RequestMapping("/products")
-	public String products(ModelMap model, HttpServletResponse response) throws IOException {
+	public String products(ModelMap model) {
 		
-		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-	    response.setHeader("Pragma", "no-cache");
-	    response.setDateHeader("Expires", 0);
+		List<BooksEntity> books = booksService.getAllBooks();
 		
-		List<BooksEntity> listBooks = booksService.getAllBooks();
-//        model.addAttribute("listBooks", listBooks);
-		List<Long> ids = new ArrayList<Long>();
-		for (BooksEntity book : listBooks) {
-			ids.add(book.getId());
+		for (BooksEntity book : books) {
+			System.out.println(book.toString());
 		}
 		
-		List<Object[]> booksWithQuantities = booksService.getBooksWithQuantitiesByIds(ids);
-		List<BooksEntity> books = new ArrayList<>(); 
-		List<Integer> quantities = new ArrayList<>(); 
-		for (Object[] result : booksWithQuantities) { 
-			books.add((BooksEntity) result[0]); 
-			quantities.add((Integer) result[1]); 
-		} 
-		
 		model.addAttribute("listBooks", books); 
-		model.addAttribute("quantities", quantities);
 		
 		return "products/index";
-		
 	}
 	
 	@RequestMapping("/product/edit/{id}")
 	public String productEdit(@PathVariable("id") Long id, ModelMap model) {
 		
 		model.addAttribute("task", "edit");
-
-		Object[] bookWithQuantity = booksService.getBookWithQuantityById(id);
+	
+		BooksEntity book = booksService.getBookById(id);
 		
-		BooksEntity book = (BooksEntity) bookWithQuantity[0];
-		
-		Integer quantity = (Integer) bookWithQuantity[1]; 
 		model.addAttribute("book", book); 
-		model.addAttribute("quantity", quantity);
+		
 		model.addAttribute("listCategories", categoriesService.getAllCategories());
 		model.addAttribute("listSubcategories", subcategoriesService.getAllSubcategories());
 		model.addAttribute("listSuppliers", suppliersService.getAllSuppliers());
@@ -165,11 +147,15 @@ public class ProductsController {
 				return "redirect:/product/new.htm";
 			}
 			
+			System.out.println("Den day roi 0");
+			
 			
 			CategoriesEntity category = (CategoriesEntity) session.get(CategoriesEntity.class, categoryId);
 			SuppliersEntity supplier = (SuppliersEntity) session.get(SuppliersEntity.class, supplierId);
 			SubcategoriesEntity subcategory = (SubcategoriesEntity) session.get(SubcategoriesEntity.class, subcategoryId);
 			InventoryEntity inventory = inventoryService.getInventoryByBookId(id);
+			
+			System.out.println("Den day roi 1");
 			
 			selectedBook.setTitle(title);
 			selectedBook.setAuthor(author);
@@ -177,12 +163,15 @@ public class ProductsController {
 			selectedBook.setDescription(description);
 			selectedBook.setPublication_year(publication_year);
 			selectedBook.setPage_count(page_count);
+			selectedBook.setQuantity(quantity);
 			selectedBook.setLanguage(language);
 			selectedBook.setStatus(status);
 			selectedBook.setUpdatedAt(new Date());
 			
 			selectedBook.setSubcategoriesEntity(subcategory);
 			selectedBook.setSupplier(supplier);
+			
+			System.out.println("Den day roi 2");
 			
 			try {
 				if (!thumbnail.isEmpty()) {
@@ -220,25 +209,21 @@ public class ProductsController {
 			}
 			
 			try {
-				boolean is_updateQuantity = inventoryService.updateQuantityByBookId(inventory, quantity);
+				System.out.println("Den day roi 3");
 				session.update(selectedBook);
 				
-				if (is_updateQuantity == true) {
-					
 //				model.addAttribute("alertMessage", "Successfully updated BookID: " + id);
 //		        model.addAttribute("alertType", "success");
 					
-					redirectAttributes.addFlashAttribute("alertMessage", "Successfully updated BookID: " + id);
-					redirectAttributes.addFlashAttribute("alertType", "success");
-				} else {
-					model.addAttribute("alertMessage", "An error occurred while updating the BookId: " + id);
-					model.addAttribute("alertType", "error");
-					
-					return "products/edit";
-				}
-				
+				redirectAttributes.addFlashAttribute("alertMessage", "Successfully updated BookID: " + id);
+				redirectAttributes.addFlashAttribute("alertType", "success");
+		
+				System.out.println("Den day roi 4");
 			} catch (Exception e) {
 				System.err.println("An error occurred while updating the book: " + e.getMessage());
+				model.addAttribute("alertMessage", "An error occurred while updating the BookId: " + id);
+				model.addAttribute("alertType", "error");
+				return "products/edit";
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -276,7 +261,7 @@ public class ProductsController {
 			newBook.setAuthor(author);
 			newBook.setPrice(price);
 			newBook.setDescription(description);
-			newBook.setStock_quantity(quantity);
+			newBook.setQuantity(quantity);
 			newBook.setPublication_year(publication_year);
 			newBook.setLanguage(language);
 			newBook.setPage_count(page_count);
@@ -326,7 +311,7 @@ public class ProductsController {
 			
 			InventoryEntity inventory = new InventoryEntity();
 			inventory.setBook(newBook);
-			inventory.setQuantity(quantity);
+			inventory.setStock_quantity(quantity);
 			inventory.setCreated_at(new Date());
 			inventory.setUpdated_at(new Date());
 			

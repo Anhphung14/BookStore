@@ -6,8 +6,8 @@
 <head>
 <meta charset="UTF-8">
 <title><c:choose>
-		<c:when test="${task == 'edit'}">Edit User</c:when>
-		<c:otherwise>New User</c:otherwise>
+		<c:when test="${task == 'edit'}">Edit Supplier</c:when>
+		<c:otherwise>New Supplier</c:otherwise>
 	</c:choose></title>
 
 <base href="${pageContext.servletContext.contextPath}/">
@@ -48,8 +48,8 @@
 				<div class="col">
 					<h2 class="h3">
 						<c:choose>
-							<c:when test="${task == 'edit'}">Edit User</c:when>
-							<c:otherwise>New User</c:otherwise>
+							<c:when test="${task == 'edit'}">Edit Supplier</c:when>
+							<c:otherwise>New Supplier</c:otherwise>
 						</c:choose>
 					</h2>
 				</div>
@@ -59,12 +59,12 @@
 				</div>
 			</div>
 			<form id="userForm"
-				action="${pageContext.servletContext.contextPath}/user/save.htm"
+				action="${pageContext.servletContext.contextPath}/supplier/save.htm"
 				method="POST">
 				<input type="hidden" id="task" name="task" value="${task}">
 
 				<c:if test="${task != 'new'}">
-					<input type="hidden" id="id" name="id" value="${user.id}">
+					<input type="hidden" id="id" name="id" value="${supplier.id}">
 				</c:if>
 
 				<div class="card">
@@ -72,54 +72,46 @@
 						<h6 class="small text-muted">GENERAL INFORMATION</h6>
 
 						<div class="form-floating mt-3">
-							<input class="form-control" id="fullname" name="fullname"
-								value="${user.fullname}" required> <label
-								class="form-label" for="fullname">Name <span
+							<input class="form-control" id="name" name="name"
+								value="${supplier.name}" required> <label
+								class="form-label" for="name">Name <span
 								class="text-danger">*</span></label>
 						</div>
 
 						<div class="form-floating mt-3">
+							<input class="form-control" id="contactPerson"
+								name="contactPerson" value="${supplier.contactPerson}" required>
+							<label class="form-label" for="contactPerson">Contact
+								Person <span class="text-danger">*</span>
+							</label>
+						</div>
+
+						<div class="form-floating mt-3">
 							<input class="form-control" id="email" name="email"
-								value="${user.email}" required> <label
+								value="${supplier.email}" required> <label
 								class="form-label" for="email">Email <span
 								class="text-danger">*</span></label>
 						</div>
 
 						<div class="form-floating mt-3">
 							<input class="form-control" id="phone" name="phone"
-								value="${user.phone}"> <label class="form-label"
-								for="phone">Phone</label>
-						</div>
-						<div class="form-floating mt-3">
-							<select class="form-control" id="gender" name="gender" required>
-								<option value="1" ${user.gender == 1 ? 'selected' : ''}>Male</option>
-								<option value="2" ${user.gender == 2 ? 'selected' : ''}>Female</option>
-								<option value="3" ${user.gender == 3 ? 'selected' : ''}>Other</option>
-							</select> <label class="form-label" for="gender">Gender <span
+								value="${supplier.phone}"> <label class="form-label"
+								for="phone">Phone <span
 								class="text-danger">*</span></label>
 						</div>
+
 						<div class="form-floating mt-3">
-							<div class="ms-2">Roles</div>
-							<select class="w-100 selectpicker" id="roles" name="roleIds"
-								multiple data-coreui-search="true" data-live-search="true">
-								<c:forEach var="role" items="${roles}">
-									<option value="${role.id}"
-										${user.roles != null && user.roles.contains(role) ? 'selected' : ''}>
-										${role.name}
-									</option>
-								</c:forEach>
-							</select>
-
-
+							<input class="form-control" id="address" name="address"
+								value="${supplier.address}"> <label class="form-label"
+								for="address">Address <span
+								class="text-danger">*</span></label>
 						</div>
-
-
 					</div>
 				</div>
 
 				<div class="mt-3">
 					<button class="btn btn-primary btn-save" type="submit">Save</button>
-					<a href="<c:url value='/users.htm' />"
+					<a href="<c:url value='/suppliers.htm' />"
 						class="btn btn-light btn-cancel">Cancel</a>
 				</div>
 			</form>

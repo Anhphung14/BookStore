@@ -1,4 +1,4 @@
-$(".btn-delete").click(function(e) {
+$(document).on('click', '.btn-delete', function(e) {
     e.preventDefault();
 
     var deleteUrl = $(this).data('url');
