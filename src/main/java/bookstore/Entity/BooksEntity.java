@@ -6,6 +6,7 @@ import javax.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Date;
 
 @Entity
@@ -67,6 +68,39 @@ public class BooksEntity {
     @Column(name = "status", columnDefinition = "bit")
     private int status;
 
+    @OneToMany(mappedBy = "book_id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Collection<Book_DiscountsEntity> bookDiscounts;
+    
+    
+    public BooksEntity() {
+    	
+    }
+    
+    
+	public BooksEntity(Long id, String title, String author, Double price, String description,
+			SubcategoriesEntity subcategoriesEntity, SuppliersEntity supplier, Integer stock_quantity, String thumbnail,
+			String images, Integer publication_year, String language, Integer page_count, Date createdAt,
+			Date updatedAt, int status, Collection<Book_DiscountsEntity> bookDiscounts) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.author = author;
+		this.price = price;
+		this.description = description;
+		this.subcategoriesEntity = subcategoriesEntity;
+		this.supplier = supplier;
+		this.stock_quantity = stock_quantity;
+		this.thumbnail = thumbnail;
+		this.images = images;
+		this.publication_year = publication_year;
+		this.language = language;
+		this.page_count = page_count;
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;
+		this.status = status;
+		this.bookDiscounts = bookDiscounts;
+	}
+
 	public SubcategoriesEntity getSubcategoriesEntity() {
 		return subcategoriesEntity;
 	}
@@ -83,8 +117,6 @@ public class BooksEntity {
 		this.supplier = supplier;
 	}
 
-	
-	
 	public Long getId() {
 		return id;
 	}
@@ -197,6 +229,14 @@ public class BooksEntity {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public Collection<Book_DiscountsEntity> getBookDiscounts() {
+		return bookDiscounts;
+	}
+
+	public void setBookDiscounts(Collection<Book_DiscountsEntity> bookDiscounts) {
+		this.bookDiscounts = bookDiscounts;
 	}
 
 	@Override

@@ -233,6 +233,14 @@ public class BooksDAO {
 			    return totalPages;
 			}
 		 
+		 public List<BooksEntity> getBooksBySubcategory(Long subcategory_id) {
+			 Session session = sessionFactory.getCurrentSession();
+			 String hql = "From BooksEntity where subcategoriesEntity.id = :subcategory_id";
+			 Query query = session.createQuery(hql);
+			 query.setParameter("subcategory_id", subcategory_id);
+			 return query.list();
+		 }
+		 
 		 public List<BooksEntity> listBooks() {
 				Session session = sessionFactory.getCurrentSession();
 				
