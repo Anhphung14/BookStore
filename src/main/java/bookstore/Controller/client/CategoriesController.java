@@ -46,7 +46,7 @@ public class CategoriesController {
                 }
             }
         }
-
+      
         List<Object[]> countBookEachCategory = booksDAO.countBookEachCategory();
         //Phân trang
         //int pageSize = 1;
