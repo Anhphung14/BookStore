@@ -177,7 +177,7 @@
 																	<ins>chưa biết</ins>
 																	<del><fmt:formatNumber value="${book.price}" type="currency" maxFractionDigits="0" currencySymbol="₫"/></del>
 																</span>
-																<a class="tg-btn tg-btnstyletwo" href="javascript:void(0);">
+																<a class="tg-btn tg-btnstyletwo" href="/bookstore/cart/add.htm?bookId=${book.id}&quantity=1">
 																	<i class="fa fa-shopping-basket"></i>
 																	<em>Thêm vào giỏ</em>
 																</a>

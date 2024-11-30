@@ -77,8 +77,10 @@ public class BooksEntity {
     }
     
     
+	
+
 	public BooksEntity(Long id, String title, String author, Double price, String description,
-			SubcategoriesEntity subcategoriesEntity, SuppliersEntity supplier, Integer stock_quantity, String thumbnail,
+			SubcategoriesEntity subcategoriesEntity, SuppliersEntity supplier, Integer quantity, String thumbnail,
 			String images, Integer publication_year, String language, Integer page_count, Date createdAt,
 			Date updatedAt, int status, Collection<Book_DiscountsEntity> bookDiscounts) {
 		super();
@@ -89,7 +91,7 @@ public class BooksEntity {
 		this.description = description;
 		this.subcategoriesEntity = subcategoriesEntity;
 		this.supplier = supplier;
-		this.stock_quantity = stock_quantity;
+		this.quantity = quantity;
 		this.thumbnail = thumbnail;
 		this.images = images;
 		this.publication_year = publication_year;
@@ -100,6 +102,9 @@ public class BooksEntity {
 		this.status = status;
 		this.bookDiscounts = bookDiscounts;
 	}
+
+
+
 
 	public SubcategoriesEntity getSubcategoriesEntity() {
 		return subcategoriesEntity;

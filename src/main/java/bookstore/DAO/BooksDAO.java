@@ -343,7 +343,7 @@ public class BooksDAO {
 	    }
 		
 		
-		public List<BooksEntity> getBooksBySubcategory(Long subcategoryId) {
+		public List<BooksEntity> getRandBooksBySubcategory(Long subcategoryId) {
 		    Session session = sessionFactory.getCurrentSession();
 		    
 		    String hql = "FROM BooksEntity WHERE subcategoriesEntity.id = :subcategoryId ORDER BY rand()";

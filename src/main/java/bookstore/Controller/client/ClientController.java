@@ -76,14 +76,19 @@ public class ClientController {
 	public String productdetail(ModelMap model, @PathVariable("productId") Long id) {
 		BooksEntity book = booksDAO.getBookByIdHQL(id);
         model.addAttribute("book", book);
-        Double discount = discountsDAO.getDiscountValueByBookId(id);
-        model.addAttribute("discount",discount);
-		System.out.println(discount); 
-		List<BooksEntity> books_category = booksDAO.getBooksBySubcategory(book.getSubcategoriesEntity().getId());
+		/*
+		 * Double discount = discountsDAO.getDiscountValueByBookId(id);
+		 * model.addAttribute("discount",discount);
+		 */
+		//System.out.println(discount); 
+		List<BooksEntity> books_category = booksDAO.getRandBooksBySubcategory(book.getSubcategoriesEntity().getId());
 		System.out.println(books_category); 
 		model.addAttribute("books_category", books_category); 
-		List<Double> discounts = discountsDAO.getDiscountsValueByBookId(books_category);
-		model.addAttribute("discounts",discounts);
+		/*
+		 * List<Double> discounts =
+		 * discountsDAO.getDiscountsValueByBookId(books_category);
+		 * model.addAttribute("discounts",discounts);
+		 */
 		 
 		return "client/productdetail";
 	}

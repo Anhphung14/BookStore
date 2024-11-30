@@ -193,7 +193,7 @@
 											</a>
 											<span class="tg-subtotal">Subtotal: <strong>35.78</strong></span>
 											<div class="tg-btns">
-												<a class="tg-btn tg-active" href="javascript:void(0);">View Cart</a>
+												<a class="tg-btn tg-active" href="${pageContext.servletContext.contextPath}/cart/view.htm">View Cart</a>
 												<a class="tg-btn" href="javascript:void(0);">Checkout</a>
 											</div>
 										</div>
