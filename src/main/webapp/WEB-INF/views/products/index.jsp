@@ -118,7 +118,7 @@
 										<th width="30px" class="text-start">#</th>
 										<th width="200x" class="text-center">Product</th>
 										<th width="30px" class="text-center">Status</th>
-										<th width="100px" class="text-center">Stock quantity</th>
+										<th width="100px" class="text-center">Total quantity</th>
 										<!-- <th width="50px" class="text-center">Inventory</th> -->
 										<th width="160px" class="text-center">Category</th>
 										<th width="50px" class="text-center">Price</th>
@@ -150,7 +150,7 @@
        data-description="${fn:escapeXml(book.description)}" 
        data-thumbnail="${book.thumbnail}"
        data-images="${book.images}"
-       data-stock="${book.stock_quantity} in stock"
+       data-quantity="${book.quantity} in stock"
        onclick="showProductDetails(this)">
         <div>
             <img alt="Product Thumbnail" src="${book.thumbnail}" class="bg-white border border-3 border-white" width="50px">
@@ -171,18 +171,18 @@
 <!-- 											<td class="text-center align-middle"><span class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">active</span></td> -->
 <%-- 											<td class="text-end align-middle"><span class="small text-uppercase ${user.isActive ? 'text-success' : 'text-danger'} bg-opacity-10 rounded px-2 py-1">${user.isActive ? 'Active' : 'Inactive'}</span></td> --%>
 											
-											<!-- <td class="text-center align-middle">${book.stock_quantity}</td> -->
+											<!-- <td class="text-center align-middle">${book.quantity}</td> -->
 											
-											<c:choose>
-												<c:when test="${book.stock_quantity > 10}">
-													<td class="text-center align-middle"><span class="small text-success bg-opacity-10 rounded px-2 py-1">${book.stock_quantity} in stock</span></td>												
-												</c:when>
-												<c:otherwise>
-													<td class="text-center align-middle"><span class="small text-danger bg-opacity-10 rounded px-2 py-1">${book.stock_quantity} in stock</span></td>
-												</c:otherwise>
-											</c:choose>
+<%-- 											<c:choose> --%>
+<%-- 												<c:when test="${book.quantity > 10}"> --%>
+<%-- 													<td class="text-center align-middle"><span class="small text-success bg-opacity-10 rounded px-2 py-1">${book.quantity} in stock</span></td>												 --%>
+<%-- 												</c:when> --%>
+<%-- 												<c:otherwise> --%>
+<%-- 													<td class="text-center align-middle"><span class="small text-danger bg-opacity-10 rounded px-2 py-1">${book.quantity} in stock</span></td> --%>
+<%-- 												</c:otherwise> --%>
+<%-- 											</c:choose> --%>
 											
-											
+											<td class="text-center align-middle">${book.quantity}</td>
 											<td class="text-center align-middle">${book.subcategoriesEntity.name}</td>
 											<td class="text-center align-middle">
 												
@@ -224,7 +224,7 @@
 			            </div>
 			            <div class="modal-body">
 			                <!-- Form used to send POST request -->
-			                <form id="deleteForm" method="POST" action="/bookstore/product/delete.htm">
+			                <form id="deleteForm" method="POST" action="product/delete.htm">
 			                    <p>Are you sure you want to delete this book?</p>
 			                    <p><strong>Book Id:</strong> <span id="bookIdToDelete"></span></p>
 			                    <p><strong>Book title:</strong> <span id="bookTitleToDelete"></span></p>
@@ -256,7 +256,7 @@
 				                    <input type="text" class="form-control" id="productTitle" disabled>
 			                	</div>
 			                    <div class="mb-3" style="flex: 1;">
-			                        <label for="productStock" class="form-label">Author</label>
+			                        <label for="productAuthor" class="form-label">Author</label>
 			                        <input type="text" class="form-control" id="productAuthor" disabled>
 			                    </div>
 			                </div>
@@ -272,7 +272,7 @@
 			                        <input type="text" class="form-control" id="productCategory" disabled>
 			                    </div>
 			                    <div class="mb-3" style="flex: 1;">
-			                        <label for="productStock" class="form-label">Subcategory</label>
+			                        <label for="productSubcategory" class="form-label">Subcategory</label>
 			                        <input type="text" class="form-control" id="productSubcategory" disabled>
 			                    </div>
 			                </div>
@@ -283,7 +283,7 @@
 			                        <input type="text" class="form-control" id="productSupplier" disabled>
 			                    </div>
 			                    <div class="mb-3" style="flex: 1;">
-			                        <label for="productStock" class="form-label">Publication year</label>
+			                        <label for="productPublicationYear" class="form-label">Publication year</label>
 			                        <input type="text" class="form-control" id="productPublicationYear" disabled>
 			                    </div>
 			                </div>
@@ -294,8 +294,8 @@
 							        <input type="text" class="form-control" id="productPrice" disabled>
 							    </div>
 							    <div class="mb-3 me-3" style="flex: 1;">
-							        <label for="productStock" class="form-label">Stock Quantity</label>
-							        <input type="text" class="form-control" id="productStock" disabled>
+							        <label for="productQuantity" class="form-label">Total quantity</label>
+							        <input type="text" class="form-control" id="productQuantity" disabled>
 							    </div>
 							    <div class="mb-3" style="flex: 1;">
 							        <label for="productCategory" class="form-label">Page count</label>
@@ -309,7 +309,7 @@
 			                        <input type="text" class="form-control" id="productCreatedAt" disabled>
 			                    </div>
 			                    <div class="mb-3" style="flex: 1;">
-			                        <label for="productStock" class="form-label">Updated at</label>
+			                        <label for="productUpdatedAt" class="form-label">Updated at</label>
 			                        <input type="text" class="form-control" id="productUpdatedAt" disabled>
 			                    </div>
 			                </div>
@@ -320,7 +320,7 @@
 			                        <input type="text" class="form-control" id="productLanguage" disabled>
 			                    </div>
 			                    <div class="mb-3" style="flex: 1;">
-			                        <label for="productStock" class="form-label">Status</label>
+			                        <label for="productStatus" class="form-label">Status</label>
 			                        <input type="text" class="form-control" id="productStatus" disabled>
 			                    </div>
 			                </div>
@@ -397,7 +397,7 @@
 		    var productUpdatedAt = link.getAttribute('data-updatedAt');
 		    var productThumbnail = link.getAttribute('data-thumbnail');
 		    var productImages = link.getAttribute('data-images');
-		    var productStock = link.getAttribute('data-stock');
+		    var productQuantity = link.getAttribute('data-quantity');
 			
 		    
 		    
@@ -415,7 +415,7 @@
 		    document.getElementById('productStatus').value = productStatus;
 		    document.getElementById('productCreatedAt').value = productCreatedAt;
 		    document.getElementById('productUpdatedAt').value = productUpdatedAt;
-		    document.getElementById('productStock').value = productStock;
+		    document.getElementById('productQuantity').value = productQuantity;
 		    
 		    document.getElementById('productThumbnail').src = productThumbnail;
 		    

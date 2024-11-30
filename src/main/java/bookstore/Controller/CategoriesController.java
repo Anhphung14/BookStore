@@ -127,7 +127,7 @@ public class CategoriesController {
 				if (subcategoryIdsToEdit != null && subcategoryIdsToEdit.length > 0) {
 				    for (int i = 0; i < subcategoryIdsToEdit.length; i++) {
 				        Long subcategoryId = Long.valueOf(subcategoryIdsToEdit[i]);
-
+				        
 				        String newSubcategoryName = subcategoryIdsToEdit[i].trim();
 				        if (!newSubcategoryName.isEmpty()) {
 				            try {

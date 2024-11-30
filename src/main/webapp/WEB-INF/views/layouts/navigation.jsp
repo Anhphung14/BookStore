@@ -81,7 +81,7 @@
 			<li><a class="nav-link" href="#" style="color: #343a40;"> <i
 					class="fa fa-shopping-cart"></i> <span>Orders</span>
 			</a></li>
-			<li><a class="nav-link" href="#" style="color: #343a40;"> <i
+			<li><a class="nav-link" href="inventories.htm" style="color: #343a40;"> <i
 					class="fa fa-archive"></i> <span>Inventories</span>
 			</a></li>
 		</ul>

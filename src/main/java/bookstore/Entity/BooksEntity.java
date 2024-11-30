@@ -36,8 +36,8 @@ public class BooksEntity {
     @JoinColumn(name = "supplier_id")
     private SuppliersEntity supplier;
 	
-	@Column(name = "stock_quantity", nullable = false)
-    private Integer stock_quantity;
+	@Column(name = "quantity", nullable = false)
+    private Integer quantity;
 	
 	@Column(name = "thumbnail", columnDefinition = "nvarchar")
     private String thumbnail;
@@ -125,13 +125,12 @@ public class BooksEntity {
 		this.description = description;
 	}
 
-
-	public Integer getStock_quantity() {
-		return stock_quantity;
+	public Integer getQuantity() {
+		return quantity;
 	}
 
-	public void setStock_quantity(Integer stock_quantity) {
-		this.stock_quantity = stock_quantity;
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
 	}
 
 	public String getThumbnail() {
@@ -208,7 +207,7 @@ public class BooksEntity {
                 ", price=" + price +
                 ", subcategory=" + (subcategoriesEntity != null ? subcategoriesEntity.getName() : "null") +
                 ", supplier=" + (supplier != null ? supplier.getName() : "null") +
-                ", stockQuantity=" + stock_quantity +
+                ", stockQuantity=" + quantity +
                 ", thumbnail='" + thumbnail + '\'' +
                 ", images='" + images + '\'' +
                 ", createdAt=" + createdAt +

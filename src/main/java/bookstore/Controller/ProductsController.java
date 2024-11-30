@@ -93,6 +93,10 @@ public class ProductsController {
 		
 		List<BooksEntity> books = booksService.getAllBooks();
 		
+		for (BooksEntity book : books) {
+			System.out.println(book.toString());
+		}
+		
 		model.addAttribute("listBooks", books); 
 		
 		return "products/index";
@@ -130,7 +134,7 @@ public class ProductsController {
 			@RequestParam("title") String title, @RequestParam("author") String author,
 			@RequestParam("price") Double price, @RequestParam("description") String description,
 			@RequestParam("category") Long categoryId, @RequestParam("subcategory") Long subcategoryId, @RequestParam("supplier") Long supplierId,
-			@RequestParam("stock_quantity") int stock_quantity, @RequestParam("publication_year") int publication_year, 
+			@RequestParam("quantity") int quantity, @RequestParam("publication_year") int publication_year, 
 			@RequestParam("page_count") int page_count, @RequestParam("language") String language, @RequestParam("status") int status,
 			@RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail, @RequestParam(value = "images", required = false) MultipartFile[] images) {
 		
@@ -143,11 +147,15 @@ public class ProductsController {
 				return "redirect:/product/new.htm";
 			}
 			
+			System.out.println("Den day roi 0");
+			
 			
 			CategoriesEntity category = (CategoriesEntity) session.get(CategoriesEntity.class, categoryId);
 			SuppliersEntity supplier = (SuppliersEntity) session.get(SuppliersEntity.class, supplierId);
 			SubcategoriesEntity subcategory = (SubcategoriesEntity) session.get(SubcategoriesEntity.class, subcategoryId);
 			InventoryEntity inventory = inventoryService.getInventoryByBookId(id);
+			
+			System.out.println("Den day roi 1");
 			
 			selectedBook.setTitle(title);
 			selectedBook.setAuthor(author);
@@ -155,13 +163,15 @@ public class ProductsController {
 			selectedBook.setDescription(description);
 			selectedBook.setPublication_year(publication_year);
 			selectedBook.setPage_count(page_count);
-			selectedBook.setStock_quantity(stock_quantity);
+			selectedBook.setQuantity(quantity);
 			selectedBook.setLanguage(language);
 			selectedBook.setStatus(status);
 			selectedBook.setUpdatedAt(new Date());
 			
 			selectedBook.setSubcategoriesEntity(subcategory);
 			selectedBook.setSupplier(supplier);
+			
+			System.out.println("Den day roi 2");
 			
 			try {
 				if (!thumbnail.isEmpty()) {
@@ -199,6 +209,7 @@ public class ProductsController {
 			}
 			
 			try {
+				System.out.println("Den day roi 3");
 				session.update(selectedBook);
 				
 //				model.addAttribute("alertMessage", "Successfully updated BookID: " + id);
@@ -207,7 +218,7 @@ public class ProductsController {
 				redirectAttributes.addFlashAttribute("alertMessage", "Successfully updated BookID: " + id);
 				redirectAttributes.addFlashAttribute("alertType", "success");
 		
-				
+				System.out.println("Den day roi 4");
 			} catch (Exception e) {
 				System.err.println("An error occurred while updating the book: " + e.getMessage());
 				model.addAttribute("alertMessage", "An error occurred while updating the BookId: " + id);
@@ -250,7 +261,7 @@ public class ProductsController {
 			newBook.setAuthor(author);
 			newBook.setPrice(price);
 			newBook.setDescription(description);
-			newBook.setStock_quantity(quantity);
+			newBook.setQuantity(quantity);
 			newBook.setPublication_year(publication_year);
 			newBook.setLanguage(language);
 			newBook.setPage_count(page_count);
@@ -300,7 +311,7 @@ public class ProductsController {
 			
 			InventoryEntity inventory = new InventoryEntity();
 			inventory.setBook(newBook);
-			inventory.setQuantity(quantity);
+			inventory.setStock_quantity(quantity);
 			inventory.setCreated_at(new Date());
 			inventory.setUpdated_at(new Date());
 			
