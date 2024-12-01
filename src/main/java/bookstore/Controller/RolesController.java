@@ -30,23 +30,61 @@ public class RolesController {
 	private SessionFactory factory;
 
 	@SuppressWarnings("unchecked")
-	private List<RolesEntity> ListRoles() {
-		Session session = factory.getCurrentSession();
-		String hql = "FROM RolesEntity";
-		Query query = session.createQuery(hql);
-		return query.list();
+	private List<RolesEntity> ListRoles(int page, int size, String search) {
+	    Session session = factory.getCurrentSession();
+	    String hql = "FROM RolesEntity r";
+	    
+	    if (search != null && !search.isEmpty()) {
+	        hql += " WHERE r.name LIKE :search";
+	    }
+	    
+	    Query query = session.createQuery(hql);
+	    
+	    if (search != null && !search.isEmpty()) {
+	        query.setParameter("search", "%" + search + "%");
+	    }
+	    
+	    query.setFirstResult((page - 1) * size);
+	    query.setMaxResults(size);
+	    
+	    return query.list();
 	}
 
-	@RequestMapping(value = "/roles", method = RequestMethod.GET)
-	public String roles(ModelMap model) {
-	    List<RolesEntity> roles = ListRoles();
+	@RequestMapping(value = "/roles")
+	public String roles(ModelMap model, 
+	                    @RequestParam(value = "page", defaultValue = "1") int page,
+	                    @RequestParam(value = "size", defaultValue = "10") int size,
+	                    @RequestParam(value = "search", required = false) String search) {
+	    
+	    List<RolesEntity> roles = ListRoles(page, size, search);
+	    
+	    Session session = factory.getCurrentSession();
+	    String countQuery = "SELECT count(r) FROM RolesEntity r";
+	    
+	    if (search != null && !search.isEmpty()) {
+	        countQuery += " WHERE r.name LIKE :search";
+	    }
 
+	    Query queryCount = session.createQuery(countQuery);
+	    
+	    if (search != null && !search.isEmpty()) {
+	        queryCount.setParameter("search", "%" + search + "%");
+	    }
+	    
+	    Long count = (Long) queryCount.uniqueResult();
+	    int totalPages = (int) Math.ceil((double) count / size);
+	    
 	    for (RolesEntity role : roles) {
 	        long userCount = countUsersByRoleId(role.getId());
 	        role.setUserCount(userCount); 
 	    }
-
+	    
 	    model.addAttribute("roles", roles);
+	    model.addAttribute("currentPage", page);
+	    model.addAttribute("totalPages", totalPages);
+	    model.addAttribute("size", size);
+	    model.addAttribute("search", search); 
+
 	    return "roles/index";
 	}
 
