@@ -45,10 +45,6 @@ public class UsersController {
 		List<UsersEntity> users = ListUsers();
 		
 		for (UsersEntity user : users) {
-			System.out.println(user.getFullname());
-		}
-
-		for (UsersEntity user : users) {
 			Set<RolesEntity> roles = user.getRoles();
 			user.setRoles(roles);
 		}
