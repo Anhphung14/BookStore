@@ -43,6 +43,21 @@
 .action-buttons button {
 	margin-right: 10px;
 }
+
+.no-bullet {
+	list-style-type: none;
+}
+.subcategory-item {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;           
+  padding: 0 0;                
+}
+.subcategory-text {
+  flex-grow: 1;
+  padding-left: 3px; 
+  padding-bottom: 1px;                
+}
 </style>
 </head>
 <body>
@@ -84,12 +99,12 @@
 						<c:if test="${task == 'edit'}">
 							<h6 class="small text-muted mt-4">Subcategories</h6>
 							<div class="mt-3">
-								<ul id="subcategoryList">
+								<ul id="subcategoryList" class="no-bullet">
 									<c:forEach var="subcategory"
 										items="${category.subcategoriesEntity}">
-										<li><input type="checkbox" class="subcategoryCheckbox"
+										<li class="subcategory-item"><input type="checkbox" class="subcategoryCheckbox"
 											name="subcategoryIdsToEdit" value="${subcategory.id}"
-											data-name="${subcategory.name}"> ${subcategory.name}
+											data-name="${subcategory.name}"><span class="subcategory-text">${subcategory.name}</span> 
 											<a href="javascript:void(0);"
 											class="btn btn-rounded edit-button"
 											data-id="${subcategory.id}" data-name="${subcategory.name}">
@@ -105,8 +120,8 @@
 						</c:if>
 						<div class="form-floating mt-3">
 							<input class="form-control" id="subcategoryNames"
-								name="subcategoryNames"> <label
-								class="form-label" for="Subcategories">Subcategories<span
+								name="subcategoryNames"> <label class="form-label"
+								for="Subcategories">Subcategories<span
 								class="text-danger">*</span></label>
 						</div>
 					</div>
