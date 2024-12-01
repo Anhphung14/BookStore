@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
@@ -119,22 +120,22 @@
 														    <c:when test="${discount > 0}">
 														        <!-- Hiển thị giá sau khi giảm giá -->
 														        <span class="tg-bookprice">
-														            <ins>${book.price - book.price * discount / 100}</ins>
-														            <del>${book.price}</del>
+														            <ins><f:formatNumber value="${book.price - book.price * discount / 100}" type="currency"/> </ins>
+														            <del><f:formatNumber value="${book.price}" type="currency"/> </del>
 														        </span>
 														        <span class="tg-bookwriter">Bạn tiết kiệm được ${book.price * discount / 100}</span>
 														    </c:when>
 														    <c:otherwise>
 														        <!-- Hiển thị giá gốc khi không có giảm giá -->
 														        <span class="tg-bookprice">
-														            <ins>${book.price}</ins>
+														            <ins><f:formatNumber value="${book.price}" type="currency"/> </ins>
 														        </span>
 														    </c:otherwise>
 														</c:choose>
 														<ul class="tg-delevrystock">
 															<li><i class="fa-solid fa-rocket"></i><span>Free delivery worldwide</span></li>
 															<li><i class="fa-regular fa-square-check"></i><span>Dispatch from the USA in 2 working days </span></li>
-															<li><i class="fa-solid fa-store"></i><span>Status: <em>${book.stock_quantity}</em></span></li>
+															<li><i class="fa-solid fa-store"></i><span>Status: <em>${book.quantity}</em></span></li>
 														</ul>
 														<div class="tg-quantityholder">
 															<em class="minus">-</em>
@@ -164,16 +165,7 @@
 													<span class="tg-bookwriter">By: <a href="javascript:void(0);">${book.author }</a></span>
 													<span class="tg-stars"><span></span></span>
 													<span class="tg-addreviews"><a href="javascript:void(0);">Add Your Review</a></span>
-													<div class="tg-share">
-														<span>Share:</span>
-														<ul class="tg-socialicons">
-															<li class="tg-facebook"><a href="javascript:void(0);"><i class="fa fa-facebook"></i></a></li>
-															<li class="tg-twitter"><a href="javascript:void(0);"><i class="fa fa-twitter"></i></a></li>
-															<li class="tg-linkedin"><a href="javascript:void(0);"><i class="fa fa-linkedin"></i></a></li>
-															<li class="tg-googleplus"><a href="javascript:void(0);"><i class="fa fa-google-plus"></i></a></li>
-															<li class="tg-rss"><a href="javascript:void(0);"><i class="fa fa-rss"></i></a></li>
-														</ul>
-													</div>
+													
 													<div class="tg-description">
 														 
 													</div>
@@ -205,8 +197,8 @@
 															<div class="tg-description">
 																<c:choose>
 															        <c:when test="${fn:length(book.description) > 100}">
-															            <p>${book.description.substring(0, 100)}...</p>
-															            <a href="javascript:void(0);" onclick="showMore()">More</a>
+															            <p id="book-description">${book.description.substring(0, 100)}...</p>
+															            <a id="more_less" href="javascript:void(0);" onclick="showMore()">More</a>
 															        </c:when>
 															        <c:otherwise>
 															            <p>${book.description}</p>
@@ -282,14 +274,14 @@ voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntu
 																		    <c:when test="${discounts[status.index] > 0}">
 																		        <!-- Hiển thị giá sau khi giảm giá -->
 																		        <span class="tg-bookprice">
-																		            <ins>${book.price - book.price * discounts[status.index] / 100}</ins>
-																		            <del>${book.price}</del>
+																		            <ins><f:formatNumber value="${book.price - book.price * discounts[status.index] / 100}" type="currency"/></ins>
+																		            <del><f:formatNumber value="${book.price}" type="currency"/></del>
 																		        </span>
 																		    </c:when>
 																		    <c:otherwise>
 																		        <!-- Hiển thị giá gốc khi không có giảm giá -->
 																		        <span class="tg-bookprice">
-																		            <ins>${book.price}</ins>
+																		            <ins><f:formatNumber value="${book.price}" type="currency"/></ins>
 																		        </span>
 																		    </c:otherwise>
 																		</c:choose>
@@ -537,8 +529,23 @@ voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntu
 	<script src="resources/assets/js/client/gmap3.js"></script>
 	<script src="resources/assets/js/client/main.js"></script>
 	<script>
+	var isFullDescription = false;  // Biến để theo dõi trạng thái của mô tả
+
     function showMore() {
-        alert('${book.description}');
+        var fullDescription = '${book.description}';
+        var shortDescription = '${book.description.substring(0, 100)}...';
+        var descriptionElement = document.getElementById('book-description');
+        var linkElement = document.getElementById('more_less');
+
+        if (isFullDescription) {
+            descriptionElement.innerText = shortDescription;  // Thu gọn lại nội dung
+            linkElement.innerText = "More";  // Đổi lại chữ thành "More"
+        } else {
+            descriptionElement.innerText = fullDescription;  // Hiển thị đầy đủ nội dung
+            linkElement.innerText = "Less";  // Đổi lại chữ thành "Less"
+        }
+
+        isFullDescription = !isFullDescription;  // Đổi trạng thái
     }
 	</script>
 </body>

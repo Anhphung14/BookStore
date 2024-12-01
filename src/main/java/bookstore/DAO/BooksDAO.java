@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -343,6 +344,44 @@ public class BooksDAO {
 		    List<BooksEntity> books = session.createQuery(hql).setParameter("subcategoryId", subcategoryId).setMaxResults(7).list();
 
 		    return books;
+		}
+		
+		public boolean updateBook(BooksEntity book) {
+			Session session = sessionFactory.openSession();
+			Transaction t = session.beginTransaction();
+			
+			try {
+				session.update(book);
+				t.commit();
+				
+				return true;
+			} catch (Exception e) {
+				t.rollback();
+				
+			} finally {
+				session.close();
+			}
+			
+			return false;
+		}
+		
+		public boolean saveBook(BooksEntity book) {
+			Session session = sessionFactory.openSession();
+			Transaction t = session.beginTransaction();
+			
+			try {
+				session.save(book);
+				t.commit();
+				
+				return true;
+			} catch (Exception e) {
+				t.rollback();
+				
+			} finally {
+				session.close();
+			}
+			
+			return false;
 		}
 
 }

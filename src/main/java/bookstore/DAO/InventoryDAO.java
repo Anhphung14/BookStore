@@ -122,4 +122,23 @@ public class InventoryDAO {
 			return false;
 		}
 	}
+	
+	public boolean saveInventory(InventoryEntity inventory) {
+		Session session = factory.openSession();
+		Transaction t = session.beginTransaction();
+		
+		try {
+			session.save(inventory);
+			t.commit();
+			
+			return true;
+		} catch (Exception e) {
+			t.rollback();
+			
+		} finally {
+			session.close();
+		}
+		
+		return false;
+	}
 }

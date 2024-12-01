@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,5 +40,13 @@ public class BooksService {
 	// Cach 2
 	public boolean deleteBookById2(Long id) {
 		return booksDAO.deleteBookById2(id);
+	}
+	
+	public boolean updateBook(BooksEntity book) {
+		return booksDAO.updateBook(book);
+	}
+	
+	public boolean saveBook(BooksEntity book) {
+		return booksDAO.saveBook(book);
 	}
 }

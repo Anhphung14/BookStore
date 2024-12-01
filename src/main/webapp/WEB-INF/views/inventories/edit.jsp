@@ -107,11 +107,10 @@
 						width="120px" alt="Page Icon">
 				</div>
 			</div>
-			<form id="productForm"
-				action="${pageContext.servletContext.contextPath}/inventory/edit.htm"
-				method="POST" enctype="multipart/form-data">
+			<form id="productForm" action="inventory/edit.htm" method="POST" enctype="multipart/form-data">
 				<input type="hidden" id="task" name="task" value="${task}">
-
+				
+				<input type="hidden" id=""hehe"" name="hehe" value="123123">
 				<c:if test="${task != 'new'}">
 					<input type="hidden" id="id" name="id" value="${inventory.id}">
 				</c:if>

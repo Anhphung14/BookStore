@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -57,9 +57,7 @@
 						width="120px" alt="Page Icon">
 				</div>
 			</div>
-			<form id="userForm"
-				action="${pageContext.servletContext.contextPath}/role/save.htm"
-				method="POST">
+			<form id="userForm" action="role/save.htm" method="POST">
 				<input type="hidden" id="task" name="task" value="${task}">
 
 				<c:if test="${task != 'new'}">

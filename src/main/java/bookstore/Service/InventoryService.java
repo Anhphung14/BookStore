@@ -44,5 +44,9 @@ public class InventoryService {
 	public boolean addQuantity(Long inventoryId, Long bookId, int bookQuantity, int inventoryStockQuantity) {
 		return inventoryDAO.addQuantity(inventoryId, bookId, bookQuantity, inventoryStockQuantity);
 	}
+	
+	public boolean saveInventory(InventoryEntity inventory) {
+		return inventoryDAO.saveInventory(inventory);
+	}
 
 }

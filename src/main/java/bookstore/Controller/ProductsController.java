@@ -18,6 +18,7 @@ import javax.persistence.criteria.CriteriaBuilder.In;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import org.apache.jasper.tagplugins.jstl.core.ForEach;
 import org.hibernate.Query;
@@ -28,6 +29,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.comparator.InvertibleComparator;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +44,8 @@ import com.ckfinder.connector.plugins.SaveFileCommand;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 
+import Mapper.BooksMapper;
+import bookstore.DTO.BooksDTO;
 import bookstore.Entity.BooksEntity;
 import bookstore.Entity.CategoriesEntity;
 import bookstore.Entity.InventoryEntity;
@@ -93,10 +97,6 @@ public class ProductsController {
 		
 		List<BooksEntity> books = booksService.getAllBooks();
 		
-		for (BooksEntity book : books) {
-			System.out.println(book.toString());
-		}
-		
 		model.addAttribute("listBooks", books); 
 		
 		return "products/index";
@@ -129,197 +129,126 @@ public class ProductsController {
 	}
 	
 	@RequestMapping(value = "/product/edit", method = RequestMethod.POST)
-	public String productEdit (ModelMap model, RedirectAttributes redirectAttributes,
-			@RequestParam(value = "id", required = false) Long id,
-			@RequestParam("title") String title, @RequestParam("author") String author,
-			@RequestParam("price") Double price, @RequestParam("description") String description,
-			@RequestParam("category") Long categoryId, @RequestParam("subcategory") Long subcategoryId, @RequestParam("supplier") Long supplierId,
-			@RequestParam("quantity") int quantity, @RequestParam("publication_year") int publication_year, 
-			@RequestParam("page_count") int page_count, @RequestParam("language") String language, @RequestParam("status") int status,
-			@RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail, @RequestParam(value = "images", required = false) MultipartFile[] images) {
+	public String productEdit (ModelMap model, RedirectAttributes redirectAttributes, @ModelAttribute BooksDTO bookDTO) {
+
+		BooksMapper booksMapper = new BooksMapper();
+		BooksEntity bookEntity = booksMapper.DTOtoEntity(bookDTO);
+		BooksEntity bookGetById = booksService.getBookById(bookEntity.getId());
+		SubcategoriesEntity subcategory = subcategoriesService.getSubcategoryBySubcategoryId(bookDTO.getSubcategory_id());
+		SuppliersEntity supplier = suppliersService.getSupplierBySupplierId(bookDTO.getSupplier_id());
 		
-		Session session = factory.getCurrentSession();
-		
-		try {
-			BooksEntity selectedBook = booksService.getBookById(id);
-			
-			if (selectedBook == null) {
-				return "redirect:/product/new.htm";
-			}
-			
-			System.out.println("Den day roi 0");
-			
-			
-			CategoriesEntity category = (CategoriesEntity) session.get(CategoriesEntity.class, categoryId);
-			SuppliersEntity supplier = (SuppliersEntity) session.get(SuppliersEntity.class, supplierId);
-			SubcategoriesEntity subcategory = (SubcategoriesEntity) session.get(SubcategoriesEntity.class, subcategoryId);
-			InventoryEntity inventory = inventoryService.getInventoryByBookId(id);
-			
-			System.out.println("Den day roi 1");
-			
-			selectedBook.setTitle(title);
-			selectedBook.setAuthor(author);
-			selectedBook.setPrice(price);
-			selectedBook.setDescription(description);
-			selectedBook.setPublication_year(publication_year);
-			selectedBook.setPage_count(page_count);
-			selectedBook.setQuantity(quantity);
-			selectedBook.setLanguage(language);
-			selectedBook.setStatus(status);
-			selectedBook.setUpdatedAt(new Date());
-			
-			selectedBook.setSubcategoriesEntity(subcategory);
-			selectedBook.setSupplier(supplier);
-			
-			System.out.println("Den day roi 2");
-			
+		bookEntity.setSubcategoriesEntity(subcategory);
+		bookEntity.setSupplier(supplier);
+
 			try {
-				if (!thumbnail.isEmpty()) {
+				if (!bookDTO.getThumbnail().isEmpty()) {
 //					String thumbnailPath = saveThumbnail(thumbnail, "resources/images/thumbnails/" + toSlug(title) + "/");
-					String thumbnailPath = uploadService.uploadByCloudinary(thumbnail, "images/thumbnails/" + uploadService.toSlug(title));
-					selectedBook.setThumbnail(thumbnailPath);
+					String thumbnailPath = uploadService.uploadByCloudinary(bookDTO.getThumbnail(), "images/thumbnails/" + uploadService.toSlug(bookEntity.getTitle()));
+					bookEntity.setThumbnail(thumbnailPath);
 					
 //					File savedFile = new File(context.getRealPath("/" + thumbnailPath));
 //					while (!savedFile.exists()) {
 //						Thread.sleep(100);
 //					}
+				} else {
+					bookEntity.setThumbnail(bookGetById.getThumbnail());
 				}
-				
-				if (images != null && images.length > 0) {
+//				
+				if (bookDTO.getImages() != null && bookDTO.getImages().length > 0) {
 //					String imagesPath = "resources/images/books/" + toSlug(title) + "/";
 					StringBuilder imagePaths = new StringBuilder();
 					
-					for (MultipartFile image : images) {
+					for (MultipartFile image : bookDTO.getImages()) {
 						if (!image.isEmpty()) {
 //							String imagePath = saveImage(image, imagesPath);
-							String imagePath = uploadService.uploadByCloudinary(image, "images/books/" + uploadService.toSlug(title));
+							String imagePath = uploadService.uploadByCloudinary(image, "images/books/" + uploadService.toSlug(bookEntity.getTitle()));
 							imagePaths.append(imagePath).append(";");
 						}
 					}
 					
 					if (imagePaths.length() > 0) {
-						selectedBook.setImages(imagePaths.toString());							
+						bookEntity.setImages(imagePaths.toString());							
 					} else {
-						selectedBook.setImages(selectedBook.getImages());
+						bookEntity.setImages(bookGetById.getImages());
 					}
 				}
 				
 			} catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
 			
-			try {
-				System.out.println("Den day roi 3");
-				session.update(selectedBook);
-				
-//				model.addAttribute("alertMessage", "Successfully updated BookID: " + id);
-//		        model.addAttribute("alertType", "success");
-					
-				redirectAttributes.addFlashAttribute("alertMessage", "Successfully updated BookID: " + id);
+			boolean result = booksService.updateBook(bookEntity);
+			
+			if (result) {
+				redirectAttributes.addFlashAttribute("alertMessage", "Successfully updated BookID: " + bookEntity.getId());
 				redirectAttributes.addFlashAttribute("alertType", "success");
-		
-				System.out.println("Den day roi 4");
-			} catch (Exception e) {
-				System.err.println("An error occurred while updating the book: " + e.getMessage());
-				model.addAttribute("alertMessage", "An error occurred while updating the BookId: " + id);
+			} else {
+				model.addAttribute("alertMessage", "An error occurred while updating the BookId: " + bookEntity.getId());
 				model.addAttribute("alertType", "error");
 				return "products/edit";
 			}
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
+			
 		return "redirect:/products.htm"; 
-		
 	}
 	
 	@RequestMapping(value = "/product/add", method = RequestMethod.POST)
 	public String productAdd (ModelMap model, RedirectAttributes redirectAttributes,
-			@RequestParam(value = "id", required = false) Long id,
-			@RequestParam("title") String title, @RequestParam("author") String author,
-			@RequestParam("price") Double price, @RequestParam("description") String description,
-			@RequestParam("category") Long categoryId, @RequestParam("subcategory") Long subcategoryId, @RequestParam("supplier") Long supplierId,
-			@RequestParam("quantity") int quantity, @RequestParam("publication_year") int publication_year, 
-			@RequestParam("page_count") int page_count, @RequestParam("language") String language, @RequestParam("status") int status,
-			@RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail, @RequestParam(value = "images", required = false) MultipartFile[] images) {
-		System.out.println("title: " + title);
-		System.out.println("author: " + author);
-		System.out.println("price: " + price);
-		System.out.println("description: " + description);
-		System.out.println("category: " + categoryId);
-		System.out.println("supplier: " + supplierId);
-		System.out.println("quantity: " + quantity);
-		System.out.println("publication_year: " + publication_year);
-		System.out.println("page_count: " + page_count);
+			@ModelAttribute BooksDTO bookDTO, @RequestParam("subcategory_id") Long subcategory_id) {
+
+		BooksMapper bookMapper = new BooksMapper();
+		BooksEntity bookEntity = bookMapper.DTOtoEntity(bookDTO);
 		
-		Session session = factory.getCurrentSession();
+		SubcategoriesEntity subcategory = subcategoriesService.getSubcategoryBySubcategoryId(bookDTO.getSubcategory_id());
+		SuppliersEntity supplier = suppliersService.getSupplierBySupplierId(bookDTO.getSupplier_id());
+			
+		bookEntity.setSubcategoriesEntity(subcategory);
+		bookEntity.setSupplier(supplier);
+		bookEntity.setCreatedAt(new Date());
+		bookEntity.setUpdatedAt(new Date());
 		
 		try {
-			BooksEntity newBook = new BooksEntity();
-			
-			newBook.setTitle(title);
-			newBook.setAuthor(author);
-			newBook.setPrice(price);
-			newBook.setDescription(description);
-			newBook.setQuantity(quantity);
-			newBook.setPublication_year(publication_year);
-			newBook.setLanguage(language);
-			newBook.setPage_count(page_count);
-			newBook.setStatus(status);
-			newBook.setCreatedAt(new Date());
-			newBook.setUpdatedAt(new Date());
-			
-			CategoriesEntity category = (CategoriesEntity) session.get(CategoriesEntity.class, categoryId);
-			SubcategoriesEntity subcategory = (SubcategoriesEntity) session.get(SubcategoriesEntity.class, subcategoryId);
-			SuppliersEntity supplier = (SuppliersEntity) session.get(SuppliersEntity.class, supplierId);
-			
-			newBook.setSubcategoriesEntity(subcategory);
-			newBook.setSupplier(supplier);
-			
-			try {
-				if (!thumbnail.isEmpty()) {
-					String thumbnailPath = uploadService.uploadByCloudinary(thumbnail, "images/thumbnails/" + uploadService.toSlug(title));
-//					String thumbnailPath = saveThumbnail(thumbnail, "resources/images/thumbnails/" + toSlug(title) + "/");
-					newBook.setThumbnail(thumbnailPath);
-					
-//					File savedFile = new File(context.getRealPath("/" + thumbnailPath));
-//					while (!savedFile.exists()) {
-//						Thread.sleep(100);
-//					}
-				}
+			if (!bookDTO.getThumbnail().isEmpty()) {
+//				String thumbnailPath = saveThumbnail(thumbnail, "resources/images/thumbnails/" + toSlug(title) + "/");
+				String thumbnailPath = uploadService.uploadByCloudinary(bookDTO.getThumbnail(), "images/thumbnails/" + uploadService.toSlug(bookEntity.getTitle()));
+				bookEntity.setThumbnail(thumbnailPath);
 				
-				if (images != null && images.length > 0) {
-//					String imagesPath = "resources/images/books/" + toSlug(title) + "/";
-					StringBuilder imagePaths = new StringBuilder();
-					
-					for (MultipartFile image : images) {
-						if (!image.isEmpty()) {
-//							String imagePath = saveImage(image, imagesPath);
-							String imagePath = uploadService.uploadByCloudinary(image, "images/books/" + uploadService.toSlug(title));
-							imagePaths.append(imagePath).append(";");
-						}
+//				File savedFile = new File(context.getRealPath("/" + thumbnailPath));
+//				while (!savedFile.exists()) {
+//					Thread.sleep(100);
+//				}
+			}
+//			
+			if (bookDTO.getImages() != null && bookDTO.getImages().length > 0) {
+//				String imagesPath = "resources/images/books/" + toSlug(title) + "/";
+				StringBuilder imagePaths = new StringBuilder();
+				
+				for (MultipartFile image : bookDTO.getImages()) {
+					if (!image.isEmpty()) {
+//						String imagePath = saveImage(image, imagesPath);
+						String imagePath = uploadService.uploadByCloudinary(image, "images/books/" + uploadService.toSlug(bookEntity.getTitle()));
+						imagePaths.append(imagePath).append(";");
 					}
-					
-					newBook.setImages(imagePaths.toString());
 				}
 				
-			} catch (Exception e) {
-				System.out.println(e);
+				bookEntity.setImages(imagePaths.toString());							
+				
 			}
 			
-			session.save(newBook);
-			
-			InventoryEntity inventory = new InventoryEntity();
-			inventory.setBook(newBook);
-			inventory.setStock_quantity(quantity);
-			inventory.setCreated_at(new Date());
-			inventory.setUpdated_at(new Date());
-			
-			session.save(inventory);
-			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println(bookEntity.toString());
+		
+		InventoryEntity inventory = new InventoryEntity(bookEntity, bookEntity.getQuantity(), new Date(), new Date());
+
+		boolean result1 = booksService.saveBook(bookEntity);
+		boolean result2 = inventoryService.saveInventory(inventory);
+		
+		if (result1 && result2) {
 			redirectAttributes.addFlashAttribute("alertMessage", "Successfully added a new book!");
 			redirectAttributes.addFlashAttribute("alertType", "success");
-		} catch (Exception e) {
+		} else {
 			model.addAttribute("alertMessage", "An error occurred while adding the new book!");
 			model.addAttribute("alertType", "error");
 			

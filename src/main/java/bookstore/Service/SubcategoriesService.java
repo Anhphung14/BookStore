@@ -47,4 +47,8 @@ public class SubcategoriesService {
 	    // Trả về Category, hoặc null nếu không tìm thấy
 	    return (CategoriesEntity) query.uniqueResult();
 	}
+	
+    public SubcategoriesEntity getSubcategoryBySubcategoryId(Long id) {
+    	return subcategoriesDAO.getSubcategoryBySubcategoryId(id);
+    }
 }

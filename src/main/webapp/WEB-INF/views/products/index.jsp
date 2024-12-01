@@ -195,9 +195,9 @@
 <%-- 													<a class="btn btn-rounded"><i class="fa ${user.isActive ? 'fa-eye-slash' : 'fa-eye'}"></i></a> --%>
 													<!-- <a class="btn btn-rounded"><i class="fa fa-eye-slash"></i></a> -->
 													<!-- <a class="btn btn-rounded"><i class="fa fa-search"></i></a> -->
-													<a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#exampleModal">
-													    <i class="fa fa-plus-circle" aria-hidden="true"></i>
-													</a>
+<!-- 													<a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#exampleModal"> -->
+<!-- 													    <i class="fa fa-plus-circle" aria-hidden="true"></i> -->
+<!-- 													</a> -->
 													<a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="prepareDelete(${book.id}, '${book.title}')">
 														<i class="fa fa-trash-alt"></i>
 													</a>

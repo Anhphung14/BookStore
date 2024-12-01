@@ -17,6 +17,7 @@
 	rel="stylesheet">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
 .main-content {
 	display: flex;
@@ -199,7 +200,7 @@ select.form-control {
 </div>
 
 <div class="form-floating mt-3">
-    <select class="form-control" id="subcategory" name="subcategory" onchange="loadCategory(this.value)">
+    <select class="form-control" id="subcategory_id" name="subcategory_id" disabled="disabled">
         <option value="" disabled selected>Select an option</option>
         <!-- Lặp qua danh sách danh mục từ server -->
         <c:forEach var="subcategory" items="${listSubcategories}">
@@ -218,7 +219,7 @@ select.form-control {
 <!-- 								</div> -->
 
 <div class="form-floating mt-3">
-    <select class="form-control" id="supplier" name="supplier">
+    <select class="form-control" id="supplier_id" name="supplier_id">
         <option value="" disabled selected>Select an option</option>
         <!-- Lặp qua danh sách danh mục từ server -->
         <c:forEach var="supplier" items="${listSuppliers}">
@@ -278,6 +279,23 @@ select.form-control {
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 	
 	<script>
+		const alertMessage = "${alertMessage}";
+		const alertType = "${alertType}";
+		
+		if (alertMessage) {
+		    Swal.fire({
+		        icon: alertType, 
+		        title: alertType === "success" ? "Success" : "Error",
+		        text: alertMessage,
+		        confirmButtonText: "OK"
+		    }).then((result) => {
+		        if (result.isConfirmed && alertType === "success") {
+		            window.location.href = '${pageContext.servletContext.contextPath}/products.htm';
+		        }
+		    });
+		}
+	
+	
 		let initialInput = true;
 	
 		function validateNumberInput(input) {
@@ -356,21 +374,26 @@ select.form-control {
 		}
 		
 		function loadSubcategories(categoryId) {
+		    const subcategorySelect = document.getElementById('subcategory_id');
+		    
 		    if (!categoryId) {
-		        document.getElementById('subcategory').innerHTML = '<option value="" disabled selected>Select a subcategory</option>';
+		        subcategorySelect.innerHTML = '<option value="" disabled selected>Select a subcategory</option>';
+		        subcategorySelect.disabled = true; // Vô hiệu hóa trường subcategory
 		        return;
 		    }
+
+		    // Kích hoạt lại trường subcategory khi category được chọn
+		    subcategorySelect.disabled = false;
 
 		    // Gửi yêu cầu AJAX đến server
 		    fetch('/bookstore/product/getSubcategories.htm?categoryId=' + categoryId)
 		    .then(response => response.text())
 		    .then(data => {
-		        const subcategorySelect = document.getElementById('subcategory');
 		        subcategorySelect.innerHTML = data; // Thêm trực tiếp HTML trả về vào dropdown
 		    })
 		    .catch(error => console.error('Error:', error));
-
 		}
+
 		
 		function loadCategory(subcategoryId) {
 		    if (!subcategoryId) return;

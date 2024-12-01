@@ -24,4 +24,14 @@ public class SuppliersDAO {
 		
 		return listSuppliers;
 	}
+	
+	public SuppliersEntity getSupplierBySupplierId(Long id) {
+		Session session = factory.getCurrentSession();
+		
+		String hql = "FROM SuppliersEntity WHERE id = :id";
+		Query query = session.createQuery(hql);
+		query.setParameter("id", id);
+		
+		return (SuppliersEntity) query.uniqueResult();
+	}
 }
