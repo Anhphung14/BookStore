@@ -202,7 +202,7 @@
 							        <div class="col-6">
 							            <div class="form-floating">
 							                <select class="form-control" id="category" name="category" onchange="loadSubcategories()">
-							                    <option value="">Select Category</option>
+							                    <option value="" disabled selected>Select Category</option>
 							                    <c:forEach var="category" items="${listCategories }">
 							                        <option value="${category.id}">${category.name}</option>
 							                    </c:forEach>
@@ -215,7 +215,7 @@
 							        <div class="col-6">
 							            <div class="form-floating">
 							                <select class="form-control" id="subcategory" name="subcategory[]" multiple="multiple">
-							                	<option value="" disabled selected>Select an option</option>
+							                	<!-- <option value="" disabled selected>Select an option</option> -->
 							                </select>
 							                <label class="form-label" for="subcategory">Select Subcategories  <span class="text-danger">*</span></label>
 							            </div>
@@ -410,13 +410,14 @@
 	$(document).ready(function() {
 	    // Khởi tạo Select2 với cấu hình cho phép xóa lựa chọn và hiển thị placeholder
 	    $('#subcategory').select2({
-	        placeholder: "Select an option",  // Đặt placeholder cho select2
+	        placeholder: "Select an option",  // Đặt placeholder cho Select2
 	        allowClear: true, // Cho phép xóa lựa chọn
 	    }).on('select2:unselecting', function(e) {
 	        // Đảm bảo chọn lại option mặc định khi người dùng xóa lựa chọn
-	        $(this).val('').trigger('change');
+	        $(this).val(null).trigger('change');  // Sử dụng null thay vì '' để giữ sự tương thích
 	    });
 	});
+
 	
 	
 	// Lấy subcategory khi chọn category

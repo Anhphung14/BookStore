@@ -24,7 +24,7 @@ public class DiscountsEntity {
     private String discountType;  // Ví dụ: 'percentage', 'amount', 'product-based', 'fixed'
 
     @Column(name = "discount_value" , nullable = false)
-    private Double discountValue;
+    private Long discountValue;
 
     @Column(name = "apply_to" , nullable = true)
     private String applyTo;  // Enum để xác định áp dụng cho user, sản phẩm, category, hoặc order
@@ -40,10 +40,19 @@ public class DiscountsEntity {
     private Date endDate;
     
     @Column(name = "min_order_value" , nullable = true)
-    private Double minOrderValue;
+    private Long minOrderValue;
     
     @Column(name = "max_uses" , nullable = true)
     private Integer maxUses;
+    
+    @Transient
+    private int used;
+    
+    @Transient
+    private String categoryName;
+    
+    @Transient
+    private List<String> subcategoriesName;
     
     @Column (name = "status" , nullable = false)
     private String status;
@@ -65,12 +74,19 @@ public class DiscountsEntity {
     @OneToMany(mappedBy = "discount_id", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Collection<Book_DiscountsEntity> bookDiscountsEntity;
     
+    public void removeBookDiscounts() {
+        for (Book_DiscountsEntity bookDiscount : bookDiscountsEntity) {
+            bookDiscount.setDiscount_id(null);  // Xóa liên kết giữa discount và bookDiscount
+        }
+        bookDiscountsEntity.clear();  // Xóa tất cả các đối tượng con khỏi collection
+    }
+    
     public DiscountsEntity() {
     	super();
     }
     
-    public DiscountsEntity(Long id, String code, String discountType, Double discountValue, String applyTo,
-    		Date startDate, Date endDate, Double minOrderValue, Integer maxUses, String status, Date createdAt,
+    public DiscountsEntity(Long id, String code, String discountType, Long discountValue, String applyTo,
+    		Date startDate, Date endDate, Long minOrderValue, Integer maxUses, String status, Date createdAt,
 			Date updatedAt, Collection<Order_DiscountsEntity> orderDiscountsEntity,
 			Collection<Book_DiscountsEntity> bookDiscountsEntity) {
 		super();
@@ -115,11 +131,11 @@ public class DiscountsEntity {
 		this.discountType = discountType;
 	}
 
-	public Double getDiscountValue() {
+	public Long getDiscountValue() {
 		return discountValue;
 	}
 
-	public void setDiscountValue(Double discountValue) {
+	public void setDiscountValue(Long discountValue) {
 		this.discountValue = discountValue;
 	}
 
@@ -147,11 +163,11 @@ public class DiscountsEntity {
 		this.endDate = endDate;
 	}
 
-	public Double getMinOrderValue() {
+	public Long getMinOrderValue() {
 		return minOrderValue;
 	}
 
-	public void setMinOrderValue(Double minOrderValue) {
+	public void setMinOrderValue(Long minOrderValue) {
 		this.minOrderValue = minOrderValue;
 	}
 
@@ -202,7 +218,33 @@ public class DiscountsEntity {
 	public void setBookDiscountsEntity(Collection<Book_DiscountsEntity> bookDiscountsEntity) {
 		this.bookDiscountsEntity = bookDiscountsEntity;
 	}
+	
 
+	public int getUsed() {
+		return used;
+	}
+
+	public void setUsed(int used) {
+		this.used = used;
+	}
+	
+	
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+
+	public List<String> getSubcategoriesName() {
+		return subcategoriesName;
+	}
+
+	public void setSubcategoriesName(List<String> subcategoriesName) {
+		this.subcategoriesName = subcategoriesName;
+	}
 
 	@Override
     public String toString() {
