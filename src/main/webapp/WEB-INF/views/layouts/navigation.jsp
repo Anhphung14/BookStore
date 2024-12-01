@@ -78,6 +78,9 @@
 			<li><a class="nav-link" href="products.htm"
 				style="color: #343a40;"> <i class="fa fa-book"></i> <span>Products</span>
 			</a></li>
+			<li><a class="nav-link" href="discounts.htm"
+				style="color: #343a40;"> <i class="fa-solid fa-tag"></i> <span>Discounts</span>
+			</a></li>
 			<li><a class="nav-link" href="#" style="color: #343a40;"> <i
 					class="fa fa-shopping-cart"></i> <span>Orders</span>
 			</a></li>

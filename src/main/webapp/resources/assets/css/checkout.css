@@ -1,0 +1,59 @@
+@charset "UTF-8";
+/* checkout.css */
+body {
+    background-color: #f9f9f9;
+    font-family: Arial, sans-serif;
+}
+
+h1.page-title {
+    margin-bottom: 20px;
+    font-size: 2em;
+    color: #333;
+}
+
+.field {
+    margin-bottom: 15px;
+}
+
+.field__label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.field__input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.action-buttons-wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.order-summary th, .order-summary td {
+    text-align: center;
+    padding: 10px;
+}
+
+.btn {
+    padding: 10px 57px;
+    border-radius: 12px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.radio-group label {
+    display: block;
+    margin-bottom: 10px;
+}

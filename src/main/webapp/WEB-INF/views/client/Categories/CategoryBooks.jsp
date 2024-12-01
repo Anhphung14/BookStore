@@ -151,8 +151,8 @@
 													<div class="tg-postbook">
 														<figure class="tg-featureimg">
 															<div class="tg-bookimg">
-																<div class="tg-frontcover"><img src="${pageContext.servletContext.contextPath}/resources/images/client/books/${book.images}/front.jpg" alt="image description"></div>
-																<div class="tg-backcover"><img src="${pageContext.servletContext.contextPath}/resources/images/client/books/${book.images}/front.jpg" alt="image description"></div>
+																<div class="tg-frontcover"><img src="${book.thumbnail }" alt="image description"></div>
+																<div class="tg-backcover"><img src="${book.thumbnail }" alt="image description"></div>
 															</div>
 															<a class="tg-btnaddtowishlist" href="javascript:void(0);">
 																<i class="fa-solid fa-heart"></i>
@@ -161,7 +161,7 @@
 														</figure>
 														<div class="tg-postbookcontent">
 																<ul class="tg-bookscategories">
-																	<li><a href="javascript:void(0);">${book.subcategory.name }</a></li>
+																	<li><a href="javascript:void(0);">${book.subcategoriesEntity.name }</a></li>
 																</ul>
 																<div class="tg-themetagbox"><span class="tg-themetag">sale</span></div>
 																<div class="tg-booktitle">
@@ -173,7 +173,7 @@
 																	<ins>chưa biết</ins>
 																	<del><f:formatNumber value="${book.price}" type="currency"/></del>
 																</span>
-																<a class="tg-btn tg-btnstyletwo" href="javascript:void(0);">
+																<a class="tg-btn tg-btnstyletwo" href="/bookstore/cart/add.htm?bookId=${book.id}&quantity=1">
 																	<i class="fa fa-shopping-basket"></i>
 																	<em>Thêm vào giỏ</em>
 																</a>

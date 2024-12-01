@@ -38,4 +38,13 @@ public class SubcategoriesDAO {
     	
     	return (SubcategoriesEntity) query.uniqueResult();
     }
+    
+    public List<SubcategoriesEntity> getSubcategoryByCategoryId(Long CategoryId) {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "FROM SubcategoriesEntity where categoriesEntity.id = :CategoryId";
+        Query query = session.createQuery(hql);
+        query.setParameter("CategoryId", CategoryId);
+        List<SubcategoriesEntity> list = query.list();
+        return list;
+    }
 }

@@ -246,7 +246,7 @@
 										<div class="tg-widgetcontent">
 											<ul>
 												<c:forEach var="item" items="${countBookEachCategory }">
-													<li><a href="javascript:void(0);"><span>${item[0]}</span><em>${item[1] }</em></a></li>
+													<li><a href="http://localhost:8080/bookstore/categories/${item[3]}.htm"><span>${item[0]}</span><em>${item[2] }</em></a></li>
 												
 												</c:forEach>
 											</ul>

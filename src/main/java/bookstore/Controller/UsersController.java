@@ -19,6 +19,9 @@ import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -96,13 +99,11 @@ public class UsersController {
 	    
 	    try {
 	        if ("new".equals(task)) {
-	            // Kiểm tra email đã tồn tại chưa
 	            if (getUserByEmail(user.getEmail()) != null) {
 	                model.addAttribute("message", "This email is already registered.");
 	                return "users/edit";
 	            }
 
-	            // Lưu người dùng mới
 	            user.setAvatar("resources/images/default-avatar.png");
 
 	            String hashedPassword = PasswordUtil.hashPassword("bookstore");
@@ -115,7 +116,6 @@ public class UsersController {
 
 	            session.save(user); // Lưu người dùng
 
-	            // Xử lý roles cho người dùng mới (dùng role_id)
 	            if (roleIds != null && roleIds.size() > 0) {
 	                Set<RolesEntity> roles = new HashSet<>();
 	                for (Long roleId : roleIds) {
@@ -136,7 +136,6 @@ public class UsersController {
 	                return "redirect:/users.htm";
 	            }
 
-	            // Cập nhật thông tin người dùng
 	            existingUser.setFullname(user.getFullname());
 	            existingUser.setEmail(user.getEmail());
 	            existingUser.setPhone(user.getPhone());
@@ -145,14 +144,12 @@ public class UsersController {
 	            Date currentDate = new Date(System.currentTimeMillis());
 	            existingUser.setUpdated_at(currentDate);
 
-	            // Kiểm tra email
 	            UsersEntity emailCheck = getUserByEmail(user.getEmail());
 	            if (emailCheck != null && !emailCheck.getId().equals(existingUser.getId())) {
 	                model.addAttribute("message", "This email is already registered.");
 	                return "users/edit";
 	            }
 
-	            // Cập nhật roles cho người dùng
 	            if (roleIds != null) {
 	                Set<RolesEntity> roles = new HashSet<>();
 	                for (Long roleId : roleIds) {

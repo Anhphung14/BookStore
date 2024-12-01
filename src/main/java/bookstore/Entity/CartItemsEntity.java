@@ -1,14 +1,8 @@
 package bookstore.Entity;
 
-import java.math.BigDecimal;
-import java.text.Normalizer;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
-import javax.annotation.Generated;
-import javax.persistence.CascadeType;
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
