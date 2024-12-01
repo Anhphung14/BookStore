@@ -8,12 +8,6 @@
 <html>
 <head>
 <meta charset="UTF-8">
-	<title>
-		<c:choose>
-			<c:when test="${task == 'edit'}">Edit Discount</c:when>
-			<c:otherwise>New Discount</c:otherwise>
-		</c:choose>
-	</title>
 
 	<base href="${pageContext.servletContext.contextPath}/">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -138,15 +132,8 @@
 						width="120px" alt="Page Icon">
 				</div>
 			</div>
-			<form id="discountForm"
-				action="${pageContext.servletContext.contextPath}/product/edit.htm"
-				method="POST" enctype="multipart/form-data">
-				<input type="hidden" id="task" name="task" value="${task}">
-
-				<c:if test="${task != 'new'}">
-					<input type="hidden" id="id" name="id" value="${discount.id}">
-				</c:if>
-
+			<form id="discountForm" action="${pageContext.servletContext.contextPath}/discount/edit.htm" method="POST" >
+				<input type="hidden" value="${discount.id }" name="discount_id">
 				<div class="card mt-3">
 					<div class="card-body">
 						<h6 class="small text-muted">GENERAL INFORMATION</h6>
@@ -156,7 +143,7 @@
 							<div class="col-md-6">
 								<div class="form-floating mt-3 position-relative">
 									<input class="form-control" id="code" name="code"
-										value="${discount.code}" required> <label
+										value="${discount.code}" required oninput="convertToUpperCase(this);"> <label
 										class="form-label" for="code">Code <span
 										class="text-danger">*</span></label>
 								</div>
@@ -218,11 +205,12 @@
 
 							
 							<div class="form-floating mt-3">
-							    <select class="form-control" id="applyTo" name="applyTo" required onchange="showSubcategorySelect()">
-							        <option value="all" ${discount.applyTo == 'user' ? 'selected' : ''}>User</option>
+							    <select class="form-control" id="applyTo" name="applyTo" required onchange="showSubcategorySelect()" disabled="disabled">
+							        <option value="user" ${discount.applyTo == 'user' ? 'selected' : ''}>User</option>
 							        <option value="products" ${discount.applyTo == 'products' ? 'selected' : ''}>Products</option>
 							        <option value="categories" ${discount.applyTo == 'categories' ? 'selected' : ''}>Categories</option>
 							    </select>
+							    <input type="hidden" value="${discount.applyTo}" name="applyTo">
 							    <label class="form-label" for="applyTo">Apply To <span class="text-danger">*</span></label>
 							</div>
 
@@ -232,11 +220,12 @@
 							        <div class="col-6">
 							            <div class="form-floating">
 							                <select class="form-control" id="category" name="category" onchange="loadSubcategories()">
-							                    <option value="">Select Category</option>
+							                   <!--  <option value="" disabled selected>Select Category</option> -->
 							                    <c:forEach var="category" items="${listCategories }">
-							                        <option value="${category.id}">${category.name}</option>
+							                        <option value="${category.id}" ${category.id == category_id ? 'selected' : '' }>${category.name}</option>
 							                    </c:forEach>
 							                </select>
+							                <input type="hidden" value="" name="category">
 							                <label class="form-label" for="category">Select Category</label>
 							            </div>
 							        </div>
@@ -244,9 +233,15 @@
 							        <!-- Subcategory Select -->
 							        <div class="col-6">
 							            <div class="form-floating">
-							                <select class="form-control" id="subcategory" name="subcategory[]" multiple="multiple">
-							                	<option value="" disabled selected>Select an option</option>
-							                </select>
+							               <select class="form-control" id="subcategory" name="subcategory[]" multiple="multiple">
+											    <c:forEach var="subcategory" items="${listSubCategories}">
+											        <option value="${subcategory.id}"
+											            <c:if test="${fn:contains(subcategories_id, subcategory.id)}">
+											                selected
+											            </c:if>
+											        >${subcategory.name}</option>
+											    </c:forEach>
+											</select>
 							                <label class="form-label" for="subcategory">Select Subcategories</label>
 							            </div>
 							        </div>
@@ -275,6 +270,7 @@
 								
 							</div>
 						</div>
+					</div>
 					</div>
 					<div class="mt-3">
 						<button class="btn btn-primary btn-save" type="submit">Save</button>
@@ -338,6 +334,10 @@
 	        console.log(input.id + ": " + priceValue);
 	    });
 	}
+	
+	window.onload = function() {}
+		formatNumberInputsOnLoad();
+	;
 
 
 	document.getElementById('discountForm').onsubmit = function() {
@@ -396,7 +396,7 @@
 
 	
 	window.onload = function() {
-	    formatNumberInputsOnLoad();
+		formatNumberInputsOnLoad();
 		
 	    let numericInputs = document.querySelectorAll('.numeric-input');
 	    numericInputs.forEach(input => {
@@ -445,8 +445,8 @@
 	$(document).ready(function() {
 	    // Khởi tạo Select2 với cấu hình cho phép xóa lựa chọn và hiển thị placeholder
 	    $('#subcategory').select2({
-	        placeholder: "Select an option",  // Đặt placeholder cho select2
-	        allowClear: true, // Cho phép xóa lựa chọn
+	        //placeholder: "Select an option",  // Đặt placeholder cho select2
+	        //allowClear: true, // Cho phép xóa lựa chọn
 	    }).on('select2:unselecting', function(e) {
 	        // Đảm bảo chọn lại option mặc định khi người dùng xóa lựa chọn
 	        $(this).val('').trigger('change');
@@ -475,6 +475,10 @@
         .then(data => {
             // Lấy select subcategory
             var subcategorySelect = document.getElementById('subcategory');
+            
+            for (var i = 0; i < subcategorySelect.options.length; i++) {
+                subcategorySelect.options[i].selected = false;  // Bỏ chọn tất cả các options
+            }
             
             // Xóa các option cũ
             subcategorySelect.innerHTML = data; // Đặt trực tiếp nội dung HTML vào select
@@ -541,6 +545,10 @@
           });
       });
 
+      function convertToUpperCase(inputElement) {
+  	    // Đổi giá trị của input thành chữ in hoa
+  	    inputElement.value = inputElement.value.toUpperCase();
+  	}
 	</script>
 </body>
 </html>

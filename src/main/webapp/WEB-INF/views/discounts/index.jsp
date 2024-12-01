@@ -19,13 +19,11 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-	<script src="${pageContext.request.contextPath}/resources/js/app.js"
-	defer></script>
 	
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-	
+	<script src="${pageContext.request.contextPath}/resources/js/app.js"defer></script>
 <style>
 
 .main-content {
@@ -133,11 +131,35 @@
 											</td>
 <%-- 											<td class="text-end">${(users.page - 1) * users.pageSize + status.index + 1}</td> --%>
 											<td class="text-start align-middle">${discount.id}</td>
-											<td><a class="d-flex flex-nowrap align-items-center"style="text-decoration: none; justify-content: center; align-items: center;"href="discount/edit/${discount.id}.htm">
+											<%-- <td><a class="d-flex flex-nowrap align-items-center"style="text-decoration: none; justify-content: center; align-items: center;" onclick="showDiscountDetails(this)">
 													<div class="ms-3 ">
 														<div class="fw-semibold custom-text ellipsis">${discount.code}</div>
 													</div>
-											</a></td>							
+											</a></td> --%>	
+											
+											<td>
+											    <a class="d-flex flex-nowrap align-items-center" style="text-decoration: none;" href="javascript:void(0);" 
+											       data-id="${discount.id}"
+											       data-code="${discount.code}"
+											       data-discountType="${discount.discountType}"
+											       data-discountValue="${discount.discountValue}"
+											       data-applyTo="${discount.applyTo}"
+											       data-startDate="<fmt:formatDate value='${discount.startDate}' pattern='yyyy-MM-dd\'T\'HH:mm' />"
+											       data-endDate="<fmt:formatDate value='${discount.endDate}' pattern='yyyy-MM-dd\'T\'HH:mm' />"
+											       data-minOrderValue=<fmt:formatNumber value="${discount.minOrderValue}" type="currency" maxFractionDigits="0" currencySymbol="₫"/>
+											       data-maxUses="${discount.maxUses}"
+											       data-used="${discount.getUsed() }"
+											       data-category="${discount.getCategoryName() }"
+											       data-subcategories="${discount.getSubcategoriesName() }"
+											       data-status="${discount.status}"
+											       data-updatedAt="<fmt:formatDate value='${discount.updatedAt}' pattern='yyyy-MM-dd\'T\'HH:mm' />"
+											       data-createdAt="<fmt:formatDate value='${discount.createdAt}' pattern='yyyy-MM-dd\'T\'HH:mm' />"
+											       onclick="showDiscountDetails(this)">
+											    	<div class="ms-3 ">
+														<div class="fw-semibold custom-text ellipsis">${discount.code}</div>
+													</div>
+													</a>
+											    </td>						
 											
 											
 											<td class="text-center align-middle">${discount.discountType}</td>
@@ -216,17 +238,16 @@
 			    <div class="modal-dialog">
 			        <div class="modal-content">
 			            <div class="modal-header">
-			                <h5 class="modal-title" id="deleteModalLabel">Confirm Book Deletion</h5>
+			                <h5 class="modal-title" id="deleteModalLabel">Confirm Discount Deletion</h5>
 			                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			            </div>
 			            <div class="modal-body">
 			                <!-- Form used to send POST request -->
 			                <form id="deleteForm" method="POST" action="/bookstore/discount/delete.htm">
-			                    <p>Are you sure you want to delete this book?</p>
-			                    <p><strong>Book Id:</strong> <span id="bookIdToDelete"></span></p>
-			                    <p><strong>Book title:</strong> <span id="bookTitleToDelete"></span></p>
-			                    <!-- Hidden input to send bookId -->
-			                    <input type="hidden" name="bookId" id="bookIdInput">
+			                    <p>Are you sure you want to delete this Discount?</p>
+			                    <p><strong>Discount Id:</strong> <span id="discountIdToDelete"></span></p>
+			                    <p><strong>Discount code:</strong> <span id="discountTitleToDelete"></span></p>
+			                    <input type="hidden" name="discount_id" id="discountIdInput">
 			                </form>
 			            </div>
 			            <div class="modal-footer">
@@ -237,12 +258,112 @@
 			        </div>
 			    </div>
 			</div>
+			
+			<div class="modal fade" id="discountDetailModal" tabindex="-1" aria-labelledby="discountDetailModalLabel" aria-hidden="true">
+			    <div class="modal-dialog">
+			        <div class="modal-content">
+			            <div class="modal-header">
+			                <h5 class="modal-title" id="discountDetailModalLabel">Discount Details</h5>
+			                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			            </div>
+			            <div class="modal-body">
+			            	<div class="d-flex">
+			                    <div class="mb-3 me-3" style="flex: 1;">
+				                    <label for="code" class="form-label">Code</label>
+				                    <input type="text" class="form-control" id="discountCode" readonly="readonly">
+			                	</div>
+			                    <div class="mb-3" style="flex: 1;">
+			                        <label for="discountType" class="form-label">Discount Type</label>
+			                        <input type="text" class="form-control" id="discountType" readonly="readonly">
+			                    </div>
+			                </div>
+			                
+
+			                <div class="d-flex">
+				                <div class="mb-3 me-3">
+				                    <label for="discountValue" class="form-label">Discount Value</label>
+				                    <input type="text" class="form-control" id="discountValue" readonly="readonly">
+				                </div>
+			                    <div class="mb-3" style="flex: 1;">
+			                        <label for="applyTo" class="form-label">Apply To</label>
+			                        <input type="text" class="form-control" id="applyTo" readonly="readonly">
+			                    </div>
+			                </div>
+			                
+			                <div class="d-flex">
+			                
+			                    <div class="mb-3 me-2" style="flex: 1;">
+			                        <label for="startDate" class="form-label">Start Date</label>
+			                        <input type="datetime-local" class="form-control" id="startDate" readonly="readonly">
+			                    </div>
+			                    
+			                    <div class="mb-3" style="flex: 1;">
+			                        <label for="endDate" class="form-label">End Date</label>
+			                        <input type="datetime-local" class="form-control" id="endDate" readonly="readonly">
+			                    </div>
+			                </div>
+			                
+			                <div class="d-flex">
+			                	
+			                    <div id="minOrderValueModal" class="mb-3 me-3" style="flex: 1;">
+			                        <label for="minOrderValue" class="form-label">Min Order Value</label>
+			                        <input type="text" class="form-control" id="minOrderValue" readonly="readonly">
+			                    </div>
+			                    
+							    <div id="maxUsesModal" class="mb-3 me-3" style="flex: 1;">
+							        <label for="maxUses" class="form-label">Max Uses</label>
+							        <input type="text" class="form-control" id="maxUses" readonly="readonly">
+							    </div>
+							    
+							    <div id="usedModal" class="mb-3" style="flex: 1;">
+							        <label for="used" class="form-label">Used</label>
+							        <input type="text" class="form-control" id="used" readonly="readonly">
+							    </div>
+							    
+							    <div id="categoryModal" class="mb-3 me-3" style="flex: 1;">
+							        <label for="category" class="form-label">Category</label>
+							        <input type="text" class="form-control" id="category" readonly="readonly">
+							    </div>
+							    
+							    <div id="subcategoriesModal" class="mb-3" style="flex: 1;">
+							        <label for="subcategories" class="form-label">Subcategories</label>
+							        <input type="text" class="form-control" id="subcategories" readonly="readonly">
+							    </div>
+							</div>
+							
+							    <div class="mb-3 me-3" style="flex: 1;">
+							        <label for="status" class="form-label">Status</label>
+							        <input type="text" class="form-control" id="status" readonly="readonly">
+							    </div>
+							
+							<div class="d-flex">
+			                    <div class="mb-3 me-2" style="flex: 1;">
+			                        <label for="discountCreatedAt" class="form-label">Created at</label>
+			                        <input type="datetime-local" class="form-control" id="discountCreatedAt" readonly="readonly">
+			                    </div>
+			                    <div class="mb-3" style="flex: 1;">
+			                        <label for="discountUpdatedAt" class="form-label">Updated at</label>
+			                        <input type="datetime-local" class="form-control" id="discountUpdatedAt" readonly="readonly">
+			                    </div>
+			                </div>
+			                
+			            </div>
+			            <div class="modal-footer">
+			                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			            </div>
+			        </div>
+			    </div>
+			</div>
 
 
 
 		</div>
 
 	</div>
+	
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+	</script>
 	
 	<script type="text/javascript">
 	/* const alertMessage = "${alertMessage}";
@@ -291,7 +412,74 @@
 	}
 
 
+	function prepareDelete(bookId, bookTitle) {
+	    // Hiển thị ID của sách trong modal
+	    document.getElementById("discountIdToDelete").textContent = bookId;
+	    document.getElementById("discountTitleToDelete").textContent = bookTitle;
+	    document.getElementById("discountIdInput").value = bookId;
+
+	}
 	
+	function showDiscountDetails(link) {
+	    // Lấy thông tin từ thuộc tính data của link
+	    var discountId = link.getAttribute('data-id');
+		var discountCode = link.getAttribute('data-code');
+        var discountType = link.getAttribute('data-discountType');
+        var discountValue = link.getAttribute('data-discountValue');
+        var applyTo = link.getAttribute('data-applyTo');
+        var startDate = link.getAttribute('data-startDate');
+        var endDate = link.getAttribute('data-endDate');
+        var minOrderValue = link.getAttribute('data-minOrderValue');
+        var maxUses = link.getAttribute('data-maxUses');
+        var category = link.getAttribute('data-category');
+        var subcategories = link.getAttribute('data-subcategories');
+        console.log(subcategories.slice(1, -1));
+        var used = link.getAttribute('data-used');
+        var status = link.getAttribute('data-status');
+        var updatedAt = link.getAttribute('data-updatedAt');
+        var createdAt = link.getAttribute('data-createdAt');
+	    
+        if (applyTo === "categories") {
+            // Ẩn các trường không cần thiết
+            document.getElementById("minOrderValueModal").style.display = "none";
+            document.getElementById("maxUsesModal").style.display = "none";
+            document.getElementById("usedModal").style.display = "none";
+            
+            // Hiển thị category và subcategory
+            document.getElementById("categoryModal").style.display = "block";
+            document.getElementById("subcategoriesModal").style.display = "block";
+
+            // Cập nhật giá trị category và subcategory vào các trường
+            document.getElementById("category").value = category;
+            document.getElementById("subcategories").value = subcategories.slice(1, -1);
+        } else {
+            // Nếu không phải categories, hiển thị lại các trường ban đầu
+            document.getElementById("minOrderValueModal").style.display = "block";
+            document.getElementById("maxUsesModal").style.display = "block";
+            document.getElementById("usedModal").style.display = "block";
+            
+            // Ẩn các trường category và subcategory
+           	document.getElementById("categoryModal").style.display = "none";
+           	document.getElementById("subcategoriesModal").style.display = "none";
+        }
+        
+        document.getElementById("discountCode").value = discountCode;
+        document.getElementById("discountType").value = discountType;
+        document.getElementById("discountValue").value = discountValue;
+        document.getElementById("applyTo").value = applyTo;
+        document.getElementById("startDate").value = startDate;
+        document.getElementById("endDate").value = endDate;
+        document.getElementById("minOrderValue").value = minOrderValue;
+        document.getElementById("status").value = status;
+        document.getElementById("maxUses").value = maxUses;
+        document.getElementById("used").value = used;
+        document.getElementById("discountCreatedAt").value = createdAt;
+        document.getElementById("discountUpdatedAt").value = updatedAt;
+	    // Điền thông tin vào modal
+	    // Mở modal
+	    var modal = new bootstrap.Modal(document.getElementById('discountDetailModal'));
+	    modal.show();
+	}
 	</script>
 </body>
 </html>
