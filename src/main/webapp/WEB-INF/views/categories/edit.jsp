@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,6 +13,8 @@
 	</c:choose></title>
 <base href="${pageContext.servletContext.contextPath}/">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -47,16 +51,18 @@
 .no-bullet {
 	list-style-type: none;
 }
+
 .subcategory-item {
-  display: flex;
-  justify-content: space-between; 
-  align-items: center;           
-  padding: 0 0;                
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 0;
 }
+
 .subcategory-text {
-  flex-grow: 1;
-  padding-left: 3px; 
-  padding-bottom: 1px;                
+	flex-grow: 1;
+	padding-left: 3px;
+	padding-bottom: 1px;
 }
 </style>
 </head>
@@ -102,10 +108,11 @@
 								<ul id="subcategoryList" class="no-bullet">
 									<c:forEach var="subcategory"
 										items="${category.subcategoriesEntity}">
-										<li class="subcategory-item"><input type="checkbox" class="subcategoryCheckbox"
-											name="subcategoryIdsToEdit" value="${subcategory.id}"
-											data-name="${subcategory.name}"><span class="subcategory-text">${subcategory.name}</span> 
-											<a href="javascript:void(0);"
+										<li class="subcategory-item"><input type="checkbox"
+											class="subcategoryCheckbox" name="subcategoryIdsToEdit"
+											value="${subcategory.id}" data-name="${subcategory.name}"><span
+											class="subcategory-text">${subcategory.name}</span> <a
+											href="javascript:void(0);"
 											class="btn btn-rounded edit-button"
 											data-id="${subcategory.id}" data-name="${subcategory.name}">
 												<i class="fa fa-pencil"></i>
@@ -156,7 +163,13 @@
 
 		</div>
 	</div>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 	<script>
+	
     document.querySelectorAll('.subcategoryCheckbox').forEach(function(checkbox) {
         checkbox.addEventListener('change', function() {
             toggleActionButtons();
@@ -199,10 +212,7 @@
         }
     }
     
-    
-    </script>
 
-	<script>
     document.querySelectorAll('.edit-button').forEach(function(editButton) {
         editButton.addEventListener('click', function() {
             var subcategoryId = this.getAttribute('data-id');
@@ -216,7 +226,37 @@
     document.getElementById('cancelEditButton').addEventListener('click', function() {
         document.getElementById('editSubcategoryFormContainer').style.display = 'none';
     });
-</script>
+    const alertMessage = "${alertMessage}";
+    const alertType = "${alertType}";
+    toastr.options = {
+        "closeButton": true, // Allow close button
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": true, // Show progress bar
+        "positionClass": "toast-top-right", // Position of the toast
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "200", // Duration to show
+        "hideDuration": "1000",
+        "timeOut": "5000", // Time before auto hiding
+        "extendedTimeOut": "1000", // Time when hovering over toast
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+
+    if (alertMessage) {
+        // Check alert type and display the message accordingly
+        if (alertType === "success") {
+            toastr.success(alertMessage, "Success");
+        } else if (alertType === "error") {
+            toastr.error(alertMessage, "Error");
+        }
+    }
+    </script>
+
+
 
 </body>
 </html>

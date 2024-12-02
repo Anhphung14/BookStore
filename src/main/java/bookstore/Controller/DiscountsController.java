@@ -1,10 +1,16 @@
 package bookstore.Controller;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import bookstore.DAO.CategoriesDAO;
@@ -38,7 +45,32 @@ public class DiscountsController {
 		discountsDAO.updateStatusDiscounts();
 
 		List<DiscountsEntity> getAllDiscounts = discountsDAO.getAllDiscounts();
-		//System.out.println(getAllDiscounts);
+		for (DiscountsEntity discount : getAllDiscounts) {
+	        // Gọi hàm getUsedCountByDiscountId để lấy số lần sử dụng của discount
+	        int usedCount = discountsDAO.getUsedCountByDiscountId(discount.getId());
+	        discount.setUsed(usedCount);
+	        if (discount.getApplyTo().equals("categories")) {
+	            // Gọi hàm getNameCategoryOfDiscount để lấy Map các Category và Subcategory
+	            Map<String, List<String>> categorySubcategoryMap = discountsDAO.getNameCategoryOfDiscount(discount.getId());
+
+	            // Lấy danh sách Category (vì Map có khóa là Category)
+	            List<String> categories = new ArrayList<>(categorySubcategoryMap.keySet());
+
+	            // Lấy danh sách Subcategories (lấy giá trị trong Map)
+	            List<String> subcategories = new ArrayList<>();
+	            if (!categories.isEmpty()) {
+	                // Lấy Subcategory từ danh sách các categories (tất cả Subcategory của Category đầu tiên)
+	                subcategories = categorySubcategoryMap.get(categories.get(0)); 
+	            }
+
+	            // Cập nhật thông tin cho discount
+	            discount.setCategoryName(categories.isEmpty() ? "" : categories.get(0)); // Lấy tên category đầu tiên
+	            discount.setSubcategoriesName(subcategories); // Cập nhật danh sách Subcategory
+
+	            // Nếu cần, có thể sử dụng thêm categories/subcategories cho việc hiển thị trên giao diện
+	        }
+	      
+	    }
 		modelMap.addAttribute("listDiscounts", getAllDiscounts);
 		return "discounts/index";
 	}
@@ -52,13 +84,13 @@ public class DiscountsController {
 	
 	@RequestMapping(value = "/discount/create", method = RequestMethod.POST)
 	public String createDiscountPost(@RequestParam("code") String code, @RequestParam("discountType") String discountType, 
-	        @RequestParam("discountValue") Double discountValue, @RequestParam("applyTo") String applyTo,  
+	        @RequestParam("discountValue") Long discountValue, @RequestParam("applyTo") String applyTo,  
 	        @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date startDate, 
 	        @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date endDate, 
-	        @RequestParam(value = "minOrderValue", required = false) Double minOrderValue, @RequestParam(value = "maxUses", required = false) Integer maxUses, 
-	        @RequestParam("status") String status, @RequestParam("category") Long category_id, 
+	        @RequestParam(value = "minOrderValue", required = false) Long minOrderValue, @RequestParam(value = "maxUses", required = false) Integer maxUses, 
+	        @RequestParam("status") String status, @RequestParam(value = "category", required = false) Long category_id, 
 	        @RequestParam(value = "subcategory[]", required = false) List<Long> subcategories_id, RedirectAttributes redirectAttributes) {
-
+		
 	    DiscountsEntity newDiscount = new DiscountsEntity();
 	    newDiscount.setCode(code);
 	    newDiscount.setDiscountType(discountType);
@@ -97,18 +129,93 @@ public class DiscountsController {
 	public String editDiscount(ModelMap modelMap, @PathVariable(value = "discount_id") Long discount_id) {
 		modelMap.addAttribute("task", "edit");
 	    DiscountsEntity discount = discountsDAO.findDiscountById(discount_id);
-	    
-	    if (discount == null) {
-	        return "redirect:/discounts.htm"; // Chuyển hướng nếu không tìm thấy
+	    if(discount.getApplyTo().equals("categories")) {
+    		List<Long> idCategoryAndSubcategory = discountsDAO.foundCategoryOfDiscount(discount_id);
+	    	Long category = idCategoryAndSubcategory.get(0);
+ 	    	List<Long> subcategories = idCategoryAndSubcategory.subList(1, idCategoryAndSubcategory.size());
+ 	    	List<CategoriesEntity> listCategories = categoriesDAO.getAllCategories();
+ 		    List<SubcategoriesEntity> listSubCategories = subCategoriesDAO.getSubcategoryByCategoryId(category);
+
+ 		    modelMap.addAttribute("category_id", category);
+ 		    modelMap.addAttribute("subcategories_id", subcategories);
+ 		    modelMap.addAttribute("listCategories", listCategories);
+ 		    modelMap.addAttribute("listSubCategories", listSubCategories);
 	    }
-	    
-	    List<CategoriesEntity> listCategories = categoriesDAO.getAllCategories();
-	    
-	    
+	   
 	    modelMap.addAttribute("discount", discount);
-	    modelMap.addAttribute("listCategories", listCategories);
 	    return "discounts/edit";
 	}
+	
+	@RequestMapping(value = "/discount/edit", method = RequestMethod.POST)
+	public String editDiscountPost(@RequestParam("discount_id") Long discount_id, 
+	                               @RequestParam("code") String code, 
+	                               @RequestParam("discountType") String discountType, 
+	                               @RequestParam("discountValue") Long discountValue, 
+	                               @RequestParam("applyTo") String applyTo,  
+	                               @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date startDate, 
+	                               @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date endDate, 
+	                               @RequestParam(value = "minOrderValue", required = false) Long minOrderValue, 
+	                               @RequestParam(value = "maxUses", required = false) Integer maxUses, 
+	                               @RequestParam("status") String status, 
+	                               @RequestParam("category") Long category_id, 
+	                               @RequestParam(value = "subcategory[]", required = false) List<Long> subcategories_id, 
+	                               RedirectAttributes redirectAttributes) {
+
+	    // Tìm kiếm discount theo ID
+	    DiscountsEntity existingDiscount = discountsDAO.findDiscountById(discount_id);
+	    if (existingDiscount == null) {
+	        // Nếu không tìm thấy discount, chuyển hướng và thông báo lỗi
+	        redirectAttributes.addFlashAttribute("error", "Discount not found!");
+	        return "redirect:/discounts.htm";
+	    }
+
+
+	    // Cập nhật thông tin discount
+	    existingDiscount.setCode(code);
+	    existingDiscount.setDiscountType(discountType);
+	    existingDiscount.setDiscountValue(discountValue);
+	    existingDiscount.setApplyTo(applyTo);
+	    existingDiscount.setStartDate(startDate);
+	    existingDiscount.setEndDate(endDate);
+	    existingDiscount.setMinOrderValue(minOrderValue);
+	    existingDiscount.setMaxUses(maxUses);
+	    existingDiscount.setStatus(status);
+
+	    existingDiscount.setUpdatedAt(new Date());
+	    
+	    // Lưu discount đã chỉnh sửa
+	    discountsDAO.updateDiscount(discount_id, existingDiscount, subcategories_id);
+
+	    // Thêm thông báo thành công và chuyển hướng đến trang danh sách giảm giá
+	    redirectAttributes.addFlashAttribute("alertMessage", "Discount updated successfully!");
+	    redirectAttributes.addFlashAttribute("alertType", "success");
+	    return "redirect:/discounts.htm";
+	}
+
+	 @RequestMapping(value = "/discount/delete", method = RequestMethod.POST)
+	    public String deleteDiscount(@RequestParam("discount_id") Long discount_id, RedirectAttributes redirectAttributes) {
+	        //System.out.println("discount_id: " + discount_id);
+	        // Gọi phương thức xóa discount từ DAO
+		 	DiscountsEntity existingDiscount = discountsDAO.findDiscountById(discount_id);
+		 	if(existingDiscount.getStatus().equals("expired")) {
+		 		boolean isDeleted = discountsDAO.deleteDiscount(existingDiscount);
+		 		if (isDeleted) {
+		            // Nếu xóa thành công
+		            redirectAttributes.addFlashAttribute("alertMessage", "Discount has been successfully deleted!");
+		            redirectAttributes.addFlashAttribute("alertType", "success");
+		        } else {
+		            // Nếu xóa thất bại (có thể vì discount không tồn tại)
+		            redirectAttributes.addFlashAttribute("alertMessage", "Discount not found or couldn't be deleted!");
+		            redirectAttributes.addFlashAttribute("alertType", "error");
+		        }
+		 	}else {
+		 		redirectAttributes.addFlashAttribute("alertMessage", "Discount must expired");
+	            redirectAttributes.addFlashAttribute("alertType", "error");
+		 	}	        
+	        
+	        // Chuyển hướng về danh sách discounts sau khi xóa
+	        return "redirect:/discounts.htm";
+	    }
 	
 	
 	@RequestMapping(value = "/discount/getSubcategories", method = RequestMethod.GET, produces = "text/html; charset=UTF-8")
@@ -135,8 +242,5 @@ public class DiscountsController {
 	    // Trả về chuỗi HTML
 	    return html.toString();
 	}
-
-
-
 
 }

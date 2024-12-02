@@ -68,7 +68,6 @@ public class UsersEntity {
     @OneToOne(mappedBy = "user")
     private CartsEntity cart;
     
-    
     @Transient
     private Set<Long> roleIds;
 

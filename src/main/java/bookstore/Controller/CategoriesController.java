@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.Arrays;
 
 import java.sql.Timestamp;
@@ -41,11 +43,49 @@ public class CategoriesController {
 	private SessionFactory factory;
 
 	@RequestMapping("/categories")
-	public String showCategories(Model model) {
-		List<CategoriesEntity> categories = categoriesService.getAllCategoriesWithSubcategories();
-		model.addAttribute("categories", categories);
-		return "categories/index";
+	public String showCategories(
+	        Model model,
+	        @RequestParam(value = "page", defaultValue = "1") int page,
+	        @RequestParam(value = "size", defaultValue = "10") int size,
+	        @RequestParam(value = "search", required = false) String search) {
+	    
+	    Session session = factory.getCurrentSession();
+	    
+	    // Xây dựng câu lệnh HQL động dựa trên tham số tìm kiếm
+	    String hql = "FROM CategoriesEntity c";
+	    String countQuery = "SELECT count(c) FROM CategoriesEntity c";
+	    
+	    if (search != null && !search.isEmpty()) {
+	        hql += " WHERE c.name LIKE :search";
+	        countQuery += " WHERE c.name LIKE :search";
+	    }
+	    
+	    // Tính tổng số bản ghi
+	    Query countQ = session.createQuery(countQuery);
+	    if (search != null && !search.isEmpty()) {
+	        countQ.setParameter("search", "%" + search + "%");
+	    }
+	    Long count = (Long) countQ.uniqueResult();
+	    int totalPages = (int) Math.ceil((double) count / size);
+	    
+	    // Lấy danh sách theo trang
+	    Query query = session.createQuery(hql);
+	    if (search != null && !search.isEmpty()) {
+	        query.setParameter("search", "%" + search + "%");
+	    }
+	    query.setFirstResult((page - 1) * size);
+	    query.setMaxResults(size);
+	    
+	    List<CategoriesEntity> categories = query.list();
+	    
+	    model.addAttribute("categories", categories);
+	    model.addAttribute("currentPage", page);
+	    model.addAttribute("totalPages", totalPages);
+	    model.addAttribute("search", search); 
+	    
+	    return "categories/index";
 	}
+
 
 	@RequestMapping(value = "/category/delete/{id}.htm", method = RequestMethod.GET)
 	public String deleteCategory(@PathVariable("id") Long id) {
@@ -82,62 +122,97 @@ public class CategoriesController {
 
 	@RequestMapping(value = "/category/save", method = RequestMethod.POST)
 	public String saveCategory(@ModelAttribute("category") CategoriesEntity category, @RequestParam("task") String task,
-			@RequestParam(value = "id", required = false) Long id,
-			@RequestParam(value = "subcategoryNames", required = false) String subcategoryNames,
-			@RequestParam(value = "subcategoryIdsToDelete", required = false) String[] subcategoryIdsToDelete,
+	        @RequestParam(value = "id", required = false) Long id,
+	        @RequestParam(value = "subcategoryNames", required = false) String subcategoryNames,
+	        @RequestParam(value = "subcategoryIdsToDelete", required = false) String[] subcategoryIdsToDelete,
+	        ModelMap model, HttpServletRequest request,
+	        RedirectAttributes redirectAttributes) {
+
+	    Session session = factory.getCurrentSession();
+
+	    try {
+	        if ("new".equals(task)) {
+	            // Creating new category
+	            LocalDateTime now = LocalDateTime.now();
+	            Timestamp currentDate = Timestamp.valueOf(now);
+	            category.setCreated_at(currentDate);
+	            category.setUpdated_at(currentDate);
+
+	            if (subcategoryNames != null && !subcategoryNames.isEmpty()) {
+	                List<SubcategoriesEntity> subcategories = new ArrayList<>();
+	                String[] subcategoryArray = subcategoryNames.split(",");
+	                for (String subcategoryName : subcategoryArray) {
+	                    SubcategoriesEntity subcategory = new SubcategoriesEntity();
+	                    subcategory.setName(subcategoryName.trim());
+	                    subcategory.setCategoriesEntity(category);
+	                    subcategories.add(subcategory);
+	                }
+	                category.setSubcategoriesEntity(subcategories);
+	            }
+
+	            session.save(category);
+	            redirectAttributes.addFlashAttribute("alertMessage", "Category saved successfully!");
+	            redirectAttributes.addFlashAttribute("alertType", "success");
+
+	        } else if ("edit".equals(task)) {
+	            // Editing existing category
+	            CategoriesEntity existingCategory = getCategoryById(id);
+	            existingCategory.setName(category.getName());
+	            existingCategory.setUpdated_at(new Date(System.currentTimeMillis()));
+
+	            if (subcategoryIdsToDelete != null && subcategoryIdsToDelete.length > 0) {
+	                for (String subcategoryIdToDelete : subcategoryIdsToDelete) {
+	                    Long subcategoryId = Long.valueOf(subcategoryIdToDelete);
+	                    SubcategoriesEntity subcategoryToDelete = (SubcategoriesEntity) session.get(SubcategoriesEntity.class, subcategoryId);
+	                    if (subcategoryToDelete != null) {
+	                        existingCategory.getSubcategoriesEntity().remove(subcategoryToDelete);
+	                        session.delete(subcategoryToDelete);
+	                    }
+	                }
+	            }
+
+	            if (subcategoryNames != null && !subcategoryNames.isEmpty()) {
+	                List<SubcategoriesEntity> subcategories = new ArrayList<>();
+	                String[] subcategoryArray = subcategoryNames.split(",");
+	                for (String subcategoryName : subcategoryArray) {
+	                    SubcategoriesEntity subcategory = new SubcategoriesEntity();
+	                    subcategory.setName(subcategoryName.trim());
+	                    subcategory.setCategoriesEntity(category);
+	                    subcategories.add(subcategory);
+	                }
+	                existingCategory.setSubcategoriesEntity(subcategories);
+	            }
+
+	            session.merge(existingCategory);
+	            redirectAttributes.addFlashAttribute("alertMessage", "Category updated successfully!");
+	            redirectAttributes.addFlashAttribute("alertType", "success");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        redirectAttributes.addFlashAttribute("alertMessage", "Error occurred while saving the category.");
+	        redirectAttributes.addFlashAttribute("alertType", "error");
+	        return "redirect:/categories.htm";
+	    }
+
+	    return "redirect:/categories.htm";
+	}
+
+
+	@RequestMapping(value = "/category/saveSubcategory", method = RequestMethod.POST)
+	public String saveSubcategory(@RequestParam("subcategoryId") Long subcategoryId, @RequestParam("name") String name,
 			ModelMap model, HttpServletRequest request) {
 		Session session = factory.getCurrentSession();
 
 		try {
-			if ("new".equals(task)) {
-				LocalDateTime now = LocalDateTime.now();
-				Timestamp currentDate = Timestamp.valueOf(now);
-				category.setCreated_at(currentDate);
-				category.setUpdated_at(currentDate);
+			SubcategoriesEntity subcategory = (SubcategoriesEntity) session.get(SubcategoriesEntity.class,
+					subcategoryId);
 
-				if (subcategoryNames != null && !subcategoryNames.isEmpty()) {
-					List<SubcategoriesEntity> subcategories = new ArrayList<>();
-					String[] subcategoryArray = subcategoryNames.split(",");
-					for (String subcategoryName : subcategoryArray) {
-						SubcategoriesEntity subcategory = new SubcategoriesEntity();
-						subcategory.setName(subcategoryName.trim());
-						subcategory.setCategoriesEntity(category);
-						subcategories.add(subcategory);
-					}
-					category.setSubcategoriesEntity(subcategories);
-				}
-
-				session.save(category);
-			} else if ("edit".equals(task)) {
-				CategoriesEntity existingCategory = getCategoryById(id);
-				existingCategory.setName(category.getName());
-				existingCategory.setUpdated_at(new Date(System.currentTimeMillis()));
-
-				if (subcategoryIdsToDelete != null && subcategoryIdsToDelete.length > 0) {
-					for (String subcategoryIdToDelete : subcategoryIdsToDelete) {
-						Long subcategoryId = Long.valueOf(subcategoryIdToDelete);
-						SubcategoriesEntity subcategoryToDelete = (SubcategoriesEntity) session
-								.get(SubcategoriesEntity.class, subcategoryId);
-						if (subcategoryToDelete != null) {
-							existingCategory.getSubcategoriesEntity().remove(subcategoryToDelete);
-							session.delete(subcategoryToDelete);
-						}
-					}
-				}
-
-				if (subcategoryNames != null && !subcategoryNames.isEmpty()) {
-					List<SubcategoriesEntity> subcategories = new ArrayList<>();
-					String[] subcategoryArray = subcategoryNames.split(",");
-					for (String subcategoryName : subcategoryArray) {
-						SubcategoriesEntity subcategory = new SubcategoriesEntity();
-						subcategory.setName(subcategoryName.trim());
-						subcategory.setCategoriesEntity(category);
-						subcategories.add(subcategory);
-					}
-					existingCategory.setSubcategoriesEntity(subcategories);
-				}
-
-				session.merge(existingCategory);
+			if (subcategory != null) {
+				subcategory.setName(name);
+				session.update(subcategory);
+			} else {
+				model.addAttribute("message", "Subcategory not found.");
+				return "redirect:/categories.htm";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -145,34 +220,9 @@ public class CategoriesController {
 			return "redirect:/categories.htm";
 		}
 
-		return "redirect:/categories.htm";
+		String referer = request.getHeader("Referer");
+		return "redirect:" + referer;
 	}
-	
-	@RequestMapping(value = "/category/saveSubcategory", method = RequestMethod.POST)
-	public String saveSubcategory(@RequestParam("subcategoryId") Long subcategoryId, @RequestParam("name") String name,
-	                               ModelMap model, HttpServletRequest request) {
-	    Session session = factory.getCurrentSession();
-	    
-	    try {
-	        SubcategoriesEntity subcategory = (SubcategoriesEntity) session.get(SubcategoriesEntity.class, subcategoryId);
-	        
-	        if (subcategory != null) {
-	            subcategory.setName(name);
-	            session.update(subcategory);
-	        } else {
-	            model.addAttribute("message", "Subcategory not found.");
-	            return "redirect:/categories.htm"; 
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        model.addAttribute("message", "An error occurred: " + e.getMessage());
-	        return "redirect:/categories.htm";
-	    }
-	    
-	    String referer = request.getHeader("Referer");
-	    return "redirect:" + referer;
-	}
-
 
 	public CategoriesEntity getCategoryById(Long id) {
 		Session session = factory.getCurrentSession();

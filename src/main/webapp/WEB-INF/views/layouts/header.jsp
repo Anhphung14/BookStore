@@ -80,7 +80,7 @@ nav.navbar {
                             <div class="text-muted">${user.email}</div>
                         </div>
                     </li>
-                    <li><a class="dropdown-item" href="#"><i class="fa fa-user"></i>Profile</a></li>
+                    <li><a class="dropdown-item" href="${pageContext.servletContext.contextPath}/profile.htm"><i class="fa fa-user"></i>Profile</a></li>
                     <form id="signoutForm" action="${pageContext.servletContext.contextPath}/signout.htm" method="POST" style="display:none;">
 					    <input type="hidden" name="signout" value="true">
 					</form>
