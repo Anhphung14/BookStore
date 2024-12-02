@@ -133,22 +133,9 @@ public class DiscountsDAO {
 
 	    return count > 0;
 	}
-
-
-
 	
-	
-	
-import bookstore.Entity.BooksEntity;
-
-@Transactional
-@Repository
-public class DiscountsDAO {
-	@Autowired
-	private SessionFactory factory;
-
 	public Double getDiscountValueByBookId(Long bookId) {
-		Session session = factory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		String hql = "SELECT bd.discount.discountValue " + "FROM Book_DiscountsEntity bd "
 				+ "WHERE bd.book.id = :bookId " + "AND bd.discount.discountType = 0 "
 				+ "AND CURRENT_TIMESTAMP BETWEEN bd.discount.startDate AND bd.discount.endDate";
@@ -167,7 +154,7 @@ public class DiscountsDAO {
 	}
 
 	public List<Double> getDiscountsValueByBookId(List<BooksEntity> books) {
-		Session session = factory.getCurrentSession();
+		Session session = sessionFactory.getCurrentSession();
 		List<Double> discountValues = new ArrayList<>();
 
 		for (BooksEntity book : books) {
@@ -187,4 +174,5 @@ public class DiscountsDAO {
 
 		return discountValues;
 	}
+
 }
