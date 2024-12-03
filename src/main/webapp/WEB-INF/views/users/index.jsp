@@ -19,6 +19,15 @@
 <script src="${pageContext.request.contextPath}/resources/js/app.js"
 	defer></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css"
+	rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/app.js"
+	defer></script>
 <script
 	src="${pageContext.request.contextPath}/resources/js/confirmBox.js"></script>
 
@@ -71,8 +80,7 @@
 						<div class="d-flex gap-3">
 							<div class="input-group">
 								<input class="form-control search-input me-2" name="search"
-									id="search_text" value="${search}"
-									placeholder="Search...">
+									id="search_text" value="${search}" placeholder="Search...">
 								<button type="submit" class="btn btn-secondary btn-search">
 									<i class="fa fa-search"></i>
 								</button>
@@ -135,9 +143,10 @@
 											<td>
 												<div class="custom-text">${user.email}</div>
 											</td>
-											<td class="text-center align-middle">
-											<c:forEach var="role" items="${user.roles}">
-													<span class="small text-uppercase text-success bg-opacity-10 rounded px-2 py-1">${role.name}</span>
+											<td class="text-center align-middle"><c:forEach
+													var="role" items="${user.roles}">
+													<span
+														class="small text-uppercase text-success bg-opacity-10 rounded px-2 py-1">${role.name}</span>
 													<!-- Hiá»n thá» vai trÃ² -->
 												</c:forEach></td>
 
@@ -204,5 +213,34 @@
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script type="text/javascript">
+		const alertMessage = "${alertMessage}";
+		const alertType = "${alertType}";
+
+		toastr.options = {
+			"closeButton" : true,
+			"debug" : false,
+			"newestOnTop" : true,
+			"progressBar" : true,
+			"positionClass" : "toast-top-right",
+			"preventDuplicates" : true,
+			"onclick" : null,
+			"showDuration" : "200",
+			"hideDuration" : "1000",
+			"timeOut" : "5000",
+			"extendedTimeOut" : "1000",
+			"showEasing" : "swing",
+			"hideEasing" : "linear",
+			"showMethod" : "fadeIn",
+			"hideMethod" : "fadeOut"
+		};
+		if (alertMessage) {
+			if (alertType === "success") {
+				toastr.success(alertMessage, "Success");
+			} else if (alertType === "error") {
+				toastr.error(alertMessage, "Error");
+			}
+		}
+	</script>
 </body>
 </html>

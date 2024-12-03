@@ -17,10 +17,14 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <script src="${pageContext.request.contextPath}/resources/js/app.js"
 	defer></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/js/app.js"defer></script>
 <script
 	src="${pageContext.request.contextPath}/resources/js/confirmBox.js"></script>
-
 <style>
 .main-content {
 	display: flex;
@@ -71,8 +75,7 @@
 						<div class="d-flex gap-3">
 							<div class="input-group">
 								<input class="form-control search-input me-2" name="search"
-									id="search_text" value="${search}"
-									placeholder="Search...">
+									id="search_text" value="${search}" placeholder="Search...">
 								<button type="submit" class="btn btn-secondary btn-search">
 									<i class="fa fa-search"></i>
 								</button>
@@ -139,7 +142,7 @@
 									</c:forEach>
 								</table>
 							</div>
-														<c:if test="${totalPages > 1}">
+							<c:if test="${totalPages > 1}">
 								<nav aria-label="Page navigation example" class="mt-2">
 									<ul class="pagination justify-content-center">
 										<!-- Liên kết đến trang trước -->
@@ -180,5 +183,34 @@
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script type="text/javascript">
+		const alertMessage = "${alertMessage}";
+		const alertType = "${alertType}";
+
+		toastr.options = {
+			"closeButton" : true,
+			"debug" : false,
+			"newestOnTop" : true,
+			"progressBar" : true,
+			"positionClass" : "toast-top-right",
+			"preventDuplicates" : true,
+			"onclick" : null,
+			"showDuration" : "200",
+			"hideDuration" : "1000",
+			"timeOut" : "5000",
+			"extendedTimeOut" : "1000",
+			"showEasing" : "swing",
+			"hideEasing" : "linear",
+			"showMethod" : "fadeIn",
+			"hideMethod" : "fadeOut"
+		};
+		if (alertMessage) {
+			if (alertType === "success") {
+				toastr.success(alertMessage, "Success");
+			} else if (alertType === "error") {
+				toastr.error(alertMessage, "Error");
+			}
+		}
+	</script>
 </body>
 </html>

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import bookstore.Entity.RolesEntity;
 import bookstore.Entity.UsersEntity;
@@ -122,7 +123,7 @@ public class RolesController {
 
 	@RequestMapping(value = "/role/save.htm", method = RequestMethod.POST)
 	public String saveRole(@ModelAttribute("role") RolesEntity role, @RequestParam("task") String task,
-	        @RequestParam(value = "id", required = false) Long id, ModelMap model) {
+	        @RequestParam(value = "id", required = false) Long id, RedirectAttributes redirectAttributes, ModelMap model) {
 	    Session session = factory.getCurrentSession();
 
 	    try {
@@ -140,6 +141,8 @@ public class RolesController {
 	                role.setUpdatedAt(currentDate);
 
 	                session.save(role);
+	                redirectAttributes.addFlashAttribute("alertMessage", "Role saved successfully!");
+		            redirectAttributes.addFlashAttribute("alertType", "success");
 
 	            } catch (Exception e) {
 	                e.printStackTrace();
@@ -166,11 +169,14 @@ public class RolesController {
 	            existingRole.setUpdatedAt(currentDate);
 
 	            session.merge(existingRole);
+                redirectAttributes.addFlashAttribute("alertMessage", "Role saved successfully!");
+	            redirectAttributes.addFlashAttribute("alertType", "success");
 	            return "redirect:/roles.htm";
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();
-	        model.addAttribute("message", "An error occurred: " + e.getMessage());
+	        redirectAttributes.addFlashAttribute("alertMessage", "Error occurred while saving the Role.");
+	        redirectAttributes.addFlashAttribute("alertType", "error");
 	        return "redirect:/roles.htm";
 	    }
 

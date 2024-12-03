@@ -1,6 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +22,15 @@
 <link
 	href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"
 	rel="stylesheet">
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css"
+	rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/app.js"
+	defer></script>
 <style>
 .main-content {
 	display: flex;
@@ -96,15 +107,13 @@
 						<div class="form-floating mt-3">
 							<input class="form-control" id="phone" name="phone"
 								value="${supplier.phone}"> <label class="form-label"
-								for="phone">Phone <span
-								class="text-danger">*</span></label>
+								for="phone">Phone <span class="text-danger">*</span></label>
 						</div>
 
 						<div class="form-floating mt-3">
 							<input class="form-control" id="address" name="address"
 								value="${supplier.address}"> <label class="form-label"
-								for="address">Address <span
-								class="text-danger">*</span></label>
+								for="address">Address <span class="text-danger">*</span></label>
 						</div>
 					</div>
 				</div>
@@ -123,7 +132,6 @@
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-
 	<script>
 		document.getElementById("userForm").addEventListener("submit",
 				function(event) {
