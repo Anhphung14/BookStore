@@ -68,6 +68,9 @@ public class UsersEntity {
     @OneToOne(mappedBy = "user")
     private CartsEntity cart;
     
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<OrdersEntity> orders;
+    
     @Transient
     private Set<Long> roleIds;
 

@@ -14,6 +14,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import bookstore.Entity.DiscountsEntity;
 import bookstore.Entity.Order_DiscountsEntity;
 import bookstore.Entity.OrdersDetailEntity;
 import bookstore.Entity.OrdersEntity;
@@ -225,7 +226,7 @@ public class OrderDAO {
 			OrdersEntity updateOrder = (OrdersEntity) session.createQuery(hql).setParameter("orderId", orderId).uniqueResult();
 			//OrderEntity updateOrder = getOrderByOrderId(orderId);
 			updateOrder.setUpdatedAt(new Date());
-			updateOrder.setStatus(3);
+			updateOrder.setOrderStatus("Huỷ Đơn Hàng");
 			session.update(updateOrder);
 			t.commit();
 			isUpdate = 1;
