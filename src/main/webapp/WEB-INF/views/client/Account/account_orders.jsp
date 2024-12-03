@@ -120,23 +120,33 @@
             <td>${order.totalPrice}</td>
             <td>
                 <c:choose>
-                    <c:when test="${order.status == 1}">
-                        <span class="badge badge-success" style="background-color: #28a745;">Delivered</span>
-                    </c:when>
-                    <c:when test="${order.status == 2}">
-                        <span class="badge badge-warning" style="background-color: #ffc107;">Pending</span>
-                    </c:when>
-                    <c:when test="${order.status == 3}">
-                        <span class="badge badge-danger" style="background-color: #dc3545;">Canceled</span>
-                    </c:when>
-                </c:choose>
+				    <c:when test="${order.orderStatus == 'Hoàn thành'}">
+				        <span class="badge badge-success" style="background-color: #28a745;">Delivered</span>
+				    </c:when>
+				    <c:when test="${order.orderStatus == 'Chờ xác nhận'}">
+				        <span class="badge badge-warning" style="background-color: #ffc107;">Pending</span>
+				    </c:when>
+				    <c:when test="${order.orderStatus eq 'Hủy Đơn Hàng'}">
+				        <span class="badge badge-danger" style="background-color: #dc3545;">Canceled</span>
+				    </c:when>
+				    <c:when test="${order.orderStatus == 'Xác nhận đơn hàng'}">
+				        <span class="badge badge-primary" style="background-color: #007bff;">Confirmed</span>
+				    </c:when>
+				    <c:when test="${order.orderStatus == 'Đang giao hàng'}">
+				        <span class="badge badge-info" style="background-color: #17a2b8;">Shipping</span>
+				    </c:when>
+				    <c:otherwise>
+				        <span class="badge badge-danger" style="background-color: #dc3545;">Canceled</span>
+				    </c:otherwise>
+				</c:choose>
+<%-- 				<c:out value = "${order.orderStatus }"/> --%>
             </td>
             <td>
                 <a class="btn btn-info btn-sm link-detail" data-toggle="modal" data-target="#orderDetailsModal" data-bs-backdrop="false" href="${pageContext.servletContext.contextPath}/account/order_details/${order.id}.htm">View</a>
-                <c:if test="${order.status == 2}">
+                <c:if test="${order.orderStatus == 'Chờ xác nhận'}">
 				    <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmCancelModal" onclick="setOrderIdToCancel(${order.id});">Cancel</button>
 				</c:if>
-				<c:if test="${order.status == 1}">
+				<c:if test="${order.orderStatus == 'Hoàn thành'}">
 					<!-- Check if the order ID is in the list of rated orders -->
 					<c:set var="isReviewed" value="false" />
 					<c:forEach var="reviewedOrderId" items="${order_reviewed}">

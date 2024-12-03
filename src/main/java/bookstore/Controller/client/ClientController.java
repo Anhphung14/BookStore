@@ -107,7 +107,7 @@ public class ClientController {
     @RequestMapping(value = "productdetail/{productId}/reviews", method = RequestMethod.GET)
 	public String getReviewsByProductId(ModelMap model, @PathVariable("productId") Long productId) {
 	    // Gọi DAO để lấy danh sách đánh giá
-	    List<RatingsEntity> reviews = ratingsDAO.getRatingsByBookId(productId);
+	    List<RatingsEntity> reviews = ratingsDAO.getRatingsByBookIdApp(productId);
 
 	    // Thêm danh sách reviews vào model
 	    model.addAttribute("reviews", reviews);

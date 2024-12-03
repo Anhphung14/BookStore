@@ -37,6 +37,12 @@ public class RatingsDAO {
         String hql = "FROM RatingsEntity WHERE book.id = :bookId";
         return session.createQuery(hql).setParameter("bookId", bookId) .list();
     }
+    
+    public List<RatingsEntity> getRatingsByBookIdApp(Long bookId) {
+        Session session = factory.getCurrentSession();
+        String hql = "FROM RatingsEntity WHERE book.id = :bookId AND status = 1";
+        return session.createQuery(hql).setParameter("bookId", bookId).list();
+    }
 
     // Lấy tất cả đánh giá
     public List<RatingsEntity> getAllRatings() {

@@ -39,6 +39,7 @@ import bookstore.Entity.RatingsEntity;
 //import bookstore.Entity.Order_DiscountsEntity;
 import bookstore.Entity.UsersEntity;
 import bookstore.Service.UploadService;
+import bookstore.Util.PasswordUtil;
 
 @Transactional
 @Controller
@@ -64,7 +65,7 @@ public class AccountController {
 		HttpSession session = request.getSession();
 	    UsersEntity currentUser = (UsersEntity) session.getAttribute("user");
 	    if (currentUser == null) {
-	    	return "redirect:/signin.htm";
+	    	return "redirect:/client/signin.htm";
 	    }
 	    UsersEntity user = userDAO.getUserById(currentUser.getId());
 	    model.addAttribute("user", user);
@@ -111,7 +112,7 @@ public class AccountController {
 		HttpSession session = request.getSession();
 	    UsersEntity currentUser = (UsersEntity) session.getAttribute("user");
 	    if (currentUser == null) {
-	    	return "redirect:/signin.htm";
+	    	return "redirect:/client/signin.htm";
 	    }
 	    UsersEntity user = userDAO.getUserById(currentUser.getId());
 	    user.setEmail(user.getEmail().toLowerCase());
@@ -195,14 +196,15 @@ public class AccountController {
 	    String oldPass = request.getParameter("oldPassword");
 	    if (oldPass.trim().length() == 0) {
 	    	redirectAttributes.addFlashAttribute("oldPassError", "Hãy nhập lại mật khẩu cũ!");
-	    }else if (!oldPass.equals(currentUser.getPassword())) {
+	    }else if (!userDAO.checkOldPassword(user.getId(), oldPass)) {
 	    	redirectAttributes.addFlashAttribute("oldPassError", "Mật khẩu cũ không đúng");
 	    }else {
 	    	String newPass = request.getParameter("newPassword");
-	    	if (userDAO.updatePasswordUserById(user.getId(), newPass) > 0) {
+	    	String hashNewPass = PasswordUtil.hashPassword(newPass);
+	    	if (userDAO.updatePasswordUserById(user.getId(), hashNewPass) > 0) {
 	    		redirectAttributes.addFlashAttribute("messagePassword", "Đổi password thành công!");
 	    		redirectAttributes.addFlashAttribute("alertType", "success");
-	    		user.setPassword(newPass);
+	    		user.setPassword(hashNewPass);
 	    		session.setAttribute("user",user);
 	    	}else {
 	    		redirectAttributes.addFlashAttribute("messagePassword", "Đổi password không thành công!");
@@ -217,7 +219,7 @@ public class AccountController {
 		HttpSession session = request.getSession();
 	    UsersEntity currentUser = (UsersEntity) session.getAttribute("user");
 	    if (currentUser == null) {
-	    	return "redirect:/signin.htm";
+	    	return "redirect:/client/signin.htm";
 	    }
 	    UsersEntity user = userDAO.getUserById(currentUser.getId());
 	    model.addAttribute("user", user);
