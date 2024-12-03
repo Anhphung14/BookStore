@@ -54,7 +54,12 @@
 										<form id="signupform" class="needs-validation" novalidate
 											action="${pageContext.servletContext.contextPath}/client/user/save.htm"
 											method="POST">
-
+											<div class="mb-3">
+												<label for="fullname" class="form-label">Họ tên</label> <input
+													type="text" class="form-control" name="fullname" id="fullname"
+													placeholder="Vui lòng nhập Họ tên" required>
+												<div class="invalid-feedback">Vui lòng nhập Họ tên.</div>
+											</div>
 											<!-- Email Input -->
 											<div class="mb-3">
 												<label for="email" class="form-label">Email</label> <input
@@ -90,7 +95,8 @@
 														id="confirm-password-toggle">
 														<i class="fa fa-eye fa-fw"></i>
 													</button>
-													<div class="invalid-feedback">Mật khẩu không trùng khớp</div>
+													<div class="invalid-feedback">Mật khẩu không trùng
+														khớp</div>
 												</div>
 											</div>
 
