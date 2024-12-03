@@ -46,7 +46,7 @@
             <div class="author-card pb-3">
                 <div class="author-card-cover" style="background-image: url(https://bootdey.com/img/Content/flores-amarillas-wallpaper.jpeg);"></div>
                 <div class="author-card-profile">
-                    <div class="author-card-avatar"><img style="width: 250px; height: 250px" src="${user.avatar}" alt="${user.fullname}">
+                    <div class="author-card-avatar"><img src="${user.avatar}" alt="${user.fullname}">
                     </div>
                     <div class="author-card-details">
                         <h5 class="author-card-name text-lg">${user.fullname}</h5><span class="author-card-position">Joined ${user.created_at}</span>
@@ -55,11 +55,12 @@
             </div>
             <div class="wizard">
                 <nav class="list-group list-group-flush">
-                    <a class="list-group-item" href="client/account/account_orders.htm">
+                    <a class="list-group-item" href="account/account_orders.htm">
                         <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-inline-block font-weight-medium text-uppercase">Orders List</div>
                         </div>
-                    </a><a class="list-group-item" href="client/account/profile_settings.htm" target="__blank">Profile Settings</a>
+                    </a><a class="list-group-item" href="account/profile_settings.htm">Profile Settings</a>
+                    <a class="list-group-item" href="account/my_ratings.htm">My Ratings</a>
                 </nav>
             </div>
         </div>
@@ -262,7 +263,6 @@
 
 </script>
 
-</script>
 
 </body>
 </html>

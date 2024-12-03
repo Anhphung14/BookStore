@@ -14,9 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import bookstore.DAO.BooksDAO;
 import bookstore.DAO.CategoriesDAO;
 import bookstore.DAO.DiscountsDAO;
+import bookstore.DAO.InventoryDAO;
+import bookstore.DAO.RatingsDAO;
 import bookstore.DAO.SubcategoriesDAO;
 import bookstore.Entity.BooksEntity;
 import bookstore.Entity.CategoriesEntity;
+import bookstore.Entity.InventoryEntity;
+import bookstore.Entity.RatingsEntity;
 import bookstore.Entity.SubcategoriesEntity;
 
 
@@ -30,8 +34,10 @@ public class ClientController {
     private BooksDAO booksDAO;
     @Autowired
     private DiscountsDAO discountsDAO;
-    
-    
+    @Autowired
+    private RatingsDAO ratingsDAO;
+    @Autowired
+    private InventoryDAO inventoryDAO;
     
     @RequestMapping(value = "/index")
 	public String index(ModelMap model) {
@@ -76,20 +82,38 @@ public class ClientController {
 	public String productdetail(ModelMap model, @PathVariable("productId") Long id) {
 		BooksEntity book = booksDAO.getBookByIdHQL(id);
         model.addAttribute("book", book);
-		/*
-		 * Double discount = discountsDAO.getDiscountValueByBookId(id);
-		 * model.addAttribute("discount",discount);
-		 */
+		System.out.println(book.getDescription());
+        Double discount = discountsDAO.getDiscountValueByBookId(id);
+		model.addAttribute("discount",discount);
+		 
 		//System.out.println(discount); 
 		List<BooksEntity> books_category = booksDAO.getRandBooksBySubcategory(book.getSubcategoriesEntity().getId());
 		System.out.println(books_category); 
 		model.addAttribute("books_category", books_category); 
-		/*
-		 * List<Double> discounts =
-		 * discountsDAO.getDiscountsValueByBookId(books_category);
-		 * model.addAttribute("discounts",discounts);
-		 */
-		 
+		
+		List<Double> discounts = discountsDAO.getDiscountsValueByBookId(books_category);
+		model.addAttribute("discounts",discounts);
+		
+		Double ratingAVR = ratingsDAO.getAverageRatingByBookId(id);
+		int averageRating = (int) Math.floor(ratingAVR);
+		model.addAttribute("ratingAVR", averageRating);
+		
+		InventoryEntity inventory = inventoryDAO.getInventoryByBookId(id);
+		model.addAttribute("stock_quantity", inventory.getStock_quantity());
+		
 		return "client/productdetail";
+	}
+    
+    @RequestMapping(value = "productdetail/{productId}/reviews", method = RequestMethod.GET)
+	public String getReviewsByProductId(ModelMap model, @PathVariable("productId") Long productId) {
+	    // Gọi DAO để lấy danh sách đánh giá
+	    List<RatingsEntity> reviews = ratingsDAO.getRatingsByBookId(productId);
+
+	    // Thêm danh sách reviews vào model
+	    model.addAttribute("reviews", reviews);
+	    model.addAttribute("bookId", productId);
+
+	    // Trả về view reviews.jsp
+	    return "client/reviews";
 	}
 }

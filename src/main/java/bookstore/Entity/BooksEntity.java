@@ -26,7 +26,7 @@ public class BooksEntity {
 	@Column(name = "price", precision = 10, scale = 2, nullable = false)
     private Double price;
 	
-	@Column(name = "description", columnDefinition = "nvarchar")
+	@Column(name = "description", columnDefinition = "TEXT")
     private String description;
 	
 	@ManyToOne(fetch = FetchType.EAGER)

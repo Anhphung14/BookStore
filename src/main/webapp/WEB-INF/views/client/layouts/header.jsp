@@ -223,10 +223,10 @@
 							    <h3>Nhìn đoé gì<br /><span>Hội viên siêu cấp vjp pro</span></h3>
 							    <ul>
 							      <li>
-							        <i class="fa-solid fa-user"></i>&nbsp;&nbsp;<a href="#">My profile</a>
+							        <i class="fa-solid fa-user"></i>&nbsp;&nbsp;<a href="${pageContext.servletContext.contextPath}/account/profile_settings.htm">My profile</a>
 							      </li>
 							      <li>
-							        <i class="fa-solid fa-shop"></i>&nbsp;&nbsp;<a href="#">My Orders</a>
+							        <i class="fa-solid fa-shop"></i>&nbsp;&nbsp;<a href="${pageContext.servletContext.contextPath}/account/account_orders.htm">My Orders</a>
 							      </li>
 							      <li>
 							        <i class="fa-solid fa-inbox"></i>&nbsp;&nbsp;<a href="#">Inbox</a>
