@@ -1,6 +1,9 @@
 package bookstore.DAO;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +34,63 @@ public class OrderDAO {
     	Query query = session.createQuery(hql);
     	return query.list();
     }
+    
+    public List<OrdersEntity> searchOrders(String customerName, String fromDate, String toDate, Double minPrice, Double maxPrice, String paymentStatus, String orderStatus) throws ParseException {
+        Session session = sessionFactory.getCurrentSession();
+    	String hql = "FROM OrdersEntity o WHERE 1=1";  
+
+        if (customerName != null && !customerName.isEmpty()) {
+            hql += " AND o.user.fullname LIKE :customerName";
+        }
+        if (fromDate != null && !fromDate.isEmpty() && toDate != null && !toDate.isEmpty()) {
+            hql += " AND CONVERT(date, o.createdAt) BETWEEN :fromDate AND :toDate";
+        }
+
+        if (minPrice != null) {
+            hql += " AND o.price >= :minPrice";
+        }
+        if (maxPrice != null) {
+            hql += " AND o.price <= :maxPrice";
+        }
+        if (paymentStatus != null && !paymentStatus.isEmpty()) {
+            hql += " AND o.paymentStatus = :paymentStatus";
+        }
+        if (orderStatus != null && !orderStatus.isEmpty()) {
+            hql += " AND o.orderStatus = :orderStatus";
+        }
+
+        Query query = session.createQuery(hql);
+        if (customerName != null && !customerName.isEmpty()) {
+            query.setParameter("customerName", "%" + customerName + "%");
+        }
+        if (fromDate != null && !fromDate.isEmpty()) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse(fromDate);
+            query.setParameter("fromDate", date);
+        }
+        if (toDate != null && !toDate.isEmpty()) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse(toDate);
+            query.setParameter("toDate", date);
+        }
+        
+        if (minPrice != null) {
+            query.setParameter("minPrice", minPrice);
+        }
+        if (maxPrice != null) {
+            query.setParameter("maxPrice", maxPrice);
+        }
+        if (paymentStatus != null && !paymentStatus.isEmpty()) {
+            query.setParameter("paymentStatus", paymentStatus);
+        }
+        if (orderStatus != null && !orderStatus.isEmpty()) {
+            query.setParameter("orderStatus", orderStatus);
+        }
+
+        List<OrdersEntity> orders = query.list();
+        return orders;
+    }
+
     
     public boolean updateOrderStatus(Long orderId, String orderStatus) {
         Session session = null;

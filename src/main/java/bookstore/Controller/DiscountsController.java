@@ -1,5 +1,6 @@
 package bookstore.Controller;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -44,12 +45,22 @@ public class DiscountsController {
 	OrderDAO orderDAO;
 	
 	@RequestMapping("/discounts")
-	public String index(ModelMap modelMap) {
+	public String index(ModelMap modelMap, @RequestParam(value = "discountCode", required = false) String discountCode, @RequestParam(value = "discountType", required = false) String discountType,
+			@RequestParam(value = "minValue", required = false) String minValue, @RequestParam(value = "maxValue", required = false) String maxValue,
+			@RequestParam(value = "fromDate", required = false) String fromDate, @RequestParam(value = "toDate", required = false) String toDate,
+			@RequestParam(value = "discountStatus", required = false) String discountStatus) throws ParseException {
 		
+		
+		List<DiscountsEntity> getAllDiscounts = new ArrayList<DiscountsEntity>();
+		if(discountCode != null || discountType != null || minValue != null || maxValue != null || fromDate != null || toDate != null || discountStatus != null) {
+			getAllDiscounts = discountsDAO.searchDiscount(discountCode, discountType, minValue, maxValue, fromDate, toDate, discountStatus);
+		}else {
+			getAllDiscounts = discountsDAO.getAllDiscounts();
+		}
+		//System.out.println("getAllDiscounts: " + getAllDiscounts);
 		/* Cập nhật trạng thái mã giảm giá */
 		discountsDAO.updateStatusDiscounts();
-
-		List<DiscountsEntity> getAllDiscounts = discountsDAO.getAllDiscounts();
+		
 		for (DiscountsEntity discount : getAllDiscounts) {
 	        // Gọi hàm getUsedCountByDiscountId để lấy số lần sử dụng của discount
 	        int usedCount = discountsDAO.getUsedCountByDiscountId(discount.getId());

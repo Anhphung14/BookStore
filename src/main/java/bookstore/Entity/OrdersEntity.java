@@ -1,6 +1,9 @@
 package bookstore.Entity;
 
 import javax.persistence.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.Date;
 import java.util.List;
 
@@ -166,6 +169,9 @@ public class OrdersEntity {
 		this.discountValue = discountValue;
 	}
 
-	
+	@Autowired
+	public String toString() {
+		return "OrderId: " + id + " totalPrice: " + totalPrice + " paymentStatus: " + paymentStatus + " orderStatus: " + orderStatus;
+	}
     
 }

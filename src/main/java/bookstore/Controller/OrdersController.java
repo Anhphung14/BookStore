@@ -1,5 +1,7 @@
 package bookstore.Controller;
 
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,9 +41,17 @@ public class OrdersController {
 	DiscountsDAO discountsDAO;
 	
 	@RequestMapping("/orders")
-	public String index(ModelMap modelMap) {
-		List<OrdersEntity> listOrders = orderDAO.listOrders();
-		
+	public String index(ModelMap modelMap, @RequestParam(value = "customerName", required = false) String customerName, @RequestParam(value = "fromDate", required = false) String fromDate, @RequestParam(value = "toDate", required = false) String toDate, 
+			@RequestParam(value = "minPrice", required = false) Double minPrice, @RequestParam(value = "maxPrice", required = false) Double maxPrice, @RequestParam(value = "paymentStatus", required = false) String paymentStatus,
+			@RequestParam(value = "orderStatus", required = false) String orderStatus) throws ParseException {
+
+		List<OrdersEntity> listOrders = new ArrayList<OrdersEntity>();
+		if(customerName != null || fromDate != null || toDate != null || minPrice != null || maxPrice != null || paymentStatus != null || orderStatus != null) {
+			listOrders = orderDAO.searchOrders(customerName, fromDate, toDate, minPrice, maxPrice, paymentStatus, orderStatus);
+		}else{
+			listOrders = orderDAO.listOrders();
+		}
+		//System.out.println("listOrders: " + listOrders);
 		for(OrdersEntity order: listOrders) {
 			Hibernate.initialize(order.getOrderDetails());
 			DiscountsEntity discount = orderDAO.getDiscountUsedByOrder(order.getId());
@@ -58,6 +68,13 @@ public class OrdersController {
 			order.setDiscountValue(discountValue);
 		}
 		
+		modelMap.addAttribute("customerName", customerName);
+		modelMap.addAttribute("fromDate", fromDate);
+		modelMap.addAttribute("toDate", toDate);
+		modelMap.addAttribute("minPrice", minPrice);
+		modelMap.addAttribute("maxPrice", maxPrice);
+		modelMap.addAttribute("paymentStatus", paymentStatus);
+		modelMap.addAttribute("orderStatus", orderStatus);
 		modelMap.addAttribute("listOrders", listOrders);
 		
 		return "orders/index";

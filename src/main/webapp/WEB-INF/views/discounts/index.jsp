@@ -68,29 +68,69 @@
 					</div>
 				</div>
 			</div>
-			<form id="frm-admin" name="adminForm" action="" method="POST">
-				<input type="hidden" id="task" name="task" value="${param.task}">
-				<input type="hidden" id="sortby" name="sortby"
-					value="${param.sortby != null ? param.sortby : 'updated_at'}" /> <input
-					type="hidden" id="orderby" name="orderby"
-					value="${param.orderby != null ? param.orderby : 'desc'}" /> <input
-					type="hidden" id="boxchecked" name="boxchecked" value="0" />
+			<form id="frm-admin" name="adminForm" action="${pageContext.request.contextPath}/discounts.htm" method="GET">
 
 				<div class="card mx-3">
 					<div class="card-body">
 						<div class="d-flex gap-3">
-							<div class="input-group">
-								<input class="form-control search-input" name="search_text"
-									id="search_text" value="${param.search_text}"
-									placeholder="Search ...">
-								<button type="button" class="btn btn-secondary btn-search">
-									<i class="fa fa-search"></i>
-								</button>
-							</div>
-							<a class="btn btn-primary text-nowrap btn-add"
-								href="${pageContext.request.contextPath}/discount/create.htm"> <i
-								class="fa fa-plus me-2"></i>Add
-							</a>
+						
+						
+							    <div class="input-group mb-3">
+							        <input class="form-control" type="text" name="discountCode" id="discountCode" 
+							               value="${discountCode}" placeholder="Discount Code" oninput="convertToUpperCase(this);">
+							    </div>
+
+							    
+							    <div class="input-group mb-3">
+							        <select class="form-control" name="discountType" id=""discountType">
+							            <option value="">Discount Type</option>
+							            <option value="percentage" ${discountType == 'percentage' ? 'selected' : ''}>Percentage</option>
+							            <option value="amount" ${discountType == 'amount' ? 'selected' : ''}>Amount</option>
+							        </select>
+							    </div>
+							
+							    <!-- Tìm kiếm theo khoảng giá trị-->
+							    <div class="input-group mb-3">
+								    <input class="form-control" type="text" name="minValue" id="minValue" 
+								           value="${minValue}" placeholder="Min Value" 
+								           pattern="^\d+(\.\d+)?%?$" 
+								           oninvalid="this.setCustomValidity('Discount value must be a number, and can optionally include a percentage sign (e.g., 10 or 10%).')">
+								    <span class="input-group-text">to</span>
+								    <input class="form-control" type="text" name="maxValue" id="maxValue" 
+								           value="${maxValue}" placeholder="Max Value" 
+								           pattern="^\d+(\.\d+)?%?$" 
+								           oninvalid="this.setCustomValidity('Discount value must be a number, and can optionally include a percentage sign (e.g., 10 or 10%).')">
+								</div>
+							
+								<div class="input-group mb-3">
+				                    <input class="form-control" type="date" name="fromDate" id="fromDate" onchange="checkDates()"
+				                           value="${fromDate}" placeholder="From Date">
+				                     <span class="input-group-text">to</span>
+				                     <input class="form-control" type="date" name="toDate" id="toDate" onchange="checkDates()"
+				                           value="${toDate}" placeholder="To Date">
+				                </div>
+							    
+							    <div class="input-group mb-3">
+							        <select class="form-control" name="discountStatus" id=""discountStatus">
+							            <option value="">Discount Status</option>
+							            <option value="active" ${discountStatus == 'active' ? 'selected' : ''}>Active</option>
+							            <option value="inactive" ${discountStatus == 'inactive' ? 'selected' : ''}>Inactive</option>
+							            <option value="expired" ${discountStatus == 'expired' ? 'selected' : ''}>Expired</option>
+							        </select>
+							    </div>
+							
+							    <!-- Nút tìm kiếm -->
+							    <div class="d-flex justify-content-end mb-3">
+							        <button type="submit" class="btn btn-primary">
+							            <i class="fa fa-search"></i>
+							        </button>
+							    </div>
+							    <div class="d-flex justify-content-end mb-3">
+							        
+							        <button type="button" class="btn btn-search" style="background-color: #B197FC" onclick="refreshPage()">
+					                    <i class="fa-solid fa-arrows-rotate" style="color: #ffffff;"></i>
+					                </button>
+							    </div>
 
 						</div>
 
@@ -229,7 +269,6 @@
 								</table>
 							</div>
 						</div>
-<%-- 						<div>${users.links}</div> --%>
 					</div>
 				</div>
 			</form>
@@ -480,6 +519,39 @@
 	    var modal = new bootstrap.Modal(document.getElementById('discountDetailModal'));
 	    modal.show();
 	}
+	
+	function refreshPage() {
+	    // Sử dụng window.location để reload lại trang mà không tham số
+	    window.location.href = window.location.origin + window.location.pathname;
+	}
+	
+	function convertToUpperCase(inputElement) {
+	    // Đổi giá trị của input thành chữ in hoa
+	    inputElement.value = inputElement.value.toUpperCase();
+	}
+	
+	function checkDates() {
+	    var fromDate = document.getElementById('fromDate');
+	    var toDate = document.getElementById('toDate');
+
+	    // Kiểm tra và set "required" nếu chỉ có một ô có giá trị
+	    if (fromDate.value && !toDate.value) {
+	        toDate.setAttribute('required', true);
+	        toDate.setAttribute('min', fromDate.value);  // Set min cho toDate là fromDate
+	    } else if (!fromDate.value && toDate.value) {
+	        fromDate.setAttribute('required', true);
+	        fromDate.setAttribute('max', toDate.value);  // Set max cho fromDate là toDate
+	    } else {
+	        fromDate.removeAttribute('required');
+	        toDate.removeAttribute('required');
+	        toDate.setAttribute('min', fromDate.value);
+	        fromDate.setAttribute('max', toDate.value);
+	    }
+	}
+
+
+	
+
 	</script>
 </body>
 </html>

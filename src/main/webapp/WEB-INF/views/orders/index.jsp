@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Discounts Management</title>
+<title>Orders Management</title>
 <base href="${pageContext.servletContext.contextPath}/">
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -68,29 +68,60 @@
 					</div>
 				</div>
 			</div>
-			<form id="frm-admin" name="adminForm" action="" method="POST">
-				<input type="hidden" id="task" name="task" value="${param.task}">
-				<input type="hidden" id="sortby" name="sortby"
-					value="${param.sortby != null ? param.sortby : 'updated_at'}" /> <input
-					type="hidden" id="orderby" name="orderby"
-					value="${param.orderby != null ? param.orderby : 'desc'}" /> <input
-					type="hidden" id="boxchecked" name="boxchecked" value="0" />
-
+			<form id="frm-admin" name="adminForm" action="${pageContext.request.contextPath}/orders.htm" method="GET">
 				<div class="card mx-3">
 					<div class="card-body">
 						<div class="d-flex gap-3">
-							<div class="input-group">
-								<input class="form-control search-input" name="search_text"
-									id="search_text" value="${param.search_text}"
-									placeholder="Search ...">
-								<button type="button" class="btn btn-secondary btn-search">
-									<i class="fa fa-search"></i>
-								</button>
-							</div>
-							<a class="btn btn-primary text-nowrap btn-add"
-								href="${pageContext.request.contextPath}/order/create.htm"> <i
-								class="fa fa-plus me-2"></i>Add
-							</a>
+							 <div class="input-group">
+                    <input class="form-control" name="customerName" id="customer_name" 
+                           value="${customerName}" placeholder="Customer Name">
+                </div>
+
+                <!-- Tìm kiếm theo ngày tạo -->
+                <div class="input-group">
+                    <input class="form-control" type="date" name="fromDate" id="fromDate" onchange="checkDates()"
+                           value="${fromDate}" placeholder="From Date">
+                     <span class="input-group-text">to</span>
+                     <input class="form-control" type="date" name="toDate" id="toDate" onchange="checkDates()"
+                           value="${toDate}" placeholder="To Date">
+                </div>
+
+                <!-- Tìm kiếm theo khoảng giá -->
+                <div class="input-group">
+                    <input class="form-control" type="number" name="minPrice" id="min_price" 
+                           value="${param.min_price}" placeholder="Min Price">
+                    <span class="input-group-text">to</span>
+                    <input class="form-control" type="number" name="maxPrice" id="max_price" 
+                           value="${minPrice}" placeholder="Max Price">
+                </div>
+
+                <!-- Tìm kiếm theo trạng thái đơn hàng -->
+                <div class="input-group">
+                    <select class="form-control" name="paymentStatus" id="order_status">
+                        <option value="">Payment Status</option>
+                        <option value="Chưa thanh toán" ${paymentStatus == 'Chưa thanh toán' ? 'selected' : ''}>Chưa thanh toán</option>
+                        <option value="Đã thanh toán" ${paymentStatus == 'Đã thanh toán' ? 'selected' : ''}>Đã thanh toán</option>
+                    </select>
+                </div>
+                
+                 <div class="input-group">
+                    <select class="form-control" name="orderStatus" id="order_status">
+                        <option value="">Order Status</option>
+                        <option value="Chờ xác nhận" ${orderStatus == 'Chờ xác nhận' ? 'selected' : ''}>Chờ xác nhận</option>
+                        <option value="Đang giao hàng" ${orderStatus == 'Đang giao hàng' ? 'selected' : ''}>Đang giao hàng</option>
+                        <option value="Đã hoàn thành" ${orderStatus == 'Đã hoàn thành' ? 'selected' : ''}>Đã hoàn thành</option>
+                        <option value="Huỷ đơn hàng" ${orderStatus == 'Huỷ đơn hàng' ? 'selected' : ''}>Huỷ đơn hàng</option>
+                    </select>
+                </div>
+                
+
+                <!-- Nút tìm kiếm -->
+                <button type="submit" class="btn btn-info btn-search" style="background-color: #74C0FC">
+                    <i class="fa fa-search" style="color: #ffffff;"></i> 
+                </button>
+                <button type="button" class="btn btn-search" style="background-color: #B197FC" onclick="refreshPage()">
+                    <i class="fa-solid fa-arrows-rotate" style="color: #ffffff;"></i>
+                </button>
 
 						</div>
 
@@ -127,10 +158,10 @@
 									<c:forEach var="order" items="${listOrders}" varStatus="status">
 										<tr>
 											<td class="align-middle">
-												<input type="checkbox" class="form-check-input" id="cb${status.index}" name="cid[]" value="${discount.id}" onclick="isChecked(this.checked)">
+												<input type="checkbox" class="form-check-input" id="cb${status.index}" name="cid[]" value="${order.id}" onclick="isChecked(this.checked)">
 											</td>
 <%-- 											<td class="text-end">${(users.page - 1) * users.pageSize + status.index + 1}</td> --%>
-											<td class="text-start align-middle">${oder.id}</td>
+											<td class="text-start align-middle">${order.id}</td>
 											
 											<td>
 											    <a class="d-flex flex-nowrap align-items-center" style="text-decoration: none;" href="javascript:void(0);">
@@ -512,6 +543,30 @@
 	    // Mở modal
 	    var modal = new bootstrap.Modal(document.getElementById('orderDetailModal'));
 	    modal.show();
+	}
+	
+	function refreshPage() {
+	    // Sử dụng window.location để reload lại trang mà không tham số
+	    window.location.href = window.location.origin + window.location.pathname;
+	}
+
+	function checkDates() {
+	    var fromDate = document.getElementById('fromDate');
+	    var toDate = document.getElementById('toDate');
+
+	    // Kiểm tra và set "required" nếu chỉ có một ô có giá trị
+	    if (fromDate.value && !toDate.value) {
+	        toDate.setAttribute('required', true);
+	        toDate.setAttribute('min', fromDate.value);  // Set min cho toDate là fromDate
+	    } else if (!fromDate.value && toDate.value) {
+	        fromDate.setAttribute('required', true);
+	        fromDate.setAttribute('max', toDate.value);  // Set max cho fromDate là toDate
+	    } else {
+	        fromDate.removeAttribute('required');
+	        toDate.removeAttribute('required');
+	        toDate.setAttribute('min', fromDate.value);
+	        fromDate.setAttribute('max', toDate.value);
+	    }
 	}
 	</script>
 </body>
