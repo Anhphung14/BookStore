@@ -100,17 +100,17 @@
 				<div class="col">
 					<h2 class="h3">Edit Inventory</h2>
 				    <p class="text-muted small">InventoryID: ${inventory.id}</p>
-					<p>Manage users, roles, permissions, and profile.</p>
+					<p>Update the stock quantity for this inventory item.</p>
 				</div>
 				<div class="col-auto d-none d-sm-block">
 					<img class="page-icon" src="resources/images/page.svg"
 						width="120px" alt="Page Icon">
 				</div>
 			</div>
-			<form id="productForm" action="inventory/edit.htm" method="POST" enctype="multipart/form-data">
+			<form id="productForm" action="inventory/edit.htm" method="POST">
 				<input type="hidden" id="task" name="task" value="${task}">
 				
-				<input type="hidden" id=""hehe"" name="hehe" value="123123">
+				<input type="hidden" id="hehe" name="hehe" value="123123">
 				<c:if test="${task != 'new'}">
 					<input type="hidden" id="id" name="id" value="${inventory.id}">
 				</c:if>
@@ -120,11 +120,16 @@
 						<h6 class="small text-muted">GENERAL INFORMATION</h6>
 
 						<div class="form-floating mt-3">
-							<input class="form-control" id="stock_quantity" name="stock_quantity"
-								value="${inventory.stock_quantity}" required> <label
+							<input class="form-control numeric-input" id="stock_quantity" name="stock_quantity"
+								value="${inventory.stock_quantity}" oninput="validateNumberInput(this)" required> <label
 								class="form-label" for="stock_quantity">Stock quantity <span
 								class="text-danger">*</span></label>
 						</div>
+						<c:if test="${not empty errorstock_quantity}">
+                        	 <div class="text-danger">${errorstock_quantity}</div>
+                        </c:if>
+		                        
+		                        
 					</div>
 				</div>
 
@@ -144,21 +149,83 @@
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 	<script>
 
-	const alertMessage = "${alertMessage}";
-	const alertType = "${alertType}";
+		const alertMessage = "${alertMessage}";
+		const alertType = "${alertType}";
+		
+		if (alertMessage) {
+		    Swal.fire({
+		        icon: alertType, 
+		        title: alertType === "success" ? "Success" : "Error",
+		        text: alertMessage,
+		        confirmButtonText: "OK"
+		    }).then((result) => {
+		        if (result.isConfirmed && alertType === "success") {
+		            window.location.href = '${pageContext.servletContext.contextPath}/inventories.htm';
+		        }
+		    });
+		}
+		
+		
+		let initialInput = true;
+
+		function validateNumberInput(input) {
+
+		    let value = input.value.replace(/[^0-9]/g, '');
+
+		    if (value === "") {
+		        input.value = "0";
+		        initialInput = true;
+		        return;
+		    }
+
+		    if (initialInput) {
+		        value = value.replace(/^0+/, '');
+		        initialInput = false;
+		    }
+
+		    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+		    input.value = value;
+		}
+		
+		function resetInitialInputFlag(event) {
+		    initialInput = true;
+		}
+
+		function formatNumberInputsOnLoad() {
+
+		    let numericInputs = document.querySelectorAll('.numeric-input');
+
+		    numericInputs.forEach(input => {
+		        let priceValue = input.value;
+
+		        priceValue = priceValue.split('.')[0]; 
+
+		        priceValue = parseInt(priceValue, 10).toString();
+
+		        priceValue = priceValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+		        input.value = priceValue;
+		    });
+		}
+
+		window.onload = function() {
+		    formatNumberInputsOnLoad();
+
+		    let numericInputs = document.querySelectorAll('.numeric-input');
+		    numericInputs.forEach(input => {
+		        input.addEventListener('focus', resetInitialInputFlag);
+		    });
+		};
+		
+		document.getElementById('productForm').onsubmit = function() {
+		    let numericInputs = document.querySelectorAll('.numeric-input');
+
+		    numericInputs.forEach(input => {
+		        input.value = input.value.replace(/\./g, '');
+		    });
+		}
 	
-	if (alertMessage) {
-	    Swal.fire({
-	        icon: alertType, 
-	        title: alertType === "success" ? "Success" : "Error",
-	        text: alertMessage,
-	        confirmButtonText: "OK"
-	    }).then((result) => {
-	        if (result.isConfirmed && alertType === "success") {
-	            window.location.href = '${pageContext.servletContext.contextPath}/inventories.htm';
-	        }
-	    });
-	}
 
 
 	</script>

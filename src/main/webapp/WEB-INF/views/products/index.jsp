@@ -69,7 +69,7 @@
 					</div>
 				</div>
 			</div>
-			<form id="frm-admin" name="adminForm" action="" method="POST">
+				<form id="frm-admin" name="adminForm" action="" method="POST">
 				<input type="hidden" id="task" name="task" value="${param.task}">
 				<input type="hidden" id="sortby" name="sortby"
 					value="${param.sortby != null ? param.sortby : 'updated_at'}" /> <input
@@ -133,33 +133,33 @@
 <%-- 											<td class="text-end">${(users.page - 1) * users.pageSize + status.index + 1}</td> --%>
 											<td class="text-start align-middle">${book.id}</td>
 											<td>
-    <a class="d-flex flex-nowrap align-items-center" style="text-decoration: none;" href="javascript:void(0);" 
-       data-id="${book.id}"
-       data-title="${book.title}"
-       data-author="${book.author}"
-       data-category="${book.subcategoriesEntity.categoriesEntity.name}"
-       data-subcategory="${book.subcategoriesEntity.name}"
-       data-supplier="${book.supplier.name}"
-       data-publicationYear="${book.publication_year}"
-       data-pageCount="${book.page_count} pages"
-       data-language="${book.language}"
-       data-status="${book.status == 0 ? 'Disable' : 'Enable'}"
-       data-createdAt="<fmt:formatDate value='${book.updatedAt}' pattern='dd-MM-yyyy HH:mm' />"
-       data-updatedAt="<fmt:formatDate value='${book.createdAt}' pattern='dd-MM-yyyy HH:mm' />"
-       data-price=<fmt:formatNumber value="${book.price}" type="currency" maxFractionDigits="0" currencySymbol="₫"/>
-       data-description="${fn:escapeXml(book.description)}" 
-       data-thumbnail="${book.thumbnail}"
-       data-images="${book.images}"
-       data-quantity="${book.quantity} in stock"
-       onclick="showProductDetails(this)">
-        <div>
-            <img alt="Product Thumbnail" src="${book.thumbnail}" class="bg-white border border-3 border-white" width="50px">
-        </div>
-        <div class="ms-3">
-            <div class="fw-semibold custom-text ellipsis">${book.title}</div>
-        </div>
-    </a>
-</td>
+											    <a class="d-flex flex-nowrap align-items-center" style="text-decoration: none;" href="javascript:void(0);" 
+											       data-id="${book.id}"
+											       data-title="${book.title}"
+											       data-author="${book.author}"
+											       data-category="${book.subcategoriesEntity.categoriesEntity.name}"
+											       data-subcategory="${book.subcategoriesEntity.name}"
+											       data-supplier="${book.supplier.name}"
+											       data-publicationYear="${book.publication_year}"
+											       data-pageCount="${book.page_count} pages"
+											       data-language="${book.language}"
+											       data-status="${book.status == 0 ? 'Disable' : 'Enable'}"
+											       data-createdAt="<fmt:formatDate value='${book.updatedAt}' pattern='dd-MM-yyyy HH:mm' />"
+											       data-updatedAt="<fmt:formatDate value='${book.createdAt}' pattern='dd-MM-yyyy HH:mm' />"
+											       data-price=<fmt:formatNumber value="${book.price}" type="currency" maxFractionDigits="0" currencySymbol="₫"/>
+											       data-description="${fn:escapeXml(book.description)}" 
+											       data-thumbnail="${book.thumbnail}"
+											       data-images="${book.images}"
+											       data-quantity="${book.quantity} in stock"
+											       onclick="showProductDetails(this)">
+											        <div>
+											            <img alt="Product Thumbnail" src="${book.thumbnail}" class="bg-white border border-3 border-white" width="50px">
+											        </div>
+											        <div class="ms-3">
+											            <div class="fw-semibold custom-text ellipsis">${book.title}</div>
+											        </div>
+											    </a>
+											</td>
 											<c:choose>
 												<c:when test="${book.status == 1}">
 													<td class="text-center align-middle"><span class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">active</span></td>
@@ -192,7 +192,10 @@
 											<td class="text-center">
 												<div class="d-flex justify-content-center align-items-center gap-1">
 													<a class="btn btn-rounded" href="product/edit/${book.id}.htm"><i class="fa fa-pencil"></i></a>
-<%-- 													<a class="btn btn-rounded"><i class="fa ${user.isActive ? 'fa-eye-slash' : 'fa-eye'}"></i></a> --%>
+													<a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#statusModal" 
+													   onclick="prepareStatusChange(${book.id}, '${book.status}')">
+													    <i class="fa ${book.status == '1' ? 'fa-eye-slash' : 'fa-eye'}"></i>
+													</a>
 													<!-- <a class="btn btn-rounded"><i class="fa fa-eye-slash"></i></a> -->
 													<!-- <a class="btn btn-rounded"><i class="fa fa-search"></i></a> -->
 <!-- 													<a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#exampleModal"> -->
@@ -360,15 +363,44 @@
 			                        <img id="productThumbnail" src="" alt="Product Image" class="img-fluid" style="max-width: 100px; max-height: 100px; display: block;">
 			                    </div>
 			                    <div class="mb-3" style="flex: 1;">
-        <label for="productImages" class="form-label">Images</label>
-        <div id="productImages" class="d-flex flex-wrap"></div>
-    </div>
+							        <label for="productImages" class="form-label">Images</label>
+							        <div id="productImages" class="d-flex flex-wrap"></div>
+							    </div>
 			                </div>
 			                
 			                <!-- Add more fields if needed -->
 			            </div>
 			            <div class="modal-footer">
 			                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+
+			<!-- Modal Status -->
+			<div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+			    <div class="modal-dialog">
+			        <div class="modal-content">
+			            <div class="modal-header">
+			                <h5 class="modal-title" id="statusModalLabel">Confirm Status Change</h5>
+			                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			            </div>
+			            <div class="modal-body">
+			                <form id="statusForm" method="POST" action="product/changeStatus.htm">
+			                    <p id="statusMessage">Do you want to change the status of this book?</p>
+			                    <p id="currentStatus">Current Status: <span id="statusText"></span></p>
+			
+			                    <!-- Hidden fields to store book ID and new status -->
+			                    <input type="hidden" id="bookId" name="bookId">
+			                    <input type="hidden" id="newStatus" name="newStatus">
+			
+			                    <!-- Display current status, and update the button text dynamically -->
+			                    <p id="statusDetails"></p>
+			                </form>
+			            </div>
+			            <div class="modal-footer">
+			                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+			                <button type="submit" class="btn btn-primary" form="statusForm">Confirm</button>
 			            </div>
 			        </div>
 			    </div>
@@ -406,6 +438,16 @@
 		    document.getElementById("bookTitleToDelete").textContent = bookTitle;
 		    document.getElementById("bookIdInput").value = bookId;
 
+		}
+		
+		function prepareStatusChange(bookId, currentStatus) {
+		    // Set the current book ID and status
+		    document.getElementById("bookId").value = bookId;
+		    document.getElementById("statusText").textContent = currentStatus === '1' ? 'Activated' : 'Disabled';
+
+		    // Set the new status (toggle between 1 and 0)
+		    const newStatus = currentStatus === '1' ? '0' : '1'; // Enable -> Disable, Disable -> Enable
+		    document.getElementById("newStatus").value = newStatus;
 		}
 		
 		function showProductDetails(link) {

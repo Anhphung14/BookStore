@@ -26,7 +26,7 @@ public class BooksEntity {
 	@Column(name = "price", precision = 10, scale = 2, nullable = false)
     private Double price;
 	
-	@Column(name = "description", columnDefinition = "nvarchar")
+	@Column(name = "description", columnDefinition = "TEXT")
     private String description;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -66,18 +66,18 @@ public class BooksEntity {
     private Date updatedAt;
     
     @Column(name = "status", columnDefinition = "bit")
-    private int status;
+    private Integer status;
 
-    @OneToMany(mappedBy = "book_id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "book_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Collection<Book_DiscountsEntity> bookDiscounts;
     
+    @OneToOne(mappedBy = "book", fetch = FetchType.EAGER)
+    private InventoryEntity inventory;
     
     public BooksEntity() {
     	
     }
     
-    
-	
 
 	public BooksEntity(Long id, String title, String author, Double price, String description,
 			SubcategoriesEntity subcategoriesEntity, SuppliersEntity supplier, Integer quantity, String thumbnail,
@@ -227,13 +227,15 @@ public class BooksEntity {
 		this.updatedAt = updatedAt;
 	}
 
-    public int getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
+
 
 	public Collection<Book_DiscountsEntity> getBookDiscounts() {
 		return bookDiscounts;
@@ -242,6 +244,16 @@ public class BooksEntity {
 	public void setBookDiscounts(Collection<Book_DiscountsEntity> bookDiscounts) {
 		this.bookDiscounts = bookDiscounts;
 	}
+	
+	public InventoryEntity getInventory() {
+		return inventory;
+	}
+
+
+	public void setInventory(InventoryEntity inventory) {
+		this.inventory = inventory;
+	}
+
 
 	@Override
     public String toString() {

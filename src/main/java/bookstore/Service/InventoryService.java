@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
 
 import bookstore.DAO.InventoryDAO;
 import bookstore.Entity.InventoryEntity;
@@ -47,6 +48,26 @@ public class InventoryService {
 	
 	public boolean saveInventory(InventoryEntity inventory) {
 		return inventoryDAO.saveInventory(inventory);
+	}
+	
+	public boolean handleErrors(ModelMap model, InventoryEntity inventory) {
+		boolean hasError = false;
+		
+		if (inventory.getStock_quantity() == null) {
+			model.addAttribute("errorstock_quantity", "This field must not be empty!");
+			hasError = true;
+		}
+		
+		return hasError;
+	}
+	
+	public boolean checkUpdateStockQuantity(ModelMap model, InventoryEntity inventory, InventoryEntity inventoryGetById) {
+		if (inventory.getStock_quantity() > inventoryGetById.getBook().getQuantity()) {
+			model.addAttribute("errorstock_quantity", "Cannot update Stock quantity to be greater than Total quantity!");
+			return false;
+		}
+		
+		return true;
 	}
 
 }

@@ -133,24 +133,40 @@
 									<label class="form-label" for="title">Title 
 									<span class="text-danger">*</span></label>
 								</div>
+								<c:if test="${not empty errorTitle}">
+		                        	 <div class="text-danger">${errorTitle}</div>
+		                        </c:if>
+		                        
 
 								<div class="form-floating mt-3">
 									<input class="form-control" id="author" name="author" value="${book.author}" required /> 
 										<label class="form-label" for="author">Author 
 										<span class="text-danger">*</span></label>
 								</div>
+								<c:if test="${not empty errorAuthor}">
+		                        	 <div class="text-danger">${errorAuthor}</div>
+		                        </c:if>
+
 
 								<div class="form-floating mt-3">
 								    <textarea class="form-control" id="description" name="description" rows="5" >${book.description}</textarea>
 								    <label class="form-label" for="description">Description</label>
 								</div>
+								<c:if test="${not empty errorDescription}">
+		                        	 <div class="text-danger">${errorDescription}</div>
+		                        </c:if>
+		                        
 								
 								<div class="form-floating mt-3 position-relative">
 									<input class="form-control pr-4" id="publication_year" name="publication_year"
-										type="text" value="${book.publication_year}" max="2024" required> <label
+										type="text" value="${book.publication_year}" max="2024" oninput="validateYearInput(this)" required> <label
 										class="form-label" for="publication_year">Publication year <span class="text-danger">*</span>
 									</label>
 								</div>
+								<c:if test="${not empty errorpublication_year}">
+		                        	 <div class="text-danger">${errorpublication_year}</div>
+		                        </c:if>
+		                        
 								
 								<div class="form-floating mt-3 position-relative">
 									<input class="form-control pr-4 numeric-input" id="price" name="price" oninput="validateNumberInput(this)"
@@ -158,8 +174,10 @@
 										class="form-label" for="price">Price <span class="text-danger">*</span>
 									</label>
 								</div>
-
-
+								<c:if test="${not empty errorPrice}">
+		                        	 <div class="text-danger">${errorPrice}</div>
+		                        </c:if>
+		                        
 								
 								<div class="form-floating mt-3 position-relative">
 									<input class="form-control pr-4 numeric-input" id="page_count" name="page_count" oninput="validateNumberInput(this)"
@@ -167,6 +185,10 @@
 										class="form-label" for="price">Page count <span class="text-danger">*</span>
 									</label>
 								</div>
+								<c:if test="${not empty errorpage_count}">
+		                        	 <div class="text-danger">${errorpage_count}</div>
+		                        </c:if>
+		                        
 								
 								<div class="form-floating mt-3">
 <!-- 								    Hiển thị ảnh thumbnail hiện tại nếu có -->
@@ -179,6 +201,10 @@
 								    <input class="form-control" id="thumbnail" name="thumbnail" type="file" accept="image/*">
 								    <label class="form-label" for="thumbnail">Thumbnail</label>
 								</div>
+								<c:if test="${not empty errorThumbnail}">
+		                        	 <div class="text-danger">${errorThumbnail}</div>
+		                        </c:if>
+		                        
 								
 							</div>
 
@@ -204,7 +230,7 @@
 								</div>
 
 								<div class="form-floating mt-3">
-								    <select class="form-control" id="subcategory_id" name="subcategory_id">
+								    <select class="form-control" id="subcategory_id" name="subcategory_id" onchange="loadCategory(this.value)">
 								        <option value="" disabled selected>Select an option</option>
 	<!-- 							        Lặp qua danh sách danh mục từ server -->
 								        <c:forEach var="subcategory" items="${listSubcategories}">
@@ -215,6 +241,10 @@
 								    </select>
 								    <label class="form-label" for="category">Subcategory <span class="text-danger">*</span></label>
 								</div>
+								<c:if test="${not empty errorSubcategory}">
+		                        	 <div class="text-danger">${errorSubcategory}</div>
+		                        </c:if>
+		                        
 
 <!-- 								<div class="form-floating mt-3"> -->
 <!-- 									<input class="form-control" id="supplier" name="supplier" -->
@@ -234,12 +264,20 @@
 									    </select>
 									    <label class="form-label" for="category">Supplier <span class="text-danger">*</span></label>
 									</div>
+									<c:if test="${not empty errorSupplier}">
+			                        	 <div class="text-danger">${errorSupplier}</div>
+			                        </c:if>
+		                        
 
 									<div class="form-floating mt-3">
 										<input class="form-control numeric-input" id="quantity" oninput="validateNumberInput(this)"
 											name="quantity" value="${book.quantity}"> <label
 											class="form-label" for="quantity">Total quantity <span class="text-danger">*</span></label>
 									</div>
+									<c:if test="${not empty errortotal_quantity}">
+			                        	 <div class="text-danger">${errortotal_quantity}</div>
+			                        </c:if>
+		                        
 								
 									<div class="form-floating mt-3">
 										<input class="form-control" id="language" name="language"
@@ -247,6 +285,10 @@
 											class="form-label" for="title">Language <span
 											class="text-danger">*</span></label>
 									</div>
+									<c:if test="${not empty errorLanguage}">
+			                        	 <div class="text-danger">${errorLanguage}</div>
+			                        </c:if>
+		                        
 
 									<div class="form-floating mt-3">
 										<select class="form-control" id="status" name="status">
@@ -260,6 +302,10 @@
 										</select>
 										<label class="form-label" for="status">Status<span class="text-danger">*</span></label>
 									</div>
+									<c:if test="${not empty errorStatus}">
+			                        	 <div class="text-danger">${errorStatus}</div>
+			                        </c:if>
+		                        
 
 									<div class="form-floating mt-3">
 										<input class="form-control" id="createdAt" name="createdAt" 
@@ -290,6 +336,10 @@
 									    <input class="form-control" id="images" name="images" type="file" accept="image/*" multiple>
 									    <label class="form-label" for="images">Images</label>
 									</div>
+									<c:if test="${not empty errorImages}">
+			                        	 <div class="text-danger">${errorImages}</div>
+			                        </c:if>
+		                        
 								
 							</div>
 						</div>

@@ -48,37 +48,58 @@ public class InventoriesController {
 	
 	@RequestMapping(value = "/inventory/edit", method = RequestMethod.POST)
 	public String edit(ModelMap model, RedirectAttributes redirectAttributes, @ModelAttribute("inventory") InventoryEntity inventory) {
-		if (inventoryService.updateQuantityByInventoryId(inventory.getId(), inventory.getStock_quantity(), new Date())) {
-			redirectAttributes.addFlashAttribute("alertMessage", "Successfully updated Inventory Id: " + inventory.getId());
-			redirectAttributes.addFlashAttribute("alertType", "success");
-		} else {
-			model.addAttribute("alertMessage", "An error occurred while updating the BookId: " + inventory.getId());
-			model.addAttribute("alertType", "error");
-			return "inventories/edit";
+		
+		InventoryEntity inventoryGetById = inventoryService.getInventoryById(inventory.getId());
+		
+		if (!inventoryService.handleErrors(model, inventoryGetById)) {
+			if (inventoryService.checkUpdateStockQuantity(model, inventory, inventoryGetById)) {
+				System.out.println("1");
+				boolean result = inventoryService.updateQuantityByInventoryId(inventory.getId(), inventory.getStock_quantity(), new Date());
+				
+				System.out.println("2");
+				if (result) {
+					redirectAttributes.addFlashAttribute("alertMessage", "Successfully updated Inventory Id: " + inventory.getId());
+					redirectAttributes.addFlashAttribute("alertType", "success");
+
+					return "redirect:/inventories.htm";
+				}
+			}
 		}
-		return "redirect:/inventories.htm";
+		
+		model.addAttribute("alertMessage", "An error occurred while updating the BookId: " + inventory.getId());
+		model.addAttribute("alertType", "error");
+		return "inventories/edit";
+		
 	}
 	
 	@RequestMapping(value = "/inventory/addQuantity", method = RequestMethod.POST)
 	public String addQuantity(ModelMap model, RedirectAttributes redirectAttributes,
 			@RequestParam("stock_quantity") int stock_quantity, @RequestParam("bookId") Long bookId,
 			@RequestParam("totalQuantity") int totalQuantity, @RequestParam("id") Long inventoryId,
-			@RequestParam("addQuantity") int addQuantity) {
+			@RequestParam("addQuantity") Integer addQuantity) {
 		
 		InventoryEntity inventory = inventoryService.getInventoryById(inventoryId);
 		BooksEntity book = booksService.getBookById(bookId);
 		
-		totalQuantity += addQuantity;
-		stock_quantity += addQuantity;
-		
-		
-		if (inventoryService.addQuantity(inventoryId, bookId, totalQuantity, stock_quantity)) {
-			redirectAttributes.addFlashAttribute("alertMessage", "Successfully updated Inventory Id: " + inventory.getId());
-			redirectAttributes.addFlashAttribute("alertType", "success");
+		if (addQuantity == null) {
+			model.addAttribute("errorQuantity", "This field must not be empty!");
+			model.addAttribute("listInventories", inventoryService.getAllInventories());
+			
+			return "inventories/index";
 		} else {
-			model.addAttribute("alertMessage", "An error occurred while updating the BookId: " + inventory.getId());
-			model.addAttribute("alertType", "error");
+			totalQuantity += addQuantity;
+			stock_quantity += addQuantity;
+			
+			if (inventoryService.addQuantity(inventoryId, bookId, totalQuantity, stock_quantity)) {
+				redirectAttributes.addFlashAttribute("alertMessage", "Successfully updated Inventory Id: " + inventory.getId());
+				redirectAttributes.addFlashAttribute("alertType", "success");
+				
+			} else {
+				model.addAttribute("alertMessage", "An error occurred while updating the BookId: " + inventory.getId());
+				model.addAttribute("alertType", "error");				
+			}
 		}
+		
 		
 		return "redirect:/inventories.htm"; 
 	}

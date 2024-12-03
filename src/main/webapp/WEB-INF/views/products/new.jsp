@@ -122,10 +122,6 @@ select.form-control {
 				method="POST" enctype="multipart/form-data">
 				<input type="hidden" id="task" name="task" value="${task}">
 
-				<c:if test="${task != 'new'}">
-					<input type="hidden" id="id" name="id" value="${book.id}">
-				</c:if>
-
 				<div class="card mt-3">
 					<div class="card-body">
 						<h6 class="small text-muted">GENERAL INFORMATION</h6>
@@ -135,130 +131,171 @@ select.form-control {
 							<div class="col-md-6">
 								<div class="form-floating mt-3">
 									<input class="form-control" id="title" name="title"
-										value="" required> <label
+										value="${book.title}" required> <label
 										class="form-label" for="title">Title <span
 										class="text-danger">*</span></label>
 								</div>
+								<c:if test="${not empty errorTitle}">
+		                        	 <div class="text-danger">${errorTitle}</div>
+		                        </c:if>
+		                        
 
 								<div class="form-floating mt-3">
 									<input class="form-control" id="author" name="author"
-										value="" required> <label
+										value="${book.author}" required> <label
 										class="form-label" for="author">Author <span
 										class="text-danger">*</span></label>
 								</div>
+								<c:if test="${not empty errorAuthor}">
+		                        	 <div class="text-danger">${errorAuthor}</div>
+		                        </c:if>
+
 
 								<div class="form-floating mt-3">
-								    <textarea class="form-control" id="description" name="description" rows="5"></textarea>
+								    <textarea class="form-control" id="description" name="description" rows="5">${book.description}</textarea>
 								    <label class="form-label" for="description">Description</label>
 								</div>
+								<c:if test="${not empty errorDescription}">
+		                        	 <div class="text-danger">${errorDescription}</div>
+		                        </c:if>
+		                        
 								
 								<div class="form-floating mt-3 position-relative">
 									<input class="form-control pr-4" id="publication_year" name="publication_year"
-										type="text" value="0" max="2024" oninput="validateYearInput(this)" required> <label
+										type="text" value="${book.publication_year != null ? book.publication_year : 0}" max="2024" oninput="validateYearInput(this)" required> <label
 										class="form-label" for="publication_year">Publication year <span class="text-danger">*</span>
 									</label>
 								</div>
+								<c:if test="${not empty errorpublication_year}">
+		                        	 <div class="text-danger">${errorpublication_year}</div>
+		                        </c:if>
+		                        
 								
 								<div class="form-floating mt-3 position-relative">
 									<input class="form-control pr-4 numeric-input" id="price" name="price" oninput="validateNumberInput(this)"
-										type="text" value="0" required> <span class="currency-symbol">₫</span> <label
+										type="text" value="${book.price != null ? book.price : 0}" required> <span class="currency-symbol">₫</span> <label
 										class="form-label" for="price">Price <span class="text-danger">*</span>
 									</label>
 								</div>
+								<c:if test="${not empty errorPrice}">
+		                        	 <div class="text-danger">${errorPrice}</div>
+		                        </c:if>
+		                        
 								
 								<div class="form-floating mt-3">
-									<input class="form-control" id="language" name="language" value="" required> <label
+									<input class="form-control" id="language" name="language" value="${book.language}" required> <label
 										class="form-label" for="title">Language <span
 										class="text-danger">*</span></label>
 								</div>
+								<c:if test="${not empty errorLanguage}">
+		                        	 <div class="text-danger">${errorLanguage}</div>
+		                        </c:if>
+		                        
 								
 								<div class="form-floating mt-3">
 								    <input class="form-control" id="thumbnail" name="thumbnail" type="file" accept="image/*">
 								    <label class="form-label" for="thumbnail">Thumbnail</label>
 								</div>
+								<c:if test="${not empty errorThumbnail}">
+		                        	 <div class="text-danger">${errorThumbnail}</div>
+		                        </c:if>
+		                        
 	
 							</div>
 
 							<!-- Cột 2 -->
 							<div class="col-md-6">
-<!-- 								<div class="form-floating mt-3"> -->
-<!-- 									<input class="form-control" id="category" name="category" -->
-<%-- 										value="${book.category.name}"> <label --%>
-<!-- 										class="form-label" for="category">Category <span class="text-danger">*</span></label> -->
-<!-- 								</div> -->
-<div class="form-floating mt-3">
-    <select class="form-control" id="category" name="category" onchange="loadSubcategories(this.value)">
-        <option value="" disabled selected>Select an option</option>
-        <!-- Lặp qua danh sách danh mục từ server -->
-        <c:forEach var="category" items="${listCategories}">
-            <option value="${category.id}">
-                ${category.name}
-            </option>
-        </c:forEach>
-    </select>
-    <label class="form-label" for="category">Category <span class="text-danger">*</span></label>
-</div>
 
-<div class="form-floating mt-3">
-    <select class="form-control" id="subcategory_id" name="subcategory_id" disabled="disabled">
-        <option value="" disabled selected>Select an option</option>
-        <!-- Lặp qua danh sách danh mục từ server -->
-        <c:forEach var="subcategory" items="${listSubcategories}">
-            <option value="${subcategory.id}">
-                ${subcategory.name}
-            </option>
-        </c:forEach>
-    </select>
-    <label class="form-label" for="category">Subcategory <span class="text-danger">*</span></label>
-</div>
-
-<!-- 								<div class="form-floating mt-3"> -->
-<!-- 									<input class="form-control" id="supplier" name="supplier" -->
-<%-- 										value="${book.supplier.name}"> <label --%>
-<!-- 										class="form-label" for="supplier">Supplier <span class="text-danger">*</span></label> -->
-<!-- 								</div> -->
-
-<div class="form-floating mt-3">
-    <select class="form-control" id="supplier_id" name="supplier_id">
-        <option value="" disabled selected>Select an option</option>
-        <!-- Lặp qua danh sách danh mục từ server -->
-        <c:forEach var="supplier" items="${listSuppliers}">
-            <option value="${supplier.id}" ${supplier.id == book.supplier.id ? 'selected' : ''}>
-                ${supplier.name}
-            </option>
-        </c:forEach>
-    </select>
-    <label class="form-label" for="category">Supplier <span class="text-danger">*</span></label>
-</div>
+								<div class="form-floating mt-3">
+								    <select class="form-control" id="category" name="category" onchange="loadSubcategories(this.value)">
+								        <option value="" disabled selected>Select an option</option>
+								        <!-- Lặp qua danh sách danh mục từ server -->
+								        <c:forEach var="category" items="${listCategories}">
+								            <option value="${category.id}" ${category.id == book.subcategoriesEntity.categoriesEntity.id ? 'selected' : ''}>
+								                ${category.name}
+								            </option>
+								        </c:forEach>
+								    </select>
+								    <label class="form-label" for="category">Category <span class="text-danger">*</span></label>
+								</div>
+								
+								<div class="form-floating mt-3">
+								    <select class="form-control" id="subcategory_id" name="subcategory_id" ${book.subcategoriesEntity.id != null ? '' : 'disabled="disabled"'}>
+								        <option value="" disabled selected>Select an option</option>
+								        <!-- Lặp qua danh sách danh mục từ server -->
+								        <c:forEach var="subcategory" items="${listSubcategories}">
+								            <option value="${subcategory.id}" ${subcategory.id == book.subcategoriesEntity.id ? 'selected' : ''}>
+								                ${subcategory.name}
+								            </option>
+								        </c:forEach>
+								    </select>
+								    <label class="form-label" for="category">Subcategory <span class="text-danger">*</span></label>
+								</div>
+								<c:if test="${not empty errorSubcategory}">
+		                        	 <div class="text-danger">${errorSubcategory}</div>
+		                        </c:if>
+		                        
+								
+								<div class="form-floating mt-3">
+								    <select class="form-control" id="supplier_id" name="supplier_id">
+								        <option value="" disabled selected>Select an option</option>
+								        <!-- Lặp qua danh sách danh mục từ server -->
+								        <c:forEach var="supplier" items="${listSuppliers}">
+								            <option value="${supplier.id}" ${supplier.id == book.supplier.id ? 'selected' : ''}>
+								                ${supplier.name}
+								            </option>
+								        </c:forEach>
+								    </select>
+								    <label class="form-label" for="category">Supplier <span class="text-danger">*</span></label>
+								</div>
+								<c:if test="${not empty errorSupplier}">
+		                        	 <div class="text-danger">${errorSupplier}</div>
+		                        </c:if>
+		                        
 
 								<div class="form-floating mt-3">
 									<input class="form-control numeric-input" id="quantity" oninput="validateNumberInput(this)"
-										name="quantity" value="0"> <label
-										class="form-label" for="quantity">Stock quantity <span class="text-danger">*</span></label>
+										name="quantity" value="${book.quantity != null ? book.quantity : 0}"> <label
+										class="form-label" for="quantity">Total quantity <span class="text-danger">*</span></label>
 								</div>
+								<c:if test="${not empty errortotal_quantity}">
+		                        	 <div class="text-danger">${errortotal_quantity}</div>
+		                        </c:if>
+		                        
 								
 								<div class="form-floating mt-3 position-relative">
 									<input class="form-control pr-4 numeric-input" id="page_count" name="page_count" oninput="validateNumberInput(this)"
-										type="text" value="0" required> <label
+										type="text" value="${book.page_count != null ? book.page_count : 0}" required> <label
 										class="form-label" for="price">Page count <span class="text-danger">*</span>
 									</label>
 								</div>
-								
+								<c:if test="${not empty errorpage_count}">
+		                        	 <div class="text-danger">${errorpage_count}</div>
+		                        </c:if>
+		                        
+		                        
 								<div class="form-floating mt-3">
 								    <select class="form-control" id="status" name="status">
 								        <option value="" disabled selected>Select an option</option>
-								            <option value="0">Disable</option>
-								            <option value="1">Enable</option>
+								            <option value="0" ${book.status == 0 ? 'selected' : ''}>Disable</option>
+								            <option value="1" ${book.status == 1 ? 'selected' : ''}>Enable</option>
 								    </select>
 								    <label class="form-label" for="category">Status <span class="text-danger">*</span></label>
 								</div>
+								<c:if test="${not empty errorStatus}">
+		                        	 <div class="text-danger">${errorStatus}</div>
+		                        </c:if>
 								
 								
 								<div class="form-floating mt-3">
 								    <input class="form-control" id="images" name="images" type="file" accept="image/*" multiple>
 								    <label class="form-label" for="images">Images</label>
 								</div>
-								
+								<c:if test="${not empty errorImages}">
+		                        	 <div class="text-danger">${errorImages}</div>
+		                        </c:if>
+		                        
+		                        
 							</div>
 						</div>
 					</div>

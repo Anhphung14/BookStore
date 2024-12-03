@@ -3,6 +3,7 @@ package bookstore.Controller;
 import java.awt.print.Book;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Paths;
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -171,56 +172,32 @@ public class ProductsController {
 		
 		bookEntity.setSubcategoriesEntity(subcategory);
 		bookEntity.setSupplier(supplier);
+		
+		booksService.editThumbnail_Images(bookDTO, bookEntity, bookGetById);
 
-			try {
-				if (!bookDTO.getThumbnail().isEmpty()) {
-//					String thumbnailPath = saveThumbnail(thumbnail, "resources/images/thumbnails/" + toSlug(title) + "/");
-					String thumbnailPath = uploadService.uploadByCloudinary(bookDTO.getThumbnail(), "images/thumbnails/" + uploadService.toSlug(bookEntity.getTitle()));
-					bookEntity.setThumbnail(thumbnailPath);
-					
-//					File savedFile = new File(context.getRealPath("/" + thumbnailPath));
-//					while (!savedFile.exists()) {
-//						Thread.sleep(100);
-//					}
-				} else {
-					bookEntity.setThumbnail(bookGetById.getThumbnail());
-				}
-//				
-				if (bookDTO.getImages() != null && bookDTO.getImages().length > 0) {
-//					String imagesPath = "resources/images/books/" + toSlug(title) + "/";
-					StringBuilder imagePaths = new StringBuilder();
-					
-					for (MultipartFile image : bookDTO.getImages()) {
-						if (!image.isEmpty()) {
-//							String imagePath = saveImage(image, imagesPath);
-							String imagePath = uploadService.uploadByCloudinary(image, "images/books/" + uploadService.toSlug(bookEntity.getTitle()));
-							imagePaths.append(imagePath).append(";");
-						}
-					}
-					
-					if (imagePaths.length() > 0) {
-						bookEntity.setImages(imagePaths.toString());							
-					} else {
-						bookEntity.setImages(bookGetById.getImages());
-					}
-				}
+		if (!booksService.handleBookErrors(model, bookEntity)) {
+			
+			if (booksService.checkUpdateQuantity(model, bookGetById, bookEntity)) {
+				boolean result = booksService.updateBook(bookEntity);
 				
-			} catch (Exception e) {
-				e.printStackTrace();
+				if (result) {
+					redirectAttributes.addFlashAttribute("alertMessage", "Successfully updated BookID: " + bookEntity.getId());
+					redirectAttributes.addFlashAttribute("alertType", "success");
+	
+					return "redirect:/products.htm"; 
+				}
 			}
-			
-			boolean result = booksService.updateBook(bookEntity);
-			
-			if (result) {
-				redirectAttributes.addFlashAttribute("alertMessage", "Successfully updated BookID: " + bookEntity.getId());
-				redirectAttributes.addFlashAttribute("alertType", "success");
-			} else {
-				model.addAttribute("alertMessage", "An error occurred while updating the BookId: " + bookEntity.getId());
-				model.addAttribute("alertType", "error");
-				return "products/edit";
-			}
-			
-		return "redirect:/products.htm"; 
+		}
+		
+		model.addAttribute("alertMessage", "An error occurred while updating the BookId: " + bookEntity.getId());
+		model.addAttribute("alertType", "error");
+		
+		model.addAttribute("book", bookEntity);
+		model.addAttribute("listCategories", categoriesService.getAllCategories());
+		model.addAttribute("listSuppliers", suppliersService.getAllSuppliers());
+		model.addAttribute("listSubcategories", subcategoriesService.getAllSubcategories());
+
+		return "products/edit";
 	}
 	
 	@RequestMapping(value = "/product/add", method = RequestMethod.POST)
@@ -238,72 +215,61 @@ public class ProductsController {
 		bookEntity.setCreatedAt(new Date());
 		bookEntity.setUpdatedAt(new Date());
 		
-		try {
-			if (!bookDTO.getThumbnail().isEmpty()) {
-//				String thumbnailPath = saveThumbnail(thumbnail, "resources/images/thumbnails/" + toSlug(title) + "/");
-				String thumbnailPath = uploadService.uploadByCloudinary(bookDTO.getThumbnail(), "images/thumbnails/" + uploadService.toSlug(bookEntity.getTitle()));
-				bookEntity.setThumbnail(thumbnailPath);
-				
-//				File savedFile = new File(context.getRealPath("/" + thumbnailPath));
-//				while (!savedFile.exists()) {
-//					Thread.sleep(100);
-//				}
-			}
-//			
-			if (bookDTO.getImages() != null && bookDTO.getImages().length > 0) {
-//				String imagesPath = "resources/images/books/" + toSlug(title) + "/";
-				StringBuilder imagePaths = new StringBuilder();
-				
-				for (MultipartFile image : bookDTO.getImages()) {
-					if (!image.isEmpty()) {
-//						String imagePath = saveImage(image, imagesPath);
-						String imagePath = uploadService.uploadByCloudinary(image, "images/books/" + uploadService.toSlug(bookEntity.getTitle()));
-						imagePaths.append(imagePath).append(";");
-					}
-				}
-				
-				bookEntity.setImages(imagePaths.toString());							
-				
-			}
+		booksService.addThumbnail_Images(bookDTO, bookEntity);
+		
+		if (!booksService.handleBookErrors(model, bookEntity)) {
+			InventoryEntity inventory = new InventoryEntity(bookEntity, bookEntity.getQuantity(), new Date(), new Date());
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+			boolean result1 = booksService.saveBook(bookEntity);
+			boolean result2 = inventoryService.saveInventory(inventory);
+			
+			if (result1 && result2 ) {
+				redirectAttributes.addFlashAttribute("alertMessage", "Successfully added a new book!");
+				redirectAttributes.addFlashAttribute("alertType", "success");
+				
+				return "redirect:/products.htm";
+			}
 		}
 		
-		System.out.println(bookEntity.toString());
+		model.addAttribute("alertMessage", "An error occurred while adding the new book!");
+		model.addAttribute("alertType", "error");
 		
-		InventoryEntity inventory = new InventoryEntity(bookEntity, bookEntity.getQuantity(), new Date(), new Date());
-
-		boolean result1 = booksService.saveBook(bookEntity);
-		boolean result2 = inventoryService.saveInventory(inventory);
+		model.addAttribute("book", bookEntity);
+		model.addAttribute("listCategories", categoriesService.getAllCategories());
+		model.addAttribute("listSuppliers", suppliersService.getAllSuppliers());
+		model.addAttribute("listSubcategories", subcategoriesService.getAllSubcategories());
 		
-		if (result1 && result2) {
-			redirectAttributes.addFlashAttribute("alertMessage", "Successfully added a new book!");
-			redirectAttributes.addFlashAttribute("alertType", "success");
-		} else {
-			model.addAttribute("alertMessage", "An error occurred while adding the new book!");
-			model.addAttribute("alertType", "error");
-			
-			return "products/new";
-		}
-		
-		return "redirect:/products.htm";
-		
+		return "products/new";
 	}
 	
 	@RequestMapping(value = "/product/delete", method = RequestMethod.POST)
     public String deleteBook(@RequestParam("bookId") Long bookId, RedirectAttributes redirectAttributes, ModelMap model) {
-        try {
-            // Gọi service để xóa sách
-            booksService.deleteBookById2(bookId);
-            redirectAttributes.addFlashAttribute("alertMessage", "Sách đã được xóa thành công!");
-            redirectAttributes.addFlashAttribute("alertType", "success");
-        } catch (Exception e) {
+        
+        if (booksService.deleteBookById2(bookId)) {	
+	        redirectAttributes.addFlashAttribute("alertMessage", "Sách đã được xóa thành công!");
+	        redirectAttributes.addFlashAttribute("alertType", "success");
+        } else {
             redirectAttributes.addFlashAttribute("errorMessage", "Không thể xóa sách. Vui lòng thử lại!");
             model.addAttribute("alertType", "error");
         }
-        return "redirect:/products.htm"; // Quay lại danh sách sản phẩm
+        
+        return "redirect:/products.htm";
     }
+	
+	@RequestMapping(value = "/product/changeStatus", method = RequestMethod.POST)
+	public String changeStatus(ModelMap model, RedirectAttributes redirectAttributes,
+			@RequestParam("bookId") Long bookId, @RequestParam("newStatus") int newStatus) {
+		
+		if (booksService.changeStatus(bookId, newStatus)) {
+			redirectAttributes.addFlashAttribute("alertMessage", "The book's status has been successfully updated!!");
+	        redirectAttributes.addFlashAttribute("alertType", "success");
+		} else {
+			redirectAttributes.addFlashAttribute("alertMessage", "The book's status update has failed!!");
+	        redirectAttributes.addFlashAttribute("alertType", "error");
+		}
+		
+		return "redirect:/products.htm";
+	}
 	
 	
 	@RequestMapping(value = "/product/getSubcategories", method = RequestMethod.GET, produces = "text/html; charset=UTF-8")
@@ -324,15 +290,14 @@ public class ProductsController {
 	@ResponseBody
 	public String getCategory(@RequestParam("subcategoryId") Long subcategoryId) {
 	    try {
-	        // Lấy Category từ Subcategory ID
 	        CategoriesEntity category = subcategoriesService.getCategoryBySubcategoryId(subcategoryId);
 	        if (category != null) {
-	            return "<span id='categoryId'>" + category.getId() + "</span>"; // Trả về ID dạng HTML
+	            return "<span id='categoryId'>" + category.getId() + "</span>";
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
-	    return "<span id='categoryId'>No category found</span>"; // Trả về nếu không tìm thấy
+	    return "<span id='categoryId'>No category found</span>";
 	}
 
 }

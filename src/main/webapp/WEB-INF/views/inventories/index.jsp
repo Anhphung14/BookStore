@@ -88,10 +88,10 @@
 									<i class="fa fa-search"></i>
 								</button>
 							</div>
-							<a class="btn btn-primary text-nowrap btn-add"
-								href="${pageContext.request.contextPath}/product/new.htm"> <i
-								class="fa fa-plus me-2"></i>Add
-							</a>
+<!-- 							<a class="btn btn-primary text-nowrap btn-add" -->
+<%-- 								href="${pageContext.request.contextPath}/product/new.htm"> <i --%>
+<!-- 								class="fa fa-plus me-2"></i>Add -->
+<!-- 							</a> -->
 
 						</div>
 
@@ -116,7 +116,7 @@
 											type="checkbox" id="toggle" name="toggle"
 											onclick="checkAll()" /></th>
 										<th width="30px" class="text-start">#</th>
-										<th width="30px" class="text-center">Book Id</th>
+										<th width="30px" class="text-center">Product Id</th>
 										<th width="200px" class="text-center">Product</th>
 										<th width="100px" class="text-center">Total quantity</th>
 										<th width="160px" class="text-center">Stock quantity</th>
@@ -151,12 +151,12 @@
 <%-- 													<a class="btn btn-rounded"><i class="fa ${user.isActive ? 'fa-eye-slash' : 'fa-eye'}"></i></a> --%>
 <!-- 													<a class="btn btn-rounded"><i class="fa fa-eye-slash"></i></a> -->
 <!-- 													<a class="btn btn-rounded"><i class="fa fa-search"></i></a> -->
-													<a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#addQuantityModal" onclick="prepareAddQuantity(${inventory.book.id}, ${inventory.book.quantity}, ${inventory.stock_quantity}, ${inventory.id})">
+													<a class="btn btn-rounded" id="openModalButton" data-bs-toggle="modal" data-bs-target="#addQuantityModal" onclick="prepareAddQuantity(${inventory.book.id}, ${inventory.book.quantity}, ${inventory.stock_quantity}, ${inventory.id})">
 													    <i class="fa fa-plus-circle" aria-hidden="true"></i>
 													</a>
-													<a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="prepareAddQuantity(${inventory.book.id}, ${inventory.book.quantity}, ${inventory.stock_quantity})">
-														<i class="fa fa-trash-alt"></i>
-													</a>
+<%-- 													<a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="prepareAddQuantity(${inventory.book.id}, ${inventory.book.quantity}, ${inventory.stock_quantity})"> --%>
+<!-- 														<i class="fa fa-trash-alt"></i> -->
+<!-- 													</a> -->
 												</div>
 											</td>
 										</tr>
@@ -204,7 +204,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addQuantityModalLabel">Add Quantity to Product</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" id="closeModalButton" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="addQuantityForm" method="POST" action="inventory/addQuantity.htm">
                 <div class="modal-body">
@@ -230,10 +230,13 @@
                         <label for="bookId" class="form-label">Enter Quantity to add</label>
                         <input type="number" min="0" max="10000" class="form-control" id="addQuantity" name="addQuantity">
                     </div>
+                    <c:if test="${not empty errorQuantity}">
+                    	 <div class="text-danger">${errorQuantity}</div>
+                    </c:if>
                     
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="closeModalButton" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Save Quantity</button>
                 </div>
                 <input type="hidden" name="id" id="inventoryId">
@@ -269,12 +272,54 @@
 		}
 		
 		function prepareAddQuantity(bookId, quantity, stock_quantity, inventoryId) {
-		    // Hiển thị ID của sách trong modal
+			localStorage.setItem("bookId", bookId);
+		    localStorage.setItem("totalQuantity", quantity);
+		    localStorage.setItem("stock_quantity", stock_quantity);
+		    localStorage.setItem("inventoryId", inventoryId);
+			
+			
 		    document.getElementById("bookId").value = bookId;
 		    document.getElementById("totalQuantity").value = quantity;
 		    document.getElementById("stock_quantity").value = stock_quantity;
 		    document.getElementById("inventoryId").value = inventoryId
 		}
+		
+		document.querySelectorAll('#openModalButton').forEach(button => {
+		    button.addEventListener('click', function() {
+		        localStorage.setItem('isModalOpen', 'true');
+		    });
+		});
+
+		// Khi đóng modal
+		document.querySelectorAll('#closeModalButton').forEach(button => {
+		    button.addEventListener('click', function() {
+		        localStorage.setItem('isModalOpen', 'false');
+		    });
+		});
+
+		// Kiểm tra trạng thái modal khi tải lại trang
+		window.addEventListener('load', function() {
+			const errorMess = "${errorQuantity}";
+			
+			if (!errorMess) {
+				localStorage.setItem('isModalOpen', 'false');
+			}
+			
+		    // Kiểm tra nếu modal đã được mở trước đó
+		    const isModalOpen = localStorage.getItem('isModalOpen') === 'true';
+		
+		    if (isModalOpen) {
+		        // Mở modal
+		        var myModal = new bootstrap.Modal(document.getElementById('addQuantityModal'));
+		        myModal.show();
+		
+		        // Binding lại giá trị vào các input trong modal
+		        document.getElementById('bookId').value = localStorage.getItem('bookId');
+		        document.getElementById('totalQuantity').value = localStorage.getItem('totalQuantity');
+		        document.getElementById('stock_quantity').value = localStorage.getItem('stock_quantity');
+		        document.getElementById('inventoryId').value = localStorage.getItem('inventoryId');
+		    }
+		});
 		
 	</script>
 </body>
