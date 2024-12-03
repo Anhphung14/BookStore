@@ -69,7 +69,7 @@
 					</div>
 				</div>
 			</div>
-			<form id="frm-admin" name="adminForm" action="" method="POST">
+				<form id="frm-admin" name="adminForm" action="" method="POST">
 				<input type="hidden" id="task" name="task" value="${param.task}">
 				<input type="hidden" id="sortby" name="sortby"
 					value="${param.sortby != null ? param.sortby : 'updated_at'}" /> <input
@@ -81,10 +81,10 @@
 					<div class="card-body">
 						<div class="d-flex gap-3">
 							<div class="input-group">
-								<input class="form-control search-input" name="search_text"
-									id="search_text" value="${param.search_text}"
-									placeholder="Search ...">
-								<button type="button" class="btn btn-secondary btn-search">
+								<input class="form-control search-input me-2" name="search"
+									id="search_text" value="${search}"
+									placeholder="Search...">
+								<button type="submit" class="btn btn-secondary btn-search">
 									<i class="fa fa-search"></i>
 								</button>
 							</div>
@@ -152,7 +152,7 @@
 											       data-images="${book.images}"
 											       data-quantity="${book.quantity} in stock"
 											       onclick="showProductDetails(this)">
-											       <div>
+											        <div>
 											            <img alt="Product Thumbnail" src="${book.thumbnail}" class="bg-white border border-3 border-white" width="50px">
 											        </div>
 											        <div class="ms-3">
@@ -192,12 +192,15 @@
 											<td class="text-center">
 												<div class="d-flex justify-content-center align-items-center gap-1">
 													<a class="btn btn-rounded" href="product/edit/${book.id}.htm"><i class="fa fa-pencil"></i></a>
-<%-- 													<a class="btn btn-rounded"><i class="fa ${user.isActive ? 'fa-eye-slash' : 'fa-eye'}"></i></a> --%>
+													<a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#statusModal" 
+													   onclick="prepareStatusChange(${book.id}, '${book.status}')">
+													    <i class="fa ${book.status == '1' ? 'fa-eye-slash' : 'fa-eye'}"></i>
+													</a>
 													<!-- <a class="btn btn-rounded"><i class="fa fa-eye-slash"></i></a> -->
 													<!-- <a class="btn btn-rounded"><i class="fa fa-search"></i></a> -->
-													<a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#exampleModal">
-													    <i class="fa fa-plus-circle" aria-hidden="true"></i>
-													</a>
+<!-- 													<a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#exampleModal"> -->
+<!-- 													    <i class="fa fa-plus-circle" aria-hidden="true"></i> -->
+<!-- 													</a> -->
 													<a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="prepareDelete(${book.id}, '${book.title}')">
 														<i class="fa fa-trash-alt"></i>
 													</a>
@@ -209,8 +212,37 @@
 									</c:forEach>
 								</table>
 							</div>
+							<c:if test="${totalPages > 1}">
+								<nav aria-label="Page navigation example" class="mt-2">
+									<ul class="pagination justify-content-center">
+										<!-- Liên kết đến trang trước -->
+										<li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+											<a class="page-link"
+											href="${pageContext.request.contextPath}/products.htm?page=${currentPage > 1 ? currentPage - 1 : 1}&size=${size}"
+											aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+										</a>
+										</li>
+
+										<!-- Liên kết đến từng trang -->
+										<c:forEach var="i" begin="1" end="${totalPages}">
+											<li class="page-item ${i == currentPage ? 'active' : ''}">
+												<a class="page-link"
+												href="${pageContext.request.contextPath}/products.htm?page=${i}&size=${size}">${i}</a>
+											</li>
+										</c:forEach>
+
+										<!-- Liên kết đến trang tiếp theo -->
+										<li
+											class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+											<a class="page-link"
+											href="${pageContext.request.contextPath}/products.htm?page=${currentPage < totalPages ? currentPage + 1 : totalPages}&size=${size}"
+											aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+										</a>
+										</li>
+									</ul>
+								</nav>
+							</c:if>
 						</div>
-					<%-- <div>${users.links}</div>  --%>
 					</div>
 				</div>
 			</form>
@@ -331,15 +363,44 @@
 			                        <img id="productThumbnail" src="" alt="Product Image" class="img-fluid" style="max-width: 100px; max-height: 100px; display: block;">
 			                    </div>
 			                    <div class="mb-3" style="flex: 1;">
-        <label for="productImages" class="form-label">Images</label>
-        <div id="productImages" class="d-flex flex-wrap"></div>
-    </div>
+							        <label for="productImages" class="form-label">Images</label>
+							        <div id="productImages" class="d-flex flex-wrap"></div>
+							    </div>
 			                </div>
 			                
 			                <!-- Add more fields if needed -->
 			            </div>
 			            <div class="modal-footer">
 			                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+
+			<!-- Modal Status -->
+			<div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+			    <div class="modal-dialog">
+			        <div class="modal-content">
+			            <div class="modal-header">
+			                <h5 class="modal-title" id="statusModalLabel">Confirm Status Change</h5>
+			                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			            </div>
+			            <div class="modal-body">
+			                <form id="statusForm" method="POST" action="product/changeStatus.htm">
+			                    <p id="statusMessage">Do you want to change the status of this book?</p>
+			                    <p id="currentStatus">Current Status: <span id="statusText"></span></p>
+			
+			                    <!-- Hidden fields to store book ID and new status -->
+			                    <input type="hidden" id="bookId" name="bookId">
+			                    <input type="hidden" id="newStatus" name="newStatus">
+			
+			                    <!-- Display current status, and update the button text dynamically -->
+			                    <p id="statusDetails"></p>
+			                </form>
+			            </div>
+			            <div class="modal-footer">
+			                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+			                <button type="submit" class="btn btn-primary" form="statusForm">Confirm</button>
 			            </div>
 			        </div>
 			    </div>
@@ -377,6 +438,16 @@
 		    document.getElementById("bookTitleToDelete").textContent = bookTitle;
 		    document.getElementById("bookIdInput").value = bookId;
 
+		}
+		
+		function prepareStatusChange(bookId, currentStatus) {
+		    // Set the current book ID and status
+		    document.getElementById("bookId").value = bookId;
+		    document.getElementById("statusText").textContent = currentStatus === '1' ? 'Activated' : 'Disabled';
+
+		    // Set the new status (toggle between 1 and 0)
+		    const newStatus = currentStatus === '1' ? '0' : '1'; // Enable -> Disable, Disable -> Enable
+		    document.getElementById("newStatus").value = newStatus;
 		}
 		
 		function showProductDetails(link) {

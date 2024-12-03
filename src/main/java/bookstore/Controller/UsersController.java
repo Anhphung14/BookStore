@@ -40,22 +40,50 @@ public class UsersController {
 	@Autowired
 	private SessionFactory factory;
 
-	@RequestMapping(value = "/users", method = RequestMethod.GET)
-	public String users(ModelMap model) {
-		List<UsersEntity> users = ListUsers();
-		
-		for (UsersEntity user : users) {
-			System.out.println(user.getFullname());
-		}
+	@RequestMapping(value = "/users")
+	public String users(ModelMap model,
+	                    @RequestParam(value = "page", defaultValue = "1") int page,
+	                    @RequestParam(value = "size", defaultValue = "10") int size,
+	                    @RequestParam(value = "search", required = false) String search) {
 
-		for (UsersEntity user : users) {
-			Set<RolesEntity> roles = user.getRoles();
-			user.setRoles(roles);
-		}
+	    Session session = factory.getCurrentSession();
+	    String hql = "FROM UsersEntity u";
+	    String countQuery = "SELECT count(u) FROM UsersEntity u";
 
-		model.addAttribute("users", users);
-		return "users/index";
+	    if (search != null && !search.isEmpty()) {
+	        hql += " WHERE u.fullname LIKE :search";
+	        countQuery += " WHERE u.fullname LIKE :search";
+	    }
+
+	    Query countQ = session.createQuery(countQuery);
+	    if (search != null && !search.isEmpty()) {
+	        countQ.setParameter("search", "%" + search + "%");
+	    }
+	    Long count = (Long) countQ.uniqueResult();
+	    int totalPages = (int) Math.ceil((double) count / size);
+
+	    Query query = session.createQuery(hql);
+	    if (search != null && !search.isEmpty()) {
+	        query.setParameter("search", "%" + search + "%");
+	    }
+	    query.setFirstResult((page - 1) * size);
+	    query.setMaxResults(size);
+
+	    List<UsersEntity> users = query.list();
+
+	    for (UsersEntity user : users) {
+	        Set<RolesEntity> roles = user.getRoles();
+	        user.setRoles(roles);
+	    }
+
+	    model.addAttribute("users", users);
+	    model.addAttribute("currentPage", page);
+	    model.addAttribute("totalPages", totalPages);
+	    model.addAttribute("search", search);
+
+	    return "users/index";
 	}
+
 	
 	@RequestMapping(value = "/user/new", method = RequestMethod.GET)
 	public String userNew(ModelMap model) {

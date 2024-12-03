@@ -40,6 +40,27 @@ public class InventoryEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "updated_at", nullable = false)
     private Date updated_at;
+    
+    public InventoryEntity() {
+    	
+    }
+
+	public InventoryEntity(Long id, BooksEntity book, Integer stock_quantity, Date created_at, Date updated_at) {
+		super();
+		this.id = id;
+		this.book = book;
+		this.stock_quantity = stock_quantity;
+		this.created_at = created_at;
+		this.updated_at = updated_at;
+	}
+
+	public InventoryEntity(BooksEntity book, Integer stock_quantity, Date created_at, Date updated_at) {
+		super();
+		this.book = book;
+		this.stock_quantity = stock_quantity;
+		this.created_at = created_at;
+		this.updated_at = updated_at;
+	}
 
 	public Long getId() {
 		return id;

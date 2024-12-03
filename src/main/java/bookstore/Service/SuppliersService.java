@@ -18,4 +18,8 @@ public class SuppliersService {
 	public List<SuppliersEntity> getAllSuppliers() {
 		return suppliersDAO.getAllSuppliers();
 	}
+	
+	public SuppliersEntity getSupplierBySupplierId(Long id) {
+		return suppliersDAO.getSupplierBySupplierId(id);
+	}
 }

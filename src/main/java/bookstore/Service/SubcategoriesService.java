@@ -46,4 +46,8 @@ public class SubcategoriesService {
 
 	    return (CategoriesEntity) query.uniqueResult();
 	}
+	
+    public SubcategoriesEntity getSubcategoryBySubcategoryId(Long id) {
+    	return subcategoriesDAO.getSubcategoryBySubcategoryId(id);
+    }
 }

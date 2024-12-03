@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
@@ -119,39 +120,37 @@
 														    <c:when test="${discount > 0}">
 														        <!-- Hiển thị giá sau khi giảm giá -->
 														        <span class="tg-bookprice">
-														            <ins>${book.price - book.price * discount / 100}</ins>
-														            <del>${book.price}</del>
+														            <ins><f:formatNumber value="${book.price - book.price * discount / 100}" type="currency"/> </ins>
+														            <del><f:formatNumber value="${book.price}" type="currency"/> </del>
 														        </span>
 														        <span class="tg-bookwriter">Bạn tiết kiệm được ${book.price * discount / 100}</span>
 														    </c:when>
 														    <c:otherwise>
 														        <!-- Hiển thị giá gốc khi không có giảm giá -->
 														        <span class="tg-bookprice">
-														            <ins>${book.price}</ins>
+														            <ins><f:formatNumber value="${book.price}" type="currency"/> </ins>
 														        </span>
 														    </c:otherwise>
 														</c:choose>
 														<ul class="tg-delevrystock">
 															<li><i class="fa-solid fa-rocket"></i><span>Free delivery worldwide</span></li>
 															<li><i class="fa-regular fa-square-check"></i><span>Dispatch from the USA in 2 working days </span></li>
-															<li><i class="fa-solid fa-store"></i><span>Status: <em>${book.stock_quantity}</em></span></li>
+															<li><i class="fa-solid fa-store"></i><span>Status: <em>${stock_quantity}</em></span></li>
 														</ul>
 														<div class="tg-quantityholder">
 															<em class="minus">-</em>
 															<input type="text" class="result" value="0" id="quantity1" name="quantity">
 															<em class="plus">+</em>
 														</div>
-														<a class="tg-btn tg-active tg-btn-lg" href="javascript:void(0);">Add To Basket</a>
-														<a class="tg-btnaddtowishlist" href="javascript:void(0);">
-															<span>add to wishlist</span>
-														</a>
+														<a class="tg-btn tg-active tg-btn-lg" style="text-decoration: none;" href="javascript:void(0);">Add To Basket</a>
+								
 													</div>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
 												<div class="tg-productcontent">
 													<ul class="tg-bookscategories">
-														<li><a href="javascript:void(0);">${book.subcategoriesEntity.name }</a></li>
+														<li><a style="text-decoration: none;" href="javascript:void(0);">${book.subcategoriesEntity.name }</a></li>
 													</ul>
 													<c:if test="${discount > 0}">
 													    <div class="tg-themetagbox">
@@ -161,19 +160,16 @@
 													<div class="tg-booktitle">
 														<h3>${book.title }</h3>
 													</div>
-													<span class="tg-bookwriter">By: <a href="javascript:void(0);">${book.author }</a></span>
-													<span class="tg-stars"><span></span></span>
-													<span class="tg-addreviews"><a href="javascript:void(0);">Add Your Review</a></span>
-													<div class="tg-share">
-														<span>Share:</span>
-														<ul class="tg-socialicons">
-															<li class="tg-facebook"><a href="javascript:void(0);"><i class="fa fa-facebook"></i></a></li>
-															<li class="tg-twitter"><a href="javascript:void(0);"><i class="fa fa-twitter"></i></a></li>
-															<li class="tg-linkedin"><a href="javascript:void(0);"><i class="fa fa-linkedin"></i></a></li>
-															<li class="tg-googleplus"><a href="javascript:void(0);"><i class="fa fa-google-plus"></i></a></li>
-															<li class="tg-rss"><a href="javascript:void(0);"><i class="fa fa-rss"></i></a></li>
-														</ul>
-													</div>
+													<span class="tg-bookwriter">By: <a style="text-decoration: none;" href="javascript:void(0);">${book.author }</a></span>
+													<span>
+														<c:forEach begin="1" end="${ratingAVR}">
+										                    ⭐
+										                </c:forEach>
+										                <c:forEach begin="${ratingAVR + 1}" end="5">
+										                    ☆
+										                </c:forEach>
+													</span>
+													
 													<div class="tg-description">
 														 
 													</div>
@@ -197,43 +193,26 @@
 														<h2>Product Description</h2>
 													</div>
 													<ul class="tg-themetabs" role="tablist">
-														<li role="presentation" class="active"><a href="#description" data-toggle="tab">Description</a></li>
-														<li role="presentation"><a href="#review" data-toggle="tab">Reviews</a></li>
+														<li role="presentation" class="active"><a style="text-decoration: none;" href="#description" data-toggle="tab">Description</a></li>
+														<li role="presentation"><a style="text-decoration: none;" href="#review" data-toggle="tab">Reviews</a></li>
 													</ul>
 													<div class="tg-tab-content tab-content">
 														<div role="tabpanel" class="tg-tab-pane tab-pane active" id="description">
 															<div class="tg-description">
-																<c:choose>
-															        <c:when test="${fn:length(book.description) > 100}">
-															            <p>${book.description.substring(0, 100)}...</p>
-															            <a href="javascript:void(0);" onclick="showMore()">More</a>
-															        </c:when>
-															        <c:otherwise>
-															            <p>${book.description}</p>
-													        		</c:otherwise>
-													    		</c:choose>
+																<c:set var="description" value="${book.description}" />
+																	<c:choose>
+																	    <c:when test="${description != null && fn:length(description) > 100}">
+																	        <p id="book-description" style="font-size: 1.4rem;">${description.substring(0, 100)}...</p>
+																	        <a id="more_less" href="javascript:void(0);" onclick="showMore()" style="font-size: 1.4rem;">More</a>
+																	    </c:when>
+																	    <c:otherwise>
+																	        <p style="font-size: 1.4rem;">${description != null ? description : 'Không có mô tả'}</p>
+																	    </c:otherwise>
+																	</c:choose>
 															</div>
 														</div>
 														<div role="tabpanel" class="tg-tab-pane tab-pane" id="review">
-															<div class="tg-description">
-																<p>Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veni quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenden
-voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-																<figure class="tg-alignleft">
-																	<img src="${pageContext.servletContext.contextPath}/resources/images/client/placeholdervtwo.jpg" alt="image description">
-																	<iframe src="https://www.youtube.com/embed/aLwpuDpZm1k?rel=0&amp;controls=0&amp;showinfo=0"></iframe>
-																</figure>
-																<ul class="tg-liststyle">
-																	<li><span>Sed do eiusmod tempor incididunt ut labore et dolore</span></li>
-																	<li><span>Magna aliqua enim ad minim veniam</span></li>
-																	<li><span>Quis nostrud exercitation ullamco laboris nisi ut</span></li>
-																	<li><span>Aliquip ex ea commodo consequat aute dolor reprehenderit</span></li>
-																	<li><span>Voluptate velit esse cillum dolore eu fugiat nulla pariatur</span></li>
-																	<li><span>Magna aliqua enim ad minim veniam</span></li>
-																	<li><span>Quis nostrud exercitation ullamco laboris nisi ut</span></li>
-																</ul>
-																<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam remmata aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enimsam
-voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos quistatoa.</p>
-															</div>
+															<jsp:include page="/productdetail/${book.id}/reviews.htm" />
 														</div>
 													</div>
 												</div>
@@ -243,7 +222,7 @@ voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntu
 												<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 													<div class="tg-sectionhead">
 														<h2><span>Related Products</span>You May Also Like</h2>
-														<a class="tg-btn" href="javascript:void(0);">View All</a>
+														<a style="text-decoration: none;" class="tg-btn" href="javascript:void(0);">View All</a>
 													</div>
 												</div>
 												<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -260,14 +239,11 @@ voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntu
 														                        <img src="${book.thumbnail}" alt="${book.title}">
 														                    </div>
 														                </div>
-														                <a class="tg-btnaddtowishlist" href="/productdetail/${book.id}.htm">
-														                    <i class="icon-heart"></i>
-														                    <span>add to wishlist</span>
-														                </a>
+														     
 														            </figure>
 														            <div class="tg-postbookcontent">
 														                <ul class="tg-bookscategories">
-														                        <li><a href="javascript:void(0);">${book.subcategoriesEntity.name}</a></li>
+														                        <li><a style="text-decoration: none;" href="javascript:void(0);">${book.subcategoriesEntity.name}</a></li>
 														                </ul>
 														                <c:if test="${discounts[status.index] > 0}">
 																		    <div class="tg-themetagbox">
@@ -275,21 +251,21 @@ voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntu
 																		    </div>
 																		</c:if>
 														                <div class="tg-booktitle">
-														                    <h3><a href="/client/productdetail/${book.id}">${book.title}</a></h3>
+														                    <h3><a style="text-decoration: none;" href="/productdetail/${book.id}.htm">${book.title}</a></h3>
 														                </div>
-														                <span class="tg-bookwriter">By: <a href="javascript:void(0);">${book.author}</a></span>
+														                <span class="tg-bookwriter">By: <a style="text-decoration: none;" href="javascript:void(0);">${book.author}</a></span>
 														                <c:choose>
 																		    <c:when test="${discounts[status.index] > 0}">
 																		        <!-- Hiển thị giá sau khi giảm giá -->
 																		        <span class="tg-bookprice">
-																		            <ins>${book.price - book.price * discounts[status.index] / 100}</ins>
-																		            <del>${book.price}</del>
+																		            <ins><f:formatNumber value="${book.price - book.price * discounts[status.index] / 100}" type="currency"/></ins>
+																		            <del><f:formatNumber value="${book.price}" type="currency"/></del>
 																		        </span>
 																		    </c:when>
 																		    <c:otherwise>
 																		        <!-- Hiển thị giá gốc khi không có giảm giá -->
 																		        <span class="tg-bookprice">
-																		            <ins>${book.price}</ins>
+																		            <ins><f:formatNumber value="${book.price}" type="currency"/></ins>
 																		        </span>
 																		    </c:otherwise>
 																		</c:choose>
@@ -537,8 +513,23 @@ voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntu
 	<script src="resources/assets/js/client/gmap3.js"></script>
 	<script src="resources/assets/js/client/main.js"></script>
 	<script>
+	var isFullDescription = false;  // Biến để theo dõi trạng thái của mô tả
+
     function showMore() {
-        alert('${book.description}');
+        var fullDescription = '${book.description}';
+        var shortDescription = '${book.description.substring(0, 100)}...';
+        var descriptionElement = document.getElementById('book-description');
+        var linkElement = document.getElementById('more_less');
+
+        if (isFullDescription) {
+            descriptionElement.innerText = shortDescription;  // Thu gọn lại nội dung
+            linkElement.innerText = "More";  // Đổi lại chữ thành "More"
+        } else {
+            descriptionElement.innerText = fullDescription;  // Hiển thị đầy đủ nội dung
+            linkElement.innerText = "Less";  // Đổi lại chữ thành "Less"
+        }
+
+        isFullDescription = !isFullDescription;  // Đổi trạng thái
     }
 	</script>
 </body>

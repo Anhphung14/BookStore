@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -114,13 +114,11 @@
 						width="120px" alt="Page Icon">
 				</div>
 			</div>
-			<form id="productForm"
-				action="${pageContext.servletContext.contextPath}/product/edit.htm"
-				method="POST" enctype="multipart/form-data">
+			<form id="productForm" action="product/edit.htm" method="POST" enctype="multipart/form-data">
 				<input type="hidden" id="task" name="task" value="${task}">
 
 				<c:if test="${task != 'new'}">
-					<input type="hidden" id="id" name="id" value="${book.id}">
+					<input type="hidden" id="id" name="id" value="${book.id}" />
 				</c:if>
 
 				<div class="card mt-3">
@@ -131,30 +129,44 @@
 							<!-- Cột 1 -->
 							<div class="col-md-6">
 								<div class="form-floating mt-3">
-									<input class="form-control" id="title" name="title"
-										value="${book.title}" required> <label
-										class="form-label" for="title">Title <span
-										class="text-danger">*</span></label>
+									<input class="form-control" id="title" name="title" value="${book.title}" required/> 
+									<label class="form-label" for="title">Title 
+									<span class="text-danger">*</span></label>
 								</div>
+								<c:if test="${not empty errorTitle}">
+		                        	 <div class="text-danger">${errorTitle}</div>
+		                        </c:if>
+		                        
 
 								<div class="form-floating mt-3">
-									<input class="form-control" id="author" name="author"
-										value="${book.author}" required> <label
-										class="form-label" for="author">Author <span
-										class="text-danger">*</span></label>
+									<input class="form-control" id="author" name="author" value="${book.author}" required /> 
+										<label class="form-label" for="author">Author 
+										<span class="text-danger">*</span></label>
 								</div>
+								<c:if test="${not empty errorAuthor}">
+		                        	 <div class="text-danger">${errorAuthor}</div>
+		                        </c:if>
+
 
 								<div class="form-floating mt-3">
-    <textarea class="form-control" id="description" name="description" rows="5">${book.description}</textarea>
-    <label class="form-label" for="description">Description</label>
-</div>
+								    <textarea class="form-control" id="description" name="description" rows="5" >${book.description}</textarea>
+								    <label class="form-label" for="description">Description</label>
+								</div>
+								<c:if test="${not empty errorDescription}">
+		                        	 <div class="text-danger">${errorDescription}</div>
+		                        </c:if>
+		                        
 								
 								<div class="form-floating mt-3 position-relative">
 									<input class="form-control pr-4" id="publication_year" name="publication_year"
-										type="text" value="${book.publication_year}" max="2024" required> <label
+										type="text" value="${book.publication_year}" max="2024" oninput="validateYearInput(this)" required> <label
 										class="form-label" for="publication_year">Publication year <span class="text-danger">*</span>
 									</label>
 								</div>
+								<c:if test="${not empty errorpublication_year}">
+		                        	 <div class="text-danger">${errorpublication_year}</div>
+		                        </c:if>
+		                        
 								
 								<div class="form-floating mt-3 position-relative">
 									<input class="form-control pr-4 numeric-input" id="price" name="price" oninput="validateNumberInput(this)"
@@ -162,8 +174,10 @@
 										class="form-label" for="price">Price <span class="text-danger">*</span>
 									</label>
 								</div>
-
-
+								<c:if test="${not empty errorPrice}">
+		                        	 <div class="text-danger">${errorPrice}</div>
+		                        </c:if>
+		                        
 								
 								<div class="form-floating mt-3 position-relative">
 									<input class="form-control pr-4 numeric-input" id="page_count" name="page_count" oninput="validateNumberInput(this)"
@@ -171,18 +185,26 @@
 										class="form-label" for="price">Page count <span class="text-danger">*</span>
 									</label>
 								</div>
+								<c:if test="${not empty errorpage_count}">
+		                        	 <div class="text-danger">${errorpage_count}</div>
+		                        </c:if>
+		                        
 								
 								<div class="form-floating mt-3">
-								    <!-- Hiển thị ảnh thumbnail hiện tại nếu có -->
+<!-- 								    Hiển thị ảnh thumbnail hiện tại nếu có -->
 								    <c:if test="${book.thumbnail != null && !book.thumbnail.isEmpty()}">
 								        <img src="${book.thumbnail}" alt="Thumbnail" 
 								             class="img-thumbnail mb-3" style="max-width: 200px;">
 								    </c:if>
 								
-								    <!-- Input file để chọn ảnh mới -->
+<!-- 								    Input file để chọn ảnh mới -->
 								    <input class="form-control" id="thumbnail" name="thumbnail" type="file" accept="image/*">
 								    <label class="form-label" for="thumbnail">Thumbnail</label>
 								</div>
+								<c:if test="${not empty errorThumbnail}">
+		                        	 <div class="text-danger">${errorThumbnail}</div>
+		                        </c:if>
+		                        
 								
 							</div>
 
@@ -193,31 +215,36 @@
 <%-- 										value="${book.category.name}"> <label --%>
 <!-- 										class="form-label" for="category">Category <span class="text-danger">*</span></label> -->
 <!-- 								</div> -->
-<div class="form-floating mt-3">
-    <select class="form-control" id="category" name="category" onchange="loadSubcategories(this.value)">
-        <option value="" disabled selected>Chọn danh mục</option>
-        <!-- Lặp qua danh sách danh mục từ server -->
-        <c:forEach var="category" items="${listCategories}">
-            <option value="${category.id}" ${category.id == book.subcategoriesEntity.categoriesEntity.id ? 'selected' : ''}>
-                ${category.name}
-            </option>
-        </c:forEach>
-    </select>
-    <label class="form-label" for="category">Category <span class="text-danger">*</span></label>
-</div>
 
-<div class="form-floating mt-3">
-    <select class="form-control" id="subcategory" name="subcategory" onchange="loadCategory(this.value)">
-        <option value="" disabled selected>Select an option</option>
-        <!-- Lặp qua danh sách danh mục từ server -->
-        <c:forEach var="subcategory" items="${listSubcategories}">
-            <option value="${subcategory.id}" ${subcategory.id == book.subcategoriesEntity.id ? 'selected' : ''}>
-                ${subcategory.name}
-            </option>
-        </c:forEach>
-    </select>
-    <label class="form-label" for="category">Subcategory <span class="text-danger">*</span></label>
-</div>
+								<div class="form-floating mt-3">
+								    <select class="form-control" id="category" name="category" onchange="loadSubcategories(this.value)">
+								        <option value="" disabled selected>Chọn danh mục</option>
+	<!-- 							        Lặp qua danh sách danh mục từ server -->
+								        <c:forEach var="category" items="${listCategories}">
+								            <option value="${category.id}" ${category.id == book.subcategoriesEntity.categoriesEntity.id ? 'selected' : ''}>
+								                ${category.name}
+								            </option>
+								        </c:forEach>
+								    </select>
+								    <label class="form-label" for="category">Category <span class="text-danger">*</span></label>
+								</div>
+
+								<div class="form-floating mt-3">
+								    <select class="form-control" id="subcategory_id" name="subcategory_id" onchange="loadCategory(this.value)">
+								        <option value="" disabled selected>Select an option</option>
+	<!-- 							        Lặp qua danh sách danh mục từ server -->
+								        <c:forEach var="subcategory" items="${listSubcategories}">
+								            <option value="${subcategory.id}" ${subcategory.id == book.subcategoriesEntity.id ? 'selected' : ''}>
+								                ${subcategory.name}
+								            </option>
+								        </c:forEach>
+								    </select>
+								    <label class="form-label" for="category">Subcategory <span class="text-danger">*</span></label>
+								</div>
+								<c:if test="${not empty errorSubcategory}">
+		                        	 <div class="text-danger">${errorSubcategory}</div>
+		                        </c:if>
+		                        
 
 <!-- 								<div class="form-floating mt-3"> -->
 <!-- 									<input class="form-control" id="supplier" name="supplier" -->
@@ -225,74 +252,94 @@
 <!-- 										class="form-label" for="supplier">Supplier <span class="text-danger">*</span></label> -->
 <!-- 								</div> -->
 
-<div class="form-floating mt-3">
-    <select class="form-control" id="supplier" name="supplier">
-        <option value="" disabled selected>Chọn danh mục</option>
-        <!-- Lặp qua danh sách danh mục từ server -->
-        <c:forEach var="supplier" items="${listSuppliers}">
-            <option value="${supplier.id}" ${supplier.id == book.supplier.id ? 'selected' : ''}>
-                ${supplier.name}
-            </option>
-        </c:forEach>
-    </select>
-    <label class="form-label" for="category">Supplier <span class="text-danger">*</span></label>
-</div>
+									<div class="form-floating mt-3">
+									    <select class="form-control" id="supplier_id" name="supplier_id">
+									        <option value="" disabled selected>Chọn danh mục</option>
+	<!-- 								        Lặp qua danh sách danh mục từ server -->
+									        <c:forEach var="supplier" items="${listSuppliers}">
+									            <option value="${supplier.id}" ${supplier.id == book.supplier.id ? 'selected' : ''}>
+									                ${supplier.name}
+									            </option>
+									        </c:forEach>
+									    </select>
+									    <label class="form-label" for="category">Supplier <span class="text-danger">*</span></label>
+									</div>
+									<c:if test="${not empty errorSupplier}">
+			                        	 <div class="text-danger">${errorSupplier}</div>
+			                        </c:if>
+		                        
 
-								<div class="form-floating mt-3">
-									<input class="form-control numeric-input" id="quantity" oninput="validateNumberInput(this)"
-										name="quantity" value="${book.quantity}"> <label
-										class="form-label" for="quantity">Total quantity <span class="text-danger">*</span></label>
-								</div>
+									<div class="form-floating mt-3">
+										<input class="form-control numeric-input" id="quantity" oninput="validateNumberInput(this)"
+											name="quantity" value="${book.quantity}"> <label
+											class="form-label" for="quantity">Total quantity <span class="text-danger">*</span></label>
+									</div>
+									<c:if test="${not empty errortotal_quantity}">
+			                        	 <div class="text-danger">${errortotal_quantity}</div>
+			                        </c:if>
+		                        
 								
-								<div class="form-floating mt-3">
-									<input class="form-control" id="language" name="language"
-										value="${book.language}" required> <label
-										class="form-label" for="title">Language <span
-										class="text-danger">*</span></label>
-								</div>
+									<div class="form-floating mt-3">
+										<input class="form-control" id="language" name="language"
+											value="${book.language}" required> <label
+											class="form-label" for="title">Language <span
+											class="text-danger">*</span></label>
+									</div>
+									<c:if test="${not empty errorLanguage}">
+			                        	 <div class="text-danger">${errorLanguage}</div>
+			                        </c:if>
+		                        
 
-								<div class="form-floating mt-3">
-									<select class="form-control" id="status" name="status">
-										<option value="" disabled selected>Select an option</option>
-											<option value="0" ${book.status == 0 ? 'selected' : ''}>
-												Disable
-											</option>
-											<option value="1" ${book.status == 1 ? 'selected' : ''}>
-												Enable
-											</option>
-									</select>
-									<label class="form-label" for="category">Category <span class="text-danger">*</span></label>
-								</div>
+									<div class="form-floating mt-3">
+										<select class="form-control" id="status" name="status">
+											<option value="" disabled selected>Select an option</option>
+												<option value="0" ${book.status == 0 ? 'selected' : ''}>
+													Disable
+												</option>
+												<option value="1" ${book.status == 1 ? 'selected' : ''}>
+													Enable
+												</option>
+										</select>
+										<label class="form-label" for="status">Status<span class="text-danger">*</span></label>
+									</div>
+									<c:if test="${not empty errorStatus}">
+			                        	 <div class="text-danger">${errorStatus}</div>
+			                        </c:if>
+		                        
 
-								<div class="form-floating mt-3">
-									<input class="form-control" id="createdAt" name="createdAt" 
-										value="<fmt:formatDate value='${book.createdAt}' pattern='dd-MM-yyyy HH:mm' />"
-										disabled="disabled"> <label class="form-label"
-										for="createdAt">Created at</label>
-								</div>
+									<div class="form-floating mt-3">
+										<input class="form-control" id="createdAt" name="createdAt" 
+											value="<fmt:formatDate value='${book.createdAt}' pattern='dd-MM-yyyy HH:mm' />"
+											readonly="readonly"> <label class="form-label"
+											for="createdAt">Created at</label>
+									</div>
+									
+									<div class="form-floating mt-3">
+										<input class="form-control" id="updatedAt" name="updatedAt" 
+											value="<fmt:formatDate value='${book.updatedAt}' pattern='dd-MM-yyyy HH:mm' />"
+											readonly="readonly"> <label class="form-label"
+											for="updatedAt">Updated at</label>
+									</div>
 								
-								<div class="form-floating mt-3">
-									<input class="form-control" id="updatedAt" name="updatedAt" 
-										value="<fmt:formatDate value='${book.updatedAt}' pattern='dd-MM-yyyy HH:mm' />"
-										disabled="disabled"> <label class="form-label"
-										for="updatedAt">Updated at</label>
-								</div>
-								
-								<div class="form-floating mt-3">
-								    <!-- Hiển thị các ảnh hiện tại nếu có -->
-								    <c:if test="${not empty book.images}">
-								        <div class="mb-3">
-								            <c:forEach var="image" items="${fn:split(book.images, ';')}">
-								                <img src="${image}" alt="Image" 
-								                     class="img-thumbnail mb-2" style="max-width: 100px;">
-								            </c:forEach>
-								        </div>
-								    </c:if>
-								
-								    <!-- Input để chọn nhiều ảnh mới -->
-								    <input class="form-control" id="images" name="images" type="file" accept="image/*" multiple>
-								    <label class="form-label" for="images">Images</label>
-								</div>
+									<div class="form-floating mt-3">
+	<!-- 								    Hiển thị các ảnh hiện tại nếu có -->
+									    <c:if test="${not empty book.images}">
+									        <div class="mb-3">
+									            <c:forEach var="image" items="${fn:split(book.images, ';')}">
+									                <img src="${image}" alt="Image" 
+									                     class="img-thumbnail mb-2" style="max-width: 100px;">
+									            </c:forEach>
+									        </div>
+									    </c:if>
+									
+	<!-- 								    Input để chọn nhiều ảnh mới -->
+									    <input class="form-control" id="images" name="images" type="file" accept="image/*" multiple>
+									    <label class="form-label" for="images">Images</label>
+									</div>
+									<c:if test="${not empty errorImages}">
+			                        	 <div class="text-danger">${errorImages}</div>
+			                        </c:if>
+		                        
 								
 							</div>
 						</div>
@@ -410,7 +457,7 @@
 
 	function loadSubcategories(categoryId) {
 		    if (!categoryId) {
-		        document.getElementById('subcategory').innerHTML = '<option value="" disabled selected>Select a subcategory</option>';
+		        document.getElementById('subcategory_id').innerHTML = '<option value="" disabled selected>Select a subcategory</option>';
 		        return;
 		    }
 
@@ -418,7 +465,7 @@
 		    fetch('/bookstore/product/getSubcategories.htm?categoryId=' + categoryId)
 		    .then(response => response.text())
 		    .then(data => {
-		        const subcategorySelect = document.getElementById('subcategory');
+		        const subcategorySelect = document.getElementById('subcategory_id');
 		        subcategorySelect.innerHTML = data; // Thêm trực tiếp HTML trả về vào dropdown
 		    })
 		    .catch(error => console.error('Error:', error));

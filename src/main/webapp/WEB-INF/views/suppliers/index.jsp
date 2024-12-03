@@ -70,10 +70,10 @@
 					<div class="card-body">
 						<div class="d-flex gap-3">
 							<div class="input-group">
-								<input class="form-control search-input" name="search_text"
-									id="search_text" value="${param.search_text}"
-									placeholder="Search ...">
-								<button type="button" class="btn btn-secondary btn-search">
+								<input class="form-control search-input me-2" name="search"
+									id="search_text" value="${search}"
+									placeholder="Search...">
+								<button type="submit" class="btn btn-secondary btn-search">
 									<i class="fa fa-search"></i>
 								</button>
 							</div>
@@ -142,6 +142,36 @@
 									</c:forEach>
 								</table>
 							</div>
+							<c:if test="${totalPages > 1}">
+								<nav aria-label="Page navigation example" class="mt-2">
+									<ul class="pagination justify-content-center">
+										<!-- Liên kết đến trang trước -->
+										<li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+											<a class="page-link"
+											href="${pageContext.request.contextPath}/suppliers.htm?page=${currentPage > 1 ? currentPage - 1 : 1}&size=${size}"
+											aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+										</a>
+										</li>
+
+										<!-- Liên kết đến từng trang -->
+										<c:forEach var="i" begin="1" end="${totalPages}">
+											<li class="page-item ${i == currentPage ? 'active' : ''}">
+												<a class="page-link"
+												href="${pageContext.request.contextPath}/suppliers.htm?page=${i}&size=${size}">${i}</a>
+											</li>
+										</c:forEach>
+
+										<!-- Liên kết đến trang tiếp theo -->
+										<li
+											class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+											<a class="page-link"
+											href="${pageContext.request.contextPath}/suppliers.htm?page=${currentPage < totalPages ? currentPage + 1 : totalPages}&size=${size}"
+											aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+										</a>
+										</li>
+									</ul>
+								</nav>
+							</c:if>
 						</div>
 					</div>
 				</div>

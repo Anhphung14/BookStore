@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -326,14 +327,28 @@ public class BooksDAO {
 		
 		// Cach 2
 		public boolean deleteBookById2(Long bookId) {
-		    Session session = sessionFactory.getCurrentSession();
-
-		    String hql = "DELETE FROM BooksEntity WHERE id = :bookId";
-		    int result = session.createQuery(hql)
-		                        .setParameter("bookId", bookId)
-		                        .executeUpdate();
-
-		    return result > 0;
+		    Session session = sessionFactory.openSession();
+		    Transaction t = session.beginTransaction();
+		    
+		    try {
+		    	String hql = "DELETE FROM BooksEntity WHERE id = :bookId";
+		    	int result = session.createQuery(hql)
+		    			.setParameter("bookId", bookId)
+		    			.executeUpdate();
+		    	
+		    	t.commit();
+		    	
+		    	if (result > 0) {
+		    		return true;
+		    	}
+		    	
+		    } catch (Exception e) {
+				t.rollback();
+			} finally {
+				session.close();
+			}
+		    
+		    return false;
 		}
 
 		public BooksEntity getBookByIdHQL(Long id) {
@@ -351,6 +366,72 @@ public class BooksDAO {
 		    List<BooksEntity> books = session.createQuery(hql).setParameter("subcategoryId", subcategoryId).setMaxResults(7).list();
 
 		    return books;
+		}
+		
+		public boolean updateBook(BooksEntity book) {
+			Session session = sessionFactory.openSession();
+			Transaction t = session.beginTransaction();
+			
+			try {
+				session.update(book);
+				t.commit();
+				
+				return true;
+			} catch (Exception e) {
+				t.rollback();
+				
+			} finally {
+				session.close();
+			}
+			
+			return false;
+		}
+		
+		public boolean saveBook(BooksEntity book) {
+			Session session = sessionFactory.openSession();
+			Transaction t = session.beginTransaction();
+			
+			try {
+				session.save(book);
+				t.commit();
+				
+				return true;
+			} catch (Exception e) {
+				t.rollback();
+				
+			} finally {
+				session.close();
+			}
+			
+			return false;
+		}
+		
+		public boolean changeStatus(Long bookId, int newStatus) {
+			Session session = sessionFactory.openSession();
+			Transaction t = session.beginTransaction();
+			boolean isUpdated = false;
+			
+			try {
+				String hql = "UPDATE BooksEntity SET status = :newStatus WHERE id = :bookId";
+				
+				int result = session.createQuery(hql)
+							.setParameter("newStatus", newStatus)
+							.setParameter("bookId", bookId)
+							.executeUpdate();
+				
+				if (result > 0) {
+					isUpdated = true;
+				}
+				
+				t.commit();
+			} catch (Exception e) {
+				t.rollback();
+				e.printStackTrace();
+			} finally {
+				session.close();
+			}
+			
+			return isUpdated;
 		}
 
 }
