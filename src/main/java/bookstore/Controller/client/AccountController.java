@@ -3,6 +3,7 @@ package bookstore.Controller.client;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,8 +24,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import bookstore.DAO.BooksDAO;
+import bookstore.DAO.OrderDAO;
+import bookstore.DAO.RatingsDAO;
 //import bookstore.DAO.OrderDAO;
 import bookstore.DAO.UserDAO;
+import bookstore.Entity.BooksEntity;
+import bookstore.Entity.Order_DiscountsEntity;
+import bookstore.Entity.OrdersDetailEntity;
+import bookstore.Entity.OrdersEntity;
+import bookstore.Entity.RatingsEntity;
 //import bookstore.Entity.OrderDetailEntity;
 //import bookstore.Entity.OrderEntity;
 //import bookstore.Entity.Order_DiscountsEntity;
@@ -36,43 +45,54 @@ import bookstore.Service.UploadService;
 @RequestMapping("/account/")
 public class AccountController {
 	@Autowired
+	private BooksDAO bookDAO;
+	
+	@Autowired
 	private UserDAO userDAO;
 	
-//	@Autowired
-//    private OrderDAO orderDAO;
+	@Autowired
+    private OrderDAO orderDAO;
 	
 	@Autowired
 	private UploadService uploadService;
-	/*
+	
+	@Autowired
+	private RatingsDAO ratingsDAO;
+	
 	@RequestMapping(value = "account_orders", method = RequestMethod.GET)
 	public String account_order(ModelMap model, HttpServletRequest request) {
 		HttpSession session = request.getSession();
 	    UsersEntity currentUser = (UsersEntity) session.getAttribute("user");
+	    if (currentUser == null) {
+	    	return "redirect:/signin.htm";
+	    }
 	    UsersEntity user = userDAO.getUserById(currentUser.getId());
 	    model.addAttribute("user", user);
 	    
-	    List<OrderEntity> orders = orderDAO.getOrdersByUserId(user.getId());
+	    List<OrdersEntity> orders = orderDAO.getOrdersByUserId(user.getId());
         model.addAttribute("orders", orders);
-	  
+        List<Long> order_reviewed = ratingsDAO.getRatedOrderIdsByUserId(user.getId());
+        for (Long i: order_reviewed) {
+        	System.out.println(i);
+        }
+        model.addAttribute("order_reviewed", order_reviewed);
 		return "client/Account/account_orders";
 	}
 	
-	
-	  @RequestMapping(value = "order_details/{orderId}", method = RequestMethod.GET) 
-	  public String order_details(Model model, @PathVariable("orderId") Long id) {
-		  OrderEntity order = orderDAO.getOrderByOrderId(id);
-		  model.addAttribute("order", order);
-		  List<OrderDetailEntity> listOrderDetails = orderDAO.getOrderDetailsByOrderId(id);
+	@RequestMapping(value = "order_details/{orderId}", method = RequestMethod.GET) 
+	public String order_details(ModelMap model, @PathVariable("orderId") Long id) {
+		OrdersEntity order = orderDAO.getOrderByOrderId(id);
+		model.addAttribute("order", order);
+		List<OrdersDetailEntity> listOrderDetails = orderDAO.getOrderDetailsByOrderId(id);
 	     // Lấy thông tin giảm giá cho đơn hàng (OrderDiscount)
-		  List<Order_DiscountsEntity> listOrderDiscounts = orderDAO.getOrderDiscountsByOrderId(id);
+		List<Order_DiscountsEntity> listOrderDiscounts = orderDAO.getOrderDiscountsByOrderId(id);
 		  // Thêm dữ liệu vào model để gửi tới view
-		  model.addAttribute("orderDetails", listOrderDetails);
-		  if (listOrderDiscounts != null && !listOrderDiscounts.isEmpty()) {
-			  model.addAttribute("orderDiscounts", listOrderDiscounts);
-	      }
-		  return "client/Account/order_detail";
-	  }
-	 
+		model.addAttribute("orderDetails", listOrderDetails);
+		if (listOrderDiscounts != null && !listOrderDiscounts.isEmpty()) {
+			model.addAttribute("orderDiscounts", listOrderDiscounts);
+		}
+		return "client/Account/order_detail";
+	}
 	
 	@RequestMapping(value = "cancel_order", method = RequestMethod.POST)
 	public String cancel_order(@RequestParam("orderId") Long orderId, RedirectAttributes redirectAttributes) {
@@ -82,14 +102,17 @@ public class AccountController {
 	    } catch (Exception e) {
 	        redirectAttributes.addFlashAttribute("errorMessage", "Failed to cancel the order. Please try again.");
 	    }
-		return "redirect:/client/account/account_orders.htm";
+		return "redirect:/account/account_orders.htm";
 	}
-	*/
+	
 	@RequestMapping(value = "profile_settings", method = RequestMethod.GET)
 	public String account_profile_get(ModelMap model, HttpServletRequest request)
 	{
 		HttpSession session = request.getSession();
 	    UsersEntity currentUser = (UsersEntity) session.getAttribute("user");
+	    if (currentUser == null) {
+	    	return "redirect:/signin.htm";
+	    }
 	    UsersEntity user = userDAO.getUserById(currentUser.getId());
 	    user.setEmail(user.getEmail().toLowerCase());
 	    model.addAttribute("user", user);
@@ -98,7 +121,7 @@ public class AccountController {
 	
 	
 	@RequestMapping(value = "update_profile", method = RequestMethod.POST)
-	public String update_profile(ModelMap model, HttpServletRequest request, 
+	public String update_profile(ModelMap model, HttpServletRequest request, RedirectAttributes redirectAttributes,
 			@RequestParam("fullname") String fullname,
             @RequestParam("phone") String phone,
             @RequestParam(value = "avatar", required = false) MultipartFile avatar) throws IOException
@@ -113,7 +136,7 @@ public class AccountController {
 		
 	    int isError = 0;
 	    if(userUpdate.getFullname().trim().length() == 0){
-			model.addAttribute("errorfn", "Vui lòng nhập họ tên!");
+	    	redirectAttributes.addFlashAttribute("errorfn", "Vui lòng nhập họ tên!");
 			isError++;
 		}
 	    
@@ -124,19 +147,19 @@ public class AccountController {
         
 
 		if(userUpdate.getPhone().trim().length() == 0){
-			model.addAttribute("errorPhone", "Vui lòng nhập số điện thoại!");
+			redirectAttributes.addFlashAttribute("errorPhone", "Vui lòng nhập số điện thoại!");
 			isError++;
 		}
 		else {
 			if (!matcher.matches()) {
-	        	model.addAttribute("errorPhone", "Số điện thoại không hợp lệ!");
+				redirectAttributes.addFlashAttribute("errorPhone", "Số điện thoại không hợp lệ!");
 	        	isError++;
 			}
 		}
 		
 		if(isError > 0){
-			model.addAttribute("errorUpdate", "Vui lòng sửa các lỗi sau đây !");
-			return "client/Account/profile_settings";
+			redirectAttributes.addFlashAttribute("errorUpdate", "Vui lòng sửa các lỗi sau đây !");
+			return "redirect:/account/profile_settings.htm";
 		}
 		
 	    user.setFullname(userUpdate.getFullname());
@@ -147,20 +170,20 @@ public class AccountController {
 	    	userUpdate.setAvatar(avatarPath);
 	    	user.setAvatar(avatarPath);
 		    if (userDAO.updateUserById(user.getId(), userUpdate) > 0) {
-		    	model.addAttribute("successUpdate", "Cập nhật thông tin thành công!");
+		    	redirectAttributes.addFlashAttribute("successUpdate", "Cập nhật thông tin thành công!");
 		    	session.setAttribute("user", user);
 		    }else {
-		    	model.addAttribute("errorUpdate", "Cập nhật thông tin không thành công!");
+		    	redirectAttributes.addFlashAttribute("errorUpdate", "Cập nhật thông tin không thành công!");
 		    }
 	    }else {
 	    	if (userDAO.updateUserById(user.getId(), userUpdate) > 0) {
-		    	model.addAttribute("successUpdate", "Cập nhật thông tin thành công!");
+	    		redirectAttributes.addFlashAttribute("successUpdate", "Cập nhật thông tin thành công!");
 		    	session.setAttribute("user", user);
 		    }else {
-		    	model.addAttribute("errorUpdate", "Cập nhật thông tin không thành công!");
+		    	redirectAttributes.addFlashAttribute("errorUpdate", "Cập nhật thông tin không thành công!");
 		    }
 	    }
-	    return "client/Account/profile_settings";
+	    return "redirect:/account/profile_settings.htm";
 	}
 	
 	@RequestMapping(value = "change_password", method = RequestMethod.POST)
@@ -189,7 +212,90 @@ public class AccountController {
 		return "redirect:/account/profile_settings.htm";
 	}
 	
+	@RequestMapping(value = "my_ratings", method = RequestMethod.GET)
+	public String my_ratings(ModelMap model, HttpServletRequest request) {
+		HttpSession session = request.getSession();
+	    UsersEntity currentUser = (UsersEntity) session.getAttribute("user");
+	    if (currentUser == null) {
+	    	return "redirect:/signin.htm";
+	    }
+	    UsersEntity user = userDAO.getUserById(currentUser.getId());
+	    model.addAttribute("user", user);
+	    List<RatingsEntity> reviews = ratingsDAO.getRatingsByUserId(user.getId());
+
+        model.addAttribute("reviews", reviews);
+		return "client/Account/my_ratings";
+	}
 	
+	@RequestMapping(value = "ratings/{orderId}", method = RequestMethod.GET) 
+	public String rating_order(ModelMap model, @PathVariable("orderId") Long id) {
+		model.addAttribute("orderId", id);
+		OrdersEntity order = orderDAO.getOrderByOrderId(id);
+		model.addAttribute("order", order);
+		List<OrdersDetailEntity> listOrderDetails = orderDAO.getOrderDetailsByOrderId(id);
+	     // Lấy thông tin giảm giá cho đơn hàng (OrderDiscount)
+		List<Order_DiscountsEntity> listOrderDiscounts = orderDAO.getOrderDiscountsByOrderId(id);
+		  // Thêm dữ liệu vào model để gửi tới view
+		model.addAttribute("orderDetails", listOrderDetails);
+		
+		return "client/Account/ratings";
+	}
+	
+	@RequestMapping(value = "submitRatings", method = RequestMethod.POST)
+	//public String submit_ratings(Model model, )
+	public String submitRatings(@RequestParam Map<String, String> allRequestParams, Model model, HttpServletRequest request) {
+		HttpSession session = request.getSession();
+	    UsersEntity currentUser = (UsersEntity) session.getAttribute("user");
+		Long userId = currentUser.getId(); // Lấy userId từ session hoặc security context
+		UsersEntity user = userDAO.getUserById(currentUser.getId());
+		int check = 0;
+
+		for (String key : allRequestParams.keySet()) {
+	        String orderId = "";
+	        String ratingValue = "";
+	        String reviewValue = null;
+	        String bookId = "";
+	        // Kiểm tra nếu key bắt đầu bằng "rating" thì đây là thông tin đánh giá
+	        if (key.startsWith("rating")) {
+	            // Lấy orderId và bookId từ tên trường (orderId_bookId)
+	            String[] parts = key.substring(6).split("_");
+	            orderId = parts[0];  // Lấy Order ID từ tên trường
+	            bookId = parts[1];   // Lấy Book ID từ tên trường
+	            
+	            // Lấy giá trị đánh giá
+	            if (allRequestParams.get(key) != null && allRequestParams.get(key).length() > 0) {
+	                ratingValue = allRequestParams.get(key);  // Lấy giá trị đầu tiên từ mảng
+	            }
+
+	            // Kiểm tra nếu có giá trị review
+	            String reviewKey = "review" + orderId + "_" + bookId;
+	            if (allRequestParams.get(reviewKey) != null && allRequestParams.get(reviewKey).length() > 0) {
+	                reviewValue = allRequestParams.get(reviewKey);  // Lấy giá trị review
+	            }
+
+	            // Kiểm tra giá trị null và xử lý
+	            if (ratingValue != null) {
+	            	OrdersEntity order = orderDAO.getOrderById(Long.parseLong(orderId));
+	                BooksEntity book = bookDAO.getBookById(Long.parseLong(bookId));
+	            	int rs = ratingsDAO.addRating(user, book , order, Integer.parseInt(ratingValue), reviewValue);
+	                // Lưu dữ liệu vào cơ sở dữ liệu hoặc xử lý tiếp
+	                System.out.println("Order ID: " + orderId);
+	                System.out.println("Book ID: " + bookId);
+	                System.out.println("Rating: " + ratingValue);
+	                System.out.println("Review: " + reviewValue);
+	            } else {
+	                // Xử lý nếu không có giá trị rating
+	            	check++;
+	                System.out.println("Thiếu thông tin đánh giá cho sản phẩm ID: " + bookId);
+	            }
+	        }
+	    }
+		if (check != 0) {
+			model.addAttribute("errorRating", "Thiếu thông tin đánh giá cho một vài sách!");
+			return "client/Account/ratings";
+		}
+		return "redirect:/account/my_ratings.htm"; 
+	}
 	private String[] splitFullName(String fullname) {
         if (fullname == null || fullname.isEmpty()) {
             return new String[]{"", ""};
