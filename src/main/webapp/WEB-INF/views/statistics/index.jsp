@@ -143,28 +143,28 @@ canvas {
 											<tr>
 												<td>${order.id}</td>
 												<td>${order.user.fullname}</td>
-												<td><fmt:formatDate value="${order.createdAt}" pattern="dd/MM/yyyy HH:mm" /></td>
+												<td><fmt:formatDate value="${order.createdAt}"
+														pattern="dd/MM/yyyy HH:mm" /></td>
 												<td><fmt:formatNumber value="${order.totalPrice}"
 														type="currency" currencySymbol="đ" /></td>
 
 												<td><c:choose>
-														<c:when test="${order.status == 1}">
+														<c:when test="${order.orderStatus == 'Chờ xác nhận'}">
 															<i class="fas fa-clock text-warning"></i> Chờ xác nhận
         												</c:when>
-														<c:when test="${order.status == 2}">
+														<c:when test="${order.orderStatus == 'Xác nhận đơn hàng'}">
 															<i class="fas fa-check-circle text-primary"></i> Đã xác nhận
         												</c:when>
-														<c:when test="${order.status == 3}">
+														<c:when test="${order.orderStatus == 'Đang giao hàng'}">
 															<i class="fas fa-truck text-info"></i> Vận chuyển
        													</c:when>
-														<c:when test="${order.status == 4}">
-															<i class="fas fa-check-circle text-success"></i> Thành công
+														<c:when test="${order.orderStatus == 'Hoàn thành'}">
+															<i class="fas fa-check-circle text-success"></i> Hoàn thành
         												</c:when>
-														<c:otherwise>
-															<i class="fas fa-times-circle text-danger"></i> Không xác định
-        											</c:otherwise>
+														<c:when test="${order.orderStatus == 'Huỷ đơn hàng'}">
+															<i class="fas fa-times-circle text-danger"></i> Huỷ đơn hàng
+														</c:when>
 													</c:choose></td>
-
 											</tr>
 										</c:forEach>
 									</tbody>

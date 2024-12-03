@@ -82,7 +82,7 @@ public class HomeController {
     
     private long getOrderCount() {
         Session session = factory.getCurrentSession();
-        String hql = "SELECT count(*) FROM OrdersEntity WHERE status = 3";
+        String hql = "SELECT count(*) FROM OrdersEntity WHERE orderStatus = 'Hoàn thành'";
         Long count = (Long) session.createQuery(hql).uniqueResult();
         return count != null ? count : 0;
     }
@@ -94,7 +94,7 @@ public class HomeController {
     
     public long getTotalAmountForStatus3() {
         Session session = factory.getCurrentSession();
-        String hql = "SELECT SUM(o.totalPrice) FROM OrdersEntity o WHERE o.status = 3";
+        String hql = "SELECT SUM(o.totalPrice) FROM OrdersEntity o WHERE LOWER(o.orderStatus) = LOWER('Hoàn thành')";
         Double totalAmount = (Double) session.createQuery(hql).uniqueResult();  
         return totalAmount != null ? totalAmount.longValue() : 0;  
     }
@@ -124,7 +124,10 @@ public class HomeController {
             int year = date.getYear();
 
             String hql = "SELECT SUM(o.totalPrice) FROM OrdersEntity o " +
-                         "WHERE MONTH(o.createdAt) = :month AND YEAR(o.createdAt) = :year AND o.status = 3";
+                    "WHERE EXTRACT(MONTH FROM o.createdAt) = :month " +
+                    "AND EXTRACT(YEAR FROM o.createdAt) = :year " +
+                    "AND o.orderStatus = 'Hoàn thành'";
+
             Object result = session.createQuery(hql)
                     .setParameter("month", month)
                     .setParameter("year", year)
