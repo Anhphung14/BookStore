@@ -11,7 +11,7 @@ public class Order_DiscountsEntity {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "discount_id", referencedColumnName = "id")
     private DiscountsEntity discount_id;
 

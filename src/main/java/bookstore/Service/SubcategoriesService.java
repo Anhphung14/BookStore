@@ -19,8 +19,7 @@ import bookstore.Entity.SubcategoriesEntity;
 public class SubcategoriesService {
 	
 	@Autowired
-	static
-	SessionFactory factory;
+	private static SessionFactory factory;
 	
 	@Autowired
 	SubcategoriesDAO subcategoriesDAO;
@@ -39,7 +38,7 @@ public class SubcategoriesService {
 		return query.list();
 	}
 	
-	public static CategoriesEntity getCategoryBySubcategoryId(Long id) {
+	public CategoriesEntity getCategoryBySubcategoryId(Long id) {
 		Session session = factory.getCurrentSession();
 		String hql = "SELECT s.categoriesEntity FROM SubcategoriesEntity s WHERE s.id = :subcategoryId";
 	    Query query = session.createQuery(hql);

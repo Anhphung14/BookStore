@@ -123,7 +123,7 @@ public class PaymentController {
             newOrder.setUser(user); // Gán đối tượng UsersEntity vào OrdersEntity
             newOrder.setShippingAddress(address);
             newOrder.setTotalPrice(totalPrice);
-            newOrder.setStatus(1); // 1: Chờ xử lý
+            newOrder.setOrderStatus("Chờ xử lý"); // 1: Chờ xử lý
             newOrder.setCreatedAt(new Date());
             newOrder.setUpdatedAt(new Date());
 

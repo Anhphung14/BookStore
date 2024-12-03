@@ -68,7 +68,7 @@ public class DiscountsEntity {
     private Date updatedAt;
     
     
-    @OneToMany(mappedBy = "discount_id", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "discount_id", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Collection<Order_DiscountsEntity> orderDiscountsEntity;
 
     @OneToMany(mappedBy = "discount_id", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)

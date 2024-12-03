@@ -42,6 +42,7 @@ import com.ckfinder.connector.plugins.SaveFileCommand;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 
+import bookstore.DAO.SubcategoriesDAO;
 import bookstore.Entity.BooksEntity;
 import bookstore.Entity.CategoriesEntity;
 import bookstore.Entity.InventoryEntity;
@@ -86,6 +87,9 @@ public class ProductsController {
 	
 	@Autowired
 	Cloudinary cloudinary;
+	
+	@Autowired
+	SubcategoriesDAO subcategoriesDAO;
 	
 	
 	@RequestMapping("/products")
@@ -348,7 +352,8 @@ public class ProductsController {
 	@RequestMapping(value = "/product/getSubcategories", method = RequestMethod.GET, produces = "text/html; charset=UTF-8")
 	@ResponseBody
 	public String getSubcategories(@RequestParam("categoryId") Long categoryId) {
-	    List<SubcategoriesEntity> subcategories = subcategoriesService.getSubcategoriesByCategoryId(categoryId);
+	    //List<SubcategoriesEntity> subcategories = subcategoriesService.getSubcategoriesByCategoryId(categoryId);
+		List<SubcategoriesEntity> subcategories = subcategoriesDAO.getSubcategoryByCategoryId(categoryId);
 	    StringBuilder html = new StringBuilder();
 	    html.append("<option value=\"\" disabled selected>Select an option</option>");
 	    for (SubcategoriesEntity subcategory : subcategories) {

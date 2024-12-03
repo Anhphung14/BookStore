@@ -71,6 +71,8 @@ public class BooksEntity {
     @OneToMany(mappedBy = "book_id", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Collection<Book_DiscountsEntity> bookDiscounts;
     
+    @OneToOne(mappedBy = "book" ,fetch = FetchType.LAZY)  // mappedBy chỉ ra rằng InventoryEntity quản lý mối quan hệ này
+    private InventoryEntity inventoryEntity;
     
     public BooksEntity() {
     	
@@ -242,6 +244,19 @@ public class BooksEntity {
 	public void setBookDiscounts(Collection<Book_DiscountsEntity> bookDiscounts) {
 		this.bookDiscounts = bookDiscounts;
 	}
+	
+	
+
+	public InventoryEntity getInventoryEntity() {
+		return inventoryEntity;
+	}
+
+	public void setInventoryEntity(InventoryEntity inventoryEntity) {
+		this.inventoryEntity = inventoryEntity;
+	}
+
+
+
 
 	@Override
     public String toString() {

@@ -10,11 +10,11 @@ public class OrdersDetailEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     private OrdersEntity order; // Liên kết tới bảng Orders
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "book_id", nullable = false)
     private BooksEntity book; // Liên kết tới bảng Books
 

@@ -68,6 +68,10 @@ public class UsersEntity {
     @OneToOne(mappedBy = "user")
     private CartsEntity cart;
     
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<OrdersEntity> orders;
+
+    
     
     @Transient
     private Set<Long> roleIds;
@@ -193,6 +197,16 @@ public class UsersEntity {
 	public void setCart(CartsEntity cart) {
 		this.cart = cart;
 	}
+
+	public List<OrdersEntity> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<OrdersEntity> orders) {
+		this.orders = orders;
+	}
+	
+	
     
     
 }

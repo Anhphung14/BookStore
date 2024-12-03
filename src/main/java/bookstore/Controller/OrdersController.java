@@ -1,16 +1,202 @@
 package bookstore.Controller;
 
-import javax.servlet.ServletContext;
+import java.util.HashMap;
+import java.util.List;
 
+import java.util.Map;
+
+import javax.transaction.Transactional;
+
+import org.hibernate.Hibernate;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import bookstore.Entity.*;
+import bookstore.DAO.DiscountsDAO;
+import bookstore.DAO.OrderDAO;
+import bookstore.DAO.ShippingAddressDAO;
+@Transactional
 @Controller
-@RequestMapping("Orders")
 public class OrdersController {
 	@Autowired
-	SessionFactory factory;
+	SessionFactory sessionFactory;
+	@Autowired
+	OrderDAO orderDAO;
+	@Autowired
+	ShippingAddressDAO shippingAddressDAO;
+	@Autowired
+	DiscountsDAO discountsDAO;
 	
+	@RequestMapping("/orders")
+	public String index(ModelMap modelMap) {
+		List<OrdersEntity> listOrders = orderDAO.listOrders();
+		
+		for(OrdersEntity order: listOrders) {
+			Hibernate.initialize(order.getOrderDetails());
+			DiscountsEntity discount = orderDAO.getDiscountUsedByOrder(order.getId());
+			Double discountValue = 0.0;
+			if(discount != null) {
+				if (discount != null) {
+		        	if(discount.getDiscountType().equals("percentage")) {
+		        		discountValue = (order.getTotalPrice() / (1 - (double) discount.getDiscountValue() / 100)) - order.getTotalPrice();
+		        	}else {
+		        		discountValue = discount.getDiscountValue().doubleValue();
+		        	}
+		        }
+			}
+			order.setDiscountValue(discountValue);
+		}
+		
+		modelMap.addAttribute("listOrders", listOrders);
+		
+		return "orders/index";
+	}
+	
+	@RequestMapping(value = "/orders/updateOrderStatus", method = RequestMethod.POST)
+	public String updateOrderStatus(@RequestParam("orderId") Long orderId, @RequestParam("orderStatus") String orderStatus, RedirectAttributes redirectAttributes) {
+		//System.out.println("Vô đầu hàm");
+		if(orderDAO.updateOrderStatus(orderId, orderStatus)) {
+			//System.out.println("Thành công");
+			redirectAttributes.addFlashAttribute("alertMessage", "Order status updated successfully!");
+	        redirectAttributes.addFlashAttribute("alertType", "success");
+		}else {
+			//System.out.println("Lỗi rồi");
+			redirectAttributes.addFlashAttribute("alertMessage", "Error updating order status!");
+			redirectAttributes.addFlashAttribute("alertType", "error");
+		}
+		
+		return "redirect:/orders.htm";
+	}
+	
+	@RequestMapping("/order/edit/{orderId}")
+	public String editOrder(@PathVariable("orderId") Long orderId, ModelMap modelMap) {
+		OrdersEntity order = orderDAO.getOrderWithDetails(orderId);
+		Map<String, Map<String, List<String>>> locationData = shippingAddressDAO.getProvincesWithDistrictsAndWards();
+		ObjectMapper objectMapper = new ObjectMapper();
+	    String locationDataJson = "";
+	    try {
+	        locationDataJson = objectMapper.writeValueAsString(locationData);
+	    } catch (JsonProcessingException e) {
+	        e.printStackTrace(); // Log lỗi nếu có
+	    }
+		//System.out.println(locationDataJson);
+	    Hibernate.initialize(order.getOrderDiscounts());
+	    
+		modelMap.addAttribute("locationData", locationDataJson);
+		modelMap.addAttribute("order", order);
+		//System.out.println("order: " + order.getId());
+		return "orders/edit";
+	}
+	
+	@RequestMapping(value = "/order/edit", method = RequestMethod.POST)
+	public String updateOrder(@RequestParam("orderId") Long orderId ,@RequestParam("totalPrice") Double totalPrice, @RequestParam("paymentMethod") String paymentMethod,
+			@RequestParam("paymentStatus") String paymentStatus, @RequestParam("orderStatus") String orderStatus,
+			@RequestParam("province") String province, @RequestParam("district") String district,
+			@RequestParam("ward") String ward, @RequestParam("street") String street,
+			RedirectAttributes redirectAttributes) {
+		//System.out.println("total: " + totalPrice);
+		StringBuilder shippingAddressBuilder = new StringBuilder();
+		shippingAddressBuilder.append(street).append(", ")
+		                      .append(ward).append(", ")
+		                      .append(district).append(", ")
+		                      .append(province);
+
+		String shippingAddress = shippingAddressBuilder.toString();
+		//System.out.println(shippingAddress);
+		
+		OrdersEntity order = orderDAO.getOrderById(orderId);
+		if(order != null) {
+			order.setTotalPrice(totalPrice);
+			order.setPaymentMethod(paymentMethod);
+			order.setPaymentStatus(paymentStatus);
+			order.setOrderStatus(orderStatus);
+			order.setShippingAddress(shippingAddress);
+			boolean isUpdated = orderDAO.updateOrder(order);
+			 if (isUpdated) {
+			        redirectAttributes.addFlashAttribute("alertMessage", "Order updated successfully!");
+			        redirectAttributes.addFlashAttribute("alertType", "success");
+			    } else {
+			        redirectAttributes.addFlashAttribute("alertMessage", "Failed to update order.");
+			        redirectAttributes.addFlashAttribute("alertType", "danger");
+			    }
+		}else {
+			redirectAttributes.addFlashAttribute("alertMessage", "Order not found.");
+		    redirectAttributes.addFlashAttribute("alertType", "danger");
+		}
+		
+		
+		return "redirect:/orders.htm";
+	}
+	
+	@RequestMapping(value = "/order/updateOrderItems", method = RequestMethod.POST)
+	public String updateOrderItems(@RequestParam("orderId") Long orderId,
+	                                @RequestParam Map<String, String> formParams, 
+	                                RedirectAttributes redirectAttributes) {
+	   
+		
+	    OrdersEntity order = orderDAO.getOrderById(orderId);
+		//System.out.println("orderId: " + orderId);
+	    
+	    //System.out.println("formParams" + formParams);
+	    
+        Map<Integer, Integer> quantities = new HashMap<>();
+
+        // Duyệt qua tất cả các tham số trong formParams
+        for (String key : formParams.keySet()) { 
+        	if (key.startsWith("orderDetailsQuantity")) {
+                // Lấy index của orderDetailsQuantity
+                String indexStr = key.split("\\[|\\]")[1];  // Lấy index (ví dụ: [4], [5])
+                int index = Integer.parseInt(indexStr);
+                String quantityStr = formParams.get(key);  // Lấy giá trị quantity
+                quantities.put(index, Integer.parseInt(quantityStr));
+            }
+        }
+        
+        
+        
+        double totalPrice = 0.0;
+        for (Map.Entry<Integer, Integer> entry : quantities.entrySet()) {
+            Long key = entry.getKey().longValue();
+            Integer value = entry.getValue();
+            
+            OrdersDetailEntity orderDetail = orderDAO.getOrderDetailById(key);
+            orderDetail.setQuantity(value);
+            orderDAO.updateOrderItems(orderDetail);
+            totalPrice += orderDetail.getPrice() * value;
+        }
+
+		System.out.println("totalPriceBefore: " + totalPrice);
+        
+        DiscountsEntity discountEntity = orderDAO.getDiscountUsedByOrder(orderId);
+        if (discountEntity != null) {
+        	if(discountEntity.getDiscountType().equals("percentage")) {
+        		totalPrice = totalPrice * (1 - (double) discountEntity.getDiscountValue() / 100);
+        	}else {
+        		totalPrice = totalPrice - discountEntity.getDiscountValue();
+        	}
+        }
+       
+        
+        order.setTotalPrice(totalPrice);
+        orderDAO.updateOrder(order);
+
+	    redirectAttributes.addFlashAttribute("alertMessage", "Order items updated successfully.");
+        redirectAttributes.addFlashAttribute("alertType", "success");
+	    return "redirect:/orders.htm";
+	}
+
+
+
+
 }

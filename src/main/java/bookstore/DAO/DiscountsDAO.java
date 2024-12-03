@@ -36,6 +36,15 @@ public class DiscountsDAO {
 		return allDiscounts;
 	}
 	
+	public int getUsedCountByDiscountId(Long discountId) {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "SELECT COUNT(od) FROM Order_DiscountsEntity od WHERE od.discount_id.id = :discountId";
+        Query query = session.createQuery(hql);
+        query.setParameter("discountId", discountId);
+        Long count = (Long) query.uniqueResult();
+        return count.intValue();
+    }
+	
 	public void updateStatusDiscounts() {
 		Session session = sessionFactory.getCurrentSession();
 	    // Khởi tạo đối tượng Timestamp cho ngày hiện tại
@@ -44,6 +53,8 @@ public class DiscountsDAO {
 	    List<DiscountsEntity> allDiscounts = getAllDiscounts();
 	    
 	    for (DiscountsEntity discount : allDiscounts) {
+	    	int usedCount = getUsedCountByDiscountId(discount.getId());
+	    	//System.out.println("Used: " +  usedCount);
 	        // Kiểm tra nếu ngày kết thúc của discount nhỏ hơn currentDate
 	    	if(!discount.getStatus().equals("inactive")) {
 	    		if (discount.getEndDate() != null && discount.getEndDate().before(currentDate)) {
@@ -53,6 +64,14 @@ public class DiscountsDAO {
 		            // Lưu lại thay đổi trong session
 		            session.update(discount);
 		        }
+	    		if (usedCount >= discount.getMaxUses()) {
+	                // Cập nhật trạng thái thành 'expired'
+	    			//System.out.println("Vô đây à");
+	                discount.setStatus("expired");
+	                
+	                // Lưu lại thay đổi trong session
+	                session.update(discount);
+	            }
 	    	}else {
 	    		if (discount.getEndDate() != null && discount.getEndDate().before(currentDate)) {
 		            // Cập nhật trạng thái thành 'expired'
@@ -324,14 +343,7 @@ public class DiscountsDAO {
 		}
 	}
 
-	 public int getUsedCountByDiscountId(Long discountId) {
-	        Session session = sessionFactory.getCurrentSession();
-	        String hql = "SELECT COUNT(od) FROM Order_DiscountsEntity od WHERE od.discount_id.id = :discountId";
-	        Query query = session.createQuery(hql);
-	        query.setParameter("discountId", discountId);
-	        Long count = (Long) query.uniqueResult();
-	        return count.intValue();
-	    }
+	 
 
 
 }

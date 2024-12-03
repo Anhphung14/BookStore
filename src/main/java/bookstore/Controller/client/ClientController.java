@@ -37,7 +37,7 @@ public class ClientController {
 	public String index(ModelMap model) {
 		List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
         List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
-
+        discountsDAO.updateStatusDiscounts();
         model.addAttribute("Categories", listCategories);
         model.addAttribute("SubCategories", listSubCategories);
         return "client/index";

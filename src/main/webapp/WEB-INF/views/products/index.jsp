@@ -133,33 +133,33 @@
 <%-- 											<td class="text-end">${(users.page - 1) * users.pageSize + status.index + 1}</td> --%>
 											<td class="text-start align-middle">${book.id}</td>
 											<td>
-    <a class="d-flex flex-nowrap align-items-center" style="text-decoration: none;" href="javascript:void(0);" 
-       data-id="${book.id}"
-       data-title="${book.title}"
-       data-author="${book.author}"
-       data-category="${book.subcategoriesEntity.categoriesEntity.name}"
-       data-subcategory="${book.subcategoriesEntity.name}"
-       data-supplier="${book.supplier.name}"
-       data-publicationYear="${book.publication_year}"
-       data-pageCount="${book.page_count} pages"
-       data-language="${book.language}"
-       data-status="${book.status == 0 ? 'Disable' : 'Enable'}"
-       data-createdAt="<fmt:formatDate value='${book.updatedAt}' pattern='dd-MM-yyyy HH:mm' />"
-       data-updatedAt="<fmt:formatDate value='${book.createdAt}' pattern='dd-MM-yyyy HH:mm' />"
-       data-price=<fmt:formatNumber value="${book.price}" type="currency" maxFractionDigits="0" currencySymbol="₫"/>
-       data-description="${fn:escapeXml(book.description)}" 
-       data-thumbnail="${book.thumbnail}"
-       data-images="${book.images}"
-       data-quantity="${book.quantity} in stock"
-       onclick="showProductDetails(this)">
-        <div>
-            <img alt="Product Thumbnail" src="${book.thumbnail}" class="bg-white border border-3 border-white" width="50px">
-        </div>
-        <div class="ms-3">
-            <div class="fw-semibold custom-text ellipsis">${book.title}</div>
-        </div>
-    </a>
-</td>
+											    <a class="d-flex flex-nowrap align-items-center" style="text-decoration: none;" href="javascript:void(0);" 
+											       data-id="${book.id}"
+											       data-title="${book.title}"
+											       data-author="${book.author}"
+											       data-category="${book.subcategoriesEntity.categoriesEntity.name}"
+											       data-subcategory="${book.subcategoriesEntity.name}"
+											       data-supplier="${book.supplier.name}"
+											       data-publicationYear="${book.publication_year}"
+											       data-pageCount="${book.page_count} pages"
+											       data-language="${book.language}"
+											       data-status="${book.status == 0 ? 'Disable' : 'Enable'}"
+											       data-createdAt="<fmt:formatDate value='${book.updatedAt}' pattern='dd-MM-yyyy HH:mm' />"
+											       data-updatedAt="<fmt:formatDate value='${book.createdAt}' pattern='dd-MM-yyyy HH:mm' />"
+											       data-price=<fmt:formatNumber value="${book.price}" type="currency" maxFractionDigits="0" currencySymbol="₫"/>
+											       data-description="${fn:escapeXml(book.description)}" 
+											       data-thumbnail="${book.thumbnail}"
+											       data-images="${book.images}"
+											       data-quantity="${book.quantity} in stock"
+											       onclick="showProductDetails(this)">
+											       <div>
+											            <img alt="Product Thumbnail" src="${book.thumbnail}" class="bg-white border border-3 border-white" width="50px">
+											        </div>
+											        <div class="ms-3">
+											            <div class="fw-semibold custom-text ellipsis">${book.title}</div>
+											        </div>
+											    </a>
+											</td>
 											<c:choose>
 												<c:when test="${book.status == 1}">
 													<td class="text-center align-middle"><span class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">active</span></td>
@@ -210,7 +210,7 @@
 								</table>
 							</div>
 						</div>
-<%-- 						<div>${users.links}</div> --%>
+					<%-- <div>${users.links}</div>  --%>
 					</div>
 				</div>
 			</form>
