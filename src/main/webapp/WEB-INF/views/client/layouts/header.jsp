@@ -217,10 +217,10 @@
 							
 							<div class="action">
 							     <div class="profile" onclick="menuToggle();">
-							    <img src="https://i.pinimg.com/474x/90/57/0a/90570addee2645866a597530721f37fd.jpg" style="width: 60px; height: 60px"/>
+							    <img src="${user.avatar}" style="width: 60px; height: 60px"/>
 							  </div>
 							  <div class="menu">
-							    <h3>Nhìn đoé gì<br /><span>Hội viên siêu cấp vjp pro</span></h3>
+							    <h3>${user.fullname}<br /><span>Hội viên siêu cấp vjp pro</span></h3>
 							    <ul>
 							      <li>
 							        <i class="fa-solid fa-user"></i>&nbsp;&nbsp;<a href="${pageContext.servletContext.contextPath}/account/profile_settings.htm">My profile</a>

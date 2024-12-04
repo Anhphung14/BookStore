@@ -262,7 +262,8 @@
 													<!-- <a class="btn btn-rounded"><i class="fa fa-eye-slash"></i></a> -->
 													
 													<c:if test="${order.orderStatus == 'Chờ xác nhận'}">
-													    <a href="javascript:void(0);" class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#confirmCancelModal" data-order-id="${order.id}">
+													    <a href="javascript:void(0);" class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#confirmCancelModal" data-order-id="${order.id}"
+													     data-toggle="tooltip" title="Huỷ đơn hàng" >
 													        <i class="fa-solid fa-ban"></i>
 													    </a>
 													</c:if>

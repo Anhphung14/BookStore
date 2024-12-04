@@ -150,6 +150,8 @@
 													</fieldset>
 												</form>
 											</div>
+											
+											
 											<c:forEach var="book" items="${bookList}">
 												<div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
 													<div class="tg-postbook">
@@ -177,7 +179,8 @@
 																	<ins>chưa biết</ins>
 																	<del><fmt:formatNumber value="${book.price}" type="currency" maxFractionDigits="0" currencySymbol="₫"/></del>
 																</span>
-																<a class="tg-btn tg-btnstyletwo" href="/bookstore/cart/add.htm?bookId=${book.id}&quantity=1">
+																<a class="tg-btn tg-btnstyletwo btn-add-to-cart" href="/bookstore/cart/add.htm?bookId=${book.id}&quantity=1"
+																	data-book-id="${book.id}" data-quantity="1">
 																	<i class="fa fa-shopping-basket"></i>
 																	<em>Thêm vào giỏ</em>
 																</a>
@@ -487,6 +490,43 @@
 	            console.error("PageSize value is invalid:", pageSizeValue);
 	        }
 	    }
+	    
+	    
+	    
+	    /* document.querySelectorAll('.btn-add-to-cart').forEach(function(button) {
+	        button.addEventListener('click', function(event) {
+	            var bookId = event.target.getAttribute('data-book-id');
+	            var quantity = event.target.getAttribute('data-quantity');
+	            
+	            // Gửi GET request để thêm sách vào giỏ hàng
+	            fetch('http://localhost:8080/bookstore/cart/add/test.htm?bookId=' + bookId + '&quantity=' + quantity, {
+	                method: 'GET', // Thay vì POST, sử dụng GET
+	                headers: {
+	                    'Content-Type': 'application/json' // Không cần thiết khi dùng GET
+	                }
+	            })
+	            .then(response => response.json()) // Phản hồi trả về là JSON
+	            .then(data => {
+	            	console.log("data: " + data);
+	                // Xử lý phản hồi sau khi thêm vào giỏ hàng
+	                if (data.success) {
+	                    alert('Sản phẩm đã được thêm vào giỏ hàng!');
+	                    // Cập nhật phần giỏ hàng (ví dụ: số lượng giỏ hàng)
+	                    document.getElementById('cart-count').innerText = data.cartCount;
+	                } else {
+	                    alert('Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng...');
+	                }
+	            })
+	            .catch(error => {
+	                // Lỗi trong quá trình gửi request
+	                console.error('Có lỗi xảy ra:', error);
+	                alert('Có lỗi xảy ra khi gửi yêu cầu.');
+	            });
+	        });
+	    }); */
+
+
+	    
 	</script>
 	
 </body>

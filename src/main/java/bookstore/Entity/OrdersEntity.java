@@ -19,6 +19,12 @@ public class OrdersEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UsersEntity user; // Liên kết tới bảng Users
     
+    @Column(name = "customerName", nullable = true)
+    private String customerName;
+    
+    @Column(name = "customerPhone", nullable = true)
+    private String customerPhone;
+    
     @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
     private Double totalPrice;
 
@@ -167,6 +173,22 @@ public class OrdersEntity {
 
 	public void setDiscountValue(Double discountValue) {
 		this.discountValue = discountValue;
+	}
+	
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	public String getCustomerPhone() {
+		return customerPhone;
+	}
+
+	public void setCustomerPhone(String customerPhone) {
+		this.customerPhone = customerPhone;
 	}
 
 	@Autowired

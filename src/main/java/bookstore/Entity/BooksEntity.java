@@ -74,6 +74,9 @@ public class BooksEntity {
     @OneToOne(mappedBy = "book" ,fetch = FetchType.LAZY)  // mappedBy chỉ ra rằng InventoryEntity quản lý mối quan hệ này
     private InventoryEntity inventoryEntity;
     
+    @OneToMany(mappedBy = "book", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    private Collection<CartItemsEntity> cartItemsEntity;
+    
     public BooksEntity() {
     	
     }
@@ -256,6 +259,14 @@ public class BooksEntity {
 	}
 
 
+	public Collection<CartItemsEntity> getCartItemsEntity() {
+		return cartItemsEntity;
+	}
+
+
+	public void setCartItemsEntity(Collection<CartItemsEntity> cartItemsEntity) {
+		this.cartItemsEntity = cartItemsEntity;
+	}
 
 
 	@Override

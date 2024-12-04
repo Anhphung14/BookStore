@@ -26,7 +26,9 @@
 	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/responsive.css" />
 
 	<script src="https://kit.fontawesome.com/e70d1e2fed.js" crossorigin="anonymous"></script>
-    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <!-- Modernizr JS -->
     <script src="resources/assets/js/client/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 </head>
@@ -877,5 +879,34 @@
 	<script src="resources/assets/js/client/main.js"></script>
 </body>
 
+<script type="text/javascript">
+	const alertMessage = "${alertMessage}";
+	const alertType = "${alertType}";
+	toastr.options = {
+		    "closeButton": true, // Cho phép nút đóng
+		    "debug": false,
+		    "newestOnTop": true,
+		    "progressBar": true, // Hiển thị thanh tiến trình
+		    "positionClass": "toast-top-right", // Vị trí hiển thị thông báo
+		    "preventDuplicates": true,
+		    "onclick": null,
+		    "showDuration": "200", // Thời gian hiển thị
+		    "hideDuration": "1000",
+		    "timeOut": "5000", // Thời gian thông báo sẽ tự động ẩn
+		    "extendedTimeOut": "1000", // Thời gian mở rộng nếu hover vào
+		    "showEasing": "swing",
+		    "hideEasing": "linear",
+		    "showMethod": "fadeIn",
+		    "hideMethod": "fadeOut"
+		};
+	if (alertMessage) {
+	    // Kiểm tra kiểu thông báo
+	    if (alertType === "success") {
+	        toastr.success(alertMessage, "Success");
+	    } else if (alertType === "error") {
+	        toastr.error(alertMessage, "Error");
+	    }
+	}
+</script>
 
 </html>

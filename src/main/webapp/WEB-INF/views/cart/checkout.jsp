@@ -11,13 +11,18 @@
     <!-- CSS Files -->
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/bootstrap.min.css" />
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/font-awesome.min.css" />
-    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/main.css" />
     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/cart.css" />
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/checkout.css" />
+   
     
     <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'></link>  
     <script src="https://kit.fontawesome.com/e70d1e2fed.js" crossorigin="anonymous"></script>
+    <!--boostrap for paypal -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://www.paypal.com/sdk/js?client-id=AZzuNyaP3AzHAUUzLAOkhRz0imoN1dmXQHN0FEczevPzFJK-c6tQwI-VD79x6dZ7eOuMR2kn4eBjPUnB&currency=USD"></script>
+        <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/main.css" />
+         <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/checkout.css" />
 </head>
 <body>
     <div id="tg-wrapper" class="tg-wrapper tg-haslayout">
@@ -25,9 +30,9 @@
         <%@ include file="../client/layouts/header.jsp" %>
 
         <!-- Main Content -->
-        <section class="tg-sectionspace tg-haslayout">
+        <section class="tg-sectionspace tg-haslayout" style="margin-bottom: 24px;">
             <div class="container">
-                <h1 class="page-title text-center">Thông Tin Thanh Toán</h1>
+                <h1 class="text-center">Thông Tin Thanh Toán</h1>
                 <div class="content-wrapper row">
                     <!-- Thông Tin Nhận Hàng -->
                     <div class="info-section col-md-6">
@@ -49,35 +54,55 @@
                                 <label for="email" class="field__label">Email</label>
                                 <input id="email" name="email" type="email" class="field__input" value="${user.email}" required>
                             </div>
-                            <!-- <div class="field">
-                                <label for="province" class="field__label">Tỉnh/Thành phố</label>
-                                <select id="province" name="province" class="field__input">
-                                    <option value="">Chọn tỉnh/thành phố</option>
-                                    Thêm các tỉnh thành khác ở đây
-                                </select>
-                            </div>
-                            <div class="field">
-                                <label for="district" class="field__label">Quận/Huyện</label>
-                                <select id="district" name="district" class="field__input">
-                                    <option value="">Chọn quận/huyện</option>
-                                    Các quận huyện theo tỉnh sẽ được tải sau khi chọn tỉnh
-                                </select>
-                            </div>
-                            <div class="field">
-                                <label for="ward" class="field__label">Phường/Xã</label>
-                                <select id="ward" name="ward" class="field__input">
-                                    <option value="">Chọn phường/xã</option>
-                                    Các phường xã theo quận sẽ được tải sau khi chọn quận
-                                </select>
-                            </div> -->
-                            <div class="field">
-                                <label for="address" class="field__label"><!-- Số nhà --> Địa chỉ giao hàng</label>
-                                <input id="address" name="address" type="text" class="field__input">
-                            </div>
-                            <div class="field">
+                            
+                            <div class="row mt-3">
+							    <!-- Tỉnh Thành -->
+								<div class="col-md-3">
+							        <div class="form-floating">
+							            <select class="form-control" id="province" name="province" required>
+							                <option value="">Chọn Tỉnh Thành</option>
+							                
+							            </select>
+							            <label class="form-label" for="province">Tỉnh Thành <span class="text-danger">*</span></label>
+							        </div>
+							    </div>
+
+								
+								<!-- Quận Huyện -->
+								<div class="col-md-3">
+								    <div class="form-floating">
+								        <select class="form-control" id="district" name="district" required>
+								            <option value="">Chọn Quận Huyện</option>
+								            <!-- Các quận huyện sẽ được cập nhật khi chọn Tỉnh Thành -->
+								        </select>
+								        <label class="form-label" for="district">Quận Huyện <span class="text-danger">*</span></label>
+								    </div>
+								</div>
+								
+								<!-- Phường Xã -->
+								<div class="col-md-3">
+								    <div class="form-floating">
+								        <select class="form-control" id="ward" name="ward" required>
+								            <option value="">Chọn Phường Xã</option>
+								            <!-- Các phường xã sẽ được cập nhật khi chọn Quận Huyện -->
+								        </select>
+								        <label class="form-label" for="ward">Phường Xã <span class="text-danger">*</span></label>
+								    </div>
+								</div>
+
+							
+							    <!-- Số nhà/Đường -->
+							    <div class="col-md-3">
+							        <div class="form-floating" style="height: 100%;">
+							            <input class="form-control" id="street" name="street" type="text" value="" required style="height: 100%;">
+							            <label class="form-label" for="street">Số nhà/Đường <span class="text-danger">*</span></label>
+							        </div>
+							    </div>
+							</div>
+<!--                             <div class="field">
                                 <label for="note" class="field__label">Ghi chú</label>
                                 <textarea id="note" name="note" class="field__input"></textarea>
-                            </div>
+                            </div> -->
                     </div>
                     
                     <!-- Tóm Tắt Đơn Hàng -->
@@ -86,7 +111,7 @@
                         <table class="order-summary table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Sản phẩm</th>
+                                    <th colspan="2">Sản phẩm</th>
                                     <th>Số lượng</th>
                                     <th>Đơn Giá</th>
                                 </tr>
@@ -94,6 +119,7 @@
                             <tbody>
                                 <c:forEach var="item" items="${cartItems}">
                                     <tr>
+                                    	<td><img src="${item.book.thumbnail}" width="50px"; height="50px"></td>
                                         <td>${item.book.title}</td>
                                         <td>${item.quantity}</td>
                                         <td>${item.price} VND</td>
@@ -103,20 +129,44 @@
                             <tfoot>
                                 <tr>
                                     <th colspan="2">Tổng cộng</th>
-                                    <td>${totalPrice} VND</td>
+                                    <td colspan="2">${totalPrice} VND</td>
                                 </tr>
                                 <tr>
                                     <th colspan="2">Mã giảm giá có thể sử dụng</th>
-                                    <td><input type="text" name="discount" id="discount" class="field__input" placeholder="Nhập mã giảm giá"></td>
+                                    <td colspan="2"><input type="text" name="discount" id="discount" class="field__input" placeholder="Nhập mã giảm giá"></td>
                                 </tr>
                             </tfoot>
                         </table>
                         <h3>Phương Thức Thanh Toán</h3>
+                        <!-- <h4 class="text-center mt-5">Paypal Payment Integration</h4>
+                        <form action="/bookstore/paypalPayment/create.htm" method="post" class="mt-5 card p-3">
+                        	<div class="d-flex justify-content-center">
+                        	<input type="hidden" name="payment" value="somePaymentValue" />
+                        		<button type="submit" class="btn btn-primary">Pay with Paypal</button>
+                        	</div>
+                        </form> -->
                         <div class="radio-group">
-                            <label><input type="radio" name="payment" value="paypal" required> Thanh toán bằng Paypal</label>
-                            <label><input type="radio" name="payment" value="vnpay" required> Thanh toán qua VNPAY-QR</label>
-                            <label><input type="radio" name="payment" value="cod" required> Thanh toán khi nhận hàng</label>
-                        </div>
+							<label><input type="radio" name="paymentMethod" value="paypal" required> Thanh toán bằng Paypal</label>
+								<div id="paypal-button-container"></div>
+                            <label><input type="radio" name="paymentMethod" value="vnpay" required> Thanh toán qua VNPAY-QR</label>
+                            <label><input type="radio" name="paymentMethod" value="cod" required> Thanh toán khi nhận hàng</label>
+                        </div> 
+                       <%--  <h3 class="text-center">Chọn phương thức thanh toán</h3>
+
+				        <form action="/bookstore/paypalPayment/create.htm" method="post" class="mt-5 card p-3">
+						    <!-- Thêm trường ẩn cho orderId -->
+						    <input type="hidden" name="orderId" value="${orderId}" />  <!-- Giả sử orderId đã có sẵn trong controller hoặc từ phía server -->
+						
+						    <!-- Phương thức thanh toán PayPal -->
+						    <div class="d-flex justify-content-center mb-3">
+						        <button type="submit" class="btn btn-primary" name="paymentMethod" value="paypal">Pay with PayPal</button>
+						    </div>
+						
+						    <!-- Phương thức thanh toán khi nhận hàng -->
+						    <div class="d-flex justify-content-center mb-3">
+						        <button type="submit" class="btn btn-secondary" name="paymentMethod" value="cod">Thanh toán khi nhận hàng</button>
+						    </div>
+						</form> --%>
                         
                         <a href="/bookstore/cart/view.htm" class="btn btn-secondary">Quay về giỏ hàng</a>
                         <button type="submit" class="btn btn-primary">Đặt Hàng</button>
@@ -153,63 +203,128 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-//Load danh sách tỉnh
-function loadProvinces() {
-    fetch('/api/provinces')
-        .then(response => response.json())
-        .then(data => {
-            const provinceSelect = document.getElementById('province');
-            provinceSelect.innerHTML = '<option value="">Chọn tỉnh/thành phố</option>';
-            data.forEach(province => {
-                provinceSelect.innerHTML += `<option value="${province}">${province}</option>`;
-            });
-        });
-}
 
-// Load danh sách huyện theo tỉnh
-function loadDistricts() {
-    const province = document.getElementById('province').value;
-    if (province) {
-        fetch(`/api/districts?province=${province}`)
-            .then(response => response.json())
-            .then(data => {
-                const districtSelect = document.getElementById('district');
-                districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
-                data.forEach(district => {
-                    districtSelect.innerHTML += `<option value="${district}">${district}</option>`;
-                });
-            });
-    } else {
-        document.getElementById('district').innerHTML = '<option value="">Chọn quận/huyện</option>';
-        document.getElementById('ward').innerHTML = '<option value="">Chọn phường/xã</option>';
-    }
-}
-
-// Load danh sách xã theo huyện
-function loadWards() {
-    const province = document.getElementById('province').value;
-    const district = document.getElementById('district').value;
-    if (province && district) {
-        fetch(`/api/wards?province=${province}&district=${district}`)
-            .then(response => response.json())
-            .then(data => {
-                const wardSelect = document.getElementById('ward');
-                wardSelect.innerHTML = '<option value="">Chọn phường/xã</option>';
-                data.forEach(ward => {
-                    wardSelect.innerHTML += `<option value="${ward}">${ward}</option>`;
-                });
-            });
-    } else {
-        document.getElementById('ward').innerHTML = '<option value="">Chọn phường/xã</option>';
-    }
-}
-
-// Gọi hàm loadProvinces khi trang được tải
+/* // Gọi hàm loadProvinces khi trang được tải
 document.addEventListener('DOMContentLoaded', loadProvinces);
+ */
+/* paypal.Buttons({
+    createOrder: function(data, actions) {
+        return actions.order.create({
+            purchase_units: [{
+                amount: {
+                    value: ${totalPrice}  // Số tiền cần thanh toán (ví dụ 100 USD)
+                }
+            }]
+        });
+    },
+    onApprove: function(data, actions) {
+        return actions.order.capture().then(function(details) {
+            alert('Thanh toán thành công! ' + details.payer.name.given_name);
+            // Sau khi thanh toán thành công, bạn có thể thực hiện các thao tác khác như chuyển hướng trang hoặc lưu thông tin thanh toán
+        });
+    },
+    onCancel: function(data) {
+        alert('Thanh toán đã bị hủy');
+    }
+}).render('#paypal-button-container');  // Hiển thị nút thanh toán PayPal
+ */
+
+
+var locationData = ${locationData};  // Thông qua modelMap.addAttribute("locationData", locationDataJson);
+
+// Lấy các phần tử select trong form
+var provinceSelect = document.getElementById("province");
+var districtSelect = document.getElementById("district");
+var wardSelect = document.getElementById("ward");
+
+
+// Hàm để đổ các tỉnh thành vào dropdown
+function populateProvinces() {
+    // Đổ tất cả tỉnh thành vào ô chọn
+    Object.keys(locationData).forEach(function(provinceName) {
+        var option = document.createElement("option");
+        option.value = provinceName;
+        option.textContent = provinceName;
+        provinceSelect.appendChild(option);
+
+        // Kiểm tra nếu tỉnh thành khớp với giá trị trong shippingAddress
+        if (provinceName === province) {
+            option.selected = true; // Chọn tỉnh thành
+            populateDistricts(provinceName); // Cập nhật quận huyện tương ứng
+        }
+    });
+}
+
+// Hàm để đổ quận huyện vào dropdown
+function populateDistricts(selectedProvince) {
+    // Xóa tất cả quận huyện đã có
+    districtSelect.innerHTML = "<option value=''>Chọn Quận Huyện</option>";
+
+    // Đổ các quận huyện vào dropdown dựa trên tỉnh thành đã chọn
+    var districts = locationData[selectedProvince];
+    for (var districtName in districts) {
+        var option = document.createElement("option");
+        option.value = districtName;
+        option.textContent = districtName;
+        districtSelect.appendChild(option);
+
+        // Kiểm tra xem quận huyện có giống với giá trị trong shippingAddress không
+        if (districtName === district) {
+            option.selected = true; // Chọn quận huyện
+            populateWards(selectedProvince, districtName); // Cập nhật phường xã tương ứng
+        }
+    }
+}
+
+// Hàm để đổ phường xã vào dropdown
+function populateWards(selectedProvince, selectedDistrict) {
+    // Xóa tất cả phường xã đã có
+    wardSelect.innerHTML = "<option value=''>Chọn Phường Xã</option>";
+
+    // Đổ các phường xã vào dropdown dựa trên quận huyện đã chọn
+    var wards = locationData[selectedProvince][selectedDistrict];
+    wards.forEach(function(wardName) {
+        var option = document.createElement("option");
+        option.value = wardName;
+        option.textContent = wardName;
+        wardSelect.appendChild(option);
+
+        // Kiểm tra xem phường xã có giống với giá trị trong shippingAddress không
+        if (wardName === ward) {
+            option.selected = true; // Chọn phường xã
+        }
+    });
+}
+
+// Gọi hàm để đổ tỉnh thành, quận huyện, phường xã
+populateProvinces();
+
+// Xử lý sự kiện khi người dùng thay đổi tỉnh thành
+provinceSelect.addEventListener("change", function() {
+    var selectedProvince = provinceSelect.value;
+    if (selectedProvince) {
+        populateDistricts(selectedProvince);
+    }
+});
+
+// Xử lý sự kiện khi người dùng thay đổi quận huyện
+districtSelect.addEventListener("change", function() {
+    var selectedProvince = provinceSelect.value;
+    var selectedDistrict = districtSelect.value;
+    if (selectedProvince && selectedDistrict) {
+        populateWards(selectedProvince, selectedDistrict);
+    }
+});
+
+
+
+
 </script>
     <!-- JS Files -->
     <script src="${pageContext.servletContext.contextPath}/resources/assets/js/client/vendor/jquery-library.js"></script>
     <script src="${pageContext.servletContext.contextPath}/resources/assets/js/client/vendor/bootstrap.min.js"></script>
     <script src="${pageContext.servletContext.contextPath}/resources/assets/js/client/checkout.js"></script>
+
+    
 </body>
 </html>

@@ -11,6 +11,7 @@
     <title>Danh Sách Đánh Giá</title>
     <!-- Link Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/main.css" />
     <style>
         .product-divider {
             border-top: 3px solid #007bff;  /* Đổi màu sắc và độ dày của đường phân cách */

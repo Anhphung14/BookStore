@@ -3,6 +3,8 @@ package bookstore.Controller.client;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -22,6 +24,7 @@ import bookstore.Entity.CategoriesEntity;
 import bookstore.Entity.InventoryEntity;
 import bookstore.Entity.RatingsEntity;
 import bookstore.Entity.SubcategoriesEntity;
+import bookstore.Entity.UsersEntity;
 
 
 @Controller
@@ -40,9 +43,11 @@ public class ClientController {
     private InventoryDAO inventoryDAO;
     
     @RequestMapping(value = "/index")
-	public String index(ModelMap model) {
+	public String index(ModelMap model, HttpSession session) {
 		List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
         List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
+        UsersEntity userSession = (UsersEntity) session.getAttribute("user");
+        model.addAttribute("user", userSession);
         discountsDAO.updateStatusDiscounts();
         model.addAttribute("Categories", listCategories);
         model.addAttribute("SubCategories", listSubCategories);

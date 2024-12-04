@@ -3,6 +3,9 @@ package bookstore.Controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,10 +16,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import bookstore.DAO.CartDAO;
 import bookstore.DAO.OrderDAO;
 import bookstore.DAO.OrderDetailDAO;
+import bookstore.DAO.ShippingAddressDAO;
 import bookstore.DAO.UserDAO;
 import bookstore.Entity.*;
 
@@ -35,6 +41,9 @@ public class PaymentController {
 
     @Autowired
     private OrderDetailDAO orderDetailDAO;
+    
+    @Autowired
+    private ShippingAddressDAO shippingAddressDAO;
 
     // Hiển thị trang thanh toán
     @RequestMapping(value = "/checkout", method = RequestMethod.POST)
@@ -43,8 +52,16 @@ public class PaymentController {
 		        Model model) {
 
     	Long userId = 1L; // Giả định userId = 1, bạn có thể lấy từ session
-        System.out.println("List selected: " + selectedItemIds);
-
+        //System.out.println("List selected: " + selectedItemIds);
+    	Map<String, Map<String, List<String>>> locationData = shippingAddressDAO.getProvincesWithDistrictsAndWards();
+		ObjectMapper objectMapper = new ObjectMapper();
+	    String locationDataJson = "";
+	    try {
+	        locationDataJson = objectMapper.writeValueAsString(locationData);
+	    } catch (JsonProcessingException e) {
+	        e.printStackTrace(); // Log lỗi nếu có
+	    }
+	    model.addAttribute("locationData", locationDataJson);
         if (selectedItemIds == null || selectedItemIds.isEmpty()) {
             model.addAttribute("errorMessage", "Bạn chưa chọn sản phẩm nào để thanh toán.");
             return "redirect:/cart/view.htm";
@@ -63,7 +80,7 @@ public class PaymentController {
             selectedItems.add(item);
         }
 
-        System.out.println("Selected cart items: " + selectedItems);
+        //System.out.println("Selected cart items: " + selectedItems);
         model.addAttribute("cartItems", selectedItems);
 
         // Tính tổng giá trị giỏ hàng (nếu cần)
@@ -78,13 +95,22 @@ public class PaymentController {
 
  // Xử lý thanh toán
     @RequestMapping(value = "/pay", method = RequestMethod.POST)
-    public String processCheckout(@RequestParam("address") String address,
-                                  @RequestParam("payment") String paymentMethod,
-                                  @RequestParam("selectedItems") List<Long> selectedItemIds, // Lấy danh sách ID các sản phẩm được chọn
-                                  RedirectAttributes redirectAttributes) {
+    public String processCheckout(@RequestParam("name") String name, @RequestParam("phone") String phone,
+    		@RequestParam("province") String province, @RequestParam("district") String district, @RequestParam("ward") String ward,
+    		@RequestParam("street") String street,
+	          @RequestParam("paymentMethod") String paymentMethod,
+	          @RequestParam("selectedItems") List<Long> selectedItemIds, HttpSession session,
+	          RedirectAttributes redirectAttributes) {
+    	StringBuilder shippingAddressBuilder = new StringBuilder();
+		shippingAddressBuilder.append(street).append(", ")
+		                      .append(ward).append(", ")
+		                      .append(district).append(", ")
+		                      .append(province);
+
+		String address = shippingAddressBuilder.toString();
         try {
-            // Set cứng userId là 1
-            Long userId = 1L;
+        	UsersEntity userSession = (UsersEntity) session.getAttribute("user");
+            Long userId = userSession.getId();
 
             // Kiểm tra phương thức thanh toán
             if (paymentMethod == null || paymentMethod.isEmpty()) {
@@ -121,9 +147,17 @@ public class PaymentController {
             // Tạo một đơn hàng mới
             OrdersEntity newOrder = new OrdersEntity();
             newOrder.setUser(user); // Gán đối tượng UsersEntity vào OrdersEntity
+            newOrder.setCustomerName(name);
+            newOrder.setCustomerPhone(phone);
             newOrder.setShippingAddress(address);
             newOrder.setTotalPrice(totalPrice);
-            newOrder.setOrderStatus("Chờ xử lý"); // 1: Chờ xử lý
+            newOrder.setPaymentMethod(paymentMethod);
+            if(paymentMethod.equals("paypal") || paymentMethod.equals("vnpay")) {
+            	newOrder.setPaymentStatus("Đã thanh toán");
+            }else {
+            	newOrder.setPaymentStatus("Chưa thanh toán");
+            }
+            newOrder.setOrderStatus("Chờ xác nhận");
             newOrder.setCreatedAt(new Date());
             newOrder.setUpdatedAt(new Date());
 

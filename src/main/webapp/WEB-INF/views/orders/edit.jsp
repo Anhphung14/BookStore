@@ -312,8 +312,9 @@ input[readonly] {
 			                        </div>
 			                        <div class="col-md-2 form-floating" style="box-shadow: none;">
 			                            <!-- Số lượng -->
-			                            <input type="number" class="form-control " name="orderDetailsQuantity[${orderDetail.id}].quantity" value="${orderDetail.quantity }" min="1" max="${orderDetail.book.inventoryEntity.stock_quantity}" oninvalid="this.setCustomValidity('The minimum quantity is 1, and the available stock quantity is ' + this.max + '.')" 
-           oninput="this.setCustomValidity('')">
+			                            <input type="number" class="form-control " name="orderDetailsQuantity[${orderDetail.id}].quantity" value="${orderDetail.quantity }" min="1" max="${orderDetail.book.inventoryEntity.stock_quantity}" oninput="checkMaxMin(this)" 
+			                            oninvalid="this.setCustomValidity('The minimum quantity is 1, and the available stock quantity is ' + this.max + '.')" 
+           oninput="this.setCustomValidity('')" data-toggle="tooltip" title="The minimum quantity is 1, and the available stock quantity is ${orderDetail.book.inventoryEntity.stock_quantity}"  >
 			                            <label class="form-label" for="quantity">Quantity</label>
 			                        </div>
 			                        <div class="col-md-2 form-floating" style="box-shadow: none;">
@@ -522,6 +523,21 @@ input[readonly] {
             populateWards(selectedProvince, selectedDistrict);
         }
     });
+    
+    function checkMaxMin(input) {
+        var max = parseInt(input.max);
+        var min = parseInt(input.min);
+
+        if (input.value > max) {
+            input.value = max; // Nếu giá trị nhập vào lớn hơn max, đặt lại thành giá trị max
+            input.setCustomValidity(`Value cannot be greater than ${max}`); // Thiết lập thông báo lỗi
+        } else if (input.value < min) {
+            input.value = min; // Nếu giá trị nhập vào nhỏ hơn min, đặt lại thành giá trị min
+            input.setCustomValidity(`Value cannot be less than ${min}`); // Thiết lập thông báo lỗi
+        } else {
+            input.setCustomValidity(''); // Xóa thông báo lỗi nếu giá trị hợp lệ
+        }
+    }
 	</script>
 </body>
 </html>
