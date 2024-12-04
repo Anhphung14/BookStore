@@ -1,0 +1,54 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.section-title {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.book-item {
+    background: #fff;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.book-cover img {
+    width: 100%;
+    height: auto;
+}
+
+.book-title a {
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+}
+
+.book-author {
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.book-price del {
+    color: #aaa;
+}
+
+.btn-add-to-wishlist, .btn-add-to-cart {
+    margin-top: 10px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+.btn-add-to-wishlist:hover, .btn-add-to-cart:hover {
+    background-color: #0056b3;
+}

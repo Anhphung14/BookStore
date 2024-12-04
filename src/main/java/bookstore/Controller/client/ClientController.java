@@ -1,7 +1,9 @@
 package bookstore.Controller.client;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -17,6 +19,7 @@ import bookstore.DAO.BooksDAO;
 import bookstore.DAO.CategoriesDAO;
 import bookstore.DAO.DiscountsDAO;
 import bookstore.DAO.InventoryDAO;
+import bookstore.DAO.OrderDetailDAO;
 import bookstore.DAO.RatingsDAO;
 import bookstore.DAO.SubcategoriesDAO;
 import bookstore.Entity.BooksEntity;
@@ -41,18 +44,44 @@ public class ClientController {
     private RatingsDAO ratingsDAO;
     @Autowired
     private InventoryDAO inventoryDAO;
+    @Autowired
+    private OrderDetailDAO orderDetailDAO;
     
     @RequestMapping(value = "/index")
-	public String index(ModelMap model, HttpSession session) {
-		List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
+    public String index(ModelMap model, HttpSession session) {
+        List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
         List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
         UsersEntity userSession = (UsersEntity) session.getAttribute("user");
-        model.addAttribute("user", userSession);
+
+        
+        List<BooksEntity> bookList = booksDAO.listBooks(); 
+
+        Map<Long, Double> bookDiscounts = new HashMap<>();
+        
+        for (BooksEntity book : bookList) {
+            Double discountValue = discountsDAO.getDiscountValueByBookId(book.getId());
+            
+            if (discountValue == null) {
+                discountValue = 0.0;
+            }
+            bookDiscounts.put(book.getId(), discountValue);
+        }
+
+
         discountsDAO.updateStatusDiscounts();
+        
+        BooksEntity bestSellingBook = orderDetailDAO.getBestSellingBook();
+
+        
         model.addAttribute("Categories", listCategories);
         model.addAttribute("SubCategories", listSubCategories);
-        return "client/index";
-	}
+        model.addAttribute("user", userSession);
+        model.addAttribute("bookList", bookList);
+        model.addAttribute("bookDiscounts", bookDiscounts); 
+        model.addAttribute("bestSellingBook", bestSellingBook); 
+        return "client/index"; 
+    }
+
 	
 	
     @RequestMapping("/search")
@@ -103,8 +132,8 @@ public class ClientController {
 		int averageRating = (int) Math.floor(ratingAVR);
 		model.addAttribute("ratingAVR", averageRating);
 		
-		InventoryEntity inventory = inventoryDAO.getInventoryByBookId(id);
-		model.addAttribute("stock_quantity", inventory.getStock_quantity());
+//		InventoryEntity inventory = inventoryDAO.getInventoryByBookId(id);
+//		model.addAttribute("stock_quantity", inventory.getStock_quantity());
 		
 		return "client/productdetail";
 	}

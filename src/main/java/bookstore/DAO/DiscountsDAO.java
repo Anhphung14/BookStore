@@ -425,29 +425,27 @@ public class DiscountsDAO {
 
 	 
 
-	 public Double getDiscountValueByBookId(Long bookId) {
-		    Session session = sessionFactory.getCurrentSession();
-		    String hql = "SELECT bd.discount_id.discountValue " +
-		                 "FROM Book_DiscountsEntity bd " +
-		                 "WHERE bd.book_id.id = :bookId " +
-		                 "AND bd.discount_id.applyTo = 'categories' " + 
-		                 "AND bd.discount_id.status = 'active' " +
-		                 "AND CURRENT_TIMESTAMP BETWEEN bd.discount_id.startDate AND bd.discount_id.endDate";
-		    
-		    // Retrieve the discount value as BigDecimal
-		    Object result = session.createQuery(hql)
-		            .setParameter("bookId", bookId)
-		            .uniqueResult();
+	public Double getDiscountValueByBookId(Long bookId) {
+	    Session session = sessionFactory.getCurrentSession();
+	    String hql = "SELECT bd.discount_id.discountValue " +
+	                 "FROM Book_DiscountsEntity bd " +
+	                 "WHERE bd.book_id.id = :bookId " +
+	                 "AND bd.discount_id.applyTo = 'All Products' " + 
+	                 "AND bd.discount_id.status = 'Active' " +
+	                 "AND CURRENT_TIMESTAMP BETWEEN bd.discount_id.startDate AND bd.discount_id.endDate";
+	    
+	    Object result = session.createQuery(hql)
+	            .setParameter("bookId", bookId)
+	            .uniqueResult();
 
-		    // Check if the result is null
-		    if (result == null) {
-		        return 0.0;
-		    }
+	    if (result == null) {
+	        return 0.0;
+	    }
 
-		    // Cast it to Long if the discount value is stored as Long in the DB
-		    Long discountValueLong = (Long) result;
-		    return discountValueLong.doubleValue();
-		}
+	    Long discountValueLong = (Long) result;
+	    return discountValueLong.doubleValue();
+	}
+
 		
 		public List<Double> getDiscountsValueByBookId(List<BooksEntity> books){
 			Session session = sessionFactory.getCurrentSession();
