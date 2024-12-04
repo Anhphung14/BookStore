@@ -51,8 +51,8 @@
 
     <h3>Payment Information</h3>
 	<p><strong>Order ID:</strong> ${order.id}</p>
-	<p><strong>Customer:</strong> ${order.user.fullname}</p>
-	<p><strong>Phone Number:</strong> ${order.user.phone}</p>
+	<p><strong>Customer:</strong> ${order.customerName}</p>
+	<p><strong>Phone Number:</strong> ${order.customerPhone}</p>
 	<p><strong>Order Date:</strong> ${order.createdAt}</p>
 	<p><strong>Shipping Address:</strong> ${order.shippingAddress}</p>
 	<p><strong>Payment Method:</strong> ${order.paymentMethod}</p>

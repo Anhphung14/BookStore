@@ -32,6 +32,9 @@
     
     <!-- Modernizr JS -->
     <script src="resources/assets/js/client/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+      	<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 </head>
 <body>
 
@@ -103,14 +106,14 @@
 														<ul class="tg-delevrystock">
 															<li><i class="fa-solid fa-rocket"></i><span>Free delivery worldwide</span></li>
 															<li><i class="fa-regular fa-square-check"></i><span>Dispatch from the USA in 2 working days </span></li>
-															<%-- <li><i class="fa-solid fa-store"></i><span>Status: <em>${stock_quantity}</em></span></li> --%>
+															<li><i class="fa-solid fa-store"></i><span>Status: <em>${book.inventoryEntity.stock_quantity}</em></span></li>
 														</ul>
 														<div class="tg-quantityholder">
 															<em class="minus">-</em>
-															<input type="text" class="result" value="0" id="quantity1" name="quantity">
+															<input type="text" class="result" value="1" id="quantity1" name="quantity">
 															<em class="plus">+</em>
 														</div>
-														<a class="tg-btn tg-active tg-btn-lg" style="text-decoration: none;" href="javascript:void(0);">Add To Basket</a>
+														<a class="tg-btn tg-active tg-btn-lg btn-add-to-cart" data-book-id="${book.id}" data-quantity="1" style="text-decoration: none;">Add To Basket</a>
 								
 													</div>
 												</div>
@@ -483,9 +486,44 @@
 	<script>
 	var isFullDescription = false;  // Biến để theo dõi trạng thái của mô tả
 
-    function showMore() {
-        var fullDescription = '${book.description}';
-        var shortDescription = '${book.description.substring(0, 100)}...';
+	
+	document.querySelectorAll('.btn-add-to-cart').forEach(function(button) {
+	    button.addEventListener('click', function(event) {
+    		const quantity = document.getElementById('quantity1').value;
+	    	 var bookId = event.currentTarget.getAttribute('data-book-id');
+	         //var quantity = event.currentTarget.getAttribute('data-quantity');
+	         console.log("bookId:", bookId);
+	         console.log("quantity:", quantity);
+	        // Gửi GET request để thêm sách vào giỏ hàng
+	        fetch('/bookstore/cart/add.htm?bookId=' + bookId + '&quantity=' + quantity, {
+	            method: 'GET', 
+	        })
+	        .then(response => response.text()) 
+	        .then(data => {
+	        	console.log("data: " + data);
+	            // Xử lý phản hồi sau khi thêm vào giỏ hàng
+	            if (data != "error") {
+	            	 var countBooksInCart = parseInt(data);  // Chuyển đổi dữ liệu trả về thành số
+	            	 fetch('/bookstore/index.htm');
+	                 document.querySelector('#tg-minicart .tg-themebadge').textContent = countBooksInCart;
+	            	 toastr.success('Sản phẩm đã được thêm vào giỏ hàng!', 'Thành công');
+	                
+	            } else {
+	            	toastr.error('Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ!', 'Lỗi');
+	            }
+	        })
+	        .catch(error => {
+	            // Lỗi trong quá trình gửi request
+	            console.error('Có lỗi xảy ra:', error);
+	            toastr.error('Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ!', 'Lỗi');
+	        });
+	    });
+	});
+
+	
+	/*      function showMore() {
+        var fullDescription = "${fn:escapeXml(book.description)}";
+        var shortDescription = "${book.description.substring(0, 100)}...";
         var descriptionElement = document.getElementById('book-description');
         var linkElement = document.getElementById('more_less');
 
@@ -498,7 +536,7 @@
         }
 
         isFullDescription = !isFullDescription;  // Đổi trạng thái
-    }
+    } */
 	</script>
 </body>
 </html>
