@@ -127,9 +127,18 @@
 							    </div>
 							    <div class="d-flex justify-content-end mb-3">
 							        
-							        <button type="button" class="btn btn-search" style="background-color: #B197FC" onclick="refreshPage()">
+							        <button type="button" class="btn btn-refresh" style="background-color: #B197FC" onclick="refreshPage()">
 					                    <i class="fa-solid fa-arrows-rotate" style="color: #ffffff;"></i>
 					                </button>
+							    </div>
+							    
+							   
+								
+								<div class="d-flex justify-content-end mb-3">
+							        <a class="btn btn-primary text-nowrap btn-add"
+										href="${pageContext.request.contextPath}/discount/create.htm"> <i
+										class="fa fa-plus me-2"></i>Add
+									</a>
 							    </div>
 
 						</div>
