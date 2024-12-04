@@ -73,10 +73,13 @@ public class ClientController {
         }
 
 
-
-        Long countBooksInCart = cartDAO.countItemsInCart(userSession.getCart().getId());
-        session.setAttribute("countBooksInCart", countBooksInCart);
-        
+        if(userSession.getCart() != null){
+        	Long countBooksInCart = cartDAO.countItemsInCart(userSession.getCart().getId());
+        	session.setAttribute("countBooksInCart", countBooksInCart);
+        }else {
+        	session.setAttribute("countBooksInCart", 0);
+        }
+            
         model.addAttribute("user", userSession);
 
         discountsDAO.updateStatusDiscounts();

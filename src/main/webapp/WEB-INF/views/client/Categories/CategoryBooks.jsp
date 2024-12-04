@@ -172,7 +172,7 @@
 																	<ins>chưa biết</ins>
 																	<del><f:formatNumber value="${book.price}" type="currency"/></del>
 																</span>
-																<a class="tg-btn tg-btnstyletwo" href="/bookstore/cart/add.htm?bookId=${book.id}&quantity=1">
+																<a class="tg-btn tg-btnstyletwo btn-add-to-cart" data-book-id="${book.id}" data-quantity="1" > <%-- href="/bookstore/cart/add.htm?bookId=${book.id}&quantity=1"> --%>
 																	<i class="fa fa-shopping-basket"></i>
 																	<em>Thêm vào giỏ</em>
 																</a>
