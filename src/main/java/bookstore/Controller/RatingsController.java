@@ -21,43 +21,43 @@ public class RatingsController {
 	
 	@RequestMapping(value = "/ratings", method = RequestMethod.GET)
 	public String ratings(ModelMap model) {
-		List<RatingsEntity> listUn = ratingsDAO.getRatingsByStatus0();
+//		List<RatingsEntity> listUn = ratingsDAO.getRatingsByStatus0();
 		List<RatingsEntity> listAp = ratingsDAO.getRatingsByStatus1();
-		List<RatingsEntity> listRe = ratingsDAO.getRatingsByStatus2();
-		model.addAttribute("listUn", listUn);
-		model.addAttribute("listAp", listAp);
-		model.addAttribute("listRe", listRe);
+//		List<RatingsEntity> listRe = ratingsDAO.getRatingsByStatus2();
+		model.addAttribute("listRatings", listAp);
+//		model.addAttribute("listAp", listAp);
+//		model.addAttribute("listRe", listRe);
 		return "ratings/index";
 	}
 	
 	@RequestMapping(value = "/ratings", method = RequestMethod.POST)
 	public String ratingsSearch(ModelMap model, @RequestParam(value = "search", required = false) String search,
             @RequestParam(value = "searchOption", required = false) String searchOption) {
-		List<RatingsEntity> listUn = ratingsDAO.getRatingsByStatus0();
+		//List<RatingsEntity> listUn = ratingsDAO.getRatingsByStatus0();
 		List<RatingsEntity> listAp = ratingsDAO.getRatingsByStatus1();
-		List<RatingsEntity> listRe = ratingsDAO.getRatingsByStatus2();
+		//List<RatingsEntity> listRe = ratingsDAO.getRatingsByStatus2();
 		
 		if (searchOption.equals("bookName") && !search.isEmpty()) {
-			listUn = ratingsDAO.searchRatingsByBook(search, 0);
+			//listUn = ratingsDAO.searchRatingsByBook(search, 0);
 			listAp = ratingsDAO.searchRatingsByBook(search, 1);
-			listRe = ratingsDAO.searchRatingsByBook(search, 2);
+			//listRe = ratingsDAO.searchRatingsByBook(search, 2);
 		}
 		
 		if (searchOption.equals("reviewerName") && !search.isEmpty()) {
-			listUn = ratingsDAO.searchRatingsByUser(search, 0);
+			//listUn = ratingsDAO.searchRatingsByUser(search, 0);
 			listAp = ratingsDAO.searchRatingsByUser(search, 1);
-			listRe = ratingsDAO.searchRatingsByUser(search, 2);
+			//listRe = ratingsDAO.searchRatingsByUser(search, 2);
 		}
 		
 		if (search.isEmpty()) {
-			listUn = ratingsDAO.getRatingsByStatus0();
+			//listUn = ratingsDAO.getRatingsByStatus0();
 			listAp = ratingsDAO.getRatingsByStatus1();
-			listRe = ratingsDAO.getRatingsByStatus2();
+			//listRe = ratingsDAO.getRatingsByStatus2();
 		}
 		
-		model.addAttribute("listUn", listUn);
-		model.addAttribute("listAp", listAp);
-		model.addAttribute("listRe", listRe);
+		//model.addAttribute("listUn", listUn);
+		model.addAttribute("listRatings", listAp);
+		//model.addAttribute("listRe", listRe);
 		return "ratings/index";
 	}
 	

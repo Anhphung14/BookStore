@@ -1,9 +1,11 @@
 package bookstore.Controller;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -31,7 +33,14 @@ public class InventoriesController {
 	@RequestMapping("/inventories")
 	public String inventories(ModelMap model) {
 		
-		model.addAttribute("listInventories", inventoryService.getAllInventories());
+		List<InventoryEntity> listInventories = inventoryService.getAllInventories();
+		
+		for (InventoryEntity inventory : listInventories) {
+			Hibernate.initialize(inventory.getBook());
+		}
+		
+		model.addAttribute("listInventories", listInventories);
+		
 		return "inventories/index";
 	}
 	

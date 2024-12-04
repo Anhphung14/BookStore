@@ -123,7 +123,7 @@
                                     <th width="160px" class="text-center">Status</th>
                                     <th width="60px" class="text-center">Actions</th>
                                 </tr>
-                                	<c:forEach var="rating" items="${listUn}" varStatus="status">
+                                	<c:forEach var="rating" items="${listRatings}" varStatus="status">
 <%--                                     <c:if test="${!rating.approved}"> --%>
                                         <tr>
                                             <td><input type="checkbox" class="form-check-input" id="cb${status.index}" name="cid[]" value="${rating.id}" onclick="isChecked(this.checked)"></td>

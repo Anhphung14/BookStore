@@ -86,7 +86,7 @@ public class RatingsDAO {
             newRating.setBook(book);
             newRating.setOrder(order);
             newRating.setNumber(ratingNumber);
-            newRating.setStatus(0); // Trạng thái là 0 (đánh giá chờ duyệt)
+            newRating.setStatus(1); // Trạng thái là 0 (đánh giá chờ duyệt)
             newRating.setContent(reviewContent);
             newRating.setCreatedAt(new Date());
             newRating.setUpdatedAt(new Date());

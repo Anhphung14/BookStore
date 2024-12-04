@@ -25,7 +25,7 @@ if (alertMessage) {
         cancelButtonText: "Resend link",
         confirmButtonText: "OK"
     }).then((result) => {
-        if (result.isConfirmed && alertType === "success") {
+        if (result.isConfirmed) {
             window.location.href = '${pageContext.servletContext.contextPath}/signin.htm';
         } else if (result.dismiss === Swal.DismissReason.cancel) {
             // Thực hiện yêu cầu POST khi nhấn nút "Resend link"
