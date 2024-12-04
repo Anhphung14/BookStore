@@ -102,6 +102,21 @@ public class AuthClientController {
 	            roles.add(role);
 	            user.setRoles(roles);
 	        }
+	        
+	        String otpCode = otpService.storeOtp(user.getEmail());
+			
+			String emailContent = "<html><body>"
+	                + "<h5>Hello " + user.getEmail() + ",</h5>"
+	                + "<p>Click the following link to confirm and activate your account:</p>"
+	                + "<h5 style=\"color: #4CAF50;\">" + "http://127.0.0.1:8080/bookstore/client/verify-email.htm?code="+ otpCode + "</h5>"
+	                + "<p>Bạn có 1 phút để xác thực tài khoản 😎</p>"
+	                + "<p>Regards,<br>BookStore</p>"
+	                + "<footer style=\"font-size: 0.8em; color: #777;\">This is an automated email. Please do not reply.</footer>"
+	                + "</body></html>";
+			
+			mailService.sendMail(emailContent, user.getEmail(), "Complete Your Registration with This Link");
+			
+			user.setEnabled(0);
 
 	        session.saveOrUpdate(user);
 
@@ -121,6 +136,68 @@ public class AuthClientController {
 	        return "redirect:client/signup.htm";
 	    }
 	    return "client/auth/signup";
+	}
+	
+	@RequestMapping("/client/verify-email")
+	public String verify_email(ModelMap model, @RequestParam(value = "code", required = false) String code) {
+		OTPDTO otp = otpService.getOTPByCode(code);
+		
+		String alertMessage = "";
+		String alertType = "";
+		
+	    if (otp == null) {
+	        alertMessage = "The link is incorrect or does not exist!";
+	        alertType = "error";
+	    } else {
+
+		    if (otp.isExpired()) {
+		        alertMessage = "The link has expired!";
+		        alertType = "error";
+		        model.addAttribute("email", otp.getEmail());
+		    }
+	
+		    else if (otp.isUsed()) {
+		    	alertMessage = "The link has already been activated!";
+		        alertType = "error";
+		    }
+	
+		    else if (otp.getCode().equals(code)) {
+		        otp.setUsed(true);
+		        otpService.removeOTPCode(code);
+		        
+		        alertMessage = "Congratulations, you have successfully registered!";
+		        alertType = "success";
+		    } else {
+		        alertMessage = "The link is incorrect or does not exist!";
+		        alertType = "error";
+		    }
+	    
+	    }
+		
+	    model.addAttribute("alertMessage", alertMessage);
+	    model.addAttribute("alertType", alertType);
+	    
+		return "client/auth/confirmOTP";
+		
+	}
+	
+	@RequestMapping(value = "/client/resend-link", method = RequestMethod.POST)
+	public String resend(@RequestParam("email") String email) {
+		
+		String otpCode = otpService.storeOtp(email);
+		
+		String emailContent = "<html><body>"
+                + "<h5>Hello " + email + ",</h5>"
+                + "<p>Click the following link to confirm and activate your account:</p>"
+                + "<h5 style=\"color: #4CAF50;\">" + "http://127.0.0.1:8080/bookstore/client/verify-email.htm?code="+ otpCode + "</h5>"
+                + "<p>Bạn có 1 phút để xác thực tài khoản 😎</p>"
+                + "<p>Regards,<br>BookStore</p>"
+                + "<footer style=\"font-size: 0.8em; color: #777;\">This is an automated email. Please do not reply.</footer>"
+                + "</body></html>";
+		
+		mailService.sendMail(emailContent, email,  "Complete Your Registration with This Re-Link");
+		
+		return "client/auth/signup";
 	}
 
 

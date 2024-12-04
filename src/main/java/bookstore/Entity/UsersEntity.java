@@ -56,7 +56,7 @@ public class UsersEntity {
     private String verify_token;
     
     @Column(name = "enabled", columnDefinition = "bit")
-    private int enabled;
+    private Integer enabled;
 
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
@@ -198,15 +198,15 @@ public class UsersEntity {
 	public void setCart(CartsEntity cart) {
 		this.cart = cart;
 	}
-
-	public int getEnabled() {
+	
+	public Integer getEnabled() {
 		return enabled;
 	}
 
-	public void setEnabled(int enabled) {
+	public void setEnabled(Integer enabled) {
 		this.enabled = enabled;
 	}
-	
+
 	public List<OrdersEntity> getOrders() {
 		return orders;
 	}
