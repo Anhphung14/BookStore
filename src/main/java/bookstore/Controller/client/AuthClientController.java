@@ -2,6 +2,7 @@ package bookstore.Controller.client;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import bookstore.Entity.CartsEntity;
 import bookstore.Entity.RolesEntity;
 import bookstore.Entity.UsersEntity;
 import bookstore.Util.PasswordUtil;
@@ -63,43 +65,53 @@ public class AuthClientController {
 
 	@RequestMapping(value = "/client/user/save", method = RequestMethod.POST)
 	public String saveUser(@ModelAttribute("user") UsersEntity user, Model model) {
-		Session session = factory.getCurrentSession();
+	    Session session = factory.getCurrentSession();
 
-		try {
-			if (getUserByEmail(user.getEmail()) != null) {
-				model.addAttribute("alertMessage", "Email đã tồn tại vui lòng nhập email khác!");
-				model.addAttribute("alertType", "error");
-				return "client/auth/signup";
-			}
-			user.setAvatar("https://res.cloudinary.com/dsqhfz3xt/image/upload/v1733041850/images/avatars/vo-anh-phungg/drmxjyaok8d8b8ofgiwl.png");
+	    try {
+	        if (getUserByEmail(user.getEmail()) != null) {
+	            model.addAttribute("alertMessage", "Email đã tồn tại vui lòng nhập email khác!");
+	            model.addAttribute("alertType", "error");
+	            return "client/auth/signup";
+	        }
 
-			LocalDateTime now = LocalDateTime.now();
-			Timestamp currentDate = Timestamp.valueOf(now);
-			user.setCreated_at(currentDate);
-			user.setUpdated_at(currentDate);
-			
-			String hashedPassword = PasswordUtil.hashPassword(user.getPassword());
-	        user.setPassword(hashedPassword); 
-	        
+	        user.setAvatar("https://res.cloudinary.com/dsqhfz3xt/image/upload/v1733041850/images/avatars/vo-anh-phungg/drmxjyaok8d8b8ofgiwl.png");
+
+	        LocalDateTime now = LocalDateTime.now();
+	        Timestamp currentDate = Timestamp.valueOf(now);
+	        user.setCreated_at(currentDate);
+	        user.setUpdated_at(currentDate);
+
+	        String hashedPassword = PasswordUtil.hashPassword(user.getPassword());
+	        user.setPassword(hashedPassword);
 	        user.setGender(1);
 
-			RolesEntity role = (RolesEntity) session.get(RolesEntity.class, 3L); // role_id = 3
-			if (role != null) {
-				Set<RolesEntity> roles = new HashSet<>();
-				roles.add(role);
-				user.setRoles(roles);
-			}
+	        RolesEntity role = (RolesEntity) session.get(RolesEntity.class, 3L);
+	        if (role != null) {
+	            Set<RolesEntity> roles = new HashSet<>();
+	            roles.add(role);
+	            user.setRoles(roles);
+	        }
 
-			session.save(user);
+	        session.saveOrUpdate(user);
+
+	        CartsEntity cart = new CartsEntity();
+	        cart.setUser(user);
+	        cart.setStatus(1); 
+	        cart.setCreatedAt(new Date());
+	        cart.setUpdatedAt(new Date());
+
+	        session.save(cart);
+
 	        model.addAttribute("alertMessage", "Đăng ký thành công, bạn có thể đăng nhập ngay bây giờ!");
 	        model.addAttribute("alertType", "success");
-		} catch (Exception e) {
-			e.printStackTrace();
-			model.addAttribute("alertType", "error");
-			return "redirect:client/signup.htm";
-		}
-		return "client/auth/signup";
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        model.addAttribute("alertType", "error");
+	        return "redirect:client/signup.htm";
+	    }
+	    return "client/auth/signup";
 	}
+
 
 	public UsersEntity getUserByEmail(String email) {
 		Session session = factory.getCurrentSession();
