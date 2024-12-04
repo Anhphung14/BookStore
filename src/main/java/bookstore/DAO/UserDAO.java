@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import bookstore.Entity.UsersEntity;
+import bookstore.Util.PasswordUtil;
 
 @Repository
 @Transactional
@@ -33,6 +34,21 @@ public class UserDAO {
         return user;
     }
     
+    public boolean checkOldPassword(Long userId, String oldPassword) {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "FROM UsersEntity WHERE id = :userId";
+        UsersEntity user = (UsersEntity) session.createQuery(hql)
+                                                .setParameter("userId", userId)
+                                                .uniqueResult();
+
+        if (user != null) {
+            // So sánh mật khẩu cũ với mật khẩu đã băm trong cơ sở dữ liệu
+            return PasswordUtil.verifyPassword(oldPassword, user.getPassword());
+        }
+
+        return false; // Trường hợp người dùng không tồn tại
+    }
+   
     public int updateUserById(Long id, UsersEntity updatedUser) {
         Session session = sessionFactory.openSession();
         Transaction t = session.beginTransaction();

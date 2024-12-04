@@ -71,6 +71,9 @@ public class UsersEntity {
     @OneToOne(mappedBy = "user")
     private CartsEntity cart;
     
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<OrdersEntity> orders;
+    
     @Transient
     private Set<Long> roleIds;
 
@@ -204,4 +207,15 @@ public class UsersEntity {
 		this.enabled = enabled;
 	}
 	
+	public List<OrdersEntity> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<OrdersEntity> orders) {
+		this.orders = orders;
+	}
+	
+	
+    
+    
 }

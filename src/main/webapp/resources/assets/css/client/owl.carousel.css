@@ -43,8 +43,8 @@
 }
 .owl-carousel .owl-nav.disabled,
 .owl-carousel .owl-dots.disabled {display: none;}
-.owl-carousel .owl-nav .owl-prev,
-.owl-carousel .owl-nav .owl-next,
+/* .owl-carousel .owl-nav .owl-prev,
+.owl-carousel .owl-nav .owl-next, */
 .owl-carousel .owl-dot {
 	cursor: pointer;
 	cursor: hand;
@@ -54,10 +54,10 @@
 	-ms-user-select: none;
 	user-select: none;
 }
-.owl-prev:hover,
+/* .owl-prev:hover,
 .owl-next:hover,
-.owl-prev:hover i,
-.owl-next:hover i {color: #fff;}
+.owl-prev:hover i, */
+/* .owl-next:hover i {color: #fff;} */
 .owl-carousel.owl-loaded {display: block;}
 .owl-carousel.owl-loading {
 	opacity: 0;
@@ -180,7 +180,6 @@
 /*
  *  Default theme - Owl Carousel CSS File
  */
-
 .owl-theme .owl-nav {
 	margin-top: 10px;
 	text-align: center;
@@ -200,6 +199,7 @@
 	color: #fff;
 	background: #869791;
 	text-decoration: none;
+	
 }
 .owl-theme .owl-nav .disabled {
 	opacity: 0.5;
@@ -212,7 +212,7 @@
 }
 .owl-theme .owl-dots .owl-dot {
 	zoom: 1;
-	*display: inline;
+	/* display: inline; */
 	display: inline-block;
 }
 .owl-theme .owl-dots .owl-dot span {
@@ -227,3 +227,6 @@
 }
 .owl-theme .owl-dots .owl-dot.active span,
 .owl-theme .owl-dots .owl-dot:hover span { background: #869791; }
+
+
+

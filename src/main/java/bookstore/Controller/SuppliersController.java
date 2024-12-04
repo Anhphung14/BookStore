@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import bookstore.Service.SuppliersService;
 import bookstore.Entity.SuppliersEntity;
@@ -96,39 +97,55 @@ public class SuppliersController {
 	}
 
 	@RequestMapping(value = "/supplier/save.htm", method = RequestMethod.POST)
-	public String saveSupplier(@ModelAttribute("supplier") SuppliersEntity supplier, @RequestParam("task") String task,
-			@RequestParam(value = "id", required = false) Long id, ModelMap model) {
-		Session session = factory.getCurrentSession();
-		try {
-			// If task is 'new', create a new supplier
-			if ("new".equals(task)) {
-				LocalDateTime now = LocalDateTime.now();
-				Timestamp currentDate = Timestamp.valueOf(now);
+	public String saveSupplier(@ModelAttribute("supplier") SuppliersEntity supplier, 
+	                            @RequestParam("task") String task,
+	                            @RequestParam(value = "id", required = false) Long id, 
+	                            RedirectAttributes redirectAttributes) {
+	    Session session = factory.getCurrentSession();
+	    boolean isSuccess = false; // Biến boolean kiểm tra kết quả
 
-				supplier.setCreatedAt(currentDate);
-				supplier.setUpdatedAt(currentDate);
-				session.save(supplier);
-			}
-			// If task is 'edit', update an existing supplier
-			else if ("edit".equals(task)) {
-				SuppliersEntity existingSupplier = (SuppliersEntity) session.get(SuppliersEntity.class, id);
-				if (existingSupplier != null) {
-					existingSupplier.setName(supplier.getName());
-					existingSupplier.setContactPerson(supplier.getContactPerson());
-					existingSupplier.setEmail(supplier.getEmail());
-					existingSupplier.setPhone(supplier.getPhone());
-					existingSupplier.setAddress(supplier.getAddress());
-					Date currentDate = new Date(System.currentTimeMillis());
-					existingSupplier.setUpdatedAt(currentDate);
-					session.update(existingSupplier);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			model.addAttribute("message", "An error occurred: " + e.getMessage());
-		}
-		return "redirect:/suppliers.htm";
+	    try {
+	        // Nếu task là 'new', tạo một nhà cung cấp mới
+	        if ("new".equals(task)) {
+	            LocalDateTime now = LocalDateTime.now();
+	            Timestamp currentDate = Timestamp.valueOf(now);
+
+	            supplier.setCreatedAt(currentDate);
+	            supplier.setUpdatedAt(currentDate);
+	            session.save(supplier);
+	            isSuccess = true; // Đặt là true nếu thao tác thành công
+	        }
+	        // Nếu task là 'edit', cập nhật một nhà cung cấp hiện có
+	        else if ("edit".equals(task)) {
+	            SuppliersEntity existingSupplier = (SuppliersEntity) session.get(SuppliersEntity.class, id);
+	            if (existingSupplier != null) {
+	                existingSupplier.setName(supplier.getName());
+	                existingSupplier.setContactPerson(supplier.getContactPerson());
+	                existingSupplier.setEmail(supplier.getEmail());
+	                existingSupplier.setPhone(supplier.getPhone());
+	                existingSupplier.setAddress(supplier.getAddress());
+	                Date currentDate = new Date(System.currentTimeMillis());
+	                existingSupplier.setUpdatedAt(currentDate);
+	                session.update(existingSupplier);
+	                isSuccess = true; // Đặt là true nếu thao tác thành công
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    // Dựa trên giá trị của biến isSuccess, trả thông báo tương ứng
+	    if (isSuccess) {
+	        redirectAttributes.addFlashAttribute("alertMessage", "Supplier saved/updated successfully!");
+	        redirectAttributes.addFlashAttribute("alertType", "success");
+	    } else {
+	        redirectAttributes.addFlashAttribute("alertMessage", "Failed to save/update supplier.");
+	        redirectAttributes.addFlashAttribute("alertType", "danger");
+	    }
+
+	    return "redirect:/suppliers.htm";
 	}
+
 
 	@RequestMapping(value = "/supplier/delete/{id}.htm", method = RequestMethod.GET)
 	public String deleteRole(@PathVariable("id") Long id) {

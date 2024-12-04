@@ -1,182 +1,76 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Book Library</title>
-    <base href="${pageContext.servletContext.contextPath}/">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Book Library</title>
+<base href="${pageContext.servletContext.contextPath}/">
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 	<footer id="tg-footer" class="tg-footer tg-haslayout">
-			<div class="tg-footerarea">
-				<div class="container">
-					<div class="row">
-						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-							<ul class="tg-clientservices">
-								<li class="tg-devlivery">
-									<span class="tg-clientserviceicon"><i class="fa-solid fa-rocket"></i></span>
-									<div class="tg-titlesubtitle">
-										<h3>Fast Delivery</h3>
-										<p>Shipping Worldwide</p>
-									</div>
-								</li>
-								<li class="tg-discount">
-									<span class="tg-clientserviceicon"><i class="fa-solid fa-tag"></i></span>
-									<div class="tg-titlesubtitle">
-										<h3>Open Discount</h3>
-										<p>Offering Open Discount</p>
-									</div>
-								</li>
-								<li class="tg-quality">
-									<span class="tg-clientserviceicon"><i class="fa-solid fa-leaf"></i></span>
-									<div class="tg-titlesubtitle">
-										<h3>Eyes On Quality</h3>
-										<p>Publishing Quality Work</p>
-									</div>
-								</li>
-								<li class="tg-support">
-									<span class="tg-clientserviceicon"><i class="fa-solid fa-heart"></i></span>
-									<div class="tg-titlesubtitle">
-										<h3>24/7 Support</h3>
-										<p>Serving Every Moments</p>
-									</div>
-								</li>
-							</ul>
+		<div class="tg-footerarea">
+			<div class="container">
+				<div class="row">
+					<div class="tg-threecolumns" style="padding-top:30px; padding-bottom:0px">
+
+						<div class="col-xs-10 col-sm-10 col-md-4 col-lg-4">
+							<div class="tg-footercol tg-widget tg-widgettopsellingauthors">
+								<strong > <a href="javascript:void(0);">
+										<img class="logo-img"
+										style="width: 300px; height: auto; display: block; margin: 0 auto;"
+										src="${pageContext.servletContext.contextPath}/resources/images/client/ALDPT (2).png"
+										alt="image description">
+								</a>
+								</strong>
+							</div>
 						</div>
-						<div class="tg-threecolumns">
-							<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-								<div class="tg-footercol">
-									<strong class="tg-logo"><a href="javascript:void(0);"><img src="${pageContext.servletContext.contextPath}/resources/images/client/flogo.png" alt="image description"></a></strong>
-									<ul class="tg-contactinfo">
-										<li>
-											<i class="fa-solid fa-building"></i>
-											<address>Suit # 07, Rose world Building, Street # 02, AT246T Manchester</address>
-										</li>
-										<li>
-											<i class="fa-solid fa-phone"></i>
-											<span>
-												<em>0800 12345 - 678 - 89</em>
-												<em>+4 1234 - 4567 - 67</em>
-											</span>
-										</li>
-										<li>
-											<i class="fa-solid fa-clock"></i>
-											<span>Serving 7 Days A Week From 9am - 5pm</span>
-										</li>
-										<li>
-											<i class="fa-solid fa-envelope"></i>
-											<span>
-												<em><a href="mailto:support@domain.com">support@domain.com</a></em>
-												<em><a href="mailto:info@domain.com">info@domain.com</a></em>
-											</span>
-										</li>
-									</ul>
-									<ul class="tg-socialicons">
-										<li class="tg-facebook"><a href="javascript:void(0);"><i class="fa fa-facebook"></i></a></li>
-										<li class="tg-twitter"><a href="javascript:void(0);"><i class="fa fa-twitter"></i></a></li>
-										<li class="tg-linkedin"><a href="javascript:void(0);"><i class="fa fa-linkedin"></i></a></li>
-										<li class="tg-googleplus"><a href="javascript:void(0);"><i class="fa fa-google-plus"></i></a></li>
-										<li class="tg-rss"><a href="javascript:void(0);"><i class="fa fa-rss"></i></a></li>
-									</ul>
-								</div>
+						<div class="col-xs-10 col-sm-10 col-md-4 col-lg-4">
+							<div class="tg-footercol">
+								<ul class="tg-contactinfo">
+									<li><i class="fa-solid fa-building"></i>
+										<address>97 Man Thiện, Phường Hiệp Phú, TP. Thủ Đức</address>
+									</li>
+									<li><i class="fa-solid fa-phone"></i> <span> <em>0800
+												12345 - 678 - 89</em> <em>+4 1234 - 4567 - 67</em>
+									</span></li>
+									<li><i class="fa-solid fa-clock"></i> <span>24/7</span></li>
+									<li><i class="fa-solid fa-envelope"></i> <span> <em><a
+												href="bookstore@gmail.com">bookstore@gmail.com</a></em>
+									</span></li>
+								</ul>
+								<ul class="tg-socialicons">
+									<li class="tg-facebook"><a href="javascript:void(0);"><i
+											class="fa fa-facebook"></i></a></li>
+									<li class="tg-twitter"><a href="javascript:void(0);"><i
+											class="fa fa-twitter"></i></a></li>
+									<li class="tg-linkedin"><a href="javascript:void(0);"><i
+											class="fa fa-linkedin"></i></a></li>
+									<li class="tg-googleplus"><a href="javascript:void(0);"><i
+											class="fa fa-google-plus"></i></a></li>
+									<li class="tg-rss"><a href="javascript:void(0);"><i
+											class="fa fa-rss"></i></a></li>
+								</ul>
 							</div>
-							<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-								<div class="tg-footercol tg-widget tg-widgetnavigation">
-									<div class="tg-widgettitle">
-										<h3>Shipping And Help Information</h3>
-									</div>
-									<div class="tg-widgetcontent">
-										<ul>
-											<li><a href="javascript:void(0);">Terms of Use</a></li>
-											<li><a href="javascript:void(0);">Terms of Sale</a></li>
-											<li><a href="javascript:void(0);">Returns</a></li>
-											<li><a href="javascript:void(0);">Privacy</a></li>
-											<li><a href="javascript:void(0);">Cookies</a></li>
-											<li><a href="javascript:void(0);">Contact Us</a></li>
-											<li><a href="javascript:void(0);">Our Affiliates</a></li>
-											<li><a href="javascript:void(0);">Vision &amp; Aim</a></li>
-										</ul>
-										<ul>
-											<li><a href="javascript:void(0);">Our Story</a></li>
-											<li><a href="javascript:void(0);">Meet Our Team</a></li>
-											<li><a href="javascript:void(0);">FAQ</a></li>
-											<li><a href="javascript:void(0);">Testimonials</a></li>
-											<li><a href="javascript:void(0);">Join Our Team</a></li>
-										</ul>
-									</div>
-								</div>
-							</div>
-							<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-								<div class="tg-footercol tg-widget tg-widgettopsellingauthors">
-									<div class="tg-widgettitle">
-										<h3>Top Selling Authors</h3>
-									</div>
-									<div class="tg-widgetcontent">
-										<ul>
-											<li>
-												<figure><a href="javascript:void(0);"><img src="${pageContext.servletContext.contextPath}/resources/images/client/author/imag-09.jpg" alt="image description"></a></figure>
-												<div class="tg-authornamebooks">
-													<h4><a href="javascript:void(0);">Jude Morphew</a></h4>
-													<p>21,658 Published Books</p>
-												</div>
-											</li>
-											<li>
-												<figure><a href="javascript:void(0);"><img src="${pageContext.servletContext.contextPath}/resources/images/client/author/imag-10.jpg" alt="image description"></a></figure>
-												<div class="tg-authornamebooks">
-													<h4><a href="javascript:void(0);">Shaun Humes</a></h4>
-													<p>20,257 Published Books</p>
-												</div>
-											</li>
-											<li>
-												<figure><a href="javascript:void(0);"><img src="${pageContext.servletContext.contextPath}/resources/images/client/author/imag-11.jpg" alt="image description"></a></figure>
-												<div class="tg-authornamebooks">
-													<h4><a href="javascript:void(0);">Kathrine Culbertson</a></h4>
-													<p>15,686 Published Books</p>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
+						</div>
+						<div class="col-xs-10 col-sm-10 col-md-4 col-lg-4">
+							<div class="tg-footercol tg-widget tg-widgettopsellingauthors">
+								<iframe
+									src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.5200725417058!2d106.78408977570378!3d10.84799225786829!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752772b245dff1%3A0xb838977f3d419d!2sPosts%20and%20Telecommunications%20Institute%20of%20Technology%20HCM%20Branch!5e0!3m2!1sen!2s!4v1733339577765!5m2!1sen!2s"
+									width="100%" height="250"
+									style="border: 0; display: block; margin: 0 auto;"
+									allowfullscreen="" loading="lazy"
+									referrerpolicy="no-referrer-when-downgrade"></iframe>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="tg-newsletter">
-				<div class="container">
-					<div class="row">
-						<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-							<h4>Signup Newsletter!</h4>
-							<h5>Consectetur adipisicing elit sed do eiusmod tempor incididunt.</h5>
-						</div>
-						<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-							<form class="tg-formtheme tg-formnewsletter">
-								<fieldset>
-									<input type="email" name="email" class="form-control" placeholder="Enter Your Email ID">
-									<button type="button"><i class="fa-solid fa-envelope"></i></button>
-								</fieldset>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="tg-footerbar">
-				<a id="tg-btnbacktotop" class="tg-btnbacktotop" href="javascript:void(0);"><i class="fa-solid fa-chevron-up"></i></a>
-				<div class="container">
-					<div class="row">
-						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-							<span class="tg-paymenttype"><img src="${pageContext.servletContext.contextPath}/resources/images/client/paymenticon.png" alt="image description"></span>
-							<span class="tg-copyright">2017 All Rights Reserved By &copy; Book Library</span>
-						</div>
-					</div>
-				</div>
-			</div>
-		</footer>
-		
+		</div>
+	</footer>
+
 </body>
 </html>

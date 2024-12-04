@@ -1,6 +1,9 @@
 package bookstore.DAO;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +17,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import bookstore.Entity.DiscountsEntity;
 import bookstore.Entity.Order_DiscountsEntity;
 import bookstore.Entity.OrdersDetailEntity;
 import bookstore.Entity.OrdersEntity;
@@ -22,6 +26,94 @@ import bookstore.Entity.OrdersEntity;
 public class OrderDAO {
     @Autowired
     private SessionFactory sessionFactory;
+    
+    
+    public List<OrdersEntity> listOrders(){
+    	Session session = sessionFactory.getCurrentSession();
+    	String hql = "From OrdersEntity o JOIN FETCH o.user";
+    	Query query = session.createQuery(hql);
+    	return query.list();
+    }
+    
+    public List<OrdersEntity> searchOrders(String customerName, String fromDate, String toDate, Double minPrice, Double maxPrice, String paymentStatus, String orderStatus) throws ParseException {
+        Session session = sessionFactory.getCurrentSession();
+    	String hql = "FROM OrdersEntity o WHERE 1=1";  
+
+        if (customerName != null && !customerName.isEmpty()) {
+            hql += " AND o.user.fullname LIKE :customerName";
+        }
+        if (fromDate != null && !fromDate.isEmpty() && toDate != null && !toDate.isEmpty()) {
+            hql += " AND CONVERT(date, o.createdAt) BETWEEN :fromDate AND :toDate";
+        }
+
+        if (minPrice != null) {
+            hql += " AND o.price >= :minPrice";
+        }
+        if (maxPrice != null) {
+            hql += " AND o.price <= :maxPrice";
+        }
+        if (paymentStatus != null && !paymentStatus.isEmpty()) {
+            hql += " AND o.paymentStatus = :paymentStatus";
+        }
+        if (orderStatus != null && !orderStatus.isEmpty()) {
+            hql += " AND o.orderStatus = :orderStatus";
+        }
+
+        Query query = session.createQuery(hql);
+        if (customerName != null && !customerName.isEmpty()) {
+            query.setParameter("customerName", "%" + customerName + "%");
+        }
+        if (fromDate != null && !fromDate.isEmpty()) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse(fromDate);
+            query.setParameter("fromDate", date);
+        }
+        if (toDate != null && !toDate.isEmpty()) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse(toDate);
+            query.setParameter("toDate", date);
+        }
+        
+        if (minPrice != null) {
+            query.setParameter("minPrice", minPrice);
+        }
+        if (maxPrice != null) {
+            query.setParameter("maxPrice", maxPrice);
+        }
+        if (paymentStatus != null && !paymentStatus.isEmpty()) {
+            query.setParameter("paymentStatus", paymentStatus);
+        }
+        if (orderStatus != null && !orderStatus.isEmpty()) {
+            query.setParameter("orderStatus", orderStatus);
+        }
+
+        List<OrdersEntity> orders = query.list();
+        return orders;
+    }
+
+    
+    public boolean updateOrderStatus(Long orderId, String orderStatus) {
+        Session session = null;
+        try {
+            session = sessionFactory.getCurrentSession();
+            OrdersEntity order = (OrdersEntity) session.get(OrdersEntity.class, orderId);
+            
+            if (order != null) {
+                if (orderStatus.equals("Hoàn thành") && order.getPaymentMethod().equals("COD")) {
+                    order.setPaymentStatus("Đã thanh toán");
+                }
+                order.setOrderStatus(orderStatus);
+                session.update(order);
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     
     public OrdersEntity getOrderWithDetails(Long id) {
         Session session = sessionFactory.getCurrentSession();
@@ -78,6 +170,77 @@ public class OrderDAO {
         }
     }
     
+    public void save(OrdersEntity ordersEntity) {
+    	Session session = sessionFactory.getCurrentSession();
+        // Lưu hoặc cập nhật OrdersEntity
+        if (ordersEntity.getId() == null) {
+            // Nếu là bản ghi mới (chưa có id), thì persist OrdersEntity
+        	session.persist(ordersEntity);
+        } else {
+            // Nếu đã có id (bản ghi cũ), thì merge OrdersEntity
+        	session.merge(ordersEntity);
+        }
+    }
+    
+    public boolean updateOrder(OrdersEntity order) {
+    	try {
+	    	Session session = sessionFactory.getCurrentSession();
+	    	session.update(order);
+	    	return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+	        return false;
+			// TODO: handle exception
+		}
+    }
+    
+    public OrdersDetailEntity getOrderDetailById(Long ordersDetailId) {
+    	// Lấy session mới từ sessionFactory
+        Session session = sessionFactory.openSession();
+
+        try {
+        	OrdersDetailEntity orderDetail = (OrdersDetailEntity) session.get(OrdersDetailEntity.class, ordersDetailId);
+
+            // Nếu không tìm thấy đơn hàng, trả về null
+            if (orderDetail == null) {
+                throw new EntityNotFoundException("Không tìm thấy orderDetail: " + ordersDetailId);
+            }
+
+            return orderDetail;
+
+        } finally {
+            // Đảm bảo đóng session sau khi sử dụng
+            session.close();
+        }
+    }
+    
+    public void updateOrderItems(OrdersDetailEntity orderDetail) {
+    	try {
+	    	Session session = sessionFactory.getCurrentSession();
+	    	session.update(orderDetail);
+	    
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
+    
+    public DiscountsEntity getDiscountUsedByOrder(Long orderId) {
+        Session session = sessionFactory.getCurrentSession();
+        
+        // Truy vấn để lấy giảm giá cho một đơn hàng
+        String hql = "SELECT d FROM DiscountsEntity d JOIN d.orderDiscountsEntity od WHERE od.order_id.id = :orderId";
+        Query query = session.createQuery(hql);
+        query.setParameter("orderId", orderId);
+        
+        // Trả về giảm giá đầu tiên nếu có, hoặc null nếu không có
+        List<DiscountsEntity> discounts = query.list();
+        if (discounts != null && !discounts.isEmpty()) {
+            return discounts.get(0); 
+        }
+        return null; 
+    }
+
+   
     
     
     public List<OrdersEntity> getOrdersByUserId(Long userId){
@@ -123,7 +286,7 @@ public class OrderDAO {
 			OrdersEntity updateOrder = (OrdersEntity) session.createQuery(hql).setParameter("orderId", orderId).uniqueResult();
 			//OrderEntity updateOrder = getOrderByOrderId(orderId);
 			updateOrder.setUpdatedAt(new Date());
-			updateOrder.setStatus(3);
+			updateOrder.setOrderStatus("Huỷ Đơn Hàng");
 			session.update(updateOrder);
 			t.commit();
 			isUpdate = 1;

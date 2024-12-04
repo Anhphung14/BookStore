@@ -36,6 +36,19 @@ public class CartDAO {
         // Trả về danh sách CartItem
         return query.list();
     }
+    
+    public long countItemsInCart(Long cartId) {
+        Session session = sessionFactory.getCurrentSession();
+
+        // HQL query để đếm số lượng sách trong giỏ hàng
+        String hql = "SELECT COUNT(ci) FROM CartItemsEntity ci WHERE ci.cart.id = :cartId";
+        Query query = session.createQuery(hql);
+        query.setParameter("cartId", cartId);
+
+        // Trả về số lượng sách trong giỏ hàng
+        return (Long) query.uniqueResult(); // Kết quả trả về là kiểu Long
+    }
+
 
     // Thêm một Book vào Cart
     public void addToCart(Long userId, Long bookId, int quantity) {
@@ -69,7 +82,7 @@ public class CartDAO {
             }
 
             // Truy vấn để kiểm tra xem sản phẩm đã có trong giỏ hàng hay chưa
-            String hqlCartItem = "FROM CartItemsEntity ci WHERE ci.cart.id = :cartId AND ci.booksEntity.id = :bookId";
+            String hqlCartItem = "FROM CartItemsEntity ci WHERE ci.cart.id = :cartId AND ci.book.id = :bookId";
             Query queryCartItem = session.createQuery(hqlCartItem);
             queryCartItem.setParameter("cartId", cart.getId());
             queryCartItem.setParameter("bookId", bookId);
@@ -139,33 +152,20 @@ public class CartDAO {
     }
 
     
-    public void removeCartItem(Long cartItemId, Model model) {
-        Session session = null;
-        Transaction transaction = null;
+    public String removeCartItem(Long cartItemId) {
         try {
-            // Mở session và bắt đầu transaction
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
-
-            // Lấy đối tượng CartItem từ cơ sở dữ liệu
+        	Session session = sessionFactory.getCurrentSession();
             CartItemsEntity cartItem = (CartItemsEntity) session.get(CartItemsEntity.class, cartItemId);
             if (cartItem != null) {
-                // Xóa đối tượng
-                session.delete(cartItem);
-                transaction.commit(); // Commit transaction
-                model.addAttribute("message", "Xóa thành công!");
+                session.delete(cartItem); 
+                session.flush();
+                return "Xóa thành công!";
             } else {
-                model.addAttribute("message", "Sản phẩm không tồn tại!");
+                return "Sản phẩm không tồn tại!";
             }
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback(); // Rollback transaction nếu có lỗi
-            }
-            model.addAttribute("message", "Xóa thất bại! Lỗi: " + e.getMessage());
-        } finally {
-            if (session != null) {
-                session.close(); // Đóng session
-            }
+            e.printStackTrace();
+            return "Có lỗi khi xoá!";
         }
     }
     

@@ -212,7 +212,7 @@ public class BooksService {
 	}
 	
 	public boolean checkUpdateQuantity(ModelMap model, BooksEntity bookGetById, BooksEntity bookEdit) {
-		if (bookEdit.getQuantity() < bookGetById.getInventory().getStock_quantity()) {
+		if (bookEdit.getQuantity() < bookGetById.getInventoryEntity().getStock_quantity()) {
 			model.addAttribute("errortotal_quantity", "Cannot update Total quantity to be less than Stock quantity!");
 			return false;
 		}

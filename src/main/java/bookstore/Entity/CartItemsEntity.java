@@ -3,6 +3,7 @@ package bookstore.Entity;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,9 +31,9 @@ public class CartItemsEntity {
     @JoinColumn(name = "cart_id", nullable = false)
     private CartsEntity cart;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinColumn(name = "book_id", nullable = false)
-    private BooksEntity booksEntity;
+    private BooksEntity book;
 
     @Column(name = "quantity", nullable = false)
     private int quantity;
@@ -57,7 +58,7 @@ public class CartItemsEntity {
 		super();
 		this.id = id;
 		this.cart = cart;
-		this.booksEntity = booksEntity;
+		this.book = booksEntity;
 		this.quantity = quantity;
 		this.price = price;
 		this.createdAt = createdAt;
@@ -81,11 +82,11 @@ public class CartItemsEntity {
 	}
 
 	public BooksEntity getBook() {
-		return booksEntity;
+		return book;
 	}
 
 	public void setBook(BooksEntity booksEntity) {
-		this.booksEntity = booksEntity;
+		this.book = booksEntity;
 	}
 
 	public int getQuantity() {
@@ -132,9 +133,9 @@ public class CartItemsEntity {
     
  // Tính và cập nhật tổng giá cho CartItem
     public void setTotalPrice() {
-        if (this.quantity > 0 && this.booksEntity != null && this.booksEntity.getPrice() != null) {
+        if (this.quantity > 0 && this.book != null && this.book.getPrice() != null) {
             // Tính tổng giá bằng cách nhân trực tiếp với kiểu double
-            this.price = this.booksEntity.getPrice().doubleValue() * this.quantity;
+            this.price = this.book.getPrice().doubleValue() * this.quantity;
         } else {
             this.price = 0.0; // Giá trị mặc định nếu không hợp lệ
         }

@@ -1,5 +1,6 @@
 package bookstore.Controller;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,9 +25,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import bookstore.DAO.CategoriesDAO;
 import bookstore.DAO.DiscountsDAO;
+import bookstore.DAO.OrderDAO;
 import bookstore.DAO.SubcategoriesDAO;
 import bookstore.Entity.CategoriesEntity;
 import bookstore.Entity.DiscountsEntity;
+import bookstore.Entity.Order_DiscountsEntity;
+import bookstore.Entity.OrdersEntity;
 import bookstore.Entity.SubcategoriesEntity;
 
 @Controller
@@ -37,14 +41,26 @@ public class DiscountsController {
 	CategoriesDAO categoriesDAO;
 	@Autowired
 	SubcategoriesDAO subCategoriesDAO;
+	@Autowired
+	OrderDAO orderDAO;
 	
 	@RequestMapping("/discounts")
-	public String index(ModelMap modelMap) {
+	public String index(ModelMap modelMap, @RequestParam(value = "discountCode", required = false) String discountCode, @RequestParam(value = "discountType", required = false) String discountType,
+			@RequestParam(value = "minValue", required = false) String minValue, @RequestParam(value = "maxValue", required = false) String maxValue,
+			@RequestParam(value = "fromDate", required = false) String fromDate, @RequestParam(value = "toDate", required = false) String toDate,
+			@RequestParam(value = "discountStatus", required = false) String discountStatus) throws ParseException {
 		
+		
+		List<DiscountsEntity> getAllDiscounts = new ArrayList<DiscountsEntity>();
+		if(discountCode != null || discountType != null || minValue != null || maxValue != null || fromDate != null || toDate != null || discountStatus != null) {
+			getAllDiscounts = discountsDAO.searchDiscount(discountCode, discountType, minValue, maxValue, fromDate, toDate, discountStatus);
+		}else {
+			getAllDiscounts = discountsDAO.getAllDiscounts();
+		}
+		//System.out.println("getAllDiscounts: " + getAllDiscounts);
 		/* Cập nhật trạng thái mã giảm giá */
 		discountsDAO.updateStatusDiscounts();
-
-		List<DiscountsEntity> getAllDiscounts = discountsDAO.getAllDiscounts();
+		
 		for (DiscountsEntity discount : getAllDiscounts) {
 	        // Gọi hàm getUsedCountByDiscountId để lấy số lần sử dụng của discount
 	        int usedCount = discountsDAO.getUsedCountByDiscountId(discount.getId());
@@ -192,30 +208,68 @@ public class DiscountsController {
 	    return "redirect:/discounts.htm";
 	}
 
-	 @RequestMapping(value = "/discount/delete", method = RequestMethod.POST)
-	    public String deleteDiscount(@RequestParam("discount_id") Long discount_id, RedirectAttributes redirectAttributes) {
-	        //System.out.println("discount_id: " + discount_id);
-	        // Gọi phương thức xóa discount từ DAO
-		 	DiscountsEntity existingDiscount = discountsDAO.findDiscountById(discount_id);
-		 	if(existingDiscount.getStatus().equals("expired")) {
-		 		boolean isDeleted = discountsDAO.deleteDiscount(existingDiscount);
-		 		if (isDeleted) {
-		            // Nếu xóa thành công
-		            redirectAttributes.addFlashAttribute("alertMessage", "Discount has been successfully deleted!");
-		            redirectAttributes.addFlashAttribute("alertType", "success");
-		        } else {
-		            // Nếu xóa thất bại (có thể vì discount không tồn tại)
-		            redirectAttributes.addFlashAttribute("alertMessage", "Discount not found or couldn't be deleted!");
-		            redirectAttributes.addFlashAttribute("alertType", "error");
-		        }
-		 	}else {
-		 		redirectAttributes.addFlashAttribute("alertMessage", "Discount must expired");
-	            redirectAttributes.addFlashAttribute("alertType", "error");
-		 	}	        
+	@RequestMapping(value = "/discount/delete", method = RequestMethod.POST)
+	public String deleteDiscount(@RequestParam("discount_id") Long discount_id, RedirectAttributes redirectAttributes) {
+	    // Tìm mã giảm giá theo id
+	    DiscountsEntity existingDiscount = discountsDAO.findDiscountById(discount_id);
+
+	    // Kiểm tra mã giảm giá có tồn tại và trạng thái của nó là "expired"
+	    if (existingDiscount != null && existingDiscount.getStatus().equals("expired")) {
+	        // Lấy thông tin mã giảm giá
+	        String discountType = existingDiscount.getDiscountType();
+	        Long discountValue = existingDiscount.getDiscountValue();
+	        String applyTo = existingDiscount.getApplyTo();
 	        
-	        // Chuyển hướng về danh sách discounts sau khi xóa
-	        return "redirect:/discounts.htm";
+	        //System.out.println("discountType: " + discountType);
+	        //System.out.println("discountValue: " + discountValue);
+	        //System.out.println("applyTo: " + applyTo);
+	        
+	        // Xóa giảm giá khỏi bảng giảm giá
+	        boolean isDeleted = discountsDAO.deleteDiscount(existingDiscount);
+
+	        if (isDeleted) {
+	            // Nếu xóa thành công, cập nhật lại các đơn hàng liên quan
+	            for (Order_DiscountsEntity orderDiscount : existingDiscount.getOrderDiscountsEntity()) {
+	                OrdersEntity order = orderDiscount.getOrder_id();
+	                Double totalPrice = order.getTotalPrice();
+	                
+	               // System.out.println("totalPrice after discount: " + totalPrice);
+
+	                if (applyTo.equals("user")) {
+	                    if (discountType.equals("percentage")) {
+	                        Double originalPrice = totalPrice / (1 - (discountValue / 100.0));
+	                        //System.out.println("originalPrice before discount: " + originalPrice);
+	                        
+	                        order.setTotalPrice(originalPrice);
+	                    } else if (discountType.equals("amount")) {
+	                        // Nếu là giảm giá theo số tiền, tính lại giá trị ban đầu
+	                        Double originalPrice = totalPrice + discountValue;
+	                        //System.out.println("originalPrice before discount: " + originalPrice);
+	                        
+	                        order.setTotalPrice(originalPrice);
+	                    }
+	                    
+	                    // Lưu lại thay đổi
+	                    orderDAO.save(order);
+	                }
+	            }
+	            
+	            redirectAttributes.addFlashAttribute("alertMessage", "Discount has been successfully deleted and order prices updated!");
+	            redirectAttributes.addFlashAttribute("alertType", "success");
+	        } else {
+	            // Nếu xóa thất bại
+	            redirectAttributes.addFlashAttribute("alertMessage", "Discount not found or couldn't be deleted!");
+	            redirectAttributes.addFlashAttribute("alertType", "error");
+	        }
+	    } else {
+	        // Nếu mã giảm giá không hợp lệ
+	        redirectAttributes.addFlashAttribute("alertMessage", "Discount is not expired or does not exist!");
+	        redirectAttributes.addFlashAttribute("alertType", "error");
 	    }
+	    return "redirect:/discounts.htm"; // Điều hướng về trang danh sách giảm giá
+	}
+
+
 	
 	
 	@RequestMapping(value = "/discount/getSubcategories", method = RequestMethod.GET, produces = "text/html; charset=UTF-8")

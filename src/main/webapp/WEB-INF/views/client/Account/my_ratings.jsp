@@ -101,7 +101,7 @@
 		        <div class="review">
 		            <div class="product-info">
 		            	<p>Mã đơn hàng: ${review.order.id}</p> <!-- Hiển thị mã đơn hàng -->
-		                <p>Book: <a href="client/productdetail/${review.book.id}.htm" target="_blank">${review.book.title}</a></p>
+		                <p>Book: <a href="productdetail/${review.book.id}.htm" target="_blank">${review.book.title}</a></p>
 		                <p>Thời gian tạo: 
 		                    <fmt:formatDate value="${review.createdAt}" pattern="dd/MM/yyyy HH:mm:ss"/> <!-- Hiển thị thời gian -->
 		                </p>
@@ -132,9 +132,6 @@
                     <span class="badge bg-success">Đã duyệt</span> <!-- Status 1 -->
                 </c:when>
                 <c:when test="${review.status == 2}">
-                    <span class="badge bg-warning">Chờ duyệt</span> <!-- Status 2 -->
-                </c:when>
-                <c:when test="${review.status == 3}">
                     <span class="badge bg-danger">Bị từ chối</span> <!-- Status 3 -->
                 </c:when>
                 <c:otherwise>

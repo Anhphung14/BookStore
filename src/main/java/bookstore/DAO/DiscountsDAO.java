@@ -2,6 +2,8 @@ package bookstore.DAO;
 
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.math.BigDecimal;
@@ -36,6 +38,90 @@ public class DiscountsDAO {
 		return allDiscounts;
 	}
 	
+	public List<DiscountsEntity> searchDiscount(String discountCode, String discountType, String minValue, String maxValue, String fromDate, String toDate, String discountStatus) throws ParseException {
+        Session session = sessionFactory.getCurrentSession();
+    	String hql = "FROM DiscountsEntity d WHERE 1=1";  
+
+        if (discountCode != null && !discountCode.isEmpty()) {
+            hql += " AND d.code LIKE :discountCode";
+        }
+        if (discountType != null && !discountType.isEmpty()) {
+            hql += " AND d.discountType = :discountType";
+        }
+        if (minValue != null && !minValue.isEmpty()) {
+            hql += " AND d.discountValue >= :minValue";
+        }
+        if (maxValue != null && !maxValue.isEmpty()) {
+            hql += " AND d.discountValue <= :maxValue";
+        }
+        if (fromDate != null && !fromDate.isEmpty() && toDate != null && !toDate.isEmpty()) {
+            hql += " AND CONVERT(date, d.createdAt) BETWEEN :fromDate AND :toDate";
+        }
+        if (discountStatus != null && !discountStatus.isEmpty()) {
+            hql += " AND d.status = :discountStatus";
+        }
+
+        Query query = session.createQuery(hql);
+        if (discountCode != null && !discountCode.isEmpty()) {
+            query.setParameter("discountCode", "%" + discountCode + "%");
+        }
+        if (discountType != null && !discountType.isEmpty()) {
+            query.setParameter("discountType", discountType);
+        }
+        if (minValue != null && !minValue.isEmpty()) {
+            // Kiểm tra nếu minValue có dấu '%'
+            if (minValue.endsWith("%")) {
+                // Loại bỏ dấu '%' và chuyển thành Long
+                minValue = minValue.substring(0, minValue.length() - 1);
+                // Chuyển minValue thành kiểu Long (số)
+                query.setParameter("minValue", (long) (Long.parseLong(minValue)));  // Chuyển giá trị phần trăm thành giá trị số
+            } else {
+                // Chuyển minValue thành kiểu Long (số)
+                query.setParameter("minValue", Long.parseLong(minValue));
+            }
+        }
+
+        if (maxValue != null &&  !maxValue.isEmpty()) {
+            // Kiểm tra nếu maxValue có dấu '%'
+            if (maxValue.endsWith("%")) {
+                // Loại bỏ dấu '%' và chuyển thành Long
+                maxValue = maxValue.substring(0, maxValue.length() - 1);
+                // Chuyển maxValue thành kiểu Long (số)
+                query.setParameter("maxValue", (long) (Long.parseLong(maxValue)));  // Chuyển giá trị phần trăm thành giá trị số
+            } else {
+                // Chuyển maxValue thành kiểu Long (số)
+                query.setParameter("maxValue", Long.parseLong(maxValue));
+            }
+        }
+
+
+        if (fromDate != null && !fromDate.isEmpty()) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse(fromDate);
+            query.setParameter("fromDate", date);
+        }
+        if (toDate != null && !toDate.isEmpty()) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse(toDate);
+            query.setParameter("toDate", date);
+        }
+        if (discountStatus != null && !discountStatus.isEmpty()) {
+            query.setParameter("discountStatus", discountStatus);
+        }
+        //System.out.println("hql: " + hql);
+        List<DiscountsEntity> orders = query.list();
+        return orders;
+    }
+	
+	public int getUsedCountByDiscountId(Long discountId) {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "SELECT COUNT(od) FROM Order_DiscountsEntity od WHERE od.discount_id.id = :discountId";
+        Query query = session.createQuery(hql);
+        query.setParameter("discountId", discountId);
+        Long count = (Long) query.uniqueResult();
+        return count.intValue();
+    }
+	
 	public void updateStatusDiscounts() {
 		Session session = sessionFactory.getCurrentSession();
 	    // Khởi tạo đối tượng Timestamp cho ngày hiện tại
@@ -44,6 +130,8 @@ public class DiscountsDAO {
 	    List<DiscountsEntity> allDiscounts = getAllDiscounts();
 	    
 	    for (DiscountsEntity discount : allDiscounts) {
+	    	int usedCount = getUsedCountByDiscountId(discount.getId());
+	    	//System.out.println("Used: " +  usedCount);
 	        // Kiểm tra nếu ngày kết thúc của discount nhỏ hơn currentDate
 	    	if(!discount.getStatus().equals("inactive")) {
 	    		if (discount.getEndDate() != null && discount.getEndDate().before(currentDate)) {
@@ -53,6 +141,17 @@ public class DiscountsDAO {
 		            // Lưu lại thay đổi trong session
 		            session.update(discount);
 		        }
+	    		if( discount.getMaxUses() != null) {
+	    			if (usedCount >= discount.getMaxUses()) {
+		                // Cập nhật trạng thái thành 'expired'
+		    			//System.out.println("Vô đây à");
+		                discount.setStatus("expired");
+		                
+		                // Lưu lại thay đổi trong session
+		                session.update(discount);
+		            }
+	    		}
+	    		
 	    	}else {
 	    		if (discount.getEndDate() != null && discount.getEndDate().before(currentDate)) {
 		            // Cập nhật trạng thái thành 'expired'
@@ -324,38 +423,29 @@ public class DiscountsDAO {
 		}
 	}
 
-	 public int getUsedCountByDiscountId(Long discountId) {
-	        Session session = sessionFactory.getCurrentSession();
-	        String hql = "SELECT COUNT(od) FROM Order_DiscountsEntity od WHERE od.discount_id.id = :discountId";
-	        Query query = session.createQuery(hql);
-	        query.setParameter("discountId", discountId);
-	        Long count = (Long) query.uniqueResult();
-	        return count.intValue();
+	 
+
+	public Double getDiscountValueByBookId(Long bookId) {
+	    Session session = sessionFactory.getCurrentSession();
+	    String hql = "SELECT bd.discount_id.discountValue " +
+	                 "FROM Book_DiscountsEntity bd " +
+	                 "WHERE bd.book_id.id = :bookId " +
+	                 "AND bd.discount_id.applyTo = 'All Products' " + 
+	                 "AND bd.discount_id.status = 'Active' " +
+	                 "AND CURRENT_TIMESTAMP BETWEEN bd.discount_id.startDate AND bd.discount_id.endDate";
+	    
+	    Object result = session.createQuery(hql)
+	            .setParameter("bookId", bookId)
+	            .uniqueResult();
+
+	    if (result == null) {
+	        return 0.0;
 	    }
 
-	 public Double getDiscountValueByBookId(Long bookId) {
-		    Session session = sessionFactory.getCurrentSession();
-		    String hql = "SELECT bd.discount_id.discountValue " +
-		                 "FROM Book_DiscountsEntity bd " +
-		                 "WHERE bd.book_id.id = :bookId " +
-		                 "AND bd.discount_id.applyTo = 'categories' " + 
-		                 "AND bd.discount_id.status = 'active' " +
-		                 "AND CURRENT_TIMESTAMP BETWEEN bd.discount_id.startDate AND bd.discount_id.endDate";
-		    
-		    // Retrieve the discount value as BigDecimal
-		    Object result = session.createQuery(hql)
-		            .setParameter("bookId", bookId)
-		            .uniqueResult();
+	    Long discountValueLong = (Long) result;
+	    return discountValueLong.doubleValue();
+	}
 
-		    // Check if the result is null
-		    if (result == null) {
-		        return 0.0;
-		    }
-
-		    // Cast it to Long if the discount value is stored as Long in the DB
-		    Long discountValueLong = (Long) result;
-		    return discountValueLong.doubleValue();
-		}
 		
 		public List<Double> getDiscountsValueByBookId(List<BooksEntity> books){
 			Session session = sessionFactory.getCurrentSession();

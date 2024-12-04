@@ -56,8 +56,8 @@ public class AuthClientController {
 		if (email.isEmpty() || password.isEmpty()) {
 			return "redirect:signin.htm";
 		}
-
-		UsersEntity user = this.getUserByEmailPass(email, password);
+		
+		UsersEntity user = this.authenticateUser(email, password);
 
 		if (user == null) {
 			return "redirect:signin.htm";
@@ -212,4 +212,24 @@ public class AuthClientController {
 
 		return user;
 	}
+	
+	public UsersEntity authenticateUser(String email, String password) {
+	    Session session = factory.getCurrentSession();
+	    String hql = "FROM UsersEntity WHERE email = :email";
+	    Query query = session.createQuery(hql);
+	    query.setParameter("email", email);
+
+	    UsersEntity user = (UsersEntity) query.uniqueResult();
+
+	    if (user != null) {
+	        String hashedPassword = user.getPassword();
+	        
+	        if (!PasswordUtil.verifyPassword(password, hashedPassword)) {
+	            return null; // Mật khẩu không khớp
+	        }
+	    }
+
+	    return user;
+	}
+
 }

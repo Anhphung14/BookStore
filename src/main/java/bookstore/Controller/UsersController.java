@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import bookstore.Entity.RolesEntity;
 import bookstore.Entity.UsersEntity;
@@ -121,7 +122,8 @@ public class UsersController {
 	@RequestMapping(value = "/user/save", method = RequestMethod.POST)
 	public String saveUser(@ModelAttribute("user") UsersEntity user, @RequestParam("task") String task,
 	        @RequestParam(value = "id", required = false) Long id,
-	        @RequestParam(value = "roleIds", required = false) Set<Long> roleIds, // Nhận mảng các ID
+	        @RequestParam(value = "roleIds", required = false) Set<Long> roleIds, 
+	        RedirectAttributes redirectAttributes,
 	        ModelMap model) {
 	    Session session = factory.getCurrentSession();
 	    
@@ -154,6 +156,8 @@ public class UsersController {
 	                }
 	                user.setRoles(roles); // Gán roles cho người dùng
 	                session.update(user); // Cập nhật người dùng với các roles
+	                redirectAttributes.addFlashAttribute("alertMessage", "User saved successfully!");
+		            redirectAttributes.addFlashAttribute("alertType", "success");
 	            }
 
 	        } else if ("edit".equals(task)) {
@@ -192,11 +196,14 @@ public class UsersController {
 	            }
 
 	            session.merge(existingUser); // Cập nhật người dùng
+                redirectAttributes.addFlashAttribute("alertMessage", "User saved successfully!");
+	            redirectAttributes.addFlashAttribute("alertType", "success");
 	            return "redirect:/users.htm";
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();
-	        model.addAttribute("message", "An error occurred: " + e.getMessage());
+	        redirectAttributes.addFlashAttribute("alertMessage", "Error occurred while saving the User.");
+	        redirectAttributes.addFlashAttribute("alertType", "error");
 	        return "redirect:/users.htm";
 	    }
 

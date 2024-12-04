@@ -19,7 +19,7 @@ import bookstore.Entity.SubcategoriesEntity;
 public class SubcategoriesService {
 	
 	@Autowired
-	SessionFactory factory;
+	private static SessionFactory factory;
 	
 	@Autowired
 	SubcategoriesDAO subcategoriesDAO;
