@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import bookstore.DAO.BooksDAO;
+import bookstore.DAO.CartDAO;
 import bookstore.DAO.CategoriesDAO;
 import bookstore.DAO.DiscountsDAO;
 import bookstore.DAO.InventoryDAO;
@@ -46,12 +47,16 @@ public class ClientController {
     private InventoryDAO inventoryDAO;
     @Autowired
     private OrderDetailDAO orderDetailDAO;
+    @Autowired
+    private CartDAO cartDAO;
+
     
     @RequestMapping(value = "/index")
     public String index(ModelMap model, HttpSession session) {
         List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
         List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
         UsersEntity userSession = (UsersEntity) session.getAttribute("user");
+
 
         
         List<BooksEntity> bookList = booksDAO.listBooks(); 
@@ -68,6 +73,12 @@ public class ClientController {
         }
 
 
+
+        Long countBooksInCart = cartDAO.countItemsInCart(userSession.getCart().getId());
+        session.setAttribute("countBooksInCart", countBooksInCart);
+        
+        model.addAttribute("user", userSession);
+
         discountsDAO.updateStatusDiscounts();
         
         BooksEntity bestSellingBook = orderDetailDAO.getBestSellingBook();
@@ -75,6 +86,7 @@ public class ClientController {
         
         model.addAttribute("Categories", listCategories);
         model.addAttribute("SubCategories", listSubCategories);
+
         model.addAttribute("user", userSession);
         model.addAttribute("bookList", bookList);
         model.addAttribute("bookDiscounts", bookDiscounts); 
@@ -85,10 +97,12 @@ public class ClientController {
 	
 	
     @RequestMapping("/search")
-    public String searchBooks(@RequestParam(value = "q", required = false) String searchQuery, @RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pageSize", defaultValue = "1") int pageSize, ModelMap model) {
+    public String searchBooks(@RequestParam(value = "q", required = false) String searchQuery, @RequestParam(value = "page", defaultValue = "1") int page, 
+    		@RequestParam(value = "pageSize", defaultValue = "1") int pageSize, @RequestParam(value = "sortBy", defaultValue = "newest", required = false) String sortBy,
+    		ModelMap model) {
     	//System.out.println("pageSize: " + pageSize);
         //System.out.println("Search Query: " + searchQuery);
-        List<BooksEntity> bookList = booksDAO.search(searchQuery, page, pageSize);
+        List<BooksEntity> bookList = booksDAO.search(searchQuery, page, pageSize, sortBy);
         //System.out.println(bookList.size());
         int totalPages = booksDAO.getTotalPagesOfSearch(searchQuery, pageSize);
         //System.out.println(totalPages);

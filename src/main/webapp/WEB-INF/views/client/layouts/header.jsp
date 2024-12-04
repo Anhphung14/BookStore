@@ -10,6 +10,9 @@
     <base href="${pageContext.servletContext.contextPath}/">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+   	<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 </head>
 <body>
 
@@ -149,7 +152,7 @@
 								</div>
 								<div class="dropdown tg-themedropdown tg-minicartdropdown">
 									<a href="javascript:void(0);" id="tg-minicart" class="tg-btnthemedropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-										<span class="tg-themebadge">3</span>
+										<span class="tg-themebadge">${sessionScope.countBooksInCart}</span>
 										<i class="fa-solid fa-cart-shopping"></i>
 										<span>$123.00</span>
 									</a>

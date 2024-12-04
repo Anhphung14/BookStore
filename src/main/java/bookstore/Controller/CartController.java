@@ -39,6 +39,8 @@ public class CartController {
     	UsersEntity user = (UsersEntity) session.getAttribute("user");
         Long cartId = user.getCart().getId();
         //System.out.println("cartId: " + cartId);
+        Long countBooksInCart = cartDAO.countItemsInCart(cartId);
+        session.setAttribute("countBooksInCart", countBooksInCart);
         List<CartItemsEntity> cartItems = cartDAO.getAllBooksInCart(cartId);
      // Tính tổng tiền giỏ hàng
         double totalPrice = 0;
@@ -55,7 +57,7 @@ public class CartController {
     }
 
     // Thêm sản phẩm vào giỏ hàng
-    @RequestMapping("/add")
+    /*@RequestMapping("/add")
     public String addToCart(@RequestParam("bookId") Long bookId,
                             @RequestParam("quantity") int quantity,
                             Model model, HttpSession session, RedirectAttributes redirectAttributes) {
@@ -73,40 +75,28 @@ public class CartController {
     		redirectAttributes.addFlashAttribute("alertType", "error");
             return "redirect:/index.htm"; // Quay lại trang chủ
         }
-    }
+    }*/
     
-    @RequestMapping(value = "/add/test", method = RequestMethod.GET)
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> addToCart(@RequestParam("bookId") Long bookId,
+	/* ResponseEntity<Map<String, Object>> */
+    public String addToCart(@RequestParam("bookId") Long bookId,
                                                           @RequestParam("quantity") int quantity,
                                                           HttpSession session) {
         Map<String, Object> response = new HashMap<>();
-        System.out.println("Vô đây");
+        //System.out.println("Vô đây");
         try {
             // Lấy người dùng từ session
             UsersEntity user = (UsersEntity) session.getAttribute("user");
             Long userId = user.getId();  
-            
-            // Thực hiện thêm sản phẩm vào giỏ hàng
             cartDAO.addToCart(userId, bookId, quantity);
-            
-            // Giả sử bạn có một phương thức để lấy số lượng giỏ hàng hiện tại
-            int cartCount = cartDAO.getCartItemCount(userId);
-            
-            // Trả về phản hồi dưới dạng JSON
-            response.put("success", true);
-            response.put("cartCount", cartCount);
-            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
-            
+            Long countBooksInCart = cartDAO.countItemsInCart(user.getCart().getId());
+	            
+            return String.valueOf(countBooksInCart);
         } catch (Exception e) {
-            // Xử lý lỗi nếu có
-            response.put("success", false);
-            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return "error";
         }
     }
-
-
-
 
 
     // Xóa sản phẩm khỏi giỏ hàng

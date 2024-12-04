@@ -121,16 +121,15 @@
 														<div class="form-group">
 															<label>sort by:</label>
 															<span class="tg-select">
-																<select>
-																	<option>Mới nhất</option>
-																	<option>Giá: Tăng dần</option>
-																	<option>Giá: Giảm dần</option>
-																	<option>Tên: A - Z</option>
-																	<option>Tên: Z - A</option>
-																	<option>Mới nhất</option>
-																	<option>Cũ nhất</option>
-																	<option>Bán chạy nhất</option>
+																<select name="sortby" onchange="handleSortChange()">
+																    <option value="newest" ${sortBy.equals('newest') ? 'selected="selected"' : ''}>Mới nhất</option>
+																    <option value="oldest" ${sortBy.equals('oldest') ? 'selected="selected"' : ''}>Cũ nhất</option>
+																    <option value="priceAsc" ${sortBy.equals('priceAsc') ? 'selected="selected"' : ''}>Giá: Tăng dần</option>
+																    <option value="priceDesc" ${sortBy.equals('priceDesc') ? 'selected="selected"' : ''}>Giá: Giảm dần</option>
+																    <option value="nameAsc" ${sortBy.equals('nameAsc') ? 'selected="selected"' : ''}>Tên: A - Z</option>
+																    <option value="nameDesc" ${sortBy.equals('nameDesc') ? 'selected="selected"' : ''}>Tên: Z - A</option>
 																</select>
+
 															</span>
 														</div>
 														<div class="form-group">
@@ -481,6 +480,66 @@
 	            console.error("PageSize value is invalid:", pageSizeValue);
 	        }
 	    }
+	    
+	    function handleSortChange() {
+	        const sortSelect = document.querySelector('select[name="sortby"]'); // Chọn select box sort
+	        const sortByValue = sortSelect.options[sortSelect.selectedIndex].value; // Lấy giá trị lựa chọn
+
+	        console.log("Sắp xếp theo: ", sortByValue);
+
+	        const currentUrl = new URL(window.location.href); // Lấy URL hiện tại
+	        const searchQuery = currentUrl.searchParams.get("q") || ""; // Lấy từ khóa tìm kiếm (nếu có)
+	        const pageSize = currentUrl.searchParams.get("pageSize") || "10"; // Lấy số lượng sản phẩm mỗi trang (mặc định là 10)
+
+	        const currentPage = currentUrl.searchParams.get("page") || "1"; // Lấy số trang hiện tại (mặc định là trang 1)
+
+	        // Lấy thông tin danh mục từ URL (nếu có)
+	        const pathParts = window.location.pathname.split("/");
+	        const danhMuc2 = pathParts[pathParts.length - 2] || ""; // Lấy danh mục 2
+	        const danhMuc3 = pathParts[pathParts.length - 1].split(".")[0] || ""; // Lấy danh mục 3 (loại bỏ phần mở rộng)
+
+	        // Tạo URL mới với các tham số đã chọn
+	        const newUrl = new URL(window.location.origin + window.location.pathname);
+	        newUrl.searchParams.set("q", searchQuery);
+	        newUrl.searchParams.set("sortBy", sortByValue); // Thêm giá trị sort vào URL
+	        newUrl.searchParams.set("pageSize", pageSize);
+	        newUrl.searchParams.set("page", currentPage); // Đảm bảo vẫn giữ số trang hiện tại
+
+	        // Chuyển hướng đến URL mới để tải lại dữ liệu đã sắp xếp
+	        window.location.href = newUrl.href;
+	    }
+	    
+	    document.querySelectorAll('.btn-add-to-cart').forEach(function(button) {
+	        button.addEventListener('click', function(event) {
+	        	 var bookId = event.currentTarget.getAttribute('data-book-id');
+	             var quantity = event.currentTarget.getAttribute('data-quantity');
+	             console.log("bookId:", bookId);
+	             console.log("quantity:", quantity);
+	            // Gửi GET request để thêm sách vào giỏ hàng
+	            fetch('/bookstore/cart/add.htm?bookId=' + bookId + '&quantity=' + quantity, {
+	                method: 'GET', 
+	            })
+	            .then(response => response.text()) 
+	            .then(data => {
+	            	console.log("data: " + data);
+	                // Xử lý phản hồi sau khi thêm vào giỏ hàng
+	                if (data != "error") {
+	                	 var countBooksInCart = parseInt(data);  // Chuyển đổi dữ liệu trả về thành số
+	                	 fetch('/bookstore/index.htm');
+	                     document.querySelector('#tg-minicart .tg-themebadge').textContent = countBooksInCart;
+	                	 toastr.success('Sản phẩm đã được thêm vào giỏ hàng!', 'Thành công');
+	                    
+	                } else {
+	                	toastr.error('Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ!', 'Lỗi');
+	                }
+	            })
+	            .catch(error => {
+	                // Lỗi trong quá trình gửi request
+	                console.error('Có lỗi xảy ra:', error);
+	                toastr.error('Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ!', 'Lỗi');
+	            });
+	        });
+	    });
 	</script>
 	
 </body>

@@ -42,6 +42,59 @@ public class BooksDAO {
 			}
 			return bookList;
 		 }
+	 
+	 public List<BooksEntity> listBookOfSubCategorySorted(String danhMuc, String danhMucCon, int pageNumber, int pageSize, String sortBy) {
+		    Session session = sessionFactory.getCurrentSession();
+		    
+		    // Câu truy vấn cơ bản để lọc sách theo danh mục con
+		    String hql = "FROM BooksEntity b WHERE b.subcategoriesEntity.name = :subcategoryName";
+		    System.out.println("sortBy: " + sortBy);
+		    // Thêm phần sắp xếp (ORDER BY) nếu sortBy không rỗng
+		    if (sortBy != null && !sortBy.isEmpty()) {
+		        switch (sortBy) {
+		            case "nameAsc":
+		                hql += " ORDER BY b.title ASC";  // Sắp xếp theo tên sách từ A - Z
+		                break;
+		            case "nameDesc":
+		                hql += " ORDER BY b.title DESC"; // Sắp xếp theo tên sách từ Z - A
+		                break;
+		            case "priceAsc":
+		                hql += " ORDER BY b.price ASC";  // Sắp xếp theo giá tăng dần
+		                break;
+		            case "priceDesc":
+		                hql += " ORDER BY b.price DESC"; // Sắp xếp theo giá giảm dần
+		                break;
+		            case "newest":
+		                hql += " ORDER BY b.createdAt DESC";  // Sắp xếp theo ngày tạo mới nhất
+		                break;
+		            case "oldest":
+		                hql += " ORDER BY b.createdAt ASC";   // Sắp xếp theo ngày tạo cũ nhất
+		                break;
+		            default:
+		            	hql += "ORDER BY b.createdAt DESC"; // Mặc định sắp xếp theo tên sách
+		                break;
+		        }
+		    }
+		    
+		    // Tạo query và thiết lập tham số
+		    Query query = session.createQuery(hql);
+		    query.setParameter("subcategoryName", danhMucCon);
+		    
+		    // Thiết lập phân trang
+		    query.setFirstResult((pageNumber - 1) * pageSize); // Vị trí bản ghi bắt đầu
+		    query.setMaxResults(pageSize); // Số lượng bản ghi trên mỗi trang
+		    
+		    // Lấy danh sách sách thuộc danh mục con và đã sắp xếp
+		    List<BooksEntity> bookList = query.list();
+		    
+		    // In thông tin kiểm tra
+		    for (BooksEntity booksEntity : bookList) {
+		        System.out.println("Sách: " + booksEntity.getTitle() + ", Danh mục con: " + booksEntity.getSubcategoriesEntity().getName());
+		    }
+		    
+		    return bookList;
+		}
+
 		 
 		 
 		 public List<BooksEntity> listBookOfCategory(Long id, int pageNumber, int pageSize) {
@@ -65,6 +118,60 @@ public class BooksDAO {
 			    query.setMaxResults(pageSize);
 			    return query.list();
 			}
+		 
+		 public List<BooksEntity> listBookOfCategorySorted(Long id, int pageNumber, int pageSize, String sortBy) {
+			    Session session = sessionFactory.getCurrentSession();
+
+			    // Câu truy vấn cơ bản để lấy sách theo danh mục
+			    String hql = "SELECT b " +
+			                 "FROM BooksEntity b " +
+			                 "JOIN b.subcategoriesEntity sc " +
+			                 "JOIN sc.categoriesEntity c " +
+			                 "WHERE c.id = :categoryId ";
+
+			    // Thêm phần sắp xếp dựa trên tham số sortBy
+			    if (sortBy != null && !sortBy.isEmpty()) {
+			        switch (sortBy) {
+			            case "nameAsc":
+			                hql += "ORDER BY b.title ASC"; // Sắp xếp theo tên sách A-Z
+			                break;
+			            case "nameDesc":
+			                hql += "ORDER BY b.title DESC"; // Sắp xếp theo tên sách Z-A
+			                break;
+			            case "priceAsc":
+			                hql += "ORDER BY b.price ASC"; // Sắp xếp theo giá tăng dần
+			                break;
+			            case "priceDesc":
+			                hql += "ORDER BY b.price DESC"; // Sắp xếp theo giá giảm dần
+			                break;
+			            case "newest":
+			                hql += "ORDER BY b.createdAt DESC"; // Sắp xếp theo ngày thêm mới nhất
+			                break;
+			            case "oldest":
+			                hql += "ORDER BY b.createdAt ASC"; // Sắp xếp theo ngày thêm cũ nhất
+			                break;
+			            default:
+			            	hql += "ORDER BY b.createdAt DESC"; // Mặc định sắp xếp theo tên sách
+			                break;
+			        }
+			    } else {
+			        // Mặc định nếu không có sortBy, sắp xếp theo tên sách A-Z
+			        hql += "ORDER BY b.title ASC";
+			    }
+
+			    Query query = session.createQuery(hql);
+			    query.setParameter("categoryId", id);
+
+			    // Thiết lập phân trang
+			    if (pageNumber < 1) pageNumber = 1;
+			    if (pageSize < 1) pageSize = 8; // Giá trị mặc định
+			    query.setFirstResult((pageNumber - 1) * pageSize);
+			    query.setMaxResults(pageSize);
+
+			    // Trả về danh sách sách đã được lọc và sắp xếp
+			    return query.list();
+			}
+
 
 		 
 		 public int getTotalPagesOfSubBook(String danhMucCon, int pageSize) {
@@ -128,7 +235,7 @@ public class BooksDAO {
 			    return resultsWithSlug;
 			}
 
-		 public List<BooksEntity> search(String searchQuery, int pageNumber, int pageSize ) {
+		/* public List<BooksEntity> search(String searchQuery, int pageNumber, int pageSize ) {
 			    // Khởi tạo phiên làm việc (Hibernate Session)
 			    Session session = sessionFactory.getCurrentSession();
 			    
@@ -178,7 +285,83 @@ public class BooksDAO {
 			    List<BooksEntity> bookList = query.list();
 			   
 			    return bookList;
+			} */
+		 
+		 public List<BooksEntity> search(String searchQuery, int pageNumber, int pageSize, String sortBy) {
+			    // Khởi tạo phiên làm việc (Hibernate Session)
+			    Session session = sessionFactory.getCurrentSession();
+
+			    BigDecimal minPrice = null;
+			    BigDecimal maxPrice = null;
+			    if (searchQuery.contains("-")) {
+			        String[] parts = searchQuery.split("-");
+			        try {
+			            // Chuyển đổi các giá trị thành BigDecimal (nếu hợp lệ)
+			            minPrice = new BigDecimal(parts[0].trim());
+			            maxPrice = new BigDecimal(parts[1].trim());
+			        } catch (NumberFormatException e) {
+			            // Không phải là khoảng giá hợp lệ, tiếp tục tìm kiếm theo text
+			            minPrice = null;
+			            maxPrice = null;
+			        }
+			    }
+
+			    // Bắt đầu câu truy vấn HQL cơ bản
+			    String hql = "FROM BooksEntity b " +
+			                 "LEFT JOIN FETCH b.supplier s " +
+			                 "WHERE LOWER(b.title) LIKE :searchQuery " +  // Tìm theo tên sách
+			                 "   OR LOWER(b.author) LIKE :searchQuery ";  // Tìm theo tên tác giả
+
+			    // Thêm điều kiện lọc theo giá (nếu có khoảng giá)
+			    if (minPrice != null && maxPrice != null) {
+			        hql += "AND b.price BETWEEN :minPrice AND :maxPrice ";
+			    }
+
+			    // Thêm phần sắp xếp tùy thuộc vào giá trị sortBy
+			    if (sortBy != null && !sortBy.isEmpty()) {
+			        switch (sortBy) {
+			            case "newest":
+			                hql += "ORDER BY b.createdAt DESC"; // Sắp xếp theo ngày tạo (mới nhất)
+			                break;
+			            case "oldest":
+			                hql += "ORDER BY b.createdAt ASC";  // Sắp xếp theo ngày tạo (cũ nhất)
+			                break;
+			            case "priceAsc":
+			                hql += "ORDER BY b.price ASC";  // Sắp xếp theo giá tăng dần
+			                break;
+			            case "priceDesc":
+			                hql += "ORDER BY b.price DESC"; // Sắp xếp theo giá giảm dần
+			                break;
+			            case "nameAsc":
+			                hql += "ORDER BY b.title ASC";  // Sắp xếp theo tên sách (A-Z)
+			                break;
+			            case "nameDesc":
+			                hql += "ORDER BY b.title DESC"; // Sắp xếp theo tên sách (Z-A)
+			                break;
+			            default:
+			            	hql += "ORDER BY b.createdAt DESC"; // Mặc định sắp xếp theo tên sách
+			                break;
+			        }
+			    }
+
+			    // Tạo và thực thi câu truy vấn
+			    Query query = session.createQuery(hql);
+			    query.setParameter("searchQuery", "%" + searchQuery.toLowerCase() + "%");
+
+			    // Nếu có khoảng giá, thêm tham số cho giá
+			    if (minPrice != null && maxPrice != null) {
+			        query.setParameter("minPrice", minPrice);
+			        query.setParameter("maxPrice", maxPrice);
+			    }
+
+			    // Thiết lập phân trang
+			    query.setFirstResult((pageNumber - 1) * pageSize);  // Vị trí bản ghi bắt đầu
+			    query.setMaxResults(pageSize);  // Số lượng bản ghi trên mỗi trang
+
+			    // Trả về danh sách kết quả tìm kiếm
+			    return query.list();
 			}
+
 		 
 		 public int getTotalPagesOfSearch(String searchQuery, int pageSize) {
 			    // Lấy phiên làm việc (Hibernate Session)

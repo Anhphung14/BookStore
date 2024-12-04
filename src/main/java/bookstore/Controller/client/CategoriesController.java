@@ -30,8 +30,11 @@ public class CategoriesController {
     private BooksDAO booksDAO;
     
     @RequestMapping("/{slug}/{slugSub}.htm")
-    public String getSubCategoryPage(@PathVariable("slug") String slug, @PathVariable("slugSub") String slugSub,  @RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pageSize", defaultValue = "1") int pageSize, ModelMap model) {
+    public String getSubCategoryPage(@PathVariable("slug") String slug, @PathVariable("slugSub") String slugSub,  @RequestParam(value = "page", defaultValue = "1") int page, 
+    		@RequestParam(value = "pageSize", defaultValue = "1") int pageSize, @RequestParam(value = "sortBy", defaultValue = "newest", required = false) String sortBy,
+    		ModelMap model) {
         List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
+        //System.out.println("sortBy: " + sortBy);
         //List<Object[]> danhMuc = new ArrayList<>();
         Object[] danhMuc = new Object[4]; 
         for (CategoriesEntity cg : listCategories) {
@@ -50,7 +53,7 @@ public class CategoriesController {
         List<Object[]> countBookEachCategory = booksDAO.countBookEachCategory();
         //Phân trang
         //int pageSize = 1;
-        List<BooksEntity> bookList = booksDAO.listBookOfSubCategory((String) danhMuc[0], (String) danhMuc[1], page, pageSize);
+        List<BooksEntity> bookList = booksDAO.listBookOfSubCategorySorted((String) danhMuc[0], (String) danhMuc[1], page, pageSize, sortBy);
         int totalPages = booksDAO.getTotalPagesOfSubBook((String) danhMuc[1], pageSize);
         
         
@@ -67,13 +70,17 @@ public class CategoriesController {
         model.addAttribute("currentPage", page); // Trang hiện tại
         model.addAttribute("totalPages", totalPages); // Tổng số trang
         model.addAttribute("pageSize", pageSize);
+        model.addAttribute("sortBy", sortBy);
         // Trả về trang tương ứng
         return "client/Categories/SubCategoryBooks";
     }
     
     @RequestMapping("{idCategory}.htm")
-    public String getCategoryPage(@PathVariable("idCategory") Long idCategory,  @RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pageSize", defaultValue = "1") int pageSize, ModelMap model) {
-		List<BooksEntity> bookList = booksDAO.listBookOfCategory(idCategory, page, pageSize);
+    public String getCategoryPage(@PathVariable("idCategory") Long idCategory,  @RequestParam(value = "page", defaultValue = "1") int page, 
+    		@RequestParam(value = "pageSize", defaultValue = "1") int pageSize, @RequestParam(value = "sortBy", defaultValue = "newest", required = false) String sortBy, 
+    		ModelMap model) {
+		//List<BooksEntity> bookList = booksDAO.listBookOfCategory(idCategory, page, pageSize);
+    	List<BooksEntity> bookList = booksDAO.listBookOfCategorySorted(idCategory, page, pageSize, sortBy);
 		List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
 		List<Object[]> countBookEachCategory = booksDAO.countBookEachCategory();
 		CategoriesEntity danhMuc = categoriesDAO.findCategoryById(idCategory);
@@ -96,6 +103,7 @@ public class CategoriesController {
 	     model.addAttribute("currentPage", page); // Trang hiện tại
 	     model.addAttribute("totalPages", totalPages); // Tổng số trang
 	     model.addAttribute("pageSize", pageSize);
+	     model.addAttribute("sortBy", sortBy);
 	     // Trả về trang tương ứng
 	     return "client/Categories/CategoryBooks";
     }

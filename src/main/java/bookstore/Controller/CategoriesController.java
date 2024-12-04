@@ -1,6 +1,7 @@
 package bookstore.Controller;
 
 import bookstore.Service.CategoriesService;
+import bookstore.DAO.CartDAO;
 import bookstore.Entity.CategoriesEntity;
 import bookstore.Entity.RolesEntity;
 import bookstore.Entity.SubcategoriesEntity;
@@ -30,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 @Controller("mainCategoriesController")
@@ -41,16 +43,18 @@ public class CategoriesController {
 
 	@Autowired
 	private SessionFactory factory;
+	
+	@Autowired
+	private CartDAO cartDAO;
 
 	@RequestMapping("/categories")
 	public String showCategories(
 	        Model model,
 	        @RequestParam(value = "page", defaultValue = "1") int page,
 	        @RequestParam(value = "size", defaultValue = "10") int size,
-	        @RequestParam(value = "search", required = false) String search) {
+	        @RequestParam(value = "search", required = false) String search, HttpSession httpSession) {
 	    
 	    Session session = factory.getCurrentSession();
-	    
 	    // Xây dựng câu lệnh HQL động dựa trên tham số tìm kiếm
 	    String hql = "FROM CategoriesEntity c";
 	    String countQuery = "SELECT count(c) FROM CategoriesEntity c";
@@ -90,6 +94,7 @@ public class CategoriesController {
 	@RequestMapping(value = "/category/delete/{id}.htm", method = RequestMethod.GET)
 	public String deleteCategory(@PathVariable("id") Long id) {
 		Session session = factory.getCurrentSession();
+		
 		CategoriesEntity category = (CategoriesEntity) session.get(CategoriesEntity.class, id);
 		if (category != null) {
 			session.delete(category);

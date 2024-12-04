@@ -36,6 +36,19 @@ public class CartDAO {
         // Trả về danh sách CartItem
         return query.list();
     }
+    
+    public long countItemsInCart(Long cartId) {
+        Session session = sessionFactory.getCurrentSession();
+
+        // HQL query để đếm số lượng sách trong giỏ hàng
+        String hql = "SELECT COUNT(ci) FROM CartItemsEntity ci WHERE ci.cart.id = :cartId";
+        Query query = session.createQuery(hql);
+        query.setParameter("cartId", cartId);
+
+        // Trả về số lượng sách trong giỏ hàng
+        return (Long) query.uniqueResult(); // Kết quả trả về là kiểu Long
+    }
+
 
     // Thêm một Book vào Cart
     public void addToCart(Long userId, Long bookId, int quantity) {
