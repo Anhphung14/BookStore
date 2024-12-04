@@ -120,15 +120,15 @@
 														    <c:when test="${discount > 0}">
 														        <!-- Hiển thị giá sau khi giảm giá -->
 														        <span class="tg-bookprice">
-														            <ins><f:formatNumber value="${book.price - book.price * discount / 100}" type="currency"/> </ins>
-														            <del><f:formatNumber value="${book.price}" type="currency"/> </del>
+														            <ins><f:formatNumber value="${book.price - book.price * discount / 100}" type="currency" maxFractionDigits="0" currencySymbol="₫"/> </ins>
+														            <del><f:formatNumber value="${book.price}" type="currency" maxFractionDigits="0" currencySymbol="₫"/> </del>
 														        </span>
 														        <span class="tg-bookwriter">Bạn tiết kiệm được ${book.price * discount / 100}</span>
 														    </c:when>
 														    <c:otherwise>
 														        <!-- Hiển thị giá gốc khi không có giảm giá -->
 														        <span class="tg-bookprice">
-														            <ins><f:formatNumber value="${book.price}" type="currency"/> </ins>
+														            <ins><f:formatNumber value="${book.price}" type="currency" maxFractionDigits="0" currencySymbol="₫"/> </ins>
 														        </span>
 														    </c:otherwise>
 														</c:choose>

@@ -22,11 +22,12 @@ public class HomeController {
 	@RequestMapping(value = "/home")
 	public String home(ModelMap model, HttpSession session) {
 //		model.addAttribute("list", this.getUsers());
-		UsersEntity user_session = (UsersEntity) session.getAttribute("user");
+//		UsersEntity user_session = (UsersEntity) session.getAttribute("user");
+//		
+//		if (user_session == null) {
+//			return "redirect:/signin.htm";
+//		}
 		
-		if (user_session == null) {
-			return "redirect:/signin.htm";
-		}
 		return "home";
 	}
 

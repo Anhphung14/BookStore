@@ -1,4 +1,4 @@
-	package bookstore.Controller;
+package bookstore.Controller;
 
 import java.util.Random;
 
@@ -19,12 +19,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import bookstore.DAO.UserDAO;
 import bookstore.Entity.UsersEntity;
 
 @Controller
 public class AuthController {
 	@Autowired
 	SessionFactory factory;
+	
+	@Autowired
+	UserDAO userDAO;
 
 	// LOGIN
 	@Transactional
@@ -43,7 +47,7 @@ public class AuthController {
 			return "redirect:signin.htm";
 		}
 
-		UsersEntity user = this.getUserByEmailPass(email, password);
+		UsersEntity user = userDAO.getUserByEmailPass(email, password);
 
 		if (user == null) {
 			return "redirect:signin.htm";
@@ -151,16 +155,6 @@ public class AuthController {
 		return "auth/resetpassword";
 	}
 
-	public UsersEntity getUserByEmailPass(String email, String password) {
-		Session session = factory.getCurrentSession();
-		String hql = "FROM UsersEntity WHERE email = :email AND password = :password";
-		Query query = session.createQuery(hql);
-		query.setParameter("email", email);
-	    query.setParameter("password", password);
-
-		UsersEntity user = (UsersEntity) query.uniqueResult();
-
-		return user;
-	}
+	
 
 }

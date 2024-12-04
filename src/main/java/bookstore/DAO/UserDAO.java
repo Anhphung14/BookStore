@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.transaction.Transactional;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -76,5 +77,28 @@ public class UserDAO {
             session.close();
         }
         return result;
+    }
+    
+    public UsersEntity getUserByEmailPass(String email, String password) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "FROM UsersEntity WHERE email = :email AND password = :password";
+		Query query = session.createQuery(hql);
+		query.setParameter("email", email);
+	    query.setParameter("password", password);
+
+		UsersEntity user = (UsersEntity) query.uniqueResult();
+
+		return user;
+	}
+    
+    public UsersEntity getUserByEmai(String email) {
+    	Session session = sessionFactory.getCurrentSession();
+		String hql = "FROM UsersEntity WHERE email = :email";
+		Query query = session.createQuery(hql);
+		query.setParameter("email", email);
+
+		UsersEntity user = (UsersEntity) query.uniqueResult();
+
+		return user;
     }
 }

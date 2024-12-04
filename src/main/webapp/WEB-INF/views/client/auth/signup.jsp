@@ -67,6 +67,14 @@
 													placeholder="Vui lòng nhập email" required>
 												<div class="invalid-feedback">Vui lòng nhập email.</div>
 											</div>
+											
+											<!-- PhoneNumber Input -->
+											<div class="mb-3">
+												<label for="email" class="form-label">Số điện thoại</label> <input
+													type="text" class="form-control" name="phone" id="phone"
+													placeholder="Vui lòng nhập số điện thoại" required>
+												<div class="invalid-feedback">Vui lòng nhập số điện thoại.</div>
+											</div>
 
 											<!-- Password Input -->
 											<div class="mb-3">
@@ -217,13 +225,15 @@
     if (alertMessage) {
         Swal.fire({
             icon: alertType, 
-            title: alertType === "success" ? "Success" : "Error",
+            title: alertType === "success" ? "Success" : alertType === "error" ? "Error" : "Warning",
             text: alertMessage,
             confirmButtonText: "OK"
         }).then((result) => {
             if (result.isConfirmed && alertType === "success") {
                 window.location.href = '${pageContext.servletContext.contextPath}/client/signin.htm';
-            }
+            } else {
+	        	window.location.href = '${pageContext.servletContext.contextPath}/signin.htm';
+	        }
         });
     }
 </script>

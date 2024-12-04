@@ -62,7 +62,7 @@
 	<div class="nav flex-column">
 		<ul class="side-menu" style="list-style-type: none; padding-left: 0;">
 			<li class="menu-title"><span>HOME</span></li>
-			<li class="side-nav-item"><a class="nav-link" href="#"
+			<li class="side-nav-item"><a class="nav-link" href="home.htm"
 				style="color: #212529; font-weight: 400"> <i class="fa fa-home"></i>
 					<span>Quick Start</span>
 			</a></li>

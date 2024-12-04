@@ -20,8 +20,13 @@
 			p:driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
 			p:url="jdbc:sqlserver://localhost:1433; Database=BookStore;trustServerCertificate=true"
 			p:username="sa"
-			p:password="12345">
+			p:password="123">
 	</bean>
+	
+	<!-- Cấu hình JdbcTemplate -->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
 	
 	<!-- Cấu hình Hibernate -->
 	<bean id="sessionFactory" 

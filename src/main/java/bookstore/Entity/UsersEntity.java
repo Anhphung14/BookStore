@@ -54,6 +54,9 @@ public class UsersEntity {
 
     @Column(name = "verify_token", columnDefinition = "nvarchar")
     private String verify_token;
+    
+    @Column(name = "enabled", columnDefinition = "bit")
+    private int enabled;
 
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
@@ -192,6 +195,13 @@ public class UsersEntity {
 	public void setCart(CartsEntity cart) {
 		this.cart = cart;
 	}
-    
-    
+
+	public int getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(int enabled) {
+		this.enabled = enabled;
+	}
+	
 }

@@ -64,19 +64,19 @@
                 <div class="card-body">
                 	<div class="d-flex align-items-center justify-content-between flex-wrap mx-3 mt-3">
             <!-- Card chứa combobox -->
-            <div class="card mx-3" style="flex-shrink: 0;">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <label for="filterRatings" class="me-3">Filter by:</label>
-                        <select class="form-select w-auto" id="filterRatings" onchange="filterTables()">
-                            <option value="all">All</option>
-                            <option value="unapproved">Unapproved Ratings</option>
-                            <option value="approved">Approved Ratings</option>
-                            <option value="rejected">Rejected Ratings</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
+<!--             <div class="card mx-3" style="flex-shrink: 0;"> -->
+<!--                 <div class="card-body"> -->
+<!--                     <div class="d-flex align-items-center"> -->
+<!--                         <label for="filterRatings" class="me-3">Filter by:</label> -->
+<!--                         <select class="form-select w-auto" id="filterRatings" onchange="filterTables()"> -->
+<!--                             <option value="all">All</option> -->
+<!--                             <option value="unapproved">Unapproved Ratings</option> -->
+<!--                             <option value="approved">Approved Ratings</option> -->
+<!--                             <option value="rejected">Rejected Ratings</option> -->
+<!--                         </select> -->
+<!--                     </div> -->
+<!--                 </div> -->
+<!--             </div> -->
 
             <!-- Card chứa thanh tìm kiếm -->
             <div class="card mx-3" style="flex-grow: 1;">
@@ -147,85 +147,85 @@
                         </div>
                     </div>
 
-                    <!-- Bảng các đánh giá đã được duyệt -->
-                    <div id="approvedRatings" class="mt-3">
-                        <h3>Approved Ratings</h3>
-                        <div class="table-responsive">
-                            <table class="table table-centered">
-                                <tr>
-                                    <th width="30px"><input class="form-check-input" type="checkbox" id="toggle" name="toggle" onclick="checkAll()" /></th>
-                                    <th width="30px" class="text-end">#</th>
-                                    <th width="150px">User</th>
-                                    <th width="150px">Book</th>
-                                    <th class="text-center" width="180px">Review</th>
-                                    <th width="60px" class="text-center">Rating</th>
-                                    <th width="160px" class="text-center">Created at</th>
-                                    <th width="160px" class="text-center">Status</th>
-                                    <th width="60px" class="text-center">Actions</th>
-                                </tr>
-	                                <c:forEach var="rating" items="${listAp}" varStatus="status">
-<%--                                     <c:if test="${rating.approved}"> --%>
-                                        <tr>
-                                            <td><input type="checkbox" class="form-check-input" id="cb${status.index}" name="cid[]" value="${rating.id}" onclick="isChecked(this.checked)"></td>
-                                            <td class="text-end">${rating.id }</td>
-                                            <td>${rating.user.fullname }</td>
-                                            <td>${rating.book.title }</td>
-                                            <td class="text-center">${rating.content }</td>
-                                            <td class="text-center">${rating.number }/5</td>
-                                            <td class="text-center">${rating.createdAt }</td>
-                                            <td class="text-center"><span class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">approved</span></td>
-                                            <td class="text-center">
-                                                <div class="d-flex gap-1">
-                                                    <a class="btn btn-rounded" href="${pageContext.request.contextPath}/rating/update/${rating.id}.htm"><i class="fa fa-pencil"></i></a>
-<%--                                                     <a class="btn btn-rounded btn-delete" href="javascript:void(0);" data-url="${pageContext.request.contextPath}/rating/delete/${rating.id}.htm"><i class="fa fa-trash-alt"></i></a> --%>
-                                                </div>
-                                            </td>
-                                        </tr>
-<%--                                     </c:if> --%>
-                                 </c:forEach>
-                            </table>
-                        </div>
-                    </div>
+<!--                     Bảng các đánh giá đã được duyệt -->
+<!--                     <div id="approvedRatings" class="mt-3"> -->
+<!--                         <h3>Approved Ratings</h3> -->
+<!--                         <div class="table-responsive"> -->
+<!--                             <table class="table table-centered"> -->
+<!--                                 <tr> -->
+<!--                                     <th width="30px"><input class="form-check-input" type="checkbox" id="toggle" name="toggle" onclick="checkAll()" /></th> -->
+<!--                                     <th width="30px" class="text-end">#</th> -->
+<!--                                     <th width="150px">User</th> -->
+<!--                                     <th width="150px">Book</th> -->
+<!--                                     <th class="text-center" width="180px">Review</th> -->
+<!--                                     <th width="60px" class="text-center">Rating</th> -->
+<!--                                     <th width="160px" class="text-center">Created at</th> -->
+<!--                                     <th width="160px" class="text-center">Status</th> -->
+<!--                                     <th width="60px" class="text-center">Actions</th> -->
+<!--                                 </tr> -->
+<%-- 	                                <c:forEach var="rating" items="${listAp}" varStatus="status"> --%>
+<%-- <%--                                     <c:if test="${rating.approved}"> --%>
+<!--                                         <tr> -->
+<%--                                             <td><input type="checkbox" class="form-check-input" id="cb${status.index}" name="cid[]" value="${rating.id}" onclick="isChecked(this.checked)"></td> --%>
+<%--                                             <td class="text-end">${rating.id }</td> --%>
+<%--                                             <td>${rating.user.fullname }</td> --%>
+<%--                                             <td>${rating.book.title }</td> --%>
+<%--                                             <td class="text-center">${rating.content }</td> --%>
+<%--                                             <td class="text-center">${rating.number }/5</td> --%>
+<%--                                             <td class="text-center">${rating.createdAt }</td> --%>
+<!--                                             <td class="text-center"><span class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">approved</span></td> -->
+<!--                                             <td class="text-center"> -->
+<!--                                                 <div class="d-flex gap-1"> -->
+<%--                                                     <a class="btn btn-rounded" href="${pageContext.request.contextPath}/rating/update/${rating.id}.htm"><i class="fa fa-pencil"></i></a> --%>
+<%-- <%--                                                     <a class="btn btn-rounded btn-delete" href="javascript:void(0);" data-url="${pageContext.request.contextPath}/rating/delete/${rating.id}.htm"><i class="fa fa-trash-alt"></i></a> --%>
+<!--                                                 </div> -->
+<!--                                             </td> -->
+<!--                                         </tr> -->
+<%-- <%--                                     </c:if> --%>
+<%--                                  </c:forEach> --%>
+<!--                             </table> -->
+<!--                         </div> -->
+<!--                     </div> -->
                     
                     <!-- Bảng các đánh giá bị từ chối -->
-                    <div id="rejectedRatings" class="mt-3">
-                        <h3>Rejected Ratings</h3>
-                        <div class="table-responsive">
-                            <table class="table table-centered">
-                                <tr>
-                                    <th width="30px"><input class="form-check-input" type="checkbox" id="toggle" name="toggle" onclick="checkAll()" /></th>
-                                    <th width="30px" class="text-end">#</th>
-                                    <th width="150px">User</th>
-                                    <th width="150px">Book</th>
-                                    <th class="text-center" width="180px">Review</th>
-                                    <th width="60px" class="text-center">Rating</th>
-                                    <th width="160px" class="text-center">Created at</th>
-                                    <th width="160px" class="text-center">Status</th>
-                                    <th width="60px" class="text-center">Actions</th>
-                                </tr>
-                                 <c:forEach var="rating" items="${listRe}" varStatus="status">
-<%--                                     <c:if test="${rating.approved}"> --%>
-                                        <tr>
-                                            <td><input type="checkbox" class="form-check-input" id="cb${status.index}" name="cid[]" value="${rating.id}" onclick="isChecked(this.checked)"></td>
-                                            <td class="text-end">${rating.id }</td>
-                                            <td>${rating.user.fullname }</td>
-                                            <td>$[rating.book.title]</td>
-                                            <td class="text-center">${rating.content }</td>
-                                            <td class="text-center">${rating.number }/5</td>
-                                            <td class="text-center">${rating.createdAt }</td>
-                                            <td class="text-center"><span class="small text-uppercase text-danger bg-danger bg-opacity-10 rounded px-2 py-1">rejected</span></td>
-                                            <td class="text-center">
-                                                <div class="d-flex gap-1">
-                                                    <a class="btn btn-rounded" href="${pageContext.request.contextPath}/rating/update/${rating.id}.htm"><i class="fa fa-pencil"></i></a>
-<%--                                                     <a class="btn btn-rounded btn-delete" href="javascript:void(0);" data-url="${pageContext.request.contextPath}/rating/delete/${rating.id}.htm"><i class="fa fa-trash-alt"></i></a> --%>
-                                                </div>
-                                            </td>
-                                        </tr>
-<%--                                     </c:if> --%>
-                                 </c:forEach>
-                            </table>
-                        </div>
-                    </div>
+<!--                     <div id="rejectedRatings" class="mt-3"> -->
+<!--                         <h3>Rejected Ratings</h3> -->
+<!--                         <div class="table-responsive"> -->
+<!--                             <table class="table table-centered"> -->
+<!--                                 <tr> -->
+<!--                                     <th width="30px"><input class="form-check-input" type="checkbox" id="toggle" name="toggle" onclick="checkAll()" /></th> -->
+<!--                                     <th width="30px" class="text-end">#</th> -->
+<!--                                     <th width="150px">User</th> -->
+<!--                                     <th width="150px">Book</th> -->
+<!--                                     <th class="text-center" width="180px">Review</th> -->
+<!--                                     <th width="60px" class="text-center">Rating</th> -->
+<!--                                     <th width="160px" class="text-center">Created at</th> -->
+<!--                                     <th width="160px" class="text-center">Status</th> -->
+<!--                                     <th width="60px" class="text-center">Actions</th> -->
+<!--                                 </tr> -->
+<%--                                  <c:forEach var="rating" items="${listRe}" varStatus="status"> --%>
+<%-- <%--                                     <c:if test="${rating.approved}"> --%>
+<!--                                         <tr> -->
+<%--                                             <td><input type="checkbox" class="form-check-input" id="cb${status.index}" name="cid[]" value="${rating.id}" onclick="isChecked(this.checked)"></td> --%>
+<%--                                             <td class="text-end">${rating.id }</td> --%>
+<%--                                             <td>${rating.user.fullname }</td> --%>
+<!--                                             <td>$[rating.book.title]</td> -->
+<%--                                             <td class="text-center">${rating.content }</td> --%>
+<%--                                             <td class="text-center">${rating.number }/5</td> --%>
+<%--                                             <td class="text-center">${rating.createdAt }</td> --%>
+<!--                                             <td class="text-center"><span class="small text-uppercase text-danger bg-danger bg-opacity-10 rounded px-2 py-1">rejected</span></td> -->
+<!--                                             <td class="text-center"> -->
+<!--                                                 <div class="d-flex gap-1"> -->
+<%--                                                     <a class="btn btn-rounded" href="${pageContext.request.contextPath}/rating/update/${rating.id}.htm"><i class="fa fa-pencil"></i></a> --%>
+<%-- <%--                                                     <a class="btn btn-rounded btn-delete" href="javascript:void(0);" data-url="${pageContext.request.contextPath}/rating/delete/${rating.id}.htm"><i class="fa fa-trash-alt"></i></a> --%>
+<!--                                                 </div> -->
+<!--                                             </td> -->
+<!--                                         </tr> -->
+<%-- <%--                                     </c:if> --%>
+<%--                                  </c:forEach> --%>
+<!--                             </table> -->
+<!--                         </div> -->
+<!--                     </div> -->
                 </div>
             </div>
         </form>
