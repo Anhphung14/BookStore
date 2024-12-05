@@ -175,7 +175,7 @@ public class PaymentController {
             }
             
             DiscountsEntity discount = discountsDAO.getDiscountByCode(discountCode);
-            if(discount == null) {
+            if(discount == null && discountCode != "") {
             	redirectAttributes.addFlashAttribute("alertMessage", "Mã giảm giá không hợp lệ!");
         		redirectAttributes.addFlashAttribute("alertType", "error");
                 return "redirect:/cart/view.htm";
