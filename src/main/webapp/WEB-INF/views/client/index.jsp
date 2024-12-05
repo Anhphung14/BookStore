@@ -91,19 +91,17 @@
 							<c:forEach var="book" items="${bookList}">
 								<div class="item">
 									<div class="tg-postbook">
-										<figure class="tg-featureimg">
 											<div class="tg-bookimg">
 												<div class="tg-frontcover">
 													<a
 														href="${pageContext.request.contextPath}/productdetail/${book.id}.htm">
-														<img src="${book.thumbnail}" alt="${book.title}" />
+														<img src="${book.thumbnail}" alt="${book.thumbnail}" />
 													</a>
 												</div>
 												<div class="tg-backcover">
 													<img src="${book.thumbnail}" alt="${book.title}" />
 												</div>
 											</div>
-										</figure>
 										<div class="tg-postbookcontent">
 											<ul class="tg-bookscategories">
 												<li><a href="javascript:void(0);">${book.subcategoriesEntity.name}</a></li>
@@ -323,7 +321,6 @@
 								<c:if test="${bookDiscounts[book.id] != 0.0}">
 									<div class="item">
 										<div class="tg-postbook">
-											<figure class="tg-featureimg">
 												<div class="tg-bookimg">
 													<div class="tg-frontcover">
 														<a
@@ -335,7 +332,6 @@
 														<img src="${book.thumbnail}" alt="${book.title}" />
 													</div>
 												</div>
-											</figure>
 											<div class="tg-postbookcontent">
 												<ul class="tg-bookscategories">
 													<li><a href="javascript:void(0);">${book.subcategoriesEntity.name}</a></li>
