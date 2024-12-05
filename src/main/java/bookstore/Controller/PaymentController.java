@@ -64,7 +64,7 @@ public class PaymentController {
 	public String checkoutPage(/* @RequestParam("userId") Long userId, */
 			 @RequestParam(value = "selectedItems", required = false) List<Long> selectedItemIds,
 		        Model model, HttpSession session, RedirectAttributes redirectAttributes) {
-    	System.out.println("selectedItems: " + selectedItemIds);
+    	System.out.println("selectedItemsCheckOut: " + selectedItemIds);
     	if (selectedItemIds == null || selectedItemIds.isEmpty()) {
     		redirectAttributes.addFlashAttribute("alertMessage", "Bạn chưa chọn sản phẩm nào để thanh toán.");
     		redirectAttributes.addFlashAttribute("alertType", "error");
@@ -89,7 +89,7 @@ public class PaymentController {
         // Lấy các sản phẩm đã chọn từ selectedItemIds
         List<CartItemsEntity> selectedItems = new ArrayList<>();
         for (Long selectedId : selectedItemIds) {
-            System.out.println("Selected_id: " + selectedId);
+            //System.out.println("Selected_id: " + selectedId);
             // Gọi phương thức getSelectedItemByBookId từ CartDAO để lấy CartItemsEntity
             CartItemsEntity item = cartDAO.getSelectedItemById(selectedId);
             selectedItems.add(item);
@@ -136,7 +136,7 @@ public class PaymentController {
 		                      .append(ward).append(", ")
 		                      .append(district).append(", ")
 		                      .append(province);
-
+		System.out.println("selectedItemIdsPAY: " + selectedItemIds);
 		String address = shippingAddressBuilder.toString();
         try {
         	UsersEntity userSession = (UsersEntity) session.getAttribute("user");
@@ -203,7 +203,7 @@ public class PaymentController {
             newOrder.setShippingAddress(address);
             newOrder.setTotalPrice(totalPrice);
             newOrder.setPaymentMethod(paymentMethod);
-            if(paymentMethod.equals("paypal") || paymentMethod.equals("vnpay")) {
+            if(paymentMethod.equals("PayPal") || paymentMethod.equals("VnPay")) {
             	newOrder.setPaymentStatus("Đã thanh toán");
             }else {
             	newOrder.setPaymentStatus("Chưa thanh toán");

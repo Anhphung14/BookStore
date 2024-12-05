@@ -105,8 +105,10 @@ public class OrderDAO {
                 if (orderStatus.equals("Hoàn thành") && order.getPaymentMethod().equals("COD")) {
                     order.setPaymentStatus("Đã thanh toán");
                 }
-                if(orderStatus.equals("Huỷ đơn hàng") && order.getPaymentStatus().equals("Đã thanh toán")) {
-                	order.setPaymentStatus("Đã hoàn tiền");
+                if(orderStatus.equals("Huỷ đơn hàng")) {
+                	if(order.getPaymentStatus().equals("Đã thanh toán")) {
+                		order.setPaymentStatus("Đã hoàn tiền");
+                	}
         	        for(OrdersDetailEntity orderDetail : order.getOrderDetails()) {
         	        	System.out.println("orderDetail.getBook().getId(): " + orderDetail.getBook().getId());
         	        	InventoryEntity inventoryOfCurrentBook = inventoryDAO.getInventoryByBookId(orderDetail.getBook().getId());

@@ -224,7 +224,7 @@
 												<fmt:formatNumber value="${bestSellingBook.price}"
 													type="currency" currencySymbol="VND" />
 											</ins>
-										</span> <a class="tg-btn tg-btnstyletwo tg-active btn-add-to-cart"
+										</span> <a class="tg-btn tg-btnstyletwo tg-active btn-add-to-cart" data-book-id="${bestSellingBook.id}" data-quantity="1"
 											href="javascript:void(0);"> <i
 											class="fa fa-shopping-basket"></i> <em>Thêm vào giỏ hàng</em>
 										</a>
@@ -386,10 +386,10 @@
 															currencySymbol="VND" />
 													</ins>
 												</span> <a class="tg-btn tg-btnstyletwo btn-add-to-cart"
-													href="javascript:void(0);"
+													data-book-id="${book.id}"
+													data-quantity="1" href="javascript:void(0);"
 													style="padding-left: 0px; padding-right: 0px;"> <i
-													class="fa fa-shopping-basket" data-book-id="${book.id}"
-													data-quantity="1" style="padding-left: 15px;"></i> <em>Thêm
+													class="fa fa-shopping-basket"  style="padding-left: 15px;"></i> <em>Thêm
 														vào giỏ hàng</em>
 												</a>
 											</div>

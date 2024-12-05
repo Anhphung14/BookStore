@@ -268,7 +268,7 @@
 													<div class="tg-sectionhead">
 														<h2>Sản phẩm bạn có thể thích</h2>
 														<a style="text-decoration: none;" class="tg-btn"
-															href="javascript:void(0);">Xem tất cả</a>
+															href="allProduct.htm">Xem tất cả</a>
 													</div>
 												</div>
 												<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -289,7 +289,7 @@
 
 																	<div class="tg-postbookcontent">
 																		<ul class="tg-bookscategories">
-																			<li><a style="text-decoration: none;"
+																			<li style="padding-top: 10px"><a style="text-decoration: none;"
 																				href="javascript:void(0);">${book.subcategoriesEntity.name}</a></li>
 																		</ul>
 																		<c:if test="${discount > 0}">
@@ -444,5 +444,42 @@
 	<script src="resources/assets/js/client/appear.js"></script>
 	<script src="resources/assets/js/client/gmap3.js"></script>
 	<script src="resources/assets/js/client/main.js"></script>
+	<script>
+	var isFullDescription = false;  // Biến để theo dõi trạng thái của mô tả
+
+	
+	document.querySelectorAll('.btn-add-to-cart').forEach(function(button) {
+	    button.addEventListener('click', function(event) {
+    		const quantity = document.getElementById('quantity1').value;
+	    	 var bookId = event.currentTarget.getAttribute('data-book-id');
+	         //var quantity = event.currentTarget.getAttribute('data-quantity');
+	         console.log("bookId:", bookId);
+	         console.log("quantity:", quantity);
+	        // Gửi GET request để thêm sách vào giỏ hàng
+	        fetch('/bookstore/cart/add.htm?bookId=' + bookId + '&quantity=' + quantity, {
+	            method: 'GET', 
+	        })
+	        .then(response => response.text()) 
+	        .then(data => {
+	        	console.log("data: " + data);
+	            // Xử lý phản hồi sau khi thêm vào giỏ hàng
+	            if (data != "error") {
+	            	 var countBooksInCart = parseInt(data);  // Chuyển đổi dữ liệu trả về thành số
+	            	 fetch('/bookstore/index.htm');
+	                 document.querySelector('#tg-minicart .tg-themebadge').textContent = countBooksInCart;
+	            	 toastr.success('Sản phẩm đã được thêm vào giỏ hàng!', 'Thành công');
+	                
+	            } else {
+	            	toastr.error('Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ!', 'Lỗi');
+	            }
+	        })
+	        .catch(error => {
+	            // Lỗi trong quá trình gửi request
+	            console.error('Có lỗi xảy ra:', error);
+	            toastr.error('Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ!', 'Lỗi');
+	        });
+	    });
+	});
+	</script>
 </body>
 </html>
