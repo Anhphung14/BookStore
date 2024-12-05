@@ -653,7 +653,7 @@ li.tg-rss a { background:#ff6600; }
 }
 .tg-btnstyletwo i{padding: 0 5px 0 0;}
 .tg-btnstyletwo:hover { box-shadow: none !important; }
-.tg-btnaddtowishlist {
+/* .tg-btnaddtowishlist {
 	color: #fff;
 	padding: 0 10px;
 	text-align: center;
@@ -662,8 +662,8 @@ li.tg-rss a { background:#ff6600; }
 	vertical-align: middle;
 	text-transform: capitalize;
 	font: 400 13px/34px 'Work Sans', Arial, Helvetica, sans-serif;
-}
-.tg-btnaddtowishlist i,
+} */
+/* .tg-btnaddtowishlist i,
 .tg-btnaddtowishlist span {
 	display: inline-block;
 	vertical-align: top;
@@ -679,7 +679,7 @@ li.tg-rss a { background:#ff6600; }
 .tg-btnaddtowishlist:hover i,
 .tg-btnaddtowishlist:hover span,
 .tg-btnaddtowishlist:focus i,
-.tg-btnaddtowishlist:focus sapn { color: #fff; }
+.tg-btnaddtowishlist:focus sapn { color: #fff; } */
 .tg-wrapper {overflow:hidden;}
 body.tg-comingsoonpage .tg-wrapper{overflow:visible;}
 .tg-content,
@@ -1586,7 +1586,7 @@ li.menu-item-has-mega-menu { position: static; }
 .tg-headervtwo .tg-navigation ul li.current-menu-item a:before{width:100%;}
 .tg-headervtwo .tg-navigation > ul > li > a:hover,
 .tg-headervtwo .tg-navigation > ul > li.current-menu-item > a{background:none;}
-.tg-headervtwo .tg-wishlistandcart{padding:0;}
+/* .tg-headervtwo .tg-wishlistandcart{padding:0;} */
 .tg-headervtwo .tg-themedropdown.tg-currencydropdown{margin:0;}
 .tg-headervtwo .tg-themedropdown{
 	border:0;
@@ -1984,7 +1984,7 @@ li.menu-item-has-mega-menu { position: static; }
 	transform: perspective(1000px) rotateY(-30deg) rotateZ(0deg);
 }
 .tg-postbook:hover .tg-backcover {left: 18px;}
-.tg-featureimg .tg-btnaddtowishlist{
+.tg-featureimg {
 	bottom: 35%;
 	left: 0;
 	opacity: 0;
@@ -1994,7 +1994,7 @@ li.menu-item-has-mega-menu { position: static; }
 	visibility: hidden;
 	position: absolute;
 }
-.tg-postbook:hover .tg-btnaddtowishlist{
+.tg-postbook:hover {
 	opacity: 1;
 	bottom: 50%;
 	visibility: visible;
@@ -3094,7 +3094,7 @@ li.menu-item-has-mega-menu { position: static; }
 			Inner Banner Style					
 ============================================= */
 .tg-innerbanner{
-	height:300px;
+	/* height:300px; */
 	text-align:center;
 	-webkit-box-align: center;
 	-ms-flex-align: center;
@@ -3831,7 +3831,7 @@ blockquote .tg-bookwriter{
 	padding:0;
 	margin:10px 0 0;
 }
-.tg-productdetail .tg-postbook .tg-postbookcontent .tg-btnaddtowishlist{
+.tg-productdetail .tg-postbook .tg-postbookcontent {
 	padding:0;
 	width:100%;
 	margin:10px 0 0;
