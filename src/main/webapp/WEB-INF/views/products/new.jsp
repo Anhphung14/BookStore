@@ -362,6 +362,11 @@ select.form-control {
 
 		    // Loại bỏ số 0 ở đầu nếu không phải chỉ là "0"
 		    value = value.replace(/^0+/, '') || "0";
+		    
+		    const maxValue = 10000000;
+		    if (parseInt(value, 10) > maxValue) {
+		        value = maxValue.toString(); // Giới hạn giá trị tối đa
+		    }
 
 		    // Thêm định dạng phân cách hàng nghìn
 		    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');

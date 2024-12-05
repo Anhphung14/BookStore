@@ -39,6 +39,39 @@
 <link rel="stylesheet"
 	href="${pageContext.servletContext.contextPath}/resources/assets/css/client/responsive.css" />
 
+
+<style type="text/css">
+/* Thay đổi màu nền cho toastr success */
+.toast-success {
+    background-color: #28a745 !important; /* Màu xanh lá */
+    color: #fff !important; /* Màu chữ trắng */
+}
+
+/* Thay đổi màu nền cho toastr error */
+.toast-error {
+    background-color: #dc3545 !important; /* Màu đỏ */
+    color: #fff !important; /* Màu chữ trắng */
+}
+
+/* Thay đổi màu nền cho toastr warning */
+.toast-warning {
+    background-color: #ffc107 !important; /* Màu vàng */
+    color: #000 !important; /* Màu chữ đen */
+}
+
+/* Thay đổi màu nền cho toastr info */
+.toast-info {
+    background-color: #17a2b8 !important; /* Màu xanh lam */
+    color: #fff !important; /* Màu chữ trắng */
+}
+
+/* Tùy chỉnh chung cho toastr */
+.toast {
+    border-radius: 5px; /* Bo góc */
+    font-size: 14px; /* Kích thước chữ */
+}
+
+</style>
 <script src="https://kit.fontawesome.com/e70d1e2fed.js"
 	crossorigin="anonymous"></script>
 
@@ -352,9 +385,52 @@
 				Footer End
 		*************************************-->
 	</div>
-	<!--************************************
-			Wrapper End
-	*************************************-->
+<!-- 	<!--************************************ -->
+	<script>
+	var isFullDescription = false;  // Biến để theo dõi trạng thái của mô tả
+
+	
+	document.querySelectorAll('.btn-add-to-cart').forEach(function(button) {
+        button.addEventListener('click', function(event) {
+        	console.log(event.currentTarget.getAttribute('data-book-id'));
+        	console.log(event.currentTarget.getAttribute('data-book-id'));
+        	 var bookId = event.currentTarget.getAttribute('data-book-id');
+             var quantity = event.currentTarget.getAttribute('data-quantity');
+             console.log("bookId:", bookId);
+             console.log("quantity:", quantity);
+            // Gửi GET request để thêm sách vào giỏ hàng
+            fetch('/bookstore/cart/add.htm?bookId=' + bookId + '&quantity=' + quantity, {
+                method: 'GET', 
+            })
+            .then(response => response.text()) 
+            .then(data => {
+            	console.log("data: " + data);
+                // Xử lý phản hồi sau khi thêm vào giỏ hàng
+	              	 if (data == "Vui long dang nhap") {
+	               		 toastr.error('Vui lòng đăng nhập để thêm sản phẩm!', 'Lỗi');
+	              	 }
+	              	 else if (data != "error" && data != "Vui long dang nhap") {
+                	 var countBooksInCart = parseInt(data);  // Chuyển đổi dữ liệu trả về thành số
+                	 fetch('/bookstore/index.htm');
+                     document.querySelector('#tg-minicart .tg-themebadge').textContent = countBooksInCart;
+                	 toastr.success('Sản phẩm đã được thêm vào giỏ hàng!', 'Thành công');
+                    
+                } else {
+                	toastr.error('Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ!', 'Lỗi');
+                }
+            })
+            .catch(error => {
+                // Lỗi trong quá trình gửi request
+                console.error('Có lỗi xảy ra:', error);
+                toastr.error('Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ!', 'Lỗi');
+            });
+        });
+    });
+
+	
+	</script>
+<!-- 			Wrapper End -->
+<!-- 	************************************* -->
 	<script src="resources/assets/js/client/vendor/jquery-library.js"></script>
 	<script src="resources/assets/js/client/vendor/bootstrap.min.js"></script>
 	<script
@@ -368,60 +444,5 @@
 	<script src="resources/assets/js/client/appear.js"></script>
 	<script src="resources/assets/js/client/gmap3.js"></script>
 	<script src="resources/assets/js/client/main.js"></script>
-	<script>
-	var isFullDescription = false;  // Biến để theo dõi trạng thái của mô tả
-
-	
-	document.querySelectorAll('.btn-add-to-cart').forEach(function(button) {
-	    button.addEventListener('click', function(event) {
-    		const quantity = document.getElementById('quantity1').value;
-	    	 var bookId = event.currentTarget.getAttribute('data-book-id');
-	         //var quantity = event.currentTarget.getAttribute('data-quantity');
-	         console.log("bookId:", bookId);
-	         console.log("quantity:", quantity);
-	        // Gửi GET request để thêm sách vào giỏ hàng
-	        fetch('/bookstore/cart/add.htm?bookId=' + bookId + '&quantity=' + quantity, {
-	            method: 'GET', 
-	        })
-	        .then(response => response.text()) 
-	        .then(data => {
-	        	console.log("data: " + data);
-	            // Xử lý phản hồi sau khi thêm vào giỏ hàng
-	            if (data != "error") {
-	            	 var countBooksInCart = parseInt(data);  // Chuyển đổi dữ liệu trả về thành số
-	            	 fetch('/bookstore/index.htm');
-	                 document.querySelector('#tg-minicart .tg-themebadge').textContent = countBooksInCart;
-	            	 toastr.success('Sản phẩm đã được thêm vào giỏ hàng!', 'Thành công');
-	                
-	            } else {
-	            	toastr.error('Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ!', 'Lỗi');
-	            }
-	        })
-	        .catch(error => {
-	            // Lỗi trong quá trình gửi request
-	            console.error('Có lỗi xảy ra:', error);
-	            toastr.error('Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ!', 'Lỗi');
-	        });
-	    });
-	});
-
-	
-	/*      function showMore() {
-        var fullDescription = "${fn:escapeXml(book.description)}";
-        var shortDescription = "${book.description.substring(0, 100)}...";
-        var descriptionElement = document.getElementById('book-description');
-        var linkElement = document.getElementById('more_less');
-
-        if (isFullDescription) {
-            descriptionElement.innerText = shortDescription;  // Thu gọn lại nội dung
-            linkElement.innerText = "More";  // Đổi lại chữ thành "More"
-        } else {
-            descriptionElement.innerText = fullDescription;  // Hiển thị đầy đủ nội dung
-            linkElement.innerText = "Less";  // Đổi lại chữ thành "Less"
-        }
-
-        isFullDescription = !isFullDescription;  // Đổi trạng thái
-    } */
-	</script>
 </body>
 </html>

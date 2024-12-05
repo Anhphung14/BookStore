@@ -378,6 +378,11 @@
 	        value = value.replace(/^0+/, '');
 	        initialInput = false;
 	    }
+	    
+	    const maxValue = 10000000;
+	    if (parseInt(value, 10) > maxValue) {
+	        value = maxValue.toString(); // Giới hạn giá trị tối đa
+	    }
 
 	    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 

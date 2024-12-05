@@ -44,7 +44,7 @@
 			<div class="row g-3 mt-3">
 				<div class="col">
 					<h2 class="h3">
-						Update Rating Status
+						Rating Detail
 					</h2>
 				</div>
 				<div class="col-auto d-none d-sm-block">
@@ -96,22 +96,22 @@
 								for="review">Review </label>
 						</div>
 						
-						<div class="form-floating mt-3">
-			                <select class="form-control" id="status" name="status" required>
-			                    <option value="0" ${rating.status == 0 ? 'selected' : ''}>Unapproved</option>
-			                    <option value="1" ${rating.status == 1 ? 'selected' : ''}>Approved</option>
-			                    <option value="2" ${rating.status == 2 ? 'selected' : ''}>Rejected</option>
-			                </select>
-			                <label class="form-label" for="status">Status <span class="text-danger">*</span></label>
-			            </div>
+<!-- 						<div class="form-floating mt-3"> -->
+<!-- 			                <select class="form-control" id="status" name="status" required> -->
+<%-- 			                    <option value="0" ${rating.status == 0 ? 'selected' : ''}>Unapproved</option> --%>
+<%-- 			                    <option value="1" ${rating.status == 1 ? 'selected' : ''}>Approved</option> --%>
+<%-- 			                    <option value="2" ${rating.status == 2 ? 'selected' : ''}>Rejected</option> --%>
+<!-- 			                </select> -->
+<!-- 			                <label class="form-label" for="status">Status <span class="text-danger">*</span></label> -->
+<!-- 			            </div> -->
 						
 					</div>
 				</div>
 
 				<div class="mt-3">
-					<button class="btn btn-primary btn-save" type="submit">Save</button>
+<!-- 					<button class="btn btn-primary btn-save" type="submit">Save</button> -->
 					<a href="<c:url value='/admin1337/ratings.htm' />"
-						class="btn btn-light btn-cancel">Cancel</a>
+						class="btn btn-light btn-cancel">Back</a>
 				</div>
 			</form>
 		</div>

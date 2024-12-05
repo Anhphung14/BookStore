@@ -109,7 +109,7 @@
         </div>
 					<!-- Bảng các đánh giá chưa được duyệt -->
                     <div id="unapprovedRatings" class="mt-3">
-                        <h3>Unapproved Ratings</h3>
+                        <h3>All Ratings</h3>
                         <div class="table-responsive">
                             <table class="table table-centered">
                                 <tr>
@@ -133,10 +133,10 @@
                                             <td class="text-center">${rating.content }</td>
                                             <td class="text-center">${rating.number }/5</td>
                                             <td class="text-center">${rating.createdAt}</td>
-                                            <td class="text-center"><span class="small text-uppercase text-warning bg-warning bg-opacity-10 rounded px-2 py-1">pending</span></td>
+                                            <td class="text-center"><span class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">success</span></td>
                                             <td class="text-center">
                                                 <div class="d-flex gap-1">
-                                                    <a class="btn btn-rounded" href="rating/update/${rating.id}.htm"><i class="fa fa-pencil"></i></a>
+                                                    <a class="btn btn-rounded" href="rating/update/${rating.id}.htm"><i class="fa fa-eye"></i></a>
 <%--                                                     <a class="btn btn-rounded btn-delete" href="javascript:void(0);" data-url="${pageContext.request.contextPath}/rating/delete/${rating.id}.htm"><i class="fa fa-trash-alt"></i></a> --%>
                                                 </div>
                                             </td>

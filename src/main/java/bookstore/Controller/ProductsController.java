@@ -230,23 +230,33 @@ public class ProductsController {
 
 				if (compareStrings(bookEntity.getTitle(), book.getTitle())) {
 					count += 1;
+					System.out.println("Vo day 1");
 				}
 				
 				if (compareStrings(bookEntity.getAuthor(), book.getAuthor())) {
 					count += 1;
+					System.out.println("Vo day 2");
 				}
 				
 				if (compareStrings(bookEntity.getSupplier().getName(), book.getSupplier().getName())) {
 					count += 1;
+					System.out.println("Vo day 3");
 				}
 				
-				if (bookEntity.getPublication_year() == book.getPublication_year()) {
+				System.out.println("111111" + bookEntity.getPublication_year());
+				System.out.println("222222" + book.getPublication_year());
+				
+				if (bookEntity.getPublication_year().toString().equals(book.getPublication_year().toString())) {
 					count += 1;
+					System.out.println("Vo day 4");
 				}
 				
 				if (compareStrings(bookEntity.getLanguage(), book.getLanguage())) {
 					count += 1;
+					System.out.println("Vo day 5");
 				}
+				
+				System.out.println(">>>>>>>>>>>>>>>>>" + count);
 				
 				if (count == 5) {
 					listExistBooks.add(book);
