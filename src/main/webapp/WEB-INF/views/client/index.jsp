@@ -108,8 +108,9 @@
 											</ul>
 											<c:if test="${bookDiscounts[book.id] != 0.0}">
 												<div class="tg-themetagbox">
-													<span class="tg-themetag">Giảm giá
-														${bookDiscounts[book.id]}%</span>
+													<span class="tg-themetag"> Giảm giá <fmt:formatNumber
+															value="${bookDiscounts[book.id]}" pattern="##" />%
+													</span>
 												</div>
 											</c:if>
 											<c:if test="${bookDiscounts[book.id] == 0.0}">
@@ -338,9 +339,8 @@
 												</ul>
 												<c:if test="${bookDiscounts[book.id] != 0.0}">
 													<div class="tg-themetagbox">
-														<span class="tg-themetag">Giảm giá <f:formatNumber
-																value="${bookDiscounts[book.id]}" type="number"
-																pattern="##" />%
+														<span class="tg-themetag"> Giảm giá <fmt:formatNumber
+																value="${bookDiscounts[book.id]}" pattern="##" />%
 														</span>
 													</div>
 												</c:if>
