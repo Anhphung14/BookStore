@@ -138,7 +138,7 @@ public class ClientController {
 	
     @RequestMapping("/search")
     public String searchBooks(@RequestParam(value = "q", required = false) String searchQuery, @RequestParam(value = "page", defaultValue = "1") int page, 
-    		@RequestParam(value = "pageSize", defaultValue = "1") int pageSize, @RequestParam(value = "sortBy", defaultValue = "newest", required = false) String sortBy,
+    		@RequestParam(value = "pageSize", defaultValue = "16") int pageSize, @RequestParam(value = "sortBy", defaultValue = "newest", required = false) String sortBy,
     		ModelMap model) {
     	//System.out.println("pageSize: " + pageSize);
         //System.out.println("Search Query: " + searchQuery);
@@ -148,7 +148,8 @@ public class ClientController {
         //System.out.println(totalPages);
         List<Object[]> countBookEachCategory = booksDAO.countBookEachCategory();
         
-        
+        long countAllBooks = booksDAO.countAllBook();
+        model.addAttribute("countAllBooks", countAllBooks);
         
         List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
         List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();

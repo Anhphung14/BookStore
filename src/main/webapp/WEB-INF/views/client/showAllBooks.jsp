@@ -120,7 +120,7 @@
 																<div class="tg-backcover"><img src="${book.thumbnail }" alt="image description"></div>
 															</div>
 														<div class="tg-postbookcontent">
-																<ul class="tg-bookscategories">
+																<ul class="tg-bookscategories" style="padding-top: 10px">
 																	<li><a href="javascript:void(0);">${book.subcategoriesEntity.name }</a></li>
 																</ul>
 																<c:if test="${bookDiscounts[book.id] != 0.0}">
