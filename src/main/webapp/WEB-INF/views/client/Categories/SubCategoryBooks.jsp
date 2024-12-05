@@ -186,7 +186,7 @@
 										</div>
 										
 										<!-- Phân trang -->
-										<nav aria-label="Page navigation example" style="position: relative; left: 340px;">
+										<nav aria-label="Page navigation example" >
 										    <ul class="pagination">
 										        <!-- Nút Previous -->
 										        <c:choose>
