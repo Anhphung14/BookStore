@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Providers management</title>
-<base href="${pageContext.servletContext.contextPath}/">
+<base href="${pageContext.servletContext.contextPath}/admin1337/">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script src="${pageContext.request.contextPath}/resources/js/app.js"
@@ -58,7 +58,7 @@
 
 					</div>
 					<div class="col-auto d-none d-sm-block">
-						<img class="page-icon" src="resources/images/page.svg"
+						<img class="page-icon" src="${pageContext.request.contextPath}/resources/images/page.svg"
 							width="120px" alt="Page Icon">
 					</div>
 				</div>
@@ -82,7 +82,7 @@
 								</button>
 							</div>
 							<a class="btn btn-primary text-nowrap btn-add"
-								href="${pageContext.request.contextPath}/supplier/new.htm">
+								href="supplier/new.htm">
 								<i class="fa fa-plus me-2"></i>Add
 							</a>
 						</div>
@@ -133,11 +133,11 @@
 											<td class="text-end">
 												<div class="d-flex gap-1">
 													<a class="btn btn-rounded"
-														href="${pageContext.request.contextPath}/supplier/edit/${supplier.id}.htm">
+														href="supplier/edit/${supplier.id}.htm">
 														<i class="fa fa-pencil"></i>
 													</a> <a class="btn btn-rounded btn-delete"
 														href="javascript:void(0);"
-														data-url="${pageContext.request.contextPath}/supplier/delete/${supplier.id}.htm">
+														data-url="supplier/delete/${supplier.id}.htm">
 														<i class="fa fa-trash-alt"></i>
 													</a>
 												</div>
@@ -152,7 +152,7 @@
 										<!-- Liên kết đến trang trước -->
 										<li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
 											<a class="page-link"
-											href="${pageContext.request.contextPath}/suppliers.htm?page=${currentPage > 1 ? currentPage - 1 : 1}&size=${size}"
+											href="suppliers.htm?page=${currentPage > 1 ? currentPage - 1 : 1}&size=${size}"
 											aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 										</a>
 										</li>
@@ -161,7 +161,7 @@
 										<c:forEach var="i" begin="1" end="${totalPages}">
 											<li class="page-item ${i == currentPage ? 'active' : ''}">
 												<a class="page-link"
-												href="${pageContext.request.contextPath}/suppliers.htm?page=${i}&size=${size}">${i}</a>
+												href="suppliers.htm?page=${i}&size=${size}">${i}</a>
 											</li>
 										</c:forEach>
 
@@ -169,7 +169,7 @@
 										<li
 											class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
 											<a class="page-link"
-											href="${pageContext.request.contextPath}/suppliers.htm?page=${currentPage < totalPages ? currentPage + 1 : totalPages}&size=${size}"
+											href="suppliers.htm?page=${currentPage < totalPages ? currentPage + 1 : totalPages}&size=${size}"
 											aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 										</a>
 										</li>

@@ -23,6 +23,7 @@ import bookstore.Service.InventoryService;
 
 @Controller
 @Transactional
+@RequestMapping("/admin1337")
 public class InventoriesController {
 	@Autowired
 	InventoryService inventoryService;
@@ -70,7 +71,7 @@ public class InventoriesController {
 					redirectAttributes.addFlashAttribute("alertMessage", "Successfully updated Inventory Id: " + inventory.getId());
 					redirectAttributes.addFlashAttribute("alertType", "success");
 
-					return "redirect:/inventories.htm";
+					return "redirect:/admin1337/inventories.htm";
 				}
 			}
 		}
@@ -110,6 +111,6 @@ public class InventoriesController {
 		}
 		
 		
-		return "redirect:/inventories.htm"; 
+		return "redirect:/admin1337/inventories.htm"; 
 	}
 }

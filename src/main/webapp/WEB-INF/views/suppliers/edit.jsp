@@ -13,7 +13,7 @@
 		<c:otherwise>New Supplier</c:otherwise>
 	</c:choose></title>
 
-<base href="${pageContext.servletContext.contextPath}/">
+<base href="${pageContext.servletContext.contextPath}/admin1337/">
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -65,12 +65,12 @@
 					</h2>
 				</div>
 				<div class="col-auto d-none d-sm-block">
-					<img class="page-icon" src="resources/images/page.svg"
+					<img class="page-icon" src="${pageContext.servletContext.contextPath}/resources/images/page.svg"
 						width="120px" alt="Page Icon">
 				</div>
 			</div>
 			<form id="userForm"
-				action="${pageContext.servletContext.contextPath}/supplier/save.htm"
+				action="supplier/save.htm"
 				method="POST">
 				<input type="hidden" id="task" name="task" value="${task}">
 
@@ -120,7 +120,7 @@
 
 				<div class="mt-3">
 					<button class="btn btn-primary btn-save" type="submit">Save</button>
-					<a href="<c:url value='/suppliers.htm' />"
+					<a href="<c:url value='/admin1337/suppliers.htm' />"
 						class="btn btn-light btn-cancel">Cancel</a>
 				</div>
 			</form>

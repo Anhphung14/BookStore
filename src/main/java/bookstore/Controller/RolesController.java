@@ -26,6 +26,7 @@ import bookstore.Entity.UsersEntity;
 
 @Transactional
 @Controller
+@RequestMapping("/admin1337/")
 public class RolesController {
 	@Autowired
 	private SessionFactory factory;
@@ -153,14 +154,14 @@ public class RolesController {
 	        else if ("edit".equals(task)) {
 	            if (id == null) {
 	                model.addAttribute("message", "Role ID is required to edit.");
-	                return "redirect:/roles.htm"; 
+	                return "redirect:/admin1337/roles.htm"; 
 	            }
 
 	            RolesEntity existingRole = getRoleById(id);
 
 	            if (existingRole == null) {
 	                model.addAttribute("message", "Role not found.");
-	                return "redirect:/roles.htm";
+	                return "redirect:/admin1337/roles.htm";
 	            }
 
 	            existingRole.setName(role.getName());
@@ -171,16 +172,16 @@ public class RolesController {
 	            session.merge(existingRole);
                 redirectAttributes.addFlashAttribute("alertMessage", "Role saved successfully!");
 	            redirectAttributes.addFlashAttribute("alertType", "success");
-	            return "redirect:/roles.htm";
+	            return "redirect:/admin1337/roles.htm";
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        redirectAttributes.addFlashAttribute("alertMessage", "Error occurred while saving the Role.");
 	        redirectAttributes.addFlashAttribute("alertType", "error");
-	        return "redirect:/roles.htm";
+	        return "redirect:/admin1337/roles.htm";
 	    }
 
-	    return "redirect:/roles.htm";
+	    return "redirect:/admin1337/roles.htm";
 	}
 
 	@RequestMapping(value = "/role/delete/{id}.htm", method = RequestMethod.GET)
@@ -190,7 +191,7 @@ public class RolesController {
 		if (role != null) {
 			session.delete(role);
 		}
-		return "redirect:/roles.htm";
+		return "redirect:/admin1337/roles.htm";
 	}
 
 	private RolesEntity getRoleByName(String name) {

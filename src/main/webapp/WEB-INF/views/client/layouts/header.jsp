@@ -17,13 +17,30 @@
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 </head>
+<style>
+.signin-container {
+	padding: 25px 0px;
+	text-align: center;
+}
+
+.btn-signin {
+	text-decoration: underline; 
+	font-weight: 600;
+	color: #404040;
+	background: ;
+}
+
+.btn-signin:hover {
+	color: #000;
+}
+</style>
 <body>
 
 	<header id="tg-header" class="tg-header tg-haslayout">
 		<div class="tg-middlecontainer">
 			<div class="container">
 				<div class="row">
-					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
 
 						<strong class="tg-logo"><a href="index.htm"><img
 								src="${pageContext.servletContext.contextPath}/resources/images/ALDPT.png"
@@ -84,27 +101,13 @@
 						</div>
 
 						<div class="tg-wishlistandcart">
-							<div class="dropdown tg-themedropdown tg-wishlistdropdown">
-								<a href="javascript:void(0);" id="tg-wishlisst"
-									class="tg-btnthemedropdown" data-toggle="dropdown"
-									aria-haspopup="true" aria-expanded="false"> <span
-									class="tg-themebadge">3</span> <i class="fa-solid fa-heart"></i>
-									<span>Wishlist</span>
-								</a>
-								<div class="dropdown-menu tg-themedropdownmenu"
-									aria-labelledby="tg-wishlisst">
-									<div class="tg-description">
-										<p>No products were added to the wishlist!</p>
-									</div>
-								</div>
-							</div>
 							<div class="dropdown tg-themedropdown tg-minicartdropdown">
 								<a
 									href="${pageContext.servletContext.contextPath}/cart/view.htm"
 									id="tg-minicart" class="tg-btnthemedropdown"
 									aria-haspopup="true"
 									aria-expanded="false"> <span class="tg-themebadge">${sessionScope.countBooksInCart}</span>
-									<i class="fa-solid fa-cart-shopping"></i> <span>$123.00</span>
+									<i class="fa-solid fa-cart-shopping"></i>
 								</a>
 							</div>
 						</div>
@@ -112,7 +115,8 @@
 						<div class="tg-searchbox">
 							<form class="tg-formtheme tg-formsearch"
 								action="${pageContext.servletContext.contextPath}/search.htm"
-								method="GET" onsubmit="return validateSearch();">
+								method="GET" onsubmit="return validateSearch();"
+								style="width: 550px">
 								<fieldset>
 									<!-- Ô nhập liệu tìm kiếm -->
 									<input id="searchInput" type="text" name="q"
@@ -125,28 +129,37 @@
 
 							</form>
 						</div>
-
 						<div class="action">
-							<div class="profile" onclick="menuToggle();">
-								<img src="${user.avatar}" style="width: 60px; height: 60px" />
-							</div>
-							<div class="menu">
-								<h3>${user.fullname}<br />
-									<span>Hội viên siêu cấp vjp pro</span>
-								</h3>
-								<ul>
-									<li><i class="fa-solid fa-user"></i>&nbsp;&nbsp;<a
-										href="${pageContext.servletContext.contextPath}/account/profile_settings.htm">My
-											profile</a></li>
-									<li><i class="fa-solid fa-shop"></i>&nbsp;&nbsp;<a
-										href="${pageContext.servletContext.contextPath}/account/account_orders.htm">My
-											Orders</a></li>
-									<li><i class="fa-solid fa-inbox"></i>&nbsp;&nbsp;<a
-										href="#">Inbox</a></li>
-									<li><i class="fa-solid fa-right-from-bracket"></i>&nbsp;&nbsp;<a
-										href="#">Logout</a></li>
-								</ul>
-							</div>
+							<c:choose>
+								<c:when test="${not empty user}">
+									<div class="profile" onclick="menuToggle();">
+										<img src="${user.avatar}" style="width: 60px; height: 60px" />
+									</div>
+									<div class="menu">
+										<h3>${user.fullname}</h3>
+										<ul>
+											<li><i class="fa-solid fa-user"></i>&nbsp;&nbsp;<a
+												href="${pageContext.servletContext.contextPath}/account/profile_settings.htm">My
+													profile</a></li>
+											<li><i class="fa-solid fa-shop"></i>&nbsp;&nbsp;<a
+												href="${pageContext.servletContext.contextPath}/account/account_orders.htm">My
+													Orders</a></li>
+											<li><i class="fa-solid fa-right-from-bracket"></i>&nbsp;&nbsp;<a
+												href="${pageContext.servletContext.contextPath}/signout.htm">Logout</a></li>
+										</ul>
+									</div>
+								</c:when>
+								<c:otherwise>
+									<div class="signin-container">
+										<a href="${pageContext.servletContext.contextPath}/signin.htm"
+											class="btn-signin"> <span
+											style="font-weight: 600; line-height: 20px; color: #404040;">Sign
+												In</span>
+										</a>
+									</div>
+
+								</c:otherwise>
+							</c:choose>
 						</div>
 
 					</div>

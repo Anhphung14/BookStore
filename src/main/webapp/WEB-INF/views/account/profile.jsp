@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Profile</title>
-<base href="${pageContext.servletContext.contextPath}/">
+<base href="${pageContext.servletContext.contextPath}/admin1337/">
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -42,7 +42,7 @@
 		<div class="container-fluid d-flex flex-column"
 			style="padding-left: 10px; padding-right: 10px;">
 			<form id="frm-admin" name="adminForm"
-				action="${pageContext.servletContext.contextPath}/profile/save.htm"
+				action="profile/save.htm"
 				method="POST" enctype="multipart/form-data">
 				<div class="bg-light p-3 mt-3">
 					<div class="d-flex align-items-center">

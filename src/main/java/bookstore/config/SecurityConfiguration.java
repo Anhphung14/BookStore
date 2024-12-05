@@ -58,32 +58,39 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable()
-			.authorizeRequests()
-				.antMatchers("/index.htm").permitAll()
-				.antMatchers("/cart/add").permitAll()
-				//.antMatchers("/cart/**").authenticated()
-//				.antMatchers("/cart/**").hasRole("USER")
-				.and()
-			.authorizeRequests()
-				.antMatchers("/home.htm").hasRole("ADMIN")
-				.anyRequest().permitAll()
-				.and()
-			.formLogin()
-				.loginPage("/signin.htm")
-				.loginProcessingUrl("/perform_login")
-				.usernameParameter("email")
-				.passwordParameter("password")
-				.successHandler(successHandler)
-//				.defaultSuccessUrl("/index.htm")
-//				.failureUrl("/signin.htm?error=true")
-				.permitAll()
-				.and().exceptionHandling().accessDeniedPage("/signup.htm");
+	    http.csrf().disable()
+	        .authorizeRequests()
+	            .antMatchers("/index.htm", "/categoires/**", "/productdetail/**", "/cart/add.htm/**").permitAll()
+	            .antMatchers("/admin1337/**").hasRole("ADMIN")
+	            .antMatchers("/**").hasAnyRole("USER", "ADMIN")
+	            .anyRequest().authenticated()
+	            .and()
+	        .formLogin()
+	            .loginPage("/signin.htm")
+	            .loginProcessingUrl("/perform_login")
+	            .usernameParameter("email")
+	            .passwordParameter("password")
+	            .successHandler(successHandler)
+	            .permitAll()
+	            .and()
+	        .sessionManagement()
+	        	.invalidSessionUrl("/signin.htm")
+	        	.sessionFixation().newSession()
+                .and()
+	        .logout()
+		        .logoutUrl("/signout.htm")            // Đặt URL logout cho phương thức POST
+	            .logoutSuccessUrl("/signin.htm")     // Chuyển hướng sau khi đăng xuất thành công
+	            .invalidateHttpSession(true)         // Xóa session khi đăng xuất
+	            .permitAll()
+	            .and()
+	        .exceptionHandling()
+	            .accessDeniedPage("/signup.htm");
+	    
 	}
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/resources/**");
+		web.ignoring().antMatchers("/resources/**", "/admin1337/resources/**");
 	}
 	
 }

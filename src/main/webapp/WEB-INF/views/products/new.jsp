@@ -11,13 +11,16 @@
 		<c:otherwise>New Product</c:otherwise>
 	</c:choose></title>
 
-<base href="${pageContext.servletContext.contextPath}/">
+<base href="${pageContext.servletContext.contextPath}/admin1337/">
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <style>
 .main-content {
 	display: flex;
@@ -113,12 +116,12 @@ select.form-control {
 					<p>Manage users, roles, permissions, and profile.</p>
 				</div>
 				<div class="col-auto d-none d-sm-block">
-					<img class="page-icon" src="resources/images/page.svg"
+					<img class="page-icon" src="${pageContext.servletContext.contextPath}/resources/images/page.svg"
 						width="120px" alt="Page Icon">
 				</div>
 			</div>
 			<form id="productForm"
-				action="${pageContext.servletContext.contextPath}/product/add.htm"
+				action="product/add.htm"
 				method="POST" enctype="multipart/form-data">
 				<input type="hidden" id="task" name="task" value="${task}">
 
@@ -303,7 +306,7 @@ select.form-control {
 
 				<div class="mt-3">
 					<button class="btn btn-primary btn-save" type="submit">Save</button>
-					<a href="<c:url value='/products.htm' />"
+					<a href="<c:url value='/admin1337/products.htm' />"
 						class="btn btn-light btn-cancel">Cancel</a>
 				</div>
 			</form>
@@ -316,21 +319,33 @@ select.form-control {
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 	
 	<script>
-		const alertMessage = "${alertMessage}";
-		const alertType = "${alertType}";
-		
-		if (alertMessage) {
-		    Swal.fire({
-		        icon: alertType, 
-		        title: alertType === "success" ? "Success" : "Error",
-		        text: alertMessage,
-		        confirmButtonText: "OK"
-		    }).then((result) => {
-		        if (result.isConfirmed && alertType === "success") {
-		            window.location.href = '${pageContext.servletContext.contextPath}/products.htm';
-		        }
-		    });
-		}
+	const alertMessage = "${alertMessage}";
+	const alertType = "${alertType}";
+	toastr.options = {
+		    "closeButton": true, // Cho phép nút đóng
+		    "debug": false,
+		    "newestOnTop": true,
+		    "progressBar": true, // Hiển thị thanh tiến trình
+		    "positionClass": "toast-top-right", // Vị trí hiển thị thông báo
+		    "preventDuplicates": true,
+		    "onclick": null,
+		    "showDuration": "200", // Thời gian hiển thị
+		    "hideDuration": "1000",
+		    "timeOut": "5000", // Thời gian thông báo sẽ tự động ẩn
+		    "extendedTimeOut": "1000", // Thời gian mở rộng nếu hover vào
+		    "showEasing": "swing",
+		    "hideEasing": "linear",
+		    "showMethod": "fadeIn",
+		    "hideMethod": "fadeOut"
+		};
+	if (alertMessage) {
+	    // Kiểm tra kiểu thông báo
+	    if (alertType === "success") {
+	        toastr.success(alertMessage, "Success");
+	    } else if (alertType === "error") {
+	        toastr.error(alertMessage, "Error");
+	    }
+	}
 	
 	
 		let initialInput = true;
@@ -423,7 +438,7 @@ select.form-control {
 		    subcategorySelect.disabled = false;
 
 		    // Gửi yêu cầu AJAX đến server
-		    fetch('/bookstore/product/getSubcategories.htm?categoryId=' + categoryId)
+		    fetch('/bookstore/admin1337/product/getSubcategories.htm?categoryId=' + categoryId)
 		    .then(response => response.text())
 		    .then(data => {
 		        subcategorySelect.innerHTML = data; // Thêm trực tiếp HTML trả về vào dropdown
@@ -435,7 +450,7 @@ select.form-control {
 		function loadCategory(subcategoryId) {
 		    if (!subcategoryId) return;
 
-		    fetch(`/bookstore/product/getCategory.htm?subcategoryId=` + subcategoryId)
+		    fetch(`/bookstore/admin1337/product/getCategory.htm?subcategoryId=` + subcategoryId)
 		        .then(response => response.text()) // Đọc response dạng text
 		        .then(data => {
 		            const parser = new DOMParser();

@@ -15,6 +15,7 @@ import bookstore.DAO.RatingsDAO;
 import bookstore.Entity.RatingsEntity;
 @Transactional
 @Controller
+@RequestMapping("/admin1337")
 public class RatingsController {
 	@Autowired
 	private RatingsDAO ratingsDAO;
@@ -71,7 +72,7 @@ public class RatingsController {
 	@RequestMapping(value = "/rating/update.htm", method = RequestMethod.POST)
 	public String submit_Update(@RequestParam("id") Long id, @RequestParam("status") int status) {
 		int rs = ratingsDAO.updateStatus(id, status);
-		return "redirect:/ratings.htm";
+		return "redirect:/admin1337/ratings.htm";
 	}
 	
 	

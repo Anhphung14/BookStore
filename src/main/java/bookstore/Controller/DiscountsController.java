@@ -34,6 +34,7 @@ import bookstore.Entity.OrdersEntity;
 import bookstore.Entity.SubcategoriesEntity;
 
 @Controller
+@RequestMapping("/admin1337")
 public class DiscountsController {
 	@Autowired
 	DiscountsDAO discountsDAO;
@@ -127,16 +128,16 @@ public class DiscountsController {
 	        if ("success".equals(result)) {
 	            redirectAttributes.addFlashAttribute("alertMessage", "Successfully added a new Discount!");
 	            redirectAttributes.addFlashAttribute("alertType", "success");
-	            return "redirect:/discounts.htm";
+	            return "redirect:/admin1337/discounts.htm";
 	        } else {
 	            redirectAttributes.addFlashAttribute("alertMessage", result); // Trả về lỗi từ DAO
 	            redirectAttributes.addFlashAttribute("alertType", "error");
-	            return "redirect:/discounts.htm";
+	            return "redirect:/admin1337/discounts.htm";
 	        }
 	    } else {
 	        redirectAttributes.addFlashAttribute("alertMessage", "Code discount is exist!");
 	        redirectAttributes.addFlashAttribute("alertType", "error");
-	        return "redirect:/discounts.htm";
+	        return "redirect:/admin1337/discounts.htm";
 	    }
 	}
 
@@ -182,7 +183,7 @@ public class DiscountsController {
 	    if (existingDiscount == null) {
 	        // Nếu không tìm thấy discount, chuyển hướng và thông báo lỗi
 	        redirectAttributes.addFlashAttribute("error", "Discount not found!");
-	        return "redirect:/discounts.htm";
+	        return "redirect:/admin1337/discounts.htm";
 	    }
 
 
@@ -205,7 +206,7 @@ public class DiscountsController {
 	    // Thêm thông báo thành công và chuyển hướng đến trang danh sách giảm giá
 	    redirectAttributes.addFlashAttribute("alertMessage", "Discount updated successfully!");
 	    redirectAttributes.addFlashAttribute("alertType", "success");
-	    return "redirect:/discounts.htm";
+	    return "redirect:/admin1337/discounts.htm";
 	}
 
 	@RequestMapping(value = "/discount/delete", method = RequestMethod.POST)
@@ -266,7 +267,7 @@ public class DiscountsController {
 	        redirectAttributes.addFlashAttribute("alertMessage", "Discount is not expired or does not exist!");
 	        redirectAttributes.addFlashAttribute("alertType", "error");
 	    }
-	    return "redirect:/discounts.htm"; // Điều hướng về trang danh sách giảm giá
+	    return "redirect:/admin1337/discounts.htm"; // Điều hướng về trang danh sách giảm giá
 	}
 
 

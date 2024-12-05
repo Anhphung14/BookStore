@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Ratings management</title>
-<base href="${pageContext.servletContext.contextPath}/">
+<base href="${pageContext.servletContext.contextPath}/admin1337/">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -50,7 +50,7 @@
                     <p>Manage and view product ratings and user feedback.</p>
                 </div>
                 <div class="col-auto d-none d-sm-block">
-                    <img class="page-icon" src="resources/images/page.svg" width="120px" alt="Page Icon">
+                    <img class="page-icon" src="${pageContext.request.contextPath}/resources/images/page.svg" width="120px" alt="Page Icon">
                 </div>
             </div>
         </div>
@@ -81,7 +81,7 @@
             <!-- Card chứa thanh tìm kiếm -->
             <div class="card mx-3" style="flex-grow: 1;">
                 <div class="card-body">
-                    <form id="frm-admin" name="adminForm" action="${pageContext.request.contextPath}/ratings.htm" method="POST">
+                    <form id="frm-admin" name="adminForm" action="ratings.htm" method="POST">
                         <div class="row g-2">
                             <div class="col">
                                 <input class="form-control search-input" name="search" id="search_text" value="${search}" placeholder="Search..." />
@@ -136,7 +136,7 @@
                                             <td class="text-center"><span class="small text-uppercase text-warning bg-warning bg-opacity-10 rounded px-2 py-1">pending</span></td>
                                             <td class="text-center">
                                                 <div class="d-flex gap-1">
-                                                    <a class="btn btn-rounded" href="${pageContext.request.contextPath}/rating/update/${rating.id}.htm"><i class="fa fa-pencil"></i></a>
+                                                    <a class="btn btn-rounded" href="rating/update/${rating.id}.htm"><i class="fa fa-pencil"></i></a>
 <%--                                                     <a class="btn btn-rounded btn-delete" href="javascript:void(0);" data-url="${pageContext.request.contextPath}/rating/delete/${rating.id}.htm"><i class="fa fa-trash-alt"></i></a> --%>
                                                 </div>
                                             </td>

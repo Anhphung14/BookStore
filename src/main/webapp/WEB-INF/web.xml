@@ -61,5 +61,10 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/configs/*.xml</param-value>
 	</context-param>
+
+	<session-config>
+		<session-timeout>30</session-timeout> <!-- Thời gian session hết hạn sau
+		30 phút không hoạt động -->
+	</session-config>
 </web-app>
 

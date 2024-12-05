@@ -26,6 +26,7 @@ import bookstore.Entity.UsersEntity;
 
 @Controller
 @Transactional
+@RequestMapping("/admin1337")
 public class HomeController {
 	@Autowired
 	SessionFactory factory;

@@ -10,7 +10,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Products Management</title>
-<base href="${pageContext.servletContext.contextPath}/">
+<base href="${pageContext.servletContext.contextPath}/admin1337/">
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -64,7 +64,7 @@
 						<p>Manage users, roles, permissions, and profile.</p>
 					</div>
 					<div class="col-auto d-none d-sm-block">
-						<img class="page-icon" src="resources/images/page.svg"
+						<img class="page-icon" src="${pageContext.servletContext.contextPath}/resources/images/page.svg"
 							width="120px" alt="Page Icon">
 					</div>
 				</div>
@@ -128,7 +128,7 @@
 			                </button>
 										
 							<a class="btn btn-primary text-nowrap btn-add"
-								href="${pageContext.request.contextPath}/product/new.htm"> <i
+								href="product/new.htm"> <i
 								class="fa fa-plus me-2"></i>Add
 							</a>
 
@@ -257,7 +257,7 @@
 										<!-- Liên kết đến trang trước -->
 										<li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
 											<a class="page-link"
-											href="${pageContext.request.contextPath}/products.htm?page=${currentPage > 1 ? currentPage - 1 : 1}&size=${size}"
+											href="products.htm?page=${currentPage > 1 ? currentPage - 1 : 1}&size=${size}"
 											aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 										</a>
 										</li>
@@ -266,7 +266,7 @@
 										<c:forEach var="i" begin="1" end="${totalPages}">
 											<li class="page-item ${i == currentPage ? 'active' : ''}">
 												<a class="page-link"
-												href="${pageContext.request.contextPath}/products.htm?page=${i}&size=${size}">${i}</a>
+												href="products.htm?page=${i}&size=${size}">${i}</a>
 											</li>
 										</c:forEach>
 
@@ -274,7 +274,7 @@
 										<li
 											class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
 											<a class="page-link"
-											href="${pageContext.request.contextPath}/products.htm?page=${currentPage < totalPages ? currentPage + 1 : totalPages}&size=${size}"
+											href="products.htm?page=${currentPage < totalPages ? currentPage + 1 : totalPages}&size=${size}"
 											aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 										</a>
 										</li>
@@ -466,7 +466,7 @@
 		        confirmButtonText: "OK"
 		    }).then((result) => {
 		        if (result.isConfirmed && alertType === "success") {
-		            window.location.href = '${pageContext.servletContext.contextPath}/products.htm';
+		            window.location.href = 'products.htm';
 		        }
 		    });
 		}

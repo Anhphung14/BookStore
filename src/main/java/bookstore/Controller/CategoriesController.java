@@ -36,6 +36,7 @@ import javax.transaction.Transactional;
 
 @Controller("mainCategoriesController")
 @Transactional
+@RequestMapping("/admin1337")
 public class CategoriesController {
 
 	@Autowired
@@ -100,7 +101,7 @@ public class CategoriesController {
 			session.delete(category);
 		}
 
-		return "redirect:/categories.htm";
+		return "redirect:/admin1337/categories.htm";
 	}
 
 	@RequestMapping(value = "/category/edit/{id}", method = RequestMethod.GET)
@@ -196,10 +197,10 @@ public class CategoriesController {
 	        e.printStackTrace();
 	        redirectAttributes.addFlashAttribute("alertMessage", "Error occurred while saving the category.");
 	        redirectAttributes.addFlashAttribute("alertType", "error");
-	        return "redirect:/categories.htm";
+	        return "redirect:/admin1337/categories.htm";
 	    }
 
-	    return "redirect:/categories.htm";
+	    return "redirect:/admin1337/categories.htm";
 	}
 
 
@@ -217,12 +218,12 @@ public class CategoriesController {
 				session.update(subcategory);
 			} else {
 				model.addAttribute("message", "Subcategory not found.");
-				return "redirect:/categories.htm";
+				return "redirect:/admin1337/categories.htm";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("message", "An error occurred: " + e.getMessage());
-			return "redirect:/categories.htm";
+			return "redirect:/admin1337/categories.htm";
 		}
 
 		String referer = request.getHeader("Referer");

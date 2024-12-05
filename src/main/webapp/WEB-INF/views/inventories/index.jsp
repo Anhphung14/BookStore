@@ -10,7 +10,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Inventories Management</title>
-<base href="${pageContext.servletContext.contextPath}/">
+<base href="${pageContext.servletContext.contextPath}/admin1337/">
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -64,7 +64,7 @@
 						<p>Manage users, roles, permissions, and profile.</p>
 					</div>
 					<div class="col-auto d-none d-sm-block">
-						<img class="page-icon" src="resources/images/page.svg"
+						<img class="page-icon" src="${pageContext.servletContext.contextPath}/resources/images/page.svg"
 							width="120px" alt="Page Icon">
 					</div>
 				</div>
@@ -180,7 +180,7 @@
 			            </div>
 			            <div class="modal-body">
 			                <!-- Form used to send POST request -->
-			                <form id="deleteForm" method="POST" action="/bookstore/product/delete.htm">
+			                <form id="deleteForm" method="POST" action="product/delete.htm">
 			                    <p>Are you sure you want to delete this book?</p>
 			                    <p><strong>Book Id:</strong> <span id="bookIdToDelete"></span></p>
 			                    <p><strong>Book title:</strong> <span id="bookTitleToDelete"></span></p>
@@ -266,7 +266,7 @@
 		        confirmButtonText: "OK"
 		    }).then((result) => {
 		        if (result.isConfirmed && alertType === "success") {
-		            window.location.href = '${pageContext.servletContext.contextPath}/inventories.htm';
+		            window.location.href = 'inventories.htm';
 		        }
 		    });
 		}

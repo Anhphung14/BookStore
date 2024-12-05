@@ -64,6 +64,8 @@ public class AuthController {
 		
 		session.invalidate();
 		
+		System.out.println("Da logout!!!");
+		
 		return "redirect:signin.htm";
 	}
 
