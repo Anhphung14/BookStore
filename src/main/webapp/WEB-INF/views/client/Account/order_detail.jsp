@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <div class="modal-header">
-	<h3 class="modal-title" id="orderDetailsModalLabel">Order
-		#${order.id} Details</h3>
+	<h3 class="modal-title" id="orderDetailsModalLabel">Chi tiết đơn hàng</h3>
 </div>
 <div class="modal-body">
 	<p>
@@ -43,9 +43,11 @@
 			<c:forEach var="orderDetail" items="${orderDetails}">
 				<tr>
 					<td>${orderDetail.book.title}</td>
-					<td>${orderDetail.book.price}VND</td>
+					<td><fmt:formatNumber value="${orderDetail.book.price}" type="currency"
+														currencySymbol="VND" /></td>
 					<td>${orderDetail.quantity}</td>
-					<td>${orderDetail.book.price * orderDetail.quantity}%</td>
+					<td><fmt:formatNumber value="${orderDetail.book.price * orderDetail.quantity}" type="currency"
+														currencySymbol="VND" /></td>
 				</tr>
 			</c:forEach>
 		</tbody>
@@ -80,7 +82,8 @@
 				<c:set var="orderTotal"
 					value="${orderTotal + (orderDetail.book.price * orderDetail.quantity)}" />
 			</c:forEach>
-			<td>${orderTotal} VND</td>
+			<td><fmt:formatNumber value="${orderTotal}" type="currency"
+														currencySymbol="VND" /></td>
 		</tr>
 
 		<tr>
@@ -94,7 +97,8 @@
 		</tr>
 		<tr class="total">
 			<td>Tổng thanh toán</td>
-			<td>${order.totalPrice}VND</td>
+			<td><fmt:formatNumber value="${order.totalPrice}" type="currency"
+														currencySymbol="VND" /></td>
 		</tr>
 	</table>
 

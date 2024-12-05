@@ -43,8 +43,8 @@
 }
 .owl-carousel .owl-nav.disabled,
 .owl-carousel .owl-dots.disabled {display: none;}
-/* .owl-carousel .owl-nav .owl-prev,
-.owl-carousel .owl-nav .owl-next, */
+.owl-carousel .owl-nav .owl-prev,
+.owl-carousel .owl-nav .owl-next, 
 .owl-carousel .owl-dot {
 	cursor: pointer;
 	cursor: hand;
@@ -54,10 +54,10 @@
 	-ms-user-select: none;
 	user-select: none;
 }
-/* .owl-prev:hover,
+.owl-prev:hover,
 .owl-next:hover,
-.owl-prev:hover i, */
-/* .owl-next:hover i {color: #fff;} */
+.owl-prev:hover i, 
+.owl-next:hover i {color: #fff;} 
 .owl-carousel.owl-loaded {display: block;}
 .owl-carousel.owl-loading {
 	opacity: 0;

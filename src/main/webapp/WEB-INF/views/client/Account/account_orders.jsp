@@ -114,12 +114,12 @@ th, td {
 					<nav class="list-group list-group-flush">
 						<a class="list-group-item" href="account/account_orders.htm">
 							<div class="d-flex justify-content-between align-items-center">
-								<div class="d-inline-block font-weight-medium text-uppercase">Orders
-									List</div>
+								<div class="d-inline-block font-weight-medium text-uppercase">Danh
+									sách đơn hàng</div>
 							</div>
-						</a> <a class="list-group-item" href="account/profile_settings.htm">Profile
-							Settings</a> <a class="list-group-item" href="account/my_ratings.htm">My
-							Ratings</a>
+						</a> <a class="list-group-item" href="account/profile_settings.htm">Chỉnh
+							sửa thông tin</a> <a class="list-group-item"
+							href="account/my_ratings.htm">Đánh giá của bạn</a>
 					</nav>
 				</div>
 			</div>
@@ -129,10 +129,10 @@ th, td {
 					<table class="table table-striped table-bordered">
 						<thead>
 							<tr>
-								<th scope="col">Date</th>
-								<th scope="col">Total</th>
-								<th scope="col">Status</th>
-								<th scope="col">Actions</th>
+								<th scope="col">Ngày</th>
+								<th scope="col">Tổng</th>
+								<th scope="col">Trạng thái</th>
+								<th scope="col"></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -145,37 +145,37 @@ th, td {
 									<td><c:choose>
 											<c:when test="${order.orderStatus == 'Hoàn thành'}">
 												<span class="badge badge-success"
-													style="background-color: #28a745;">Delivered</span>
+													style="background-color: #28a745;">Hoàn thành</span>
 											</c:when>
 											<c:when test="${order.orderStatus == 'Chờ xác nhận'}">
 												<span class="badge badge-warning"
-													style="background-color: #ffc107;">Pending</span>
+													style="background-color: #ffc107;">Chờ xác nhận</span>
 											</c:when>
 											<c:when test="${order.orderStatus eq 'Hủy Đơn Hàng'}">
 												<span class="badge badge-danger"
-													style="background-color: #dc3545;">Canceled</span>
+													style="background-color: #dc3545;">Hủy Đơn Hàng</span>
 											</c:when>
 											<c:when test="${order.orderStatus == 'Xác nhận đơn hàng'}">
 												<span class="badge badge-primary"
-													style="background-color: #007bff;">Confirmed</span>
+													style="background-color: #007bff;">Xác nhận đơn hàng</span>
 											</c:when>
 											<c:when test="${order.orderStatus == 'Đang giao hàng'}">
 												<span class="badge badge-info"
-													style="background-color: #17a2b8;">Shipping</span>
+													style="background-color: #17a2b8;">Đang giao hàng</span>
 											</c:when>
 											<c:otherwise>
 												<span class="badge badge-danger"
-													style="background-color: #dc3545;">Canceled</span>
+													style="background-color: #dc3545;">Huỷ</span>
 											</c:otherwise>
 										</c:choose> <%-- 				<c:out value = "${order.orderStatus }"/> --%></td>
 									<td><a class="btn btn-info btn-sm link-detail"
 										data-toggle="modal" data-target="#orderDetailsModal"
 										data-bs-backdrop="false"
-										href="${pageContext.servletContext.contextPath}/account/order_details/${order.id}.htm">View</a>
+										href="${pageContext.servletContext.contextPath}/account/order_details/${order.id}.htm">Xem</a>
 										<c:if test="${order.orderStatus == 'Chờ xác nhận'}">
 											<button class="btn btn-danger btn-sm" data-toggle="modal"
 												data-target="#confirmCancelModal"
-												onclick="setOrderIdToCancel(${order.id});">Cancel</button>
+												onclick="setOrderIdToCancel(${order.id});">Huỷ</button>
 										</c:if> <c:if test="${order.orderStatus == 'Hoàn thành'}">
 											<!-- Check if the order ID is in the list of rated orders -->
 											<c:set var="isReviewed" value="false" />
@@ -187,11 +187,11 @@ th, td {
 												</c:if>
 											</c:forEach>
 											<c:if test="${isReviewed}">
-												<button class="btn btn-success btn-sm" disabled>Reviewed</button>
+												<button class="btn btn-success btn-sm" disabled>Đánh giá</button>
 											</c:if>
 											<c:if test="${!isReviewed}">
 												<a class="btn btn-success btn-sm"
-													href="${pageContext.servletContext.contextPath}/account/ratings/${order.id}.htm">Review</a>
+													href="${pageContext.servletContext.contextPath}/account/ratings/${order.id}.htm">Đánh giá</a>
 											</c:if>
 										</c:if></td>
 								</tr>
@@ -225,15 +225,13 @@ th, td {
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="confirmCancelModalLabel">Confirm
-						Cancellation</h5>
+					<h5 class="modal-title" id="confirmCancelModalLabel">Xác nhận huỷ</h5>
 					<button type="button" class="close" data-dismiss="modal"
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-				<div class="modal-body">Are you sure you want to cancel this
-					order?</div>
+				<div class="modal-body">Bạn có chắc HUỶ đơn hàng?</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
 						data-dismiss="modal">No</button>
