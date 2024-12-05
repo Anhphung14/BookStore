@@ -175,11 +175,13 @@ public class PaymentController {
             }
             
             DiscountsEntity discount = discountsDAO.getDiscountByCode(discountCode);
-            if(discount == null && discountCode != "") {
+            if(discount == null && !discountCode.isEmpty()) {
             	redirectAttributes.addFlashAttribute("alertMessage", "Mã giảm giá không hợp lệ!");
         		redirectAttributes.addFlashAttribute("alertType", "error");
                 return "redirect:/cart/view.htm";
-            }else {
+            }
+            
+            if(discount != null) {
             	if(discount.getApplyTo().equals("user")) {
             		System.out.println("Vô điều kiện nè");
                 	if(discount.getDiscountType().equals("percentage")) {
@@ -215,15 +217,18 @@ public class PaymentController {
             if (orderId == null) {
                 throw new Exception("Không thể tạo đơn hàng.");
             }
-            Order_DiscountsEntity orderDiscountEntity = new Order_DiscountsEntity();
-            orderDiscountEntity.setDiscount_id(discount);
-            orderDiscountEntity.setOrder_id(newOrder);
-            Boolean isCreateOrderDiscount = discountsDAO.createOrderDiscount(orderDiscountEntity);
-            if(!isCreateOrderDiscount) {
-            	redirectAttributes.addFlashAttribute("alertMessage", "Có lỗi với mã giảm giá");
-        		redirectAttributes.addFlashAttribute("alertType", "error");
-        		return "redirect:/cart/view.htm";
+            if(discount != null) {
+            	Order_DiscountsEntity orderDiscountEntity = new Order_DiscountsEntity();
+                orderDiscountEntity.setDiscount_id(discount);
+                orderDiscountEntity.setOrder_id(newOrder);
+                Boolean isCreateOrderDiscount = discountsDAO.createOrderDiscount(orderDiscountEntity);
+                if(!isCreateOrderDiscount) {
+                	redirectAttributes.addFlashAttribute("alertMessage", "Có lỗi với mã giảm giá");
+            		redirectAttributes.addFlashAttribute("alertType", "error");
+            		return "redirect:/cart/view.htm";
+                }
             }
+            
             System.out.println("Tới dòng 231");
             
             // Lấy đối tượng OrdersEntity từ orderId

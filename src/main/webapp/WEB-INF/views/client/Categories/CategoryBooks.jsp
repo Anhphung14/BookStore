@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -78,44 +81,8 @@
 							<div class="col-xs-12 col-sm-8 col-md-8 col-lg-9 pull-right">
 								<div id="tg-content" class="tg-content">
 									<div class="tg-products">
-										<div class="tg-sectionhead">
-											<h2><span>People’s Choice</span>Bestselling Books</h2>
-										</div>
-										<div class="tg-featurebook alert" role="alert">
-											<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-												<span aria-hidden="true">&times;</span>
-											</button>
-											<div class="tg-featureditm">
-												<div class="row">
-													<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 hidden-sm hidden-xs">
-														<figure><img src="${pageContext.servletContext.contextPath}/resources/images/client/img-04.png" alt="image description"></figure>
-													</div>
-													<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-														<div class="tg-featureditmcontent">
-															<div class="tg-themetagbox"><span class="tg-themetag">featured</span></div>
-															<div class="tg-booktitle">
-																<h3><a href="javascript:void(0);">Things To Know About Green Flat Design</a></h3>
-															</div>
-															<span class="tg-bookwriter">By: <a href="javascript:void(0);">Farrah Whisenhunt</a></span>
-															<span class="tg-stars"><span></span></span>
-															<div class="tg-priceandbtn">
-																<span class="tg-bookprice">
-																	<ins>$23.18</ins>
-																	<del>$30.20</del>
-																</span>
-																<a class="tg-btn tg-btnstyletwo tg-active" href="javascript:void(0);">
-																	<i class="fa fa-shopping-basket"></i>
-																	<em>Add To Basket</em>
-																</a>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
 										<div class="tg-productgrid">
 											<div class="tg-refinesearch">
-												<span>showing 1 to 8 of 20 total</span>
 												<form class="tg-formtheme tg-formsortshoitems">
 													<fieldset>
 														<div class="form-group">
@@ -136,9 +103,9 @@
 														    <label>Show:</label>
 														    <span class="tg-select">
 														        <select id="pageSizeSelect" name="pageSizeValue" onchange="handlePageSizeChange()">
-														            <option value="1" ${pageSize == 1 ? 'selected="selected"' : ''}>1</option>
-														            <option value="2" ${pageSize == 2 ? 'selected="selected"' : ''}>2</option>
-														            <option value="3" ${pageSize == 3 ? 'selected="selected"' : ''}>3</option>
+														            <option value="16" ${pageSize == 16 ? 'selected="selected"' : ''}>16</option>
+														            <option value="32" ${pageSize == 32 ? 'selected="selected"' : ''}>32</option>
+														            <option value="48" ${pageSize == 48 ? 'selected="selected"' : ''}>48</option>
 														        </select>
 														    </span>
 														</div>
@@ -148,34 +115,66 @@
 											<c:forEach var="book" items="${bookList}">
 												<div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
 													<div class="tg-postbook">
-														<figure class="tg-featureimg">
 															<div class="tg-bookimg">
 																<div class="tg-frontcover"><img src="${book.thumbnail }" alt="image description"></div>
 																<div class="tg-backcover"><img src="${book.thumbnail }" alt="image description"></div>
 															</div>
-															<a class="tg-btnaddtowishlist" href="javascript:void(0);">
-																<i class="fa-solid fa-heart"></i>
-																<span>add to wishlist</span>
-															</a>
-														</figure>
 														<div class="tg-postbookcontent">
 																<ul class="tg-bookscategories">
 																	<li><a href="javascript:void(0);">${book.subcategoriesEntity.name }</a></li>
 																</ul>
-																<div class="tg-themetagbox"><span class="tg-themetag">sale</span></div>
-																<div class="tg-booktitle">
-																	<h3><a href="#" data-toggle="tooltip" title="${book.title}">${book.title}</a></h3>
-																</div>
-																<span class="tg-bookwriter">By: <a href="javascript:void(0);">${book.author }</a></span>
-																<span class="tg-stars"><span></span></span>
-																<span class="tg-bookprice">
-																	<ins>chưa biết</ins>
-																	<del><f:formatNumber value="${book.price}" type="currency"/></del>
-																</span>
-																<a class="tg-btn tg-btnstyletwo btn-add-to-cart" data-book-id="${book.id}" data-quantity="1" > <%-- href="/bookstore/cart/add.htm?bookId=${book.id}&quantity=1"> --%>
-																	<i class="fa fa-shopping-basket"></i>
-																	<em>Thêm vào giỏ</em>
-																</a>
+																<c:if test="${bookDiscounts[book.id] != 0.0}">
+																	<div class="tg-themetagbox">
+																		<span class="tg-themetag">Giảm giá
+																			${bookDiscounts[book.id]}%</span>
+																	</div>
+																</c:if>
+																<c:if test="${bookDiscounts[book.id] == 0.0}">
+																	<div class="tg-themetagbox">
+																		<span class=""></span>
+																	</div>
+																</c:if>
+																
+																<h4>
+												<a href="productdetail/${book.id}.htm"> <c:choose>
+														<c:when test="${fn:length(fn:split(book.title, ' ')) > 2}">
+															<c:forEach var="word" begin="0" end="2"
+																items="${fn:split(book.title, ' ')}">
+											                    ${word}
+											                </c:forEach>...
+											            </c:when>
+														<c:otherwise>
+											                ${book.title}
+											            </c:otherwise>
+													</c:choose>
+												</a>
+											</h4>
+											<span class="tg-bookwriter"> Tác giả: <a
+												href="javascript:void(0);"> <c:choose>
+														<c:when
+															test="${fn:length(fn:split(book.author, ' ')) > 3}">
+															<c:forEach var="word" begin="0" end="2"
+																items="${fn:split(book.author, ' ')}">
+											                        ${word} 
+											                    </c:forEach>
+											                    ...
+											                </c:when>
+														<c:otherwise>
+											                    ${book.author}
+											                </c:otherwise>
+													</c:choose>
+											</a>
+											</span> <span class="tg-bookprice"> <ins>
+													<fmt:formatNumber value="${book.price}" type="currency"
+														currencySymbol="VND" />
+												</ins>
+											</span> <a class="tg-btn tg-btnstyletwo btn-add-to-cart"
+												data-quantity="1" data-book-id="${book.id}"
+												href="javascript:void(0);"
+												style="padding-left: 0px; padding-right: 0px;"> <i
+												class="fa fa-shopping-basket" style="padding-left: 10px;"></i>
+												<em>Thêm vào giỏ hàng</em>
+											</a>
 														</div>
 													</div>
 												</div>
@@ -183,7 +182,7 @@
 										</div>
 										
 										<!-- Phân trang -->
-										<nav aria-label="Page navigation example">
+										<nav aria-label="Page navigation example" style="position: relative; left: 340px;">
 										    <ul class="pagination">
 										        <!-- Nút Previous -->
 										        <c:choose>
@@ -241,171 +240,11 @@
 										</div>
 										<div class="tg-widgetcontent">
 											<ul>
+												<li><a href="http://localhost:8080/bookstore/allProduct.htm"><span>Tất cả sách</span><em>${countAllBooks }</em></a></li>
 												<c:forEach var="item" items="${countBookEachCategory }">
 													<li><a href="http://localhost:8080/bookstore/categories/${item[3]}.htm"><span>${item[0]}</span><em>${item[2] }</em></a></li>
 												
 												</c:forEach>
-											</ul>
-										</div>
-									</div>
-									<div class="tg-widget tg-widgettrending">
-										<div class="tg-widgettitle">
-											<h3>Trending Products</h3>
-										</div>
-										<div class="tg-widgetcontent">
-											<ul>
-												<li>
-													<article class="tg-post">
-														<figure><a href="javascript:void(0);"><img src="${pageContext.servletContext.contextPath}/resources/images/client/products/img-04.jpg" alt="image description"></a></figure>
-														<div class="tg-postcontent">
-															<div class="tg-posttitle">
-																<h3><a href="javascript:void(0);">Where The Wild Things Are</a></h3>
-															</div>
-															<span class="tg-bookwriter">By: <a href="javascript:void(0);">Kathrine Culbertson</a></span>
-														</div>
-													</article>
-												</li>
-												<li>
-													<article class="tg-post">
-														<figure><a href="javascript:void(0);"><img src="${pageContext.servletContext.contextPath}/resources/images/client/products/img-05.jpg" alt="image description"></a></figure>
-														<div class="tg-postcontent">
-															<div class="tg-posttitle">
-																<h3><a href="javascript:void(0);">Where The Wild Things Are</a></h3>
-															</div>
-															<span class="tg-bookwriter">By: <a href="javascript:void(0);">Kathrine Culbertson</a></span>
-														</div>
-													</article>
-												</li>
-												<li>
-													<article class="tg-post">
-														<figure><a href="javascript:void(0);"><img src="${pageContext.servletContext.contextPath}/resources/images/client/products/img-06.jpg" alt="image description"></a></figure>
-														<div class="tg-postcontent">
-															<div class="tg-posttitle">
-																<h3><a href="javascript:void(0);">Where The Wild Things Are</a></h3>
-															</div>
-															<span class="tg-bookwriter">By: <a href="javascript:void(0);">Kathrine Culbertson</a></span>
-														</div>
-													</article>
-												</li>
-												<li>
-													<article class="tg-post">
-														<figure><a href="javascript:void(0);"><img src="${pageContext.servletContext.contextPath}/resources/images/client/products/img-07.jpg" alt="image description"></a></figure>
-														<div class="tg-postcontent">
-															<div class="tg-posttitle">
-																<h3><a href="javascript:void(0);">Where The Wild Things Are</a></h3>
-															</div>
-															<span class="tg-bookwriter">By: <a href="javascript:void(0);">Kathrine Culbertson</a></span>
-														</div>
-													</article>
-												</li>
-											</ul>
-										</div>
-									</div>
-									<div class="tg-widget tg-widgetinstagram">
-										<div class="tg-widgettitle">
-											<h3>Instagram</h3>
-										</div>
-										<div class="tg-widgetcontent">
-											<ul>
-												<li>
-													<figure>
-														<img src="${pageContext.servletContext.contextPath}/resources/images/client/instagram/img-01.jpg" alt="image description">
-														<figcaption><a href="javascript:void(0);"><i class="fa-solid fa-heart"></i><em>50,134</em></a></figcaption>
-													</figure>
-												</li>
-												<li>
-													<figure>
-														<img src="${pageContext.servletContext.contextPath}/resources/images/client/instagram/img-02.jpg" alt="image description">
-														<figcaption><a href="javascript:void(0);"><i class="fa-solid fa-heart"></i><em>50,134</em></a></figcaption>
-													</figure>
-												</li>
-												<li>
-													<figure>
-														<img src="${pageContext.servletContext.contextPath}/resources/images/client/instagram/img-03.jpg" alt="image description">
-														<figcaption><a href="javascript:void(0);"><i class="fa-solid fa-heart"></i><em>50,134</em></a></figcaption>
-													</figure>
-												</li>
-												<li>
-													<figure>
-														<img src="${pageContext.servletContext.contextPath}/resources/images/client/instagram/img-04.jpg" alt="image description">
-														<figcaption><a href="javascript:void(0);"><i class="fa-solid fa-heart"></i><em>50,134</em></a></figcaption>
-													</figure>
-												</li>
-												<li>
-													<figure>
-														<img src="${pageContext.servletContext.contextPath}/resources/images/client/instagram/img-05.jpg" alt="image description">
-														<figcaption><a href="javascript:void(0);"><i class="fa-solid fa-heart"></i><em>50,134</em></a></figcaption>
-													</figure>
-												</li>
-												<li>
-													<figure>
-														<img src="${pageContext.servletContext.contextPath}/resources/images/client/instagram/img-06.jpg" alt="image description">
-														<figcaption><a href="javascript:void(0);"><i class="fa-solid fa-heart"></i><em>50,134</em></a></figcaption>
-													</figure>
-												</li>
-												<li>
-													<figure>
-														<img src="${pageContext.servletContext.contextPath}/resources/images/client/instagram/img-07.jpg" alt="image description">
-														<figcaption><a href="javascript:void(0);"><i class="fa-solid fa-heart"></i><em>50,134</em></a></figcaption>
-													</figure>
-												</li>
-												<li>
-													<figure>
-														<img src="${pageContext.servletContext.contextPath}/resources/images/client/instagram/img-08.jpg" alt="image description">
-														<figcaption><a href="javascript:void(0);"><i class="fa-solid fa-heart"></i><em>50,134</em></a></figcaption>
-													</figure>
-												</li>
-												<li>
-													<figure>
-														<img src="${pageContext.servletContext.contextPath}/resources/images/client/instagram/img-09.jpg" alt="image description">
-														<figcaption><a href="javascript:void(0);"><i class="fa-solid fa-heart"></i><em>50,134</em></a></figcaption>
-													</figure>
-												</li>
-											</ul>
-										</div>
-									</div>
-									<div class="tg-widget tg-widgetblogers">
-										<div class="tg-widgettitle">
-											<h3>Top Bloogers</h3>
-										</div>
-										<div class="tg-widgetcontent">
-											<ul>
-												<li>
-													<div class="tg-author">
-														<figure><a href="javascript:void(0);"><img src="${pageContext.servletContext.contextPath}/resources/images/client/author/imag-03.jpg" alt="image description"></a></figure>
-														<div class="tg-authorcontent">
-															<h2><a href="javascript:void(0);">Jude Morphew</a></h2>
-															<span>21,658 Published Books</span>
-														</div>
-													</div>
-												</li>
-												<li>
-													<div class="tg-author">
-														<figure><a href="javascript:void(0);"><img src="${pageContext.servletContext.contextPath}/resources/images/client/author/imag-04.jpg" alt="image description"></a></figure>
-														<div class="tg-authorcontent">
-															<h2><a href="javascript:void(0);">Jude Morphew</a></h2>
-															<span>21,658 Published Books</span>
-														</div>
-													</div>
-												</li>
-												<li>
-													<div class="tg-author">
-														<figure><a href="javascript:void(0);"><img src="${pageContext.servletContext.contextPath}/resources/images/client/author/imag-05.jpg" alt="image description"></a></figure>
-														<div class="tg-authorcontent">
-															<h2><a href="javascript:void(0);">Jude Morphew</a></h2>
-															<span>21,658 Published Books</span>
-														</div>
-													</div>
-												</li>
-												<li>
-													<div class="tg-author">
-														<figure><a href="javascript:void(0);"><img src="${pageContext.servletContext.contextPath}/resources/images/client/author/imag-06.jpg" alt="image description"></a></figure>
-														<div class="tg-authorcontent">
-															<h2><a href="javascript:void(0);">Jude Morphew</a></h2>
-															<span>21,658 Published Books</span>
-														</div>
-													</div>
-												</li>
 											</ul>
 										</div>
 									</div>
