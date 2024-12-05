@@ -9,14 +9,14 @@ public class OTPDTO {
 	public OTPDTO(String code, String email) {
 		this.code = code;
 		this.email = email;
-		this.expiryTime = System.currentTimeMillis() + 10000;
+		this.expiryTime = System.currentTimeMillis() + 900000;
 		this.isUsed = false;
 	}
 	
 	public boolean isExpired() {
 		System.out.println("System.currentTimeMillis(): " + System.currentTimeMillis());
 		System.out.println("this.expiryTime: " + this.expiryTime);
-		
+		System.out.print(System.currentTimeMillis() - this.expiryTime);
 		return System.currentTimeMillis() > this.expiryTime;
  	}
 

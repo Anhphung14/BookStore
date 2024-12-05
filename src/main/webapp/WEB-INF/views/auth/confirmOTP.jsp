@@ -25,13 +25,13 @@ if (alertMessage) {
         cancelButtonText: "Resend link",
         confirmButtonText: "OK"
     }).then((result) => {
-        if (result.isConfirmed) {
+        if (result.isConfirmed && alertType === "success") {
             window.location.href = '${pageContext.servletContext.contextPath}/signin.htm';
         } else if (result.dismiss === Swal.DismissReason.cancel) {
             // Thực hiện yêu cầu POST khi nhấn nút "Resend link"
             Swal.fire({
                 title: 'Link Resent!',
-                text: 'Sending to your email...........',
+                text: 'Đang gửi tới email của bạn...........',
                 icon: 'warning',
                 showConfirmButton: false,
 //                 confirmButtonText: 'OK'
@@ -72,7 +72,6 @@ if (alertMessage) {
         }
     });
 }
-
 
 
 </script>
