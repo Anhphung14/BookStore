@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <!DOCTYPE html>
@@ -42,7 +41,7 @@
 		<!--************************************
 				Header Start
 		*************************************-->
-		<%@ include file="../../client/layouts/header.jsp"%>
+		<%@ include file="../client/layouts/header.jsp"%>
 		<!--************************************
 				Header End
 		*************************************-->
@@ -54,12 +53,10 @@
 				<div class="row">
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<div class="tg-innerbannercontent">
-							<h1>SÁCH THEO DANH MỤC</h1>
+							<h1>Tất cả sách</h1>
 							<ol class="tg-breadcrumb">
 								<li><a href="javascript:void(0);">home</a></li>
-								<li class="tg-active">Categories</li>
-								<li class="tg-active">${danhMuc[0] }</li>
-								<li class="tg-active">${danhMuc[1]  }</li>
+								<li class="tg-active">Tất cả sách</li>
 							</ol>
 						</div>
 					</div>
@@ -83,7 +80,6 @@
 							<div class="col-xs-12 col-sm-8 col-md-8 col-lg-9 pull-right">
 								<div id="tg-content" class="tg-content">
 									<div class="tg-products">
-										
 										<div class="tg-productgrid">
 											<div class="tg-refinesearch">
 												<form class="tg-formtheme tg-formsortshoitems">
@@ -124,7 +120,7 @@
 																<div class="tg-backcover"><img src="${book.thumbnail }" alt="image description"></div>
 															</div>
 														<div class="tg-postbookcontent">
-																<ul class="tg-bookscategories">
+																<ul class="tg-bookscategories" style="padding-top: 10px">
 																	<li><a href="javascript:void(0);">${book.subcategoriesEntity.name }</a></li>
 																</ul>
 																<c:if test="${bookDiscounts[book.id] != 0.0}">
@@ -245,13 +241,15 @@
 										<div class="tg-widgetcontent">
 											
 											<ul>	
-												<li><a href="http://localhost:8080/bookstore/allProduct.htm"><span>Tất cả sách</span><em>${countAllBooks }</em></a></li>
+												<li><a href=""><span>Tất cả sách</span><em>${countAllBooks }</em></a></li>
 												<c:forEach var="item" items="${countBookEachCategory }">
 													<li><a href="http://localhost:8080/bookstore/categories/${item[3]}.htm"><span>${item[0]}</span><em>${item[2] }</em></a></li>
+												
 												</c:forEach>
 											</ul>
 										</div>
 									</div>
+									
 								</aside>
 							</div>
 						</div>
@@ -268,7 +266,7 @@
 		<!--************************************
 				Footer Start
 		*************************************-->
-		<%@ include file="../../client/layouts/footer.jsp"%>
+		<%@ include file="../client/layouts/footer.jsp"%>
 		<!--************************************
 				Footer End
 		*************************************-->
@@ -306,9 +304,8 @@
 	
 	        // Kiểm tra và tạo URL với giá trị pageSize
 	        if (pageSizeValue && pageSizeValue.trim() !== "") {
-	            const url = "http://localhost:8080/bookstore/categories/"
-	                + danhMuc2 + "/"
-	                + danhMuc3 + ".htm?" + "&page="
+	            const url = "http://localhost:8080/bookstore/allProduct.htm"
+	            	+ "&q=" + "&page="
 	                + currentPage + "&pageSize="
 	                + pageSizeValue;
 	            console.log("Navigating to URL: ", url);
@@ -347,10 +344,8 @@
 	    }
  
 	    
-	    document.querySelectorAll('.btn-add-to-cart').forEach(function(button) {
+	     document.querySelectorAll('.btn-add-to-cart').forEach(function(button) {
 	        button.addEventListener('click', function(event) {
-	        	console.log(event.currentTarget.getAttribute('data-book-id'));
-	        	console.log(event.currentTarget.getAttribute('data-book-id'));
 	        	 var bookId = event.currentTarget.getAttribute('data-book-id');
 	             var quantity = event.currentTarget.getAttribute('data-quantity');
 	             console.log("bookId:", bookId);
@@ -363,10 +358,7 @@
 	            .then(data => {
 	            	console.log("data: " + data);
 	                // Xử lý phản hồi sau khi thêm vào giỏ hàng
-		              	 if (data == "Vui long dang nhap") {
-		               		 toastr.error('Vui lòng đăng nhập để thêm sản phẩm!', 'Lỗi');
-		              	 }
-		              	 else if (data != "error" && data != "Vui long dang nhap") {
+	                if (data != "error") {
 	                	 var countBooksInCart = parseInt(data);  // Chuyển đổi dữ liệu trả về thành số
 	                	 fetch('/bookstore/index.htm');
 	                     document.querySelector('#tg-minicart .tg-themebadge').textContent = countBooksInCart;

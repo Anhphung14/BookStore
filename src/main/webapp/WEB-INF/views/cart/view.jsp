@@ -1,124 +1,161 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Shopping Cart</title>
-    <base href="${pageContext.servletContext.contextPath}/">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Shopping Cart</title>
+<base href="${pageContext.servletContext.contextPath}/">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- CSS Files -->
-    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/bootstrap.min.css" />
-    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/font-awesome.min.css" />
-    <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/main.css" />
+<!-- CSS Files -->
+<link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/assets/css/client/bootstrap.min.css" />
+<link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/assets/css/client/font-awesome.min.css" />
+<link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/assets/css/client/main.css" />
 <%--     <link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/cart.css" /> --%>
-    
-    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'></link>  
 
-    <script src="https://kit.fontawesome.com/e70d1e2fed.js" crossorigin="anonymous"></script>
-   	<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<link rel='stylesheet'
+	href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'></link>
+
+<script src="https://kit.fontawesome.com/e70d1e2fed.js"
+	crossorigin="anonymous"></script>
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css"
+	rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 </head>
 <body>
-    <div id="tg-wrapper" class="tg-wrapper tg-haslayout">
-        <!-- Header -->
-        <%@ include file="../client/layouts/header.jsp" %>
+	<div id="tg-wrapper" class="tg-wrapper tg-haslayout">
+		<!-- Header -->
+		<%@ include file="../client/layouts/header.jsp"%>
 
-        <!-- Main Content -->
-        <section id="tg-wrapper" class="tg-sectionspace tg-haslayout">
-            <div class="container mt-4" style="margin-bottom: 24px">
-    <h1 class="cart-title mb-4">Shopping Cart</h1>
-    <c:choose>
-	    <c:when test="${empty cartItems}">
-		    <div class="alert alert-warning text-center" role="alert">
-		        <h4 class="alert-heading">Không có sản phẩm trong giỏ hàng!</h4>
-		        <p>Giỏ hàng của bạn hiện đang trống. Hãy thêm sản phẩm để tiếp tục mua sắm.</p>
-		        <hr>
-		    </div>
-		</c:when>
-		<c:otherwise>
-	    <form action="/bookstore/payment/checkout.htm" method="POST" style="width: 1170px">
-	        <table class="cart-table table table-hover table-bordered">
-	            <thead class="table-light">
-	                <tr>
-	                    <th>
-	                        <input type="checkbox" id="select-all" class="form-check-input">
-	                    </th>
-	                    <th colspan="2">Product</th>
-	                    <th>Price</th>
-	                    <th>Quantity</th>
-	                    <th>Total</th>
-	                    <th>Action</th>
-	                </tr>
-	            </thead>
-	            <tbody>
-	            	
-	            	<c:forEach var="item" items="${cartItems}">
-	                <tr>
-	                    <td>
-	                        <input type="checkbox" name="selectedItems" value="${item.id}" class="form-check-input">
-	                    </td>
-	                    <td><img src="${item.book.thumbnail}" alt="${item.book.title}" class="img-fluid" style="width: 50px; height: auto; margin-right: 10px; "></td>
-	                    <td>
-	                        <div class="d-flex justify-content-center align-items-center">
-							    <span class="ms-2"><strong>${item.book.title}</strong></span>
-	                        </div>
-	                    </td>
-	                    <td><fmt:formatNumber value="${item.book.price}" type="currency" maxFractionDigits="0" currencySymbol="₫"/></td>
-	                    <td>
-	                        <!-- <input type="number" name="quantity[1]" value="1" min="1" class="form-control quantity-input" style="width: 80px;"> -->
-	                    	<input type="number" name="quantity[${item.id}]" value="${item.quantity}" min="1" max="${item.book.inventoryEntity.stock_quantity }" oninput="checkMaxMin(this)" oninvalid="this.setCustomValidity('The minimum quantity is 1, and the available stock quantity is ' + this.max + '.')"
-	                    	class="form-control quantity-input numeric-input" style="width: 80px;" onchange="updateQuantityLink(${item.id}, this.value)" data-toggle="tooltip" title="The minimum quantity is 1, and the available stock quantity is ${item.book.inventoryEntity.stock_quantity}">
-	                    	
-	                    </td>
-	                    <td><fmt:formatNumber value="${item.quantity * item.book.price}" type="currency" maxFractionDigits="0" currencySymbol="₫"/></td>
-	                    <td>
-	                      <%--  <button type="button" class="btn btn-warning btn-sm" onclick="updateQuantityLink(${item.id}, this.previousElementSibling.value)">Update</button> --%>
-	                        <a href="/bookstore/cart/view.htm?book_id=${item.book.id}&quantity=${item.quantity}" class="btn btn-warning" id="update-link-${item.id}" style="font-size: 11px;">Update</a>
-	                        <button type="button" class="btn btn-danger btn-sm" onclick="location.href='/bookstore/cart/remove.htm?cartItemId=${item.id}'">Delete</button>
-	                    </td>
-	                </tr>
-	                </c:forEach>
-	                <tr>
-		                <td colspan="3"><strong>Total Price</strong></td>
-		                <td colspan="4"><fmt:formatNumber value="${totalPrice }" type="currency" maxFractionDigits="0" currencySymbol="₫"/></td>
-	                </tr>
-	            </tbody>
-	        </table>
-	
-	        <!-- Tổng cộng giỏ hàng -->
-	        <div class="row mt-3">
-	        
-	        	<div class="col-md-4 d-flex justify-content-center">
-	                <button type="button" class="btn btn-light btn-lg w-100" style="padding: 7px 31px;font-size: 16px;border-radius: 13px;background-color: #CCCCFF" onclick="window.location.href='/bookstore/index.htm'">Back to home page</button>
-	            <!-- <button type="button" class="btn btn-light" id="back-to-home-btn" onclick="window.location.href='/bookstore/index.htm'">Tiếp tục mua hàng</button> -->
-	            </div>
-	            <div class="col-md-4 d-flex justify-content-center align-items-center">
-			        <!-- <button type="submit" class="btn btn-secondary btn-lg w-100" style="padding: 7px 31px;font-size: 16px;border-radius: 13px;">Middle Button</button> -->
-			    </div>
-	            <div class="col-md-4 d-flex justify-content-center" style="left: 130px">
-	                <button type="submit" class="btn btn-primary btn-lg w-100" style="padding: 7px 31px;font-size: 16px;border-radius: 13px;">Proceed to Checkout</button>
-	            </div>
-	        </div>
-	    </form>
-	    </c:otherwise>
-	    </c:choose>
-</div>
+		<!-- Main Content -->
+		<section id="tg-wrapper" class="tg-sectionspace tg-haslayout">
+			<div class="container mt-4" style="margin-bottom: 24px">
+				<h1 class="cart-title mb-4" style="text-align: center;">Giỏ hàng</h1>
+				<c:choose>
+					<c:when test="${empty cartItems}">
+						<div class="alert alert-warning text-center" role="alert">
+							<h4 class="alert-heading">Không có sản phẩm trong giỏ hàng!</h4>
+							<p>Giỏ hàng của bạn hiện đang trống. Hãy thêm sản phẩm để
+								tiếp tục mua sắm.</p>
+							<hr>
+						</div>
+					</c:when>
+					<c:otherwise>
+						<form action="/bookstore/payment/checkout.htm" method="POST"
+							style="width: 1170px">
+							<table class="cart-table table table-hover table-bordered">
+								<thead class="table-light">
+									<tr>
+										<th><input type="checkbox" id="select-all"
+											class="form-check-input"></th>
+										<th colspan="2">Sản phẩm</th>
+										<th>Giá sản phẩm</th>
+										<th>Số lượng</th>
+										<th>Tổng cộng</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
 
-        </section>
-        <!-- Footer -->
-        <%@ include file="../client/layouts/footer.jsp" %>
-    </div>
+									<c:forEach var="item" items="${cartItems}">
+										<tr>
+											<td><input type="checkbox" name="selectedItems"
+												value="${item.id}" class="form-check-input"></td>
+											<td><img src="${item.book.thumbnail}"
+												alt="${item.book.title}" class="img-fluid"
+												style="width: 50px; height: auto; margin-right: 10px;"></td>
+											<td>
+												<div
+													class="d-flex justify-content-center align-items-center">
+													<span class="ms-2"><strong>${item.book.title}</strong></span>
+												</div>
+											</td>
+											<td><fmt:formatNumber value="${item.book.price}"
+													type="currency" maxFractionDigits="0" currencySymbol="₫" /></td>
+											<td>
+												<!-- <input type="number" name="quantity[1]" value="1" min="1" class="form-control quantity-input" style="width: 80px;"> -->
+												<input type="number" name="quantity[${item.id}]"
+												value="${item.quantity}" min="1"
+												max="${item.book.inventoryEntity.stock_quantity }"
+												oninput="checkMaxMin(this)"
+												oninvalid="this.setCustomValidity('The minimum quantity is 1, and the available stock quantity is ' + this.max + '.')"
+												class="form-control quantity-input numeric-input"
+												style="width: 80px;"
+												onchange="updateQuantityLink(${item.id}, this.value)"
+												data-toggle="tooltip"
+												title="The minimum quantity is 1, and the available stock quantity is ${item.book.inventoryEntity.stock_quantity}">
 
-    <!-- JS Files -->
-    <script src="${pageContext.servletContext.contextPath}/resources/assets/js/client/vendor/jquery-library.js"></script>
-    <script src="${pageContext.servletContext.contextPath}/resources/assets/js/client/vendor/bootstrap.min.js"></script>
-    <script>
+											</td>
+											<td><fmt:formatNumber
+													value="${item.quantity * item.book.price}" type="currency"
+													maxFractionDigits="0" currencySymbol="₫" /></td>
+											<td>
+												<%--  <button type="button" class="btn btn-warning btn-sm" onclick="updateQuantityLink(${item.id}, this.previousElementSibling.value)">Update</button> --%>
+												<a
+												href="/bookstore/cart/view.htm?book_id=${item.book.id}&quantity=${item.quantity}"
+												class="btn btn-warning" id="update-link-${item.id}"
+												style="font-size: 11px;">Cập nhật</a>
+												<button type="button" class="btn btn-danger btn-sm"
+													onclick="location.href='/bookstore/cart/remove.htm?cartItemId=${item.id}'">Xoá</button>
+											</td>
+										</tr>
+									</c:forEach>
+									<tr>
+										<td colspan="3"><strong>Tổng tiền</strong></td>
+										<td colspan="4"><fmt:formatNumber value="${totalPrice }"
+												type="currency" maxFractionDigits="0" currencySymbol="₫" /></td>
+									</tr>
+								</tbody>
+							</table>
+
+							<!-- Tổng cộng giỏ hàng -->
+							<div class="row mt-3">
+								<div class="col-md-4 d-flex justify-content-center" style="left: 130px">
+									<button type="button" class="btn btn-light btn-lg w-100"
+										style="padding: 7px 31px; font-size: 16px; border-radius: 13px; background-color: #6C63FF; color: #404040; border: none; transition: background-color 0.3s ease;"
+										onclick="window.location.href='/bookstore/index.htm'">
+										Trang chủ</button>
+								</div>
+
+								<div
+									class="col-md-4 d-flex justify-content-center align-items-center">
+									<!-- <button type="submit" class="btn btn-secondary btn-lg w-100" style="padding: 7px 31px; font-size: 16px; border-radius: 13px;">Middle Button</button> -->
+								</div>
+
+								<div class="col-md-4 d-flex justify-content-center"
+									style="left: 130px">
+									<button type="submit" class="btn btn-primary btn-lg w-100"
+										style="padding: 7px 31px; font-size: 16px; border-radius: 13px; background-color: #28a745; color: #404040; border: none; transition: background-color 0.3s ease;">
+										Thanh toán</button>
+								</div>
+							</div>
+						</form>
+					</c:otherwise>
+				</c:choose>
+			</div>
+
+		</section>
+		<!-- Footer -->
+		<%@ include file="../client/layouts/footer.jsp"%>
+	</div>
+
+	<!-- JS Files -->
+	<script
+		src="${pageContext.servletContext.contextPath}/resources/assets/js/client/vendor/jquery-library.js"></script>
+	<script
+		src="${pageContext.servletContext.contextPath}/resources/assets/js/client/vendor/bootstrap.min.js"></script>
+	<script>
         // Select All Checkboxes
        document.addEventListener('DOMContentLoaded', function() {
     // Chức năng Select All

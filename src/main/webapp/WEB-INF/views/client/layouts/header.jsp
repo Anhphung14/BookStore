@@ -139,13 +139,11 @@
 										<h3>${user.fullname}</h3>
 										<ul>
 											<li><i class="fa-solid fa-user"></i>&nbsp;&nbsp;<a
-												href="${pageContext.servletContext.contextPath}/account/profile_settings.htm">My
-													profile</a></li>
+												href="${pageContext.servletContext.contextPath}/account/profile_settings.htm">Trang cá nhân</a></li>
 											<li><i class="fa-solid fa-shop"></i>&nbsp;&nbsp;<a
-												href="${pageContext.servletContext.contextPath}/account/account_orders.htm">My
-													Orders</a></li>
+												href="${pageContext.servletContext.contextPath}/account/account_orders.htm">Đơn hàng của bạn</a></li>
 											<li><i class="fa-solid fa-right-from-bracket"></i>&nbsp;&nbsp;<a
-												href="${pageContext.servletContext.contextPath}/signout.htm">Logout</a></li>
+												href="${pageContext.servletContext.contextPath}/signout.htm">Đăng xuất</a></li>
 										</ul>
 									</div>
 								</c:when>
@@ -153,8 +151,7 @@
 									<div class="signin-container">
 										<a href="${pageContext.servletContext.contextPath}/signin.htm"
 											class="btn-signin"> <span
-											style="font-weight: 600; line-height: 20px; color: #404040;">Sign
-												In</span>
+											style="font-weight: 600; line-height: 20px; color: #404040;">Đăng nhập</span>
 										</a>
 									</div>
 

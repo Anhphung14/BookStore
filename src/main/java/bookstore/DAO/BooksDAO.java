@@ -115,7 +115,7 @@ public class BooksDAO {
 
 			    // Thiết lập phân trang
 			    if (pageNumber < 1) pageNumber = 1;
-			    if (pageSize < 1) pageSize = 8; // Giá trị mặc định
+			    if (pageSize < 1) pageSize = 16; // Giá trị mặc định
 			    query.setFirstResult((pageNumber - 1) * pageSize);
 			    query.setMaxResults(pageSize);
 			    return query.list();
@@ -166,7 +166,7 @@ public class BooksDAO {
 
 			    // Thiết lập phân trang
 			    if (pageNumber < 1) pageNumber = 1;
-			    if (pageSize < 1) pageSize = 8; // Giá trị mặc định
+			    if (pageSize < 1) pageSize = 16; // Giá trị mặc định
 			    query.setFirstResult((pageNumber - 1) * pageSize);
 			    query.setMaxResults(pageSize);
 
@@ -758,5 +758,75 @@ public class BooksDAO {
 				
 				return (long) query.uniqueResult();
 		}
+		
+		public long countAllBook() {
+			Session session = sessionFactory.getCurrentSession();
+			String hql = "SELECT COUNT(*) FROM BooksEntity";
+			Query query = session.createQuery(hql);
+			long count = (long) query.uniqueResult();
+		    return count;
+		}
+		
+		public int getTotalPagesOfAllBooks(int pageSize) {
+		    Session session = sessionFactory.getCurrentSession();
+		    
+		    String hql = "SELECT COUNT(b.id) FROM BooksEntity b";  
+		    Query query = session.createQuery(hql);
+
+		    Long totalElements = (Long) query.uniqueResult();
+
+		    int totalPages = (int) Math.ceil((double) totalElements / pageSize);
+		    return totalPages;
+		}
+		
+		public List<BooksEntity> getAllBook(int pageNumber, int pageSize, String sortBy) {
+		    Session session = sessionFactory.getCurrentSession();
+
+		    // Câu truy vấn cơ bản để lấy tất cả sách
+		    String hql = "FROM BooksEntity b ";
+
+		    // Thêm phần sắp xếp dựa trên tham số sortBy
+		    if (sortBy != null && !sortBy.isEmpty()) {
+		        switch (sortBy) {
+		            case "nameAsc":
+		                hql += "ORDER BY b.title ASC"; // Sắp xếp theo tên sách A-Z
+		                break;
+		            case "nameDesc":
+		                hql += "ORDER BY b.title DESC"; // Sắp xếp theo tên sách Z-A
+		                break;
+		            case "priceAsc":
+		                hql += "ORDER BY b.price ASC"; // Sắp xếp theo giá tăng dần
+		                break;
+		            case "priceDesc":
+		                hql += "ORDER BY b.price DESC"; // Sắp xếp theo giá giảm dần
+		                break;
+		            case "newest":
+		                hql += "ORDER BY b.createdAt DESC"; // Sắp xếp theo ngày thêm mới nhất
+		                break;
+		            case "oldest":
+		                hql += "ORDER BY b.createdAt ASC"; // Sắp xếp theo ngày thêm cũ nhất
+		                break;
+		            default:
+		                hql += "ORDER BY b.createdAt DESC"; // Mặc định sắp xếp theo ngày thêm mới nhất
+		                break;
+		        }
+		    } else {
+		        // Mặc định nếu không có sortBy, sắp xếp theo ngày thêm mới nhất
+		        hql += "ORDER BY b.createdAt DESC";
+		    }
+
+		    Query query = session.createQuery(hql);
+
+		    // Thiết lập phân trang
+		    if (pageNumber < 1) pageNumber = 1;
+		    if (pageSize < 1) pageSize = 16; // Giá trị mặc định
+		    query.setFirstResult((pageNumber - 1) * pageSize);
+		    query.setMaxResults(pageSize);
+
+		    // Trả về danh sách sách đã được sắp xếp và phân trang
+		    return query.list();
+		}
+
+
 }
 

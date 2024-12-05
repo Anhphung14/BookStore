@@ -10,7 +10,7 @@
     <base href="${pageContext.servletContext.contextPath}/">
     <!--  This file has been downloaded from bootdey.com @bootdey on twitter -->
     <!--  All snippets are MIT license http://bootdey.com/license -->
-    <title>My Ratings</title>
+    <title>Đánh giá của bạn</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
     
@@ -78,7 +78,7 @@
                     <div class="author-card-avatar"><img src="${user.avatar}" alt="${user.fullname}">
                     </div>
                     <div class="author-card-details">
-                        <h5 class="author-card-name text-lg">${user.fullname}</h5><span class="author-card-position">Joined ${user.created_at}</span>
+                        <h5 class="author-card-name text-lg">${user.fullname}</h5><span class="author-card-position">Tham gia ${user.created_at}</span>
                     </div>
                 </div>
             </div>
@@ -86,17 +86,17 @@
                 <nav class="list-group list-group-flush">
                     <a class="list-group-item" href="account/account_orders.htm">
                         <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-inline-block font-weight-medium text-uppercase">Orders List</div>
+                                <div class="d-inline-block font-weight-medium text-uppercase">Danh sách đơn hàng</div>
                         </div>
                     </a>
-                    <a class="list-group-item" href="account/profile_settings.htm">Profile Settings</a>
-                  	<a class="list-group-item" href="account/my_ratings.htm">My Ratings</a>
+                    <a class="list-group-item" href="account/profile_settings.htm">Chỉnh sửa thông tin</a>
+                  	<a class="list-group-item" href="account/my_ratings.htm">Đánh giá của bạn</a>
                 </nav>
             </div>
         </div>
         <!-- Reviews -->
         <div class="col-lg-8">
-            <h2 class="mb-4">MY RATINGS</h2>
+            <h2 class="mb-4">ĐÁNH GIÁ CỦA BẠN</h2>
 			<c:forEach var="review" items="${reviews}">
 		        <div class="review">
 		            <div class="product-info">

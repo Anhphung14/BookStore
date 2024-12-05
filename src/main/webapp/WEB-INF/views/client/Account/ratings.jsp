@@ -55,7 +55,7 @@
 				<div class="row">
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<div class="tg-innerbannercontent">
-							<h1>Rating & Review</h1>
+							<h1>Đánh giá</h1>
 						</div>
 					</div>
 				</div>
@@ -104,7 +104,7 @@
 			                    </label>
 			                </div>
 			                <div class="my-2">
-			                    <strong style="font-size: 1.5rem;">Review:</strong>
+			                    <strong style="font-size: 1.5rem;">Đánh giá:</strong>
 			                    <textarea class="form-control" name="review${orderDetail.order.id}_${orderDetail.book.id}" rows="3" placeholder="Nhập đánh giá của bạn..." style="font-size: 1.5rem;"></textarea>
 			                </div>
 			            </div>

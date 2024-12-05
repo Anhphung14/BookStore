@@ -97,11 +97,48 @@ public class ClientController {
         return "client/index"; 
     }
 
-	
+	@RequestMapping("/allProduct")
+	public String allProduct(@RequestParam(value = "page", defaultValue = "1") int page, 
+    		@RequestParam(value = "pageSize", defaultValue = "16") int pageSize, @RequestParam(value = "sortBy", defaultValue = "newest", required = false) String sortBy,
+    		ModelMap model) {
+		
+		List<BooksEntity> listAllBook = booksDAO.getAllBook(page, pageSize, sortBy);
+		int totalPages = booksDAO.getTotalPagesOfAllBooks(pageSize);
+		
+		List<Object[]> countBookEachCategory = booksDAO.countBookEachCategory();
+		
+		List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
+        List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
+        
+        Map<Long, Double> bookDiscounts = new HashMap<>();
+        
+        for (BooksEntity book : listAllBook) {
+            Double discountValue = discountsDAO.getDiscountValueByBookId(book.getId());
+            
+            if (discountValue == null) {
+                discountValue = 0.0;
+            }
+            bookDiscounts.put(book.getId(), discountValue);
+        }
+        
+        long countAllBooks = booksDAO.countAllBook();
+        model.addAttribute("countAllBooks", countAllBooks);
+        
+        model.addAttribute("Categories", listCategories);
+        model.addAttribute("SubCategories", listSubCategories);
+	     model.addAttribute("countBookEachCategory", countBookEachCategory);
+	     model.addAttribute("bookDiscounts", bookDiscounts); 
+	     model.addAttribute("bookList", listAllBook);
+	     model.addAttribute("currentPage", page); // Trang hiện tại
+	     model.addAttribute("totalPages", totalPages); // Tổng số trang
+	     model.addAttribute("pageSize", pageSize);
+	     model.addAttribute("sortBy", sortBy);
+		return "client/showAllBooks";
+	}
 	
     @RequestMapping("/search")
     public String searchBooks(@RequestParam(value = "q", required = false) String searchQuery, @RequestParam(value = "page", defaultValue = "1") int page, 
-    		@RequestParam(value = "pageSize", defaultValue = "1") int pageSize, @RequestParam(value = "sortBy", defaultValue = "newest", required = false) String sortBy,
+    		@RequestParam(value = "pageSize", defaultValue = "16") int pageSize, @RequestParam(value = "sortBy", defaultValue = "newest", required = false) String sortBy,
     		ModelMap model) {
     	//System.out.println("pageSize: " + pageSize);
         //System.out.println("Search Query: " + searchQuery);
@@ -111,7 +148,8 @@ public class ClientController {
         //System.out.println(totalPages);
         List<Object[]> countBookEachCategory = booksDAO.countBookEachCategory();
         
-        
+        long countAllBooks = booksDAO.countAllBook();
+        model.addAttribute("countAllBooks", countAllBooks);
         
         List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
         List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
@@ -133,7 +171,6 @@ public class ClientController {
 	public String productdetail(ModelMap model, @PathVariable("productId") Long id) {
 		BooksEntity book = booksDAO.getBookByIdHQL(id);
         model.addAttribute("book", book);
-		System.out.println(book.getDescription());
         Double discount = discountsDAO.getDiscountValueByBookId(id);
 		model.addAttribute("discount",discount);
 		 
