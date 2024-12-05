@@ -49,7 +49,7 @@
                     <div class="author-card-avatar"><img src="${user.avatar}" alt="${user.fullname}">
                     </div>
                     <div class="author-card-details">
-                        <h5 class="author-card-name text-lg">${user.fullname}</h5><span class="author-card-position">Joined ${user.created_at}</span>
+                        <h5 class="author-card-name text-lg">${user.fullname}</h5><span class="author-card-position">Tham gia ${user.created_at}</span>
                     </div>
                 </div>
             </div>
@@ -57,10 +57,10 @@
                 <nav class="list-group list-group-flush">
                     <a class="list-group-item" href="account/account_orders.htm">
                         <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-inline-block font-weight-medium text-uppercase">Orders List</div>
+                                <div class="d-inline-block font-weight-medium text-uppercase">Danh sách đơn hàng</div>
                         </div>
-                    </a><a class="list-group-item" href="account/profile_settings.htm">Profile Settings</a>
-                    <a class="list-group-item" href="account/my_ratings.htm">My Ratings</a>
+                    </a><a class="list-group-item" href="account/profile_settings.htm">Chỉnh sửa thông tin</a>
+                    <a class="list-group-item" href="account/my_ratings.htm">Đánh giá của bạn</a>
                 </nav>
             </div>
         </div>
@@ -77,7 +77,7 @@
             <form class="row" action="account/update_profile.htm" method="POST" enctype="multipart/form-data" style="border: 1px solid #ccc; padding: 20px; border-radius: 8px;">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label for="account-fn">Full Name</label>
+                        <label for="account-fn">Họ tên</label>
                         <input class="form-control" type="text" id="account-fn" name="fullname" value="${user.fullname }" required>
                         <c:if test="${not empty errorfn}">
                         	 <div class="text-danger">${errorfn}</div>
@@ -87,13 +87,13 @@
                 
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="account-email">E-mail Address</label>
+                        <label for="account-email">E-mail</label>
                         <input class="form-control" type="text" id="account-email" name="email" value="${user.email}" disabled>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="account-phone">Phone Number</label>
+                        <label for="account-phone">Số điện thoại</label>
                         <input class="form-control" type="text" id="account-phone" name="phone" value="${user.phone}" pattern="^(\\+84|0)(9[0-9]{8}|1[2-9][0-9]{7})$" required >
                         <c:if test="${not empty errorPhone}">
                         	 <div class="text-danger">${errorPhone}</div>
@@ -102,7 +102,7 @@
                 </div>
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label for="account-avatar">Upload Avatar</label>
+                        <label for="account-avatar">Ảnh đại diện</label>
                         <input class="form-control" type="file" id="account-avatar" name="avatar" accept="image/*">
                     </div>
                 </div>
@@ -116,7 +116,7 @@
             </form>
             <hr class="my-4" style="border-top: 2px dashed #ccc;">
             <!-- Change Password Form -->
-            <h4 class="mb-3">Change Password</h4>
+            <h4 class="mb-3">Thay đổi mật khẩu</h4>
             <c:if test="${not empty successPassword}">
 				<div class="alert alert-success">${successPassword}</div>
 			</c:if>
@@ -125,7 +125,7 @@
 			</c:if>
             <form action="account/change_password.htm" method="POST" id="change-password-form" style="border: 1px solid #ccc; padding: 20px; border-radius: 8px;">
                 <div class="form-group">
-                    <label for="old-password">Old Password</label>
+                    <label for="old-password">Mật khẩu hiện tại</label>
                     <input type="password" class="form-control" id="old-password" name="oldPassword" required>
                     <div id="error-old-password" class="text-danger" style="display: none;">Không được để trống ô Old Password.</div>
                     <c:if test="${not empty oldPassError}">
@@ -134,17 +134,17 @@
                     
                 </div>
                 <div class="form-group">
-                    <label for="new-password">New Password</label>
+                    <label for="new-password">Mật khẩu mới</label>
                     <input type="password" class="form-control" id="new-password" name="newPassword" required>
                     <div id="error-new-password" class="text-danger" style="display: none;">Không được để trống ô New Password.</div>
                 </div>
                 <div class="form-group">
-                    <label for="confirm-password">Confirm Password</label>
+                    <label for="confirm-password">Xác nhận mật khẩu mới</label>
                     <input type="password" class="form-control" id="confirm-password" name="confirmPassword" required>
                     <div id="error-confirm-password" class="text-danger" style="display: none;">Không được để trống ô Confirm Password.</div>
                     <div id="error-password-match" class="text-danger" style="display: none;">New Password và Confirm Password chưa khớp.</div>
                 </div>
-                <button type="submit" class="btn btn-primary" id="save-password-btn">Save changes</button>
+                <button type="submit" class="btn btn-primary" id="save-password-btn">Lưu thay đổi</button>
             </form>
         </div>
     </div>
