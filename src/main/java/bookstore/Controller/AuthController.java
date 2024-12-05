@@ -157,8 +157,9 @@ public class AuthController {
 
 	        session.save(cart);
 
-	        model.addAttribute("alertMessage", "Đăng ký thành công, bạn có thể đăng nhập ngay bây giờ!");
-	        model.addAttribute("alertType", "success");
+	        model.addAttribute("alertMessage", "The account activation link has been sent to your email, please check it!");
+	        model.addAttribute("alertType", "warning");
+	        
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        model.addAttribute("alertType", "error");
@@ -214,6 +215,7 @@ public class AuthController {
 	public String resend(@RequestParam("email") String email) {
 		
 		String otpCode = otpService.storeOtp(email);
+		long start_time = System.currentTimeMillis();
 		
 		String emailContent = "<html><body>"
                 + "<h5>Hello " + email + ",</h5>"
@@ -225,6 +227,9 @@ public class AuthController {
                 + "</body></html>";
 		
 		mailService.sendMail(emailContent, email,  "Complete Your Registration with This Re-Link");
+		long end_time = System.currentTimeMillis();
+		
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>" + (end_time - start_time));
 		
 		return "auth/signup";
 	}
