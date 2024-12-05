@@ -109,6 +109,7 @@
                     <select class="form-control" name="orderStatus" id="order_status">
                         <option value="">Order Status</option>
                         <option value="Chờ xác nhận" ${orderStatus == 'Chờ xác nhận' ? 'selected' : ''}>Chờ xác nhận</option>
+                        <option value="Xác nhận đơn hàng" ${orderStatus == 'Xác nhận đơn hàng' ? 'selected' : ''}>Xác nhận đơn hàng</option>
                         <option value="Đang giao hàng" ${orderStatus == 'Đang giao hàng' ? 'selected' : ''}>Đang giao hàng</option>
                         <option value="Đã hoàn thành" ${orderStatus == 'Đã hoàn thành' ? 'selected' : ''}>Đã hoàn thành</option>
                         <option value="Huỷ đơn hàng" ${orderStatus == 'Huỷ đơn hàng' ? 'selected' : ''}>Huỷ đơn hàng</option>
@@ -181,6 +182,7 @@
 											    <span class="small
 											        <c:choose>
 											            <c:when test="${order.paymentStatus == 'Chưa thanh toán'}">text-danger bg-danger</c:when>
+											            <c:when test="${order.paymentStatus == 'Đã hoàn tiền'}">text-warning bg-warning</c:when>
 											            <c:otherwise>text-success bg-success</c:otherwise>
 											        </c:choose> 
 											        bg-opacity-10 rounded px-2 py-1">

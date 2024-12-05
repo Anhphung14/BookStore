@@ -25,15 +25,21 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import bookstore.DAO.BooksDAO;
+import bookstore.DAO.CategoriesDAO;
+import bookstore.DAO.InventoryDAO;
 import bookstore.DAO.OrderDAO;
 import bookstore.DAO.RatingsDAO;
+import bookstore.DAO.SubcategoriesDAO;
 //import bookstore.DAO.OrderDAO;
 import bookstore.DAO.UserDAO;
 import bookstore.Entity.BooksEntity;
+import bookstore.Entity.CategoriesEntity;
+import bookstore.Entity.InventoryEntity;
 import bookstore.Entity.Order_DiscountsEntity;
 import bookstore.Entity.OrdersDetailEntity;
 import bookstore.Entity.OrdersEntity;
 import bookstore.Entity.RatingsEntity;
+import bookstore.Entity.SubcategoriesEntity;
 //import bookstore.Entity.OrderDetailEntity;
 //import bookstore.Entity.OrderEntity;
 //import bookstore.Entity.Order_DiscountsEntity;
@@ -59,6 +65,12 @@ public class AccountController {
 	
 	@Autowired
 	private RatingsDAO ratingsDAO;
+	@Autowired
+	private InventoryDAO inventoryDAO;
+	@Autowired
+    private CategoriesDAO categoriesDAO;
+    @Autowired
+    private SubcategoriesDAO subcategoriesDAO;
 	
 	@RequestMapping(value = "account_orders", method = RequestMethod.GET)
 	public String account_order(ModelMap model, HttpServletRequest request) {
@@ -76,6 +88,11 @@ public class AccountController {
         for (Long i: order_reviewed) {
         	System.out.println(i);
         }
+        List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
+        List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
+        model.addAttribute("Categories", listCategories);
+        model.addAttribute("SubCategories", listSubCategories);
+        
         model.addAttribute("order_reviewed", order_reviewed);
 		return "client/Account/account_orders";
 	}
@@ -92,13 +109,26 @@ public class AccountController {
 		if (listOrderDiscounts != null && !listOrderDiscounts.isEmpty()) {
 			model.addAttribute("orderDiscounts", listOrderDiscounts);
 		}
+		
+		List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
+        List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
+        model.addAttribute("Categories", listCategories);
+        model.addAttribute("SubCategories", listSubCategories);
 		return "client/Account/order_detail";
 	}
 	
 	@RequestMapping(value = "cancel_order", method = RequestMethod.POST)
 	public String cancel_order(@RequestParam("orderId") Long orderId, RedirectAttributes redirectAttributes) {
 		try {
-	        orderDAO.updateOrderStatusToCancel(orderId);
+	        int isCancel = orderDAO.updateOrderStatusToCancel(orderId);
+	        
+	        OrdersEntity order = orderDAO.getOrderByOrderId(orderId);
+	        for(OrdersDetailEntity orderDetail : order.getOrderDetails()) {
+	        	InventoryEntity inventoryOfCurrentBook = inventoryDAO.getInventoryByBookId(orderDetail.getBook().getId());
+                Integer currentStockQuantity = inventoryOfCurrentBook.getStock_quantity();
+                inventoryOfCurrentBook.setStock_quantity(currentStockQuantity + 1);
+                boolean isUpdateStockQuantity = inventoryDAO.updateInventory(inventoryOfCurrentBook);
+	        }
 	        redirectAttributes.addFlashAttribute("successMessage", "Order has been successfully canceled.");
 	    } catch (Exception e) {
 	        redirectAttributes.addFlashAttribute("errorMessage", "Failed to cancel the order. Please try again.");
@@ -117,6 +147,11 @@ public class AccountController {
 	    UsersEntity user = userDAO.getUserById(currentUser.getId());
 	    user.setEmail(user.getEmail().toLowerCase());
 	    model.addAttribute("user", user);
+	    
+	    List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
+        List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
+        model.addAttribute("Categories", listCategories);
+        model.addAttribute("SubCategories", listSubCategories);
 		return "client/Account/profile_settings";
 	}
 	
@@ -226,6 +261,11 @@ public class AccountController {
 	    List<RatingsEntity> reviews = ratingsDAO.getRatingsByUserId(user.getId());
 
         model.addAttribute("reviews", reviews);
+        
+        List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
+        List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
+        model.addAttribute("Categories", listCategories);
+        model.addAttribute("SubCategories", listSubCategories);
 		return "client/Account/my_ratings";
 	}
 	
@@ -240,6 +280,10 @@ public class AccountController {
 		  // Thêm dữ liệu vào model để gửi tới view
 		model.addAttribute("orderDetails", listOrderDetails);
 		
+		List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
+        List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
+        model.addAttribute("Categories", listCategories);
+        model.addAttribute("SubCategories", listSubCategories);
 		return "client/Account/ratings";
 	}
 	
