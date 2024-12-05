@@ -69,7 +69,7 @@
 					</div>
 				</div>
 			</div>
-				<form id="frm-admin" name="adminForm" action="" method="POST">
+				<form id="frm-admin" name="adminForm" action="" method="GET">
 				<input type="hidden" id="task" name="task" value="${param.task}">
 				<input type="hidden" id="sortby" name="sortby"
 					value="${param.sortby != null ? param.sortby : 'updated_at'}" /> <input
@@ -81,13 +81,52 @@
 					<div class="card-body">
 						<div class="d-flex gap-3">
 							<div class="input-group">
-								<input class="form-control search-input me-2" name="search"
-									id="search_text" value="${search}"
-									placeholder="Search...">
-								<button type="submit" class="btn btn-secondary btn-search">
-									<i class="fa fa-search"></i>
-								</button>
+								<input class="form-control search-input me-2" name="book"
+									id="search_text" value="${book}"
+									placeholder="Book Name or Subcategory">
 							</div>
+							
+			                <div class="input-group">
+			                    <input class="form-control" type="number" name="minPrice" id="min_price" 
+			                           value="${minPrice}" placeholder="Min Price">
+			                    <span class="input-group-text">to</span>
+			                    <input class="form-control" type="number" name="maxPrice" id="max_price" 
+			                           value="${minPrice}" placeholder="Max Price">
+			                </div>
+			                
+							<div class="input-group">
+			                    <input class="form-control" type="number" name="minQuantity" id="min_quantity" 
+			                           value="${minQuantity}" placeholder="Min Quantity">
+			                    <span class="input-group-text">to</span>
+			                    <input class="form-control" type="number" name="maxQuantity" id="max_quantity" 
+			                           value="${maxQuantity}" placeholder="Max Quantiy">
+			                </div>
+			                
+			                <div class="input-group" style="width: 50%">
+			                    <select class="form-control" name="bookStatus" id="book_status">
+			                        <option value="">Book Status</option>
+			                        <option value="1" ${bookStatus == '1' ? 'selected' : ''}>Active</option>
+			                        <option value="0" ${bookStatus == '0' ? 'selected' : ''}>Disable</option>
+			                    </select>
+			                </div>
+							
+							<div class="input-group">
+			                    <input class="form-control" type="date" name="fromDate" id="fromDate" onchange="checkDates()"
+			                           value="${fromDate}" placeholder="From Date">
+			                     <span class="input-group-text">to</span>
+			                     <input class="form-control" type="date" name="toDate" id="toDate" onchange="checkDates()"
+			                           value="${toDate}" placeholder="To Date">
+			                </div>
+							
+							
+							<button type="submit" class="btn btn-secondary btn-search">
+									<i class="fa fa-search"></i>
+							</button>
+							
+							<button type="button" class="btn btn-search" style="background-color: #B197FC" onclick="refreshPage()">
+			                    <i class="fa-solid fa-arrows-rotate" style="color: #ffffff;"></i>
+			                </button>
+										
 							<a class="btn btn-primary text-nowrap btn-add"
 								href="product/new.htm"> <i
 								class="fa fa-plus me-2"></i>Add
@@ -506,6 +545,30 @@
 		    // Mở modal
 		    var modal = new bootstrap.Modal(document.getElementById('productDetailModal'));
 		    modal.show();
+		}
+		
+		function refreshPage() {
+		    // Sử dụng window.location để reload lại trang mà không tham số
+		    window.location.href = window.location.origin + window.location.pathname;
+		}
+		
+		function checkDates() {
+		    var fromDate = document.getElementById('fromDate');
+		    var toDate = document.getElementById('toDate');
+
+		    // Kiểm tra và set "required" nếu chỉ có một ô có giá trị
+		    if (fromDate.value && !toDate.value) {
+		        toDate.setAttribute('required', true);
+		        toDate.setAttribute('min', fromDate.value);  // Set min cho toDate là fromDate
+		    } else if (!fromDate.value && toDate.value) {
+		        fromDate.setAttribute('required', true);
+		        fromDate.setAttribute('max', toDate.value);  // Set max cho fromDate là toDate
+		    } else {
+		        fromDate.removeAttribute('required');
+		        toDate.removeAttribute('required');
+		        toDate.setAttribute('min', fromDate.value);
+		        fromDate.setAttribute('max', toDate.value);
+		    }
 		}
 
 	</script>
