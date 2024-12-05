@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
+<%@ taglib uri="http://java.sun.com/jstl/fmt_rt" prefix="f"%>
 
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
@@ -91,19 +91,19 @@
 							<c:forEach var="book" items="${bookList}">
 								<div class="item">
 									<div class="tg-postbook">
-											<div class="tg-bookimg">
-												<div class="tg-frontcover">
-													<a
-														href="${pageContext.request.contextPath}/productdetail/${book.id}.htm">
-														<img src="${book.thumbnail}" alt="${book.thumbnail}" />
-													</a>
-												</div>
-												<div class="tg-backcover">
-													<img src="${book.thumbnail}" alt="${book.title}" />
-												</div>
+										<div class="tg-bookimg">
+											<div class="tg-frontcover">
+												<a
+													href="${pageContext.request.contextPath}/productdetail/${book.id}.htm">
+													<img src="${book.thumbnail}" alt="${book.thumbnail}" />
+												</a>
 											</div>
+											<div class="tg-backcover">
+												<img src="${book.thumbnail}" alt="${book.title}" />
+											</div>
+										</div>
 										<div class="tg-postbookcontent">
-											<ul class="tg-bookscategories">
+											<ul class="tg-bookscategories" style="padding-top: 10px">
 												<li><a href="javascript:void(0);">${book.subcategoriesEntity.name}</a></li>
 											</ul>
 											<c:if test="${bookDiscounts[book.id] != 0.0}">
@@ -177,7 +177,7 @@
 								<!-- Hiển thị ảnh của sách bán chạy nhất -->
 								<div class="tg-featuredimg" style="text-align: center;">
 									<img src="${bestSellingBook.thumbnail}"
-										alt="${bestSellingBook.title}" />
+										alt="${bestSellingBook.title}" style="height: 460px;" />
 								</div>
 							</div>
 							<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
@@ -321,25 +321,27 @@
 								<c:if test="${bookDiscounts[book.id] != 0.0}">
 									<div class="item">
 										<div class="tg-postbook">
-												<div class="tg-bookimg">
-													<div class="tg-frontcover">
-														<a
-															href="${pageContext.request.contextPath}/productdetail/${book.id}.htm">
-															<img src="${book.thumbnail}" alt="${book.title}" />
-														</a>
-													</div>
-													<div class="tg-backcover">
+											<div class="tg-bookimg">
+												<div class="tg-frontcover">
+													<a
+														href="${pageContext.request.contextPath}/productdetail/${book.id}.htm">
 														<img src="${book.thumbnail}" alt="${book.title}" />
-													</div>
+													</a>
 												</div>
+												<div class="tg-backcover">
+													<img src="${book.thumbnail}" alt="${book.title}" />
+												</div>
+											</div>
 											<div class="tg-postbookcontent">
-												<ul class="tg-bookscategories">
+												<ul class="tg-bookscategories" style="padding-top: 10px">
 													<li><a href="javascript:void(0);">${book.subcategoriesEntity.name}</a></li>
 												</ul>
 												<c:if test="${bookDiscounts[book.id] != 0.0}">
 													<div class="tg-themetagbox">
-														<span class="tg-themetag">Giảm giá
-															${bookDiscounts[book.id]}%</span>
+														<span class="tg-themetag">Giảm giá <f:formatNumber
+																value="${bookDiscounts[book.id]}" type="number"
+																pattern="##" />%
+														</span>
 													</div>
 												</c:if>
 												<c:if test="${bookDiscounts[book.id] == 0.0}">
@@ -558,23 +560,28 @@
 			}
 		}
 		$(document).ready(function() {
-			$("#tg-discountbooksslider").owlCarousel({
-				loop : true,
-				margin : 20,
-				nav : true,
-				responsive : {
-					0 : {
-						items : 1
-					},
-					600 : {
-						items : 2
-					},
-					1000 : {
-						items : 6
-					}
-				}
-			});
+		    $("#tg-discountbooksslider").owlCarousel({
+		        loop: true,
+		        margin: 20,
+		        nav: true,  // Đảm bảo rằng navigation (prev/next) được bật
+		        navText: [
+		            '<i class="fa-solid fa-chevron-left"></i>', 
+		            '<i class="fa-solid fa-chevron-right"></i>'
+		        ],  // Thiết lập icon cho các nút Prev và Next
+		        responsive: {
+		            0: {
+		                items: 1
+		            },
+		            600: {
+		                items: 2
+		            },
+		            1000: {
+		                items: 6
+		            }
+		        }
+		    });
 		});
+
 	</script>
 </body>
 </html>

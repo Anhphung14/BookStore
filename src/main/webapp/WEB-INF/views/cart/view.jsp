@@ -105,9 +105,9 @@
 												<a
 												href="/bookstore/cart/view.htm?book_id=${item.book.id}&quantity=${item.quantity}"
 												class="btn btn-warning" id="update-link-${item.id}"
-												style="font-size: 11px;">Update</a>
+												style="font-size: 11px;">Cập nhật</a>
 												<button type="button" class="btn btn-danger btn-sm"
-													onclick="location.href='/bookstore/cart/remove.htm?cartItemId=${item.id}'">Delete</button>
+													onclick="location.href='/bookstore/cart/remove.htm?cartItemId=${item.id}'">Xoá</button>
 											</td>
 										</tr>
 									</c:forEach>
