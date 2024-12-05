@@ -124,9 +124,9 @@
 											<span class="tg-bookwriter">Tác giả: <a
 												href="javascript:void(0);">${book.author}</a></span> <span
 												class="tg-bookprice"> <ins>${book.price} VND</ins>
-											</span> <a class="tg-btn tg-btnstyletwo" href="javascript:void(0);"
+											</span> <a class="tg-btn tg-btnstyletwo btn-add-to-cart" data-quantity="1" data-book-id="${book.id}" href="javascript:void(0);"
 												style="padding-left: 0px; padding-right: 0px;"> <i
-												class="fa fa-shopping-basket btn-add-to-cart" data-book-id="${book.id}" data-quantity="1" style="padding-left: 10px;"></i>
+												class="fa fa-shopping-basket"  style="padding-left: 10px;"></i>
 												<em>Thêm vào giỏ hàng</em>
 											</a>
 										</div>
@@ -284,9 +284,9 @@
 												<span class="tg-bookwriter">Tác giả: <a
 													href="javascript:void(0);">${book.author}</a></span> <span
 													class="tg-bookprice"> <ins>${book.price} VND</ins>
-												</span> <a class="tg-btn tg-btnstyletwo" href="javascript:void(0);"
+												</span> <a class="tg-btn tg-btnstyletwo btn-add-to-cart" href="javascript:void(0);"
 													style="padding-left: 0px; padding-right: 0px;"> <i
-													class="fa fa-shopping-basket btn-add-to-cart" data-book-id="${book.id}" data-quantity="1" style="padding-left: 15px;"></i>
+													class="fa fa-shopping-basket" data-book-id="${book.id}" data-quantity="1" style="padding-left: 15px;"></i>
 													<em>Thêm vào giỏ hàng</em>
 												</a>
 											</div>
@@ -375,6 +375,48 @@
 	<!--************************************
 			Wrapper End
 	*************************************-->
+	
+	<script type="text/javascript">
+	document.querySelectorAll('.btn-add-to-cart').forEach(function(button) {
+        button.addEventListener('click', function(event) {
+        	console.log(event.currentTarget.getAttribute('data-book-id'));
+        	console.log(event.currentTarget.getAttribute('data-book-id'));
+        	 var bookId = event.currentTarget.getAttribute('data-book-id');
+             var quantity = event.currentTarget.getAttribute('data-quantity');
+             console.log("bookId:", bookId);
+             console.log("quantity:", quantity);
+            // Gửi GET request để thêm sách vào giỏ hàng
+            fetch('/bookstore/cart/add.htm?bookId=' + bookId + '&quantity=' + quantity, {
+                method: 'GET', 
+            })
+            .then(response => response.text()) 
+            .then(data => {
+            	console.log("data: " + data);
+                // Xử lý phản hồi sau khi thêm vào giỏ hàng
+	              	 if (data == "Vui long dang nhap") {
+	               		 toastr.error('Vui lòng đăng nhập để thêm sản phẩm!', 'Lỗi');
+	               		 
+	               		 document.location("http://google.com");
+	              	 }
+	              	 else if (data != "error" && data != "Vui long dang nhap") {
+                	 var countBooksInCart = parseInt(data);  // Chuyển đổi dữ liệu trả về thành số
+                	 fetch('/bookstore/index.htm');
+                     document.querySelector('#tg-minicart .tg-themebadge').textContent = countBooksInCart;
+                	 toastr.success('Sản phẩm đã được thêm vào giỏ hàng!', 'Thành công');
+                    
+                } else {
+                	toastr.error('Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ!', 'Lỗi');
+                }
+            })
+            .catch(error => {
+                // Lỗi trong quá trình gửi request
+                console.error('Có lỗi xảy ra:', error);
+                toastr.error('Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ!', 'Lỗi');
+            });
+        });
+    });
+	
+	</script>
 	<script src="resources/assets/js/client/vendor/jquery-library.js"></script>
 	<script src="resources/assets/js/client/vendor/bootstrap.min.js"></script>
 	<script
@@ -435,37 +477,7 @@
 			});
 		});
 		
-		document.querySelectorAll('.btn-add-to-cart').forEach(function(button) {
-	        button.addEventListener('click', function(event) {
-	        	 var bookId = event.currentTarget.getAttribute('data-book-id');
-	             var quantity = event.currentTarget.getAttribute('data-quantity');
-	             console.log("bookId:", bookId);
-	             console.log("quantity:", quantity);
-	            // Gửi GET request để thêm sách vào giỏ hàng
-	            fetch('/bookstore/cart/add.htm?bookId=' + bookId + '&quantity=' + quantity, {
-	                method: 'GET', 
-	            })
-	            .then(response => response.text()) 
-	            .then(data => {
-	            	console.log("data: " + data);
-	                // Xử lý phản hồi sau khi thêm vào giỏ hàng
-	                if (data != "error") {
-	                	 var countBooksInCart = parseInt(data);  // Chuyển đổi dữ liệu trả về thành số
-	                	 fetch('/bookstore/index.htm');
-	                     document.querySelector('#tg-minicart .tg-themebadge').textContent = countBooksInCart;
-	                	 toastr.success('Sản phẩm đã được thêm vào giỏ hàng!', 'Thành công');
-	                    
-	                } else {
-	                	toastr.error('Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ!', 'Lỗi');
-	                }
-	            })
-	            .catch(error => {
-	                // Lỗi trong quá trình gửi request
-	                console.error('Có lỗi xảy ra:', error);
-	                toastr.error('Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ!', 'Lỗi');
-	            });
-	        });
-	    });
+
 	</script>
 </body>
 

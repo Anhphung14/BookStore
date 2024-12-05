@@ -60,7 +60,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable()
 			.authorizeRequests()
-				.antMatchers("/index.htm").hasAnyRole("ADMIN", "USER")
+				.antMatchers("/index.htm").permitAll()
+				.antMatchers("/cart/add").permitAll()
+				//.antMatchers("/cart/**").authenticated()
+//				.antMatchers("/cart/**").hasRole("USER")
 				.and()
 			.authorizeRequests()
 				.antMatchers("/home.htm").hasRole("ADMIN")

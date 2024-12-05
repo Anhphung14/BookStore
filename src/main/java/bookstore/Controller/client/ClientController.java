@@ -73,7 +73,7 @@ public class ClientController {
         }
 
 
-        if(userSession.getCart() != null){
+        if(userSession != null){
         	Long countBooksInCart = cartDAO.countItemsInCart(userSession.getCart().getId());
         	session.setAttribute("countBooksInCart", countBooksInCart);
         }else {
