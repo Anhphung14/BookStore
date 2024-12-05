@@ -235,7 +235,7 @@
 													<div class="tg-sectionhead">
 														<h2>Sản phẩm bạn có thể thích</h2>
 														<a style="text-decoration: none;" class="tg-btn"
-															href="javascript:void(0);">Xem tất cả</a>
+															href="allProduct.htm">Xem tất cả</a>
 													</div>
 												</div>
 												<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -256,7 +256,7 @@
 
 																	<div class="tg-postbookcontent">
 																		<ul class="tg-bookscategories">
-																			<li><a style="text-decoration: none;"
+																			<li style="padding-top: 10px"><a style="text-decoration: none;"
 																				href="javascript:void(0);">${book.subcategoriesEntity.name}</a></li>
 																		</ul>
 																		<c:if test="${discount > 0}">
@@ -404,24 +404,6 @@
 	        });
 	    });
 	});
-
-	
-	/*      function showMore() {
-        var fullDescription = "${fn:escapeXml(book.description)}";
-        var shortDescription = "${book.description.substring(0, 100)}...";
-        var descriptionElement = document.getElementById('book-description');
-        var linkElement = document.getElementById('more_less');
-
-        if (isFullDescription) {
-            descriptionElement.innerText = shortDescription;  // Thu gọn lại nội dung
-            linkElement.innerText = "More";  // Đổi lại chữ thành "More"
-        } else {
-            descriptionElement.innerText = fullDescription;  // Hiển thị đầy đủ nội dung
-            linkElement.innerText = "Less";  // Đổi lại chữ thành "Less"
-        }
-
-        isFullDescription = !isFullDescription;  // Đổi trạng thái
-    } */
 	</script>
 </body>
 </html>

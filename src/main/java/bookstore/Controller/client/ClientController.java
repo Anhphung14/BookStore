@@ -175,7 +175,7 @@ public class ClientController {
 		model.addAttribute("discount",discount);
 		 
 		//System.out.println(discount); 
-		List<BooksEntity> books_category = booksDAO.getRandBooksBySubcategory(book.getSubcategoriesEntity().getId());
+		List<BooksEntity> books_category = booksDAO.listBookOfCategoryRan(book.getSubcategoriesEntity().getCategoriesEntity().getId());
 		System.out.println(books_category); 
 		model.addAttribute("books_category", books_category); 
 		

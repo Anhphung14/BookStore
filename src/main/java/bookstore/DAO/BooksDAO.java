@@ -121,6 +121,24 @@ public class BooksDAO {
 			    return query.list();
 			}
 		 
+		 public List<BooksEntity> listBookOfCategoryRan(Long id) {
+			    Session session = sessionFactory.getCurrentSession();
+
+			    // HQL query with random sorting alternative
+			    String hql = "SELECT b " +
+			                 "FROM BooksEntity b " +
+			                 "JOIN b.subcategoriesEntity sc " +
+			                 "JOIN sc.categoriesEntity c " +
+			                 "WHERE c.id = :categoryId " +
+			                 "ORDER BY b.id ASC"; // Some column that gives a semi-random order
+
+			    Query query = session.createQuery(hql);
+			    query.setParameter("categoryId", id);
+
+			    return query.setMaxResults(7).list();
+			}
+
+		 
 		 public List<BooksEntity> listBookOfCategorySorted(Long id, int pageNumber, int pageSize, String sortBy) {
 			    Session session = sessionFactory.getCurrentSession();
 
