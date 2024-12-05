@@ -11,7 +11,7 @@
 		<c:when test="${task == 'edit'}">Edit Category</c:when>
 		<c:otherwise>New Category</c:otherwise>
 	</c:choose></title>
-<base href="${pageContext.servletContext.contextPath}/">
+<base href="${pageContext.servletContext.contextPath}/admin1337/">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
@@ -82,12 +82,12 @@
 					</h2>
 				</div>
 				<div class="col-auto d-none d-sm-block">
-					<img class="page-icon" src="resources/images/page.svg"
+					<img class="page-icon" src="${pageContext.servletContext.contextPath}/resources/images/page.svg"
 						width="120px" alt="Page Icon">
 				</div>
 			</div>
 			<form id="categoryForm"
-				action="${pageContext.servletContext.contextPath}/category/save.htm"
+				action="category/save.htm"
 				method="POST">
 				<input type="hidden" id="task" name="task" value="${task}">
 				<c:if test="${task != 'new'}">
@@ -135,7 +135,7 @@
 				</div>
 				<div class="mt-3">
 					<button class="btn btn-primary btn-save" type="submit">Save</button>
-					<a href="<c:url value='/categories.htm' />"
+					<a href="<c:url value='/admin1337/categories.htm' />"
 						class="btn btn-light btn-cancel">Cancel</a>
 				</div>
 			</form>
@@ -144,7 +144,7 @@
 				<hr>
 				<h6>Edit Subcategory</h6>
 				<form id="editSubcategoryForm"
-					action="${pageContext.servletContext.contextPath}/category/saveSubcategory.htm"
+					action="category/saveSubcategory.htm"
 					method="POST">
 					<input type="hidden" id="editSubcategoryId" name="subcategoryId">
 					<div class="form-floating mt-3">
@@ -217,6 +217,10 @@
         editButton.addEventListener('click', function() {
             var subcategoryId = this.getAttribute('data-id');
             var subcategoryName = this.getAttribute('data-name');
+            
+            console.log(subcategoryId)
+            console.log(subcategoryName)
+            
             document.getElementById('editSubcategoryId').value = subcategoryId;
             document.getElementById('editSubcategoryName').value = subcategoryName;
             document.getElementById('editSubcategoryFormContainer').style.display = 'block';

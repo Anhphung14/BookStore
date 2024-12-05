@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Permission management</title>
-<base href="${pageContext.servletContext.contextPath}/">
+<base href="${pageContext.servletContext.contextPath}/admin1337/">
 <script src="${pageContext.request.contextPath}/resources/js/app.js"
 	defer></script>
 <link
@@ -48,7 +48,7 @@
 						<p>Here you can view all permissions, see the roles assigned to each permission</p>
 					</div>
 					<div class="col-auto d-none d-sm-block">
-						<img class="page-icon" src="resources/images/page.svg"
+						<img class="page-icon" src="${pageContext.servletContext.contextPath}/resources/images/page.svg"
 							width="120px" alt="Page Icon">
 					</div>
 				</div>
@@ -73,7 +73,8 @@
 								</button>
 							</div>
 							<a class="btn btn-primary text-nowrap btn-add"
-								href="${pageContext.request.contextPath}/permission/new"> <i
+								href="permission/new"> <i
+								
 								class="fa fa-plus me-2"></i>Add
 							</a>
 						</div>
@@ -124,7 +125,7 @@
 										<td class="text-end align-middle">22:00 14/11/2024</td>
 										<td class="text-end">
 											<div class="d-flex gap-1">
-												<a class="btn btn-rounded" href="/user/edit/1"> <i
+												<a class="btn btn-rounded" href="user/edit/1"> <i
 													class="fa fa-pencil"></i>
 												</a> <a class="btn btn-rounded"> <i class="fa fa-eye-slash"></i>
 												</a> <a class="btn btn-rounded"> <i class="fa fa-arrow-up"></i>

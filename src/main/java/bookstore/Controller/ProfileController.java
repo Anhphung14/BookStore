@@ -21,6 +21,7 @@ import javax.transaction.Transactional;
 
 @Controller
 @Transactional
+@RequestMapping("/admin1337")
 public class ProfileController {
 
 	@Autowired
@@ -82,7 +83,7 @@ public class ProfileController {
 		}
 
 		// Điều hướng về trang profile sau khi lưu thành công
-		return "redirect:/profile.htm";
+		return "redirect:/admin1337/profile.htm";
 	}
 
 }

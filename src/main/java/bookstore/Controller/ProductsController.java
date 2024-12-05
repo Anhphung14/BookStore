@@ -62,6 +62,7 @@ import bookstore.Service.UploadService;
 
 @Controller
 @Transactional
+@RequestMapping("/admin1337")
 public class ProductsController {
 	@Autowired
     private ServletContext servletContext;
@@ -188,7 +189,7 @@ public class ProductsController {
 					redirectAttributes.addFlashAttribute("alertMessage", "Successfully updated BookID: " + bookEntity.getId());
 					redirectAttributes.addFlashAttribute("alertType", "success");
 	
-					return "redirect:/products.htm"; 
+					return "redirect:/admin1337/products.htm"; 
 				}
 			}
 		}
@@ -231,7 +232,7 @@ public class ProductsController {
 				redirectAttributes.addFlashAttribute("alertMessage", "Successfully added a new book!");
 				redirectAttributes.addFlashAttribute("alertType", "success");
 				
-				return "redirect:/products.htm";
+				return "redirect:/admin1337/products.htm";
 			}
 		}
 		
@@ -257,7 +258,7 @@ public class ProductsController {
             model.addAttribute("alertType", "error");
         }
         
-        return "redirect:/products.htm";
+        return "redirect:/admin1337/products.htm";
     }
 	
 	@RequestMapping(value = "/product/changeStatus", method = RequestMethod.POST)
@@ -272,7 +273,7 @@ public class ProductsController {
 	        redirectAttributes.addFlashAttribute("alertType", "error");
 		}
 		
-		return "redirect:/products.htm";
+		return "redirect:/admin1337/products.htm";
 	}
 	
 	

@@ -29,10 +29,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         UsersEntity user = userDAO.getUserByEmai(userDetails.getUsername());
         
-        System.out.println(user.getFullname());
-        System.out.println(user.getEmail());
-        System.out.println(user.getPhone());
-        
         request.getSession().setAttribute("user", user);
         
      // Lấy danh sách các vai trò của người dùng
@@ -41,10 +37,10 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         // Kiểm tra vai trò của người dùng và chuyển hướng tương ứng
         for (GrantedAuthority authority : authorities) {
             if (authority.getAuthority().equals("ROLE_ADMIN")) {
-                response.sendRedirect("/bookstore/home.htm");
+                response.sendRedirect("/bookstore/admin1337/home.htm");
                 return;
             } else if (authority.getAuthority().equals("ROLE_USER")) {
-                response.sendRedirect("/index.htm");
+                response.sendRedirect("/bookstore/index.htm");
                 return;
             }
         }

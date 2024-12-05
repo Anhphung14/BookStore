@@ -26,6 +26,7 @@ import bookstore.Entity.SuppliersEntity;
 
 @Controller
 @Transactional
+@RequestMapping("/admin1337")
 public class SuppliersController {
 
 	@Autowired
@@ -143,7 +144,7 @@ public class SuppliersController {
 	        redirectAttributes.addFlashAttribute("alertType", "danger");
 	    }
 
-	    return "redirect:/suppliers.htm";
+	    return "redirect:/admin1337/suppliers.htm";
 	}
 
 
@@ -154,7 +155,7 @@ public class SuppliersController {
 		if (supplier != null) {
 			session.delete(supplier);
 		}
-		return "redirect:/suppliers.htm";
+		return "redirect:/admin1337/suppliers.htm";
 	}
 
 }

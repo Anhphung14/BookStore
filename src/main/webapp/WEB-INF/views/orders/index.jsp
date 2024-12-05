@@ -9,7 +9,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Orders Management</title>
-<base href="${pageContext.servletContext.contextPath}/">
+<base href="${pageContext.servletContext.contextPath}/admin1337/">
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -51,6 +51,7 @@
 </style>
 </head>
 <body>
+<jsp:include page="/WEB-INF/views/layouts/header.jsp" />
 		<div class="main-content">
 		<jsp:include page="/WEB-INF/views/layouts/navigation.jsp" />
 		<div class="container-fluid d-flex flex-column"
@@ -63,12 +64,12 @@
 						<p>Manage orders....</p>
 					</div>
 					<div class="col-auto d-none d-sm-block">
-						<img class="page-icon" src="resources/images/page.svg"
+						<img class="page-icon" src="${pageContext.request.contextPath}/resources/images/page.svg"
 							width="120px" alt="Page Icon">
 					</div>
 				</div>
 			</div>
-			<form id="frm-admin" name="adminForm" action="${pageContext.request.contextPath}/orders.htm" method="GET">
+			<form id="frm-admin" name="adminForm" action="orders.htm" method="GET">
 				<div class="card mx-3">
 					<div class="card-body">
 						<div class="d-flex gap-3">
@@ -279,7 +280,7 @@
 				</div>
 			</form>
 			
-			<form id="orderUpdateForm" action="${pageContext.servletContext.contextPath}/orders/updateOrderStatus.htm" method="POST" style="display: none;">
+			<form id="orderUpdateForm" action="orders/updateOrderStatus.htm" method="POST" style="display: none;">
 			    <input type="hidden" name="orderId" id="orderId" />
 			    <input type="hidden" name="orderStatus" id="orderStatus" />
 			    <button type="submit" id="submitButton" style="display:none;">Submit</button> <!-- Nút ẩn -->

@@ -30,6 +30,7 @@ import bookstore.DAO.OrderDAO;
 import bookstore.DAO.ShippingAddressDAO;
 @Transactional
 @Controller
+@RequestMapping("/admin1337")
 public class OrdersController {
 	@Autowired
 	SessionFactory sessionFactory;
@@ -93,7 +94,7 @@ public class OrdersController {
 			redirectAttributes.addFlashAttribute("alertType", "error");
 		}
 		
-		return "redirect:/orders.htm";
+		return "redirect:/admin1337/orders.htm";
 	}
 	
 	@RequestMapping("/order/edit/{orderId}")
@@ -153,7 +154,7 @@ public class OrdersController {
 		}
 		
 		
-		return "redirect:/orders.htm";
+		return "redirect:/admin1337/orders.htm";
 	}
 	
 	@RequestMapping(value = "/order/updateOrderItems", method = RequestMethod.POST)
@@ -210,7 +211,7 @@ public class OrdersController {
 
 	    redirectAttributes.addFlashAttribute("alertMessage", "Order items updated successfully.");
         redirectAttributes.addFlashAttribute("alertType", "success");
-	    return "redirect:/orders.htm";
+	    return "redirect:/admin1337/orders.htm";
 	}
 
 

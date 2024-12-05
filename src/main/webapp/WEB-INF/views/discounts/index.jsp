@@ -9,7 +9,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Discounts Management</title>
-<base href="${pageContext.servletContext.contextPath}/">
+<base href="${pageContext.servletContext.contextPath}/admin1337/">
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -51,6 +51,9 @@
 </style>
 </head>
 <body>
+
+<jsp:include page="/WEB-INF/views/layouts/header.jsp" />
+
 		<div class="main-content">
 		<jsp:include page="/WEB-INF/views/layouts/navigation.jsp" />
 		<div class="container-fluid d-flex flex-column"
@@ -63,12 +66,12 @@
 						<p>Manage discount code, type, value,....</p>
 					</div>
 					<div class="col-auto d-none d-sm-block">
-						<img class="page-icon" src="resources/images/page.svg"
+						<img class="page-icon" src="${pageContext.servletContext.contextPath}/resources/images/page.svg"
 							width="120px" alt="Page Icon">
 					</div>
 				</div>
 			</div>
-			<form id="frm-admin" name="adminForm" action="${pageContext.request.contextPath}/discounts.htm" method="GET">
+			<form id="frm-admin" name="adminForm" action="discounts.htm" method="GET">
 
 				<div class="card mx-3">
 					<div class="card-body">
@@ -111,7 +114,7 @@
 				                </div>
 							    
 							    <div class="input-group mb-3">
-							        <select class="form-control" name="discountStatus" id=""discountStatus">
+							        <select class="form-control" name="discountStatus" id="discountStatus">
 							            <option value="">Discount Status</option>
 							            <option value="active" ${discountStatus == 'active' ? 'selected' : ''}>Active</option>
 							            <option value="inactive" ${discountStatus == 'inactive' ? 'selected' : ''}>Inactive</option>
@@ -136,7 +139,7 @@
 								
 								<div class="d-flex justify-content-end mb-3">
 							        <a class="btn btn-primary text-nowrap btn-add"
-										href="${pageContext.request.contextPath}/discount/create.htm"> <i
+										href="discount/create.htm"> <i
 										class="fa fa-plus me-2"></i>Add
 									</a>
 							    </div>
@@ -263,9 +266,9 @@
 <%-- 													<a class="btn btn-rounded"><i class="fa ${user.isActive ? 'fa-eye-slash' : 'fa-eye'}"></i></a> --%>
 													<!-- <a class="btn btn-rounded"><i class="fa fa-eye-slash"></i></a> -->
 													<!-- <a class="btn btn-rounded"><i class="fa fa-search"></i></a> -->
-													<a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#exampleModal">
-													    <i class="fa fa-plus-circle" aria-hidden="true"></i>
-													</a>
+<!-- 													<a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#exampleModal"> -->
+<!-- 													    <i class="fa fa-plus-circle" aria-hidden="true"></i> -->
+<!-- 													</a> -->
 													<a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="prepareDelete(${discount.id}, '${discount.code}')">
 														<i class="fa fa-trash-alt"></i>
 													</a>
@@ -291,7 +294,7 @@
 			            </div>
 			            <div class="modal-body">
 			                <!-- Form used to send POST request -->
-			                <form id="deleteForm" method="POST" action="/bookstore/discount/delete.htm">
+			                <form id="deleteForm" method="POST" action="discount/delete.htm">
 			                    <p>Are you sure you want to delete this Discount?</p>
 			                    <p><strong>Discount Id:</strong> <span id="discountIdToDelete"></span></p>
 			                    <p><strong>Discount code:</strong> <span id="discountTitleToDelete"></span></p>

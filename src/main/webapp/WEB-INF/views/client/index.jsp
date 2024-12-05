@@ -395,8 +395,6 @@
                 // Xử lý phản hồi sau khi thêm vào giỏ hàng
 	              	 if (data == "Vui long dang nhap") {
 	               		 toastr.error('Vui lòng đăng nhập để thêm sản phẩm!', 'Lỗi');
-	               		 
-	               		 document.location("http://google.com");
 	              	 }
 	              	 else if (data != "error" && data != "Vui long dang nhap") {
                 	 var countBooksInCart = parseInt(data);  // Chuyển đổi dữ liệu trả về thành số

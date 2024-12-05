@@ -12,7 +12,7 @@
 <meta charset="UTF-8">
 	<title>New Discount</title>
 
-	<base href="${pageContext.servletContext.contextPath}/">
+	<base href="${pageContext.servletContext.contextPath}/admin1337/">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -124,11 +124,11 @@
 					<p>Manage discount code, type, value,....</p>
 				</div>
 				<div class="col-auto d-none d-sm-block">
-					<img class="page-icon" src="resources/images/page.svg"
+					<img class="page-icon" src="${pageContext.servletContext.contextPath}/resources/images/page.svg"
 						width="120px" alt="Page Icon">
 				</div>
 			</div>
-			<form id="discountForm" action="${pageContext.servletContext.contextPath}/discount/create.htm" method="POST">
+			<form id="discountForm" action="discount/create.htm" method="POST">
 				<div class="card mt-3">
 					<div class="card-body">
 						<h6 class="small text-muted">GENERAL INFORMATION</h6>
@@ -242,7 +242,7 @@
 				</div>
 					<div class="mt-3">
 						<button class="btn btn-primary btn-save" type="submit">Save</button>
-						<a href="<c:url value='/discounts.htm' />"
+						<a href="<c:url value='/admin1337/discounts.htm' />"
 							class="btn btn-light btn-cancel">Cancel</a>
 					</div>
 			</form>
@@ -323,7 +323,7 @@
 	        confirmButtonText: "OK"
 	    }).then((result) => {
 	        if (result.isConfirmed && alertType === "success") {
-	            window.location.href = '${pageContext.servletContext.contextPath}/products.htm';
+	            window.location.href = 'products.htm';
 	        }
 	    });
 	}
