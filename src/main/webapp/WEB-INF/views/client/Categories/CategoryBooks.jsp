@@ -511,6 +511,8 @@
 	    
 	    document.querySelectorAll('.btn-add-to-cart').forEach(function(button) {
 	        button.addEventListener('click', function(event) {
+	        	console.log(event.currentTarget.getAttribute('data-book-id'));
+	        	console.log(event.currentTarget.getAttribute('data-book-id'));
 	        	 var bookId = event.currentTarget.getAttribute('data-book-id');
 	             var quantity = event.currentTarget.getAttribute('data-quantity');
 	             console.log("bookId:", bookId);
@@ -523,7 +525,10 @@
 	            .then(data => {
 	            	console.log("data: " + data);
 	                // Xử lý phản hồi sau khi thêm vào giỏ hàng
-	                if (data != "error") {
+		              	 if (data == "Vui long dang nhap") {
+		               		 toastr.error('Vui lòng đăng nhập để thêm sản phẩm!', 'Lỗi');
+		              	 }
+		              	 else if (data != "error" && data != "Vui long dang nhap") {
 	                	 var countBooksInCart = parseInt(data);  // Chuyển đổi dữ liệu trả về thành số
 	                	 fetch('/bookstore/index.htm');
 	                     document.querySelector('#tg-minicart .tg-themebadge').textContent = countBooksInCart;
