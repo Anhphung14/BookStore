@@ -1,7 +1,9 @@
 package bookstore.DAO;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -616,5 +618,145 @@ public class BooksDAO {
 			
 			return isUpdated;
 		}
+		
+		
+		public List<BooksEntity> getListBooksHaveSearchParam(int page, int size, String book, Double minPrice, Double maxPrice,
+				Integer minQuantity, Integer maxQuantity, Integer bookStatus, 
+                String fromDate, String toDate) {
 
+			Session session = sessionFactory.getCurrentSession();
+			String hql = "FROM BooksEntity c WHERE 1=1";
+			
+			// Thêm điều kiện tìm kiếm
+			if (book != null && !book.isEmpty()) {
+			hql += " AND (c.title LIKE :book OR c.subcategoriesEntity.name LIKE :book)";
+			}
+			if (minPrice != null) {
+			hql += " AND c.price >= :minPrice";
+			}
+			if (maxPrice != null) {
+			hql += " AND c.price <= :maxPrice";
+			}
+			if (minQuantity != null) {
+			hql += " AND c.quantity >= :minQuantity";
+			}
+			if (maxQuantity != null) {
+			hql += " AND c.quantity <= :maxQuantity";
+			}
+			if (bookStatus != null) {
+			hql += " AND c.status = :bookStatus";
+			}
+			if (fromDate != null && !fromDate.isEmpty() && toDate != null && !toDate.isEmpty()) {
+	            hql += " AND CONVERT(date, c.updatedAt) BETWEEN :fromDate AND :toDate";
+	        }
+			
+			// Thực hiện truy vấn với phân trang
+			Query query = session.createQuery(hql);
+			
+			// Set các tham số vào query
+			if (book != null && !book.isEmpty()) {
+			query.setParameter("book", "%" + book + "%");
+			}
+			if (minPrice != null) {
+				query.setParameter("minPrice", Double.valueOf(minPrice));
+			}
+			if (maxPrice != null) {
+				query.setParameter("maxPrice", Double.valueOf(maxPrice));
+			}
+			if (minQuantity != null) {
+				query.setParameter("minQuantity", Integer.valueOf(minQuantity));
+			}
+			if (maxQuantity != null) {
+				query.setParameter("maxQuantity", Integer.valueOf(maxQuantity));
+			}
+			if (bookStatus != null) {
+				query.setParameter("bookStatus", bookStatus);
+			}
+			if (fromDate != null && !fromDate.isEmpty() && toDate != null && !toDate.isEmpty()) {
+	            try {
+	                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  // Định dạng ngày
+	                Date startDate = sdf.parse(fromDate);
+	                Date endDate = sdf.parse(toDate);
+	                query.setParameter("fromDate", startDate);
+	                query.setParameter("toDate", endDate);
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	        }
+			
+			// Thiết lập phân trang
+			query.setFirstResult((page - 1) * size);
+			query.setMaxResults(size);
+			
+			return query.list();
+		}
+		
+		
+		public long countProducts(String book, Double minPrice, Double maxPrice,
+				Integer minQuantity, Integer maxQuantity, Integer bookStatus, 
+                String fromDate, String toDate) {
+
+				Session session = sessionFactory.getCurrentSession();
+				String countQuery = "SELECT count(c) FROM BooksEntity c WHERE 1=1";
+				
+				// Thêm các điều kiện giống như truy vấn lấy danh sách sản phẩm
+				if (book != null && !book.isEmpty()) {
+					countQuery += " AND (c.title LIKE :book OR c.subcategoriesEntity.name LIKE :book)";
+				}
+				if (minPrice != null) {
+					countQuery += " AND c.price >= :minPrice";
+				}
+				if (maxPrice != null) {
+					countQuery += " AND c.price <= :maxPrice";
+				}
+				if (minQuantity != null) {
+					countQuery += " AND c.quantity >= :minQuantity";
+				}
+				if (maxQuantity != null) {
+					countQuery += " AND c.quantity <= :maxQuantity";
+				}
+				if (bookStatus != null) {
+						countQuery += " AND c.status = :bookStatus";
+				}
+				if (fromDate != null && !fromDate.isEmpty() && toDate != null && !toDate.isEmpty()) {
+					countQuery += " AND CONVERT(date, c.updatedAt) BETWEEN :fromDate AND :toDate";
+		        }
+				
+				// Thực hiện truy vấn đếm
+				Query query = session.createQuery(countQuery);
+				
+				// Set các tham số vào query
+				if (book != null && !book.isEmpty()) {
+					query.setParameter("book", "%" + book + "%");
+				}
+				if (minPrice != null) {
+					query.setParameter("minPrice", Double.valueOf(minPrice));
+				}
+				if (maxPrice != null ) {
+					query.setParameter("maxPrice", Double.valueOf(maxPrice));
+				}
+				if (minQuantity != null) {
+					query.setParameter("minQuantity", Integer.valueOf(minQuantity));
+				}
+				if (maxQuantity != null) {
+					query.setParameter("maxQuantity", Integer.valueOf(maxQuantity));
+				}
+				if (bookStatus != null) {
+					query.setParameter("bookStatus", bookStatus);
+				}
+				if (fromDate != null && !fromDate.isEmpty() && toDate != null && !toDate.isEmpty()) {
+		            try {
+		                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  // Định dạng ngày
+		                Date startDate = sdf.parse(fromDate);
+		                Date endDate = sdf.parse(toDate);
+		                query.setParameter("fromDate", startDate);
+		                query.setParameter("toDate", endDate);
+		            } catch (Exception e) {
+		                e.printStackTrace();
+		            }
+		        }
+				
+				return (long) query.uniqueResult();
+		}
 }
+

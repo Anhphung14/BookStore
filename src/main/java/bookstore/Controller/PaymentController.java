@@ -146,14 +146,14 @@ public class PaymentController {
             if (paymentMethod == null || paymentMethod.isEmpty()) {
             	redirectAttributes.addFlashAttribute("alertMessage", "Vui lòng chọn phương thức thanh toán.");
         		redirectAttributes.addFlashAttribute("alertType", "error");
-                return "redirect:/payment/checkout.htm";
+        		return "redirect:/cart/view.htm";
             }
 
             // Kiểm tra xem có sản phẩm nào được chọn hay không
             if (selectedItemIds == null || selectedItemIds.isEmpty()) {
                 redirectAttributes.addFlashAttribute("alertMessage", "Vui lòng chọn sản phẩm để thanh toán.");
         		redirectAttributes.addFlashAttribute("alertType", "error");
-                return "redirect:/payment/checkout.htm";
+        		return "redirect:/cart/view.htm";
             }
 
             // Lấy thông tin người dùng
@@ -175,16 +175,11 @@ public class PaymentController {
             }
             
             DiscountsEntity discount = discountsDAO.getDiscountByCode(discountCode);
-            System.out.println("discount: " + discountCode);
-            System.out.println("discount: " + discount);
-            System.out.println("Tới dòng 180");
             if(discount == null) {
-            	System.out.println("discount null nè");
             	redirectAttributes.addFlashAttribute("alertMessage", "Mã giảm giá không hợp lệ!");
         		redirectAttributes.addFlashAttribute("alertType", "error");
-                return "redirect:/payment/checkout.htm";
+                return "redirect:/cart/view.htm";
             }else {
-            	System.out.println("discount có nè");
             	if(discount.getApplyTo().equals("user")) {
             		System.out.println("Vô điều kiện nè");
                 	if(discount.getDiscountType().equals("percentage")) {
@@ -194,7 +189,6 @@ public class PaymentController {
                 	}
                 }
             }
-            System.out.println("Tới dòng 194");
             if (selectedItems.isEmpty()) {
                 throw new Exception("Không có sản phẩm hợp lệ để thanh toán.");
             }
@@ -221,7 +215,6 @@ public class PaymentController {
             if (orderId == null) {
                 throw new Exception("Không thể tạo đơn hàng.");
             }
-            System.out.println("Tới dòng 221");
             Order_DiscountsEntity orderDiscountEntity = new Order_DiscountsEntity();
             orderDiscountEntity.setDiscount_id(discount);
             orderDiscountEntity.setOrder_id(newOrder);
@@ -229,7 +222,7 @@ public class PaymentController {
             if(!isCreateOrderDiscount) {
             	redirectAttributes.addFlashAttribute("alertMessage", "Có lỗi với mã giảm giá");
         		redirectAttributes.addFlashAttribute("alertType", "error");
-                return "redirect:/payment/checkout.htm";
+        		return "redirect:/cart/view.htm";
             }
             System.out.println("Tới dòng 231");
             

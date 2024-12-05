@@ -69,13 +69,14 @@
 				</div>
 			</div>
 			<form id="frm-admin" name="adminForm" action="${pageContext.request.contextPath}/orders.htm" method="GET">
+				<!-- Tìm kiếm theo tên khách hàng -->
 				<div class="card mx-3">
 					<div class="card-body">
 						<div class="d-flex gap-3">
 							 <div class="input-group">
-                    <input class="form-control" name="customerName" id="customer_name" 
-                           value="${customerName}" placeholder="Customer Name">
-                </div>
+			                    <input class="form-control" name="customerName" id="customer_name" 
+			                           value="${customerName}" placeholder="Customer Name">
+			                </div>
 
                 <!-- Tìm kiếm theo ngày tạo -->
                 <div class="input-group">

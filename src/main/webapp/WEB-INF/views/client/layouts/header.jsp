@@ -102,7 +102,7 @@
 								<a
 									href="${pageContext.servletContext.contextPath}/cart/view.htm"
 									id="tg-minicart" class="tg-btnthemedropdown"
-									data-toggle="dropdown" aria-haspopup="true"
+									aria-haspopup="true"
 									aria-expanded="false"> <span class="tg-themebadge">${sessionScope.countBooksInCart}</span>
 									<i class="fa-solid fa-cart-shopping"></i> <span>$123.00</span>
 								</a>
