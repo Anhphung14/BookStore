@@ -46,6 +46,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 
 import Mapper.BooksMapper;
+import bookstore.DAO.BooksDAO;
 import bookstore.DAO.SubcategoriesDAO;
 import bookstore.DTO.BooksDTO;
 import bookstore.Entity.BooksEntity;
@@ -97,45 +98,42 @@ public class ProductsController {
 	@Autowired
 	SubcategoriesDAO subcategoriesDAO;
 	
+	@Autowired
+	BooksDAO booksDAO;
+	
 	
 	@RequestMapping("/products")
 	public String products(ModelMap model, 
 	        @RequestParam(value = "page", defaultValue = "1") int page,
 	        @RequestParam(value = "size", defaultValue = "10") int size,
-	        @RequestParam(value = "search", required = false) String search) {
+	        @RequestParam(value = "book", required = false) String book,
+	        @RequestParam(value = "minPrice", required = false) Double minPrice,
+	        @RequestParam(value = "maxPrice", required = false) Double maxPrice,
+	        @RequestParam(value = "minQuantity", required = false) Integer minQuantity,
+	        @RequestParam(value = "maxQuantity", required = false) Integer maxQuantity,
+	        @RequestParam(value = "bookStatus", required = false) Integer bookStatus,
+	        @RequestParam(value = "fromDate", required = false) String fromDate,
+	        @RequestParam(value = "toDate", required = false) String toDate) {
+	   
+		//if(book != null || minPrice != null || maxPrice != null || minQuantity != null || maxQuantity != null || 
+		//		bookStatus != null || fromDate != null || toDate != null) {
+			long totalProducts = booksDAO.countProducts(book, minPrice, maxPrice, minQuantity, maxQuantity, bookStatus, fromDate, toDate);
+			long totalPages = (long) Math.ceil((double) totalProducts / size);
+			List<BooksEntity> listBooks = booksDAO.getListBooksHaveSearchParam(page, size, book, minPrice, maxPrice,  minQuantity, maxQuantity, bookStatus, 
+                     fromDate, toDate);
+		//}
 	    
-	    Session session = factory.getCurrentSession();
-	    
-	    String hql = "FROM BooksEntity c";
-	    String countQuery = "SELECT count(c) FROM BooksEntity c";
-	    
-	    if (search != null && !search.isEmpty()) {
-	        hql += " WHERE c.title LIKE :search";
-	        countQuery += " WHERE c.title LIKE :search";
-	    }
-	    
-	    Query countQ = session.createQuery(countQuery);
-	    if (search != null && !search.isEmpty()) {
-	        countQ.setParameter("search", "%" + search + "%");
-	    }
-	    Long count = (Long) countQ.uniqueResult();
-	    
-	    int totalPages = (int) Math.ceil((double) count / size);
-	    
-	    Query query = session.createQuery(hql);
-	    if (search != null && !search.isEmpty()) {
-	        query.setParameter("search", "%" + search + "%");
-	    }
-	    query.setFirstResult((page - 1) * size); 
-	    query.setMaxResults(size); 
-	    
-	    List<BooksEntity> books = query.list();
-	    
-	    model.addAttribute("listBooks", books);
+	    model.addAttribute("listBooks", listBooks);
 	    model.addAttribute("currentPage", page);
 	    model.addAttribute("totalPages", totalPages);
-	    model.addAttribute("search", search);
-	    
+	    model.addAttribute("book", book);
+	    model.addAttribute("minPrice", minPrice);
+	    model.addAttribute("maxPrice", maxPrice);
+	    model.addAttribute("minQuantity", minQuantity);
+	    model.addAttribute("maxQuantity", maxQuantity);
+	    model.addAttribute("bookStatus", bookStatus);
+	    model.addAttribute("fromDate", fromDate);
+	    model.addAttribute("toDate", toDate);
 	    return "products/index";
 	}
 
