@@ -69,136 +69,115 @@ public class AuthClientController {
 		}
 	}
 
-	@RequestMapping(value = "/client/signup", method = RequestMethod.GET)
-	public String signup() {
-		return "client/auth/signup";
-	}
-
-	@RequestMapping(value = "/client/user/save", method = RequestMethod.POST)
-	public String saveUser(@ModelAttribute("user") UsersEntity user, Model model, RedirectAttributes redirectAttributes) {
-		Session session = factory.getCurrentSession();
-
-	    try {
-	        if (getUserByEmail(user.getEmail()) != null) {
-	            model.addAttribute("alertMessage", "Email đã tồn tại vui lòng nhập email khác!");
-	            model.addAttribute("alertType", "error");
-	            return "client/auth/signup";
-	        }
-
-	        user.setAvatar("https://res.cloudinary.com/dsqhfz3xt/image/upload/v1733041850/images/avatars/vo-anh-phungg/drmxjyaok8d8b8ofgiwl.png");
-
-	        LocalDateTime now = LocalDateTime.now();
-	        Timestamp currentDate = Timestamp.valueOf(now);
-	        user.setCreated_at(currentDate);
-	        user.setUpdated_at(currentDate);
-
-	        String hashedPassword = PasswordUtil.hashPassword(user.getPassword());
-	        user.setPassword(hashedPassword);
-	        user.setGender(1);
-
-	        RolesEntity role = (RolesEntity) session.get(RolesEntity.class, 3L);
-	        if (role != null) {
-	            Set<RolesEntity> roles = new HashSet<>();
-	            roles.add(role);
-	            user.setRoles(roles);
-	        }
-	        
-	        String otpCode = otpService.storeOtp(user.getEmail());
-			
-			String emailContent = "<html><body>"
-	                + "<h5>Hello " + user.getEmail() + ",</h5>"
-	                + "<p>Click the following link to confirm and activate your account:</p>"
-	                + "<h5 style=\"color: #4CAF50;\">" + "http://127.0.0.1:8080/bookstore/client/verify-email.htm?code="+ otpCode + "</h5>"
-	                + "<p>Bạn có 1 phút để xác thực tài khoản 😎</p>"
-	                + "<p>Regards,<br>BookStore</p>"
-	                + "<footer style=\"font-size: 0.8em; color: #777;\">This is an automated email. Please do not reply.</footer>"
-	                + "</body></html>";
-			
-			mailService.sendMail(emailContent, user.getEmail(), "Complete Your Registration with This Link");
-			
-			user.setEnabled(0);
-
-	        session.saveOrUpdate(user);
-
-	        CartsEntity cart = new CartsEntity();
-	        cart.setUser(user);
-	        cart.setStatus(1); 
-	        cart.setCreatedAt(new Date());
-	        cart.setUpdatedAt(new Date());
-
-	        session.save(cart);
-
-	        model.addAttribute("alertMessage", "Đăng ký thành công, bạn có thể đăng nhập ngay bây giờ!");
-	        model.addAttribute("alertType", "success");
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        model.addAttribute("alertType", "error");
-	        return "redirect:client/signup.htm";
-	    }
-	    return "client/auth/signup";
-	}
-	
-	@RequestMapping("/client/verify-email")
-	public String verify_email(ModelMap model, @RequestParam(value = "code", required = false) String code) {
-		OTPDTO otp = otpService.getOTPByCode(code);
-		
-		String alertMessage = "";
-		String alertType = "";
-		
-	    if (otp == null) {
-	        alertMessage = "The link is incorrect or does not exist!";
-	        alertType = "error";
-	    } else {
-
-		    if (otp.isExpired()) {
-		        alertMessage = "The link has expired!";
-		        alertType = "error";
-		        model.addAttribute("email", otp.getEmail());
-		    }
-	
-		    else if (otp.isUsed()) {
-		    	alertMessage = "The link has already been activated!";
-		        alertType = "error";
-		    }
-	
-		    else if (otp.getCode().equals(code)) {
-		        otp.setUsed(true);
-		        otpService.removeOTPCode(code);
-		        
-		        alertMessage = "Congratulations, you have successfully registered!";
-		        alertType = "success";
-		    } else {
-		        alertMessage = "The link is incorrect or does not exist!";
-		        alertType = "error";
-		    }
-	    
-	    }
-		
-	    model.addAttribute("alertMessage", alertMessage);
-	    model.addAttribute("alertType", alertType);
-	    
-		return "client/auth/confirmOTP";
-		
-	}
-	
-	@RequestMapping(value = "/client/resend-link", method = RequestMethod.POST)
-	public String resend(@RequestParam("email") String email) {
-		
-		String otpCode = otpService.storeOtp(email);
-		
-		String emailContent = "<html><body>"
-                + "<h5>Hello " + email + ",</h5>"
-                + "<p>Click the following link to confirm and activate your account:</p>"
-                + "<h5 style=\"color: #4CAF50;\">" + "http://127.0.0.1:8080/bookstore/client/verify-email.htm?code="+ otpCode + "</h5>"
-                + "<p>Bạn có 1 phút để xác thực tài khoản 😎</p>"
-                + "<p>Regards,<br>BookStore</p>"
-                + "<footer style=\"font-size: 0.8em; color: #777;\">This is an automated email. Please do not reply.</footer>"
-                + "</body></html>";
-		
-		mailService.sendMail(emailContent, email,  "Complete Your Registration with This Re-Link");
-		
-		return "client/auth/signup";
-	}
+	/*
+	 * @RequestMapping(value = "/client/signup", method = RequestMethod.GET) public
+	 * String signup() { return "client/auth/signup"; }
+	 * 
+	 * @RequestMapping(value = "/client/user/save", method = RequestMethod.POST)
+	 * public String saveUser(@ModelAttribute("user") UsersEntity user, Model model,
+	 * RedirectAttributes redirectAttributes) { Session session =
+	 * factory.getCurrentSession();
+	 * 
+	 * try { if (getUserByEmail(user.getEmail()) != null) {
+	 * model.addAttribute("alertMessage",
+	 * "Email đã tồn tại vui lòng nhập email khác!");
+	 * model.addAttribute("alertType", "error"); return "client/auth/signup"; }
+	 * 
+	 * user.setAvatar(
+	 * "https://res.cloudinary.com/dsqhfz3xt/image/upload/v1733041850/images/avatars/vo-anh-phungg/drmxjyaok8d8b8ofgiwl.png"
+	 * );
+	 * 
+	 * LocalDateTime now = LocalDateTime.now(); Timestamp currentDate =
+	 * Timestamp.valueOf(now); user.setCreated_at(currentDate);
+	 * user.setUpdated_at(currentDate);
+	 * 
+	 * String hashedPassword = PasswordUtil.hashPassword(user.getPassword());
+	 * user.setPassword(hashedPassword); user.setGender(1);
+	 * 
+	 * RolesEntity role = (RolesEntity) session.get(RolesEntity.class, 2L); if (role
+	 * != null) { Set<RolesEntity> roles = new HashSet<>(); roles.add(role);
+	 * user.setRoles(roles); }
+	 * 
+	 * String otpCode = otpService.storeOtp(user.getEmail());
+	 * 
+	 * String emailContent = "<html><body>" + "<h5>Hello " + user.getEmail() +
+	 * ",</h5>" +
+	 * "<p>Click the following link to confirm and activate your account:</p>" +
+	 * "<h5 style=\"color: #4CAF50;\">" +
+	 * "http://127.0.0.1:8080/bookstore/client/verify-email.htm?code="+ otpCode +
+	 * "</h5>" + "<p>Bạn có 1 phút để xác thực tài khoản 😎</p>" +
+	 * "<p>Regards,<br>BookStore</p>" +
+	 * "<footer style=\"font-size: 0.8em; color: #777;\">This is an automated email. Please do not reply.</footer>"
+	 * + "</body></html>";
+	 * 
+	 * mailService.sendMail(emailContent, user.getEmail(),
+	 * "Complete Your Registration with This Link");
+	 * 
+	 * user.setEnabled(0);
+	 * 
+	 * session.saveOrUpdate(user);
+	 * 
+	 * CartsEntity cart = new CartsEntity(); cart.setUser(user); cart.setStatus(1);
+	 * cart.setCreatedAt(new Date()); cart.setUpdatedAt(new Date());
+	 * 
+	 * session.save(cart);
+	 * 
+	 * model.addAttribute("alertMessage",
+	 * "Đăng ký thành công, bạn có thể đăng nhập ngay bây giờ!");
+	 * model.addAttribute("alertType", "success"); } catch (Exception e) {
+	 * e.printStackTrace(); model.addAttribute("alertType", "error"); return
+	 * "redirect:client/signup.htm"; } return "client/auth/signup"; }
+	 * 
+	 * @RequestMapping("/client/verify-email") public String verify_email(ModelMap
+	 * model, @RequestParam(value = "code", required = false) String code) { OTPDTO
+	 * otp = otpService.getOTPByCode(code);
+	 * 
+	 * String alertMessage = ""; String alertType = "";
+	 * 
+	 * if (otp == null) { alertMessage = "The link is incorrect or does not exist!";
+	 * alertType = "error"; } else {
+	 * 
+	 * if (otp.isExpired()) { alertMessage = "The link has expired!"; alertType =
+	 * "error"; model.addAttribute("email", otp.getEmail()); }
+	 * 
+	 * else if (otp.isUsed()) { alertMessage =
+	 * "The link has already been activated!"; alertType = "error"; }
+	 * 
+	 * else if (otp.getCode().equals(code)) { otp.setUsed(true);
+	 * otpService.removeOTPCode(code);
+	 * 
+	 * alertMessage = "Congratulations, you have successfully registered!";
+	 * alertType = "success"; } else { alertMessage =
+	 * "The link is incorrect or does not exist!"; alertType = "error"; }
+	 * 
+	 * }
+	 * 
+	 * model.addAttribute("alertMessage", alertMessage);
+	 * model.addAttribute("alertType", alertType);
+	 * 
+	 * return "client/auth/confirmOTP";
+	 * 
+	 * }
+	 * 
+	 * @RequestMapping(value = "/client/resend-link", method = RequestMethod.POST)
+	 * public String resend(@RequestParam("email") String email) {
+	 * 
+	 * String otpCode = otpService.storeOtp(email);
+	 * 
+	 * String emailContent = "<html><body>" + "<h5>Hello " + email + ",</h5>" +
+	 * "<p>Click the following link to confirm and activate your account:</p>" +
+	 * "<h5 style=\"color: #4CAF50;\">" +
+	 * "http://127.0.0.1:8080/bookstore/client/verify-email.htm?code="+ otpCode +
+	 * "</h5>" + "<p>Bạn có 1 phút để xác thực tài khoản 😎</p>" +
+	 * "<p>Regards,<br>BookStore</p>" +
+	 * "<footer style=\"font-size: 0.8em; color: #777;\">This is an automated email. Please do not reply.</footer>"
+	 * + "</body></html>";
+	 * 
+	 * mailService.sendMail(emailContent, email,
+	 * "Complete Your Registration with This Re-Link");
+	 * 
+	 * return "client/auth/signup"; }
+	 */
 
 
 	public UsersEntity getUserByEmail(String email) {

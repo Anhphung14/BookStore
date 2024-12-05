@@ -151,7 +151,14 @@ public class ClientController {
 		
 //		InventoryEntity inventory = inventoryDAO.getInventoryByBookId(id);
 //		model.addAttribute("stock_quantity", inventory.getStock_quantity());
+		List<Object[]> countBookEachCategory = booksDAO.countBookEachCategory();
+		model.addAttribute("countBookEachCategory", countBookEachCategory);
 		
+		List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
+        List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
+
+        model.addAttribute("Categories", listCategories);
+        model.addAttribute("SubCategories", listSubCategories);
 		return "client/productdetail";
 	}
     
