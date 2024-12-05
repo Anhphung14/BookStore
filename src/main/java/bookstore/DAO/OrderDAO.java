@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import bookstore.Entity.DiscountsEntity;
+import bookstore.Entity.InventoryEntity;
 import bookstore.Entity.Order_DiscountsEntity;
 import bookstore.Entity.OrdersDetailEntity;
 import bookstore.Entity.OrdersEntity;
@@ -26,6 +27,8 @@ import bookstore.Entity.OrdersEntity;
 public class OrderDAO {
     @Autowired
     private SessionFactory sessionFactory;
+    @Autowired
+    private InventoryDAO inventoryDAO;
     
     
     public List<OrdersEntity> listOrders(){
@@ -101,6 +104,16 @@ public class OrderDAO {
             if (order != null) {
                 if (orderStatus.equals("Hoàn thành") && order.getPaymentMethod().equals("COD")) {
                     order.setPaymentStatus("Đã thanh toán");
+                }
+                if(orderStatus.equals("Huỷ đơn hàng") && order.getPaymentStatus().equals("Đã thanh toán")) {
+                	order.setPaymentStatus("Đã hoàn tiền");
+        	        for(OrdersDetailEntity orderDetail : order.getOrderDetails()) {
+        	        	System.out.println("orderDetail.getBook().getId(): " + orderDetail.getBook().getId());
+        	        	InventoryEntity inventoryOfCurrentBook = inventoryDAO.getInventoryByBookId(orderDetail.getBook().getId());
+                        Integer currentStockQuantity = inventoryOfCurrentBook.getStock_quantity();
+                        inventoryOfCurrentBook.setStock_quantity(currentStockQuantity + 1);
+                        boolean isUpdateStockQuantity = inventoryDAO.updateInventory(inventoryOfCurrentBook);
+        	        }
                 }
                 order.setOrderStatus(orderStatus);
                 session.update(order);
@@ -285,8 +298,11 @@ public class OrderDAO {
 			String hql = "FROM OrdersEntity WHERE id = :orderId";
 			OrdersEntity updateOrder = (OrdersEntity) session.createQuery(hql).setParameter("orderId", orderId).uniqueResult();
 			//OrderEntity updateOrder = getOrderByOrderId(orderId);
+			if(updateOrder.getPaymentStatus().equals("Đã thanh toán")) {
+				updateOrder.setPaymentStatus("Đã hoàn tiền");
+			}
 			updateOrder.setUpdatedAt(new Date());
-			updateOrder.setOrderStatus("Huỷ Đơn Hàng");
+			updateOrder.setOrderStatus("Huỷ đơn hàng");
 			session.update(updateOrder);
 			t.commit();
 			isUpdate = 1;

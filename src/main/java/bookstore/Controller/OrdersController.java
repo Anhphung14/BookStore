@@ -82,17 +82,13 @@ public class OrdersController {
 	
 	@RequestMapping(value = "/orders/updateOrderStatus", method = RequestMethod.POST)
 	public String updateOrderStatus(@RequestParam("orderId") Long orderId, @RequestParam("orderStatus") String orderStatus, RedirectAttributes redirectAttributes) {
-		//System.out.println("Vô đầu hàm");
 		if(orderDAO.updateOrderStatus(orderId, orderStatus)) {
-			//System.out.println("Thành công");
 			redirectAttributes.addFlashAttribute("alertMessage", "Order status updated successfully!");
 	        redirectAttributes.addFlashAttribute("alertType", "success");
 		}else {
-			//System.out.println("Lỗi rồi");
 			redirectAttributes.addFlashAttribute("alertMessage", "Error updating order status!");
 			redirectAttributes.addFlashAttribute("alertType", "error");
 		}
-		
 		return "redirect:/orders.htm";
 	}
 	

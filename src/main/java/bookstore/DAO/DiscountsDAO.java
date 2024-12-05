@@ -38,11 +38,20 @@ public class DiscountsDAO {
 		return allDiscounts;
 	}
 	
+	public DiscountsEntity getDiscountByCode(String discountCode) {
+		Session session = sessionFactory.getCurrentSession();
+		String hql = "FROM DiscountsEntity d where d.code = :discountCode";
+		Query query = session.createQuery(hql);
+		query = query.setParameter("discountCode", discountCode);
+		DiscountsEntity discount = (DiscountsEntity) query.uniqueResult();
+		return discount;
+	}
+	
 	public List<DiscountsEntity> searchDiscount(String discountCode, String discountType, String minValue, String maxValue, String fromDate, String toDate, String discountStatus) throws ParseException {
         Session session = sessionFactory.getCurrentSession();
     	String hql = "FROM DiscountsEntity d WHERE 1=1";  
 
-        if (discountCode != null && !discountCode.isEmpty()) {
+        if (discountCode != null && !discountCode.isEmpty()) {          
             hql += " AND d.code LIKE :discountCode";
         }
         if (discountType != null && !discountType.isEmpty()) {
@@ -470,5 +479,17 @@ public class DiscountsDAO {
 		    }
 		    
 		    return discountValues;
+		}
+		
+		public boolean createOrderDiscount(Order_DiscountsEntity orderDiscount) {
+		    try {
+		        Session session = sessionFactory.getCurrentSession();
+		        session.save(orderDiscount);
+		        return true;
+		    } catch (Exception e) {
+		        // Spring sẽ tự động rollback nếu exception xảy ra
+		        e.printStackTrace();
+		        return false;
+		    }
 		}
 }

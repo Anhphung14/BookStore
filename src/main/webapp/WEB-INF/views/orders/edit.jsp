@@ -142,6 +142,7 @@ input[readonly] {
 								    <select class="form-control" id="paymentMethod" name="paymentMethod" required>
 								        <option value="COD" ${order.paymentMethod == 'COD' ? 'selected' : ''}>COD</option>
 								        <option value="PayPal" ${order.paymentMethod == 'PayPal' ? 'selected' : ''}>PayPal</option>
+								        <option value="VnPay" ${order.paymentMethod == 'VnPay' ? 'selected' : ''}>VnPay</option>
 								    </select>
 								    <label class="form-label" for="paymentMethod">Payment Method <span class="text-danger">*</span></label>
 								</div>
