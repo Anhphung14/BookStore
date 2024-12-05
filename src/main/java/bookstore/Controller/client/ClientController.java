@@ -133,7 +133,6 @@ public class ClientController {
 	public String productdetail(ModelMap model, @PathVariable("productId") Long id) {
 		BooksEntity book = booksDAO.getBookByIdHQL(id);
         model.addAttribute("book", book);
-		System.out.println(book.getDescription());
         Double discount = discountsDAO.getDiscountValueByBookId(id);
 		model.addAttribute("discount",discount);
 		 
