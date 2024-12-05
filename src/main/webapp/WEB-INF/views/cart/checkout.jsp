@@ -41,8 +41,8 @@
                     <div class="info-section col-md-6">
                         <h2>Thông Tin Nhận Hàng</h2>
                             <input type="hidden" name="userId" value="${user.id}">
-                            <c:forEach var="id" items="${param.selectedItems}">
-                                <input type="hidden" name="selectedItems" value="${id}">
+                            <c:forEach var="cartItem" items="${cartItems}">
+                                <input type="hidden" name="selectedItems" value="${cartItem.id}">
                             </c:forEach>
                             <div class="field">
                                 <label for="name" class="field__label">Họ và tên</label>
