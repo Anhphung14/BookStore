@@ -11,6 +11,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import bookstore.Entity.BooksEntity;
 import bookstore.Entity.UsersEntity;
 import bookstore.Util.PasswordUtil;
 
@@ -117,4 +118,23 @@ public class UserDAO {
 
 		return user;
     }
+    
+    public boolean updateUser(UsersEntity user) {
+		Session session = sessionFactory.openSession();
+		Transaction t = session.beginTransaction();
+		
+		try {
+			session.merge(user);
+			t.commit();
+			
+			return true;
+		} catch (Exception e) {
+			t.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		
+		return false;
+	}
 }

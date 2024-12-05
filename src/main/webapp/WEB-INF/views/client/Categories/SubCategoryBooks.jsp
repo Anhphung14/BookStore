@@ -177,7 +177,7 @@
 																	<ins>chưa biết</ins>
 																	<del><fmt:formatNumber value="${book.price}" type="currency" maxFractionDigits="0" currencySymbol="₫"/></del>
 																</span>
-																<a class="tg-btn tg-btnstyletwo btn-add-to-cart" data-book-id="${book.id}" data-quantity="1"> <%-- href="/bookstore/cart/add.htm?bookId=${book.id}&quantity=1" --%>>
+																<a class="tg-btn tg-btnstyletwo btn-add-to-cart" data-book-id="${book.id}" data-quantity="1"> <%-- href="/bookstore/cart/add.htm?bookId=${book.id}&quantity=1" --%>
 																	
 																	<i class="fa fa-shopping-basket"></i>
 																	<em>Thêm vào giỏ</em>
@@ -510,8 +510,10 @@
 	    }
  
 	    
-	     document.querySelectorAll('.btn-add-to-cart').forEach(function(button) {
+	    document.querySelectorAll('.btn-add-to-cart').forEach(function(button) {
 	        button.addEventListener('click', function(event) {
+	        	console.log(event.currentTarget.getAttribute('data-book-id'));
+	        	console.log(event.currentTarget.getAttribute('data-book-id'));
 	        	 var bookId = event.currentTarget.getAttribute('data-book-id');
 	             var quantity = event.currentTarget.getAttribute('data-quantity');
 	             console.log("bookId:", bookId);
@@ -524,7 +526,10 @@
 	            .then(data => {
 	            	console.log("data: " + data);
 	                // Xử lý phản hồi sau khi thêm vào giỏ hàng
-	                if (data != "error") {
+		              	 if (data == "Vui long dang nhap") {
+		               		 toastr.error('Vui lòng đăng nhập để thêm sản phẩm!', 'Lỗi');
+		              	 }
+		              	 else if (data != "error" && data != "Vui long dang nhap") {
 	                	 var countBooksInCart = parseInt(data);  // Chuyển đổi dữ liệu trả về thành số
 	                	 fetch('/bookstore/index.htm');
 	                     document.querySelector('#tg-minicart .tg-themebadge').textContent = countBooksInCart;

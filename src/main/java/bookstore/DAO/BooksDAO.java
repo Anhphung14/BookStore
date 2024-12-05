@@ -558,13 +558,13 @@ public class BooksDAO {
 			Transaction t = session.beginTransaction();
 			
 			try {
-				session.update(book);
+				session.merge(book);
 				t.commit();
 				
 				return true;
 			} catch (Exception e) {
 				t.rollback();
-				
+				e.printStackTrace();
 			} finally {
 				session.close();
 			}

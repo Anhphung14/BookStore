@@ -36,6 +36,7 @@ import bookstore.Entity.UsersEntity;
 
 @Transactional
 @Controller
+@RequestMapping("/admin1337")
 public class UsersController {
 
 	@Autowired
@@ -165,7 +166,7 @@ public class UsersController {
 
 	            if (existingUser == null) {
 	                model.addAttribute("message", "User not found.");
-	                return "redirect:/users.htm";
+	                return "redirect:/admin1337/users.htm";
 	            }
 
 	            existingUser.setFullname(user.getFullname());
@@ -198,16 +199,16 @@ public class UsersController {
 	            session.merge(existingUser); // Cập nhật người dùng
                 redirectAttributes.addFlashAttribute("alertMessage", "User saved successfully!");
 	            redirectAttributes.addFlashAttribute("alertType", "success");
-	            return "redirect:/users.htm";
+	            return "redirect:/admin1337/users.htm";
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        redirectAttributes.addFlashAttribute("alertMessage", "Error occurred while saving the User.");
 	        redirectAttributes.addFlashAttribute("alertType", "error");
-	        return "redirect:/users.htm";
+	        return "redirect:/admin1337/users.htm";
 	    }
 
-	    return "redirect:/users.htm";
+	    return "redirect:/admin1337/users.htm";
 	}
 
 
@@ -226,7 +227,7 @@ public class UsersController {
 		if (user != null) {
 			session.delete(user);
 		}
-		return "redirect:/users.htm";
+		return "redirect:/admin1337/users.htm";
 	}
 
 	@SuppressWarnings("unchecked")

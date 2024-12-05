@@ -221,17 +221,75 @@ public class ProductsController {
 		booksService.addThumbnail_Images(bookDTO, bookEntity);
 		
 		if (!booksService.handleBookErrors(model, bookEntity)) {
-			InventoryEntity inventory = new InventoryEntity(bookEntity, bookEntity.getQuantity(), new Date(), new Date());
 			
-			boolean result1 = booksService.saveBook(bookEntity);
-			boolean result2 = inventoryService.saveInventory(inventory);
+			List<BooksEntity> listBooks = booksService.getAllBooks();
+			List<BooksEntity> listExistBooks = new ArrayList<BooksEntity>();
 			
-			if (result1 && result2 ) {
-				redirectAttributes.addFlashAttribute("alertMessage", "Successfully added a new book!");
-				redirectAttributes.addFlashAttribute("alertType", "success");
+			for (BooksEntity book : listBooks) {
+				int count = 0;
+
+				if (compareStrings(bookEntity.getTitle(), book.getTitle())) {
+					count += 1;
+				}
 				
-				return "redirect:/admin1337/products.htm";
+				if (compareStrings(bookEntity.getAuthor(), book.getAuthor())) {
+					count += 1;
+				}
+				
+				if (compareStrings(bookEntity.getSupplier().getName(), book.getSupplier().getName())) {
+					count += 1;
+				}
+				
+				if (bookEntity.getPublication_year() == book.getPublication_year()) {
+					count += 1;
+				}
+				
+				if (compareStrings(bookEntity.getLanguage(), book.getLanguage())) {
+					count += 1;
+				}
+				
+				if (count == 5) {
+					listExistBooks.add(book);
+					break;
+				}
 			}
+			
+			if (listExistBooks.size() == 0) {
+				InventoryEntity inventory = new InventoryEntity(bookEntity, bookEntity.getQuantity(), new Date(), new Date());
+				
+				boolean result1 = booksService.saveBook(bookEntity);
+				boolean result2 = inventoryService.saveInventory(inventory);
+				
+				if (result1 && result2 ) {
+					redirectAttributes.addFlashAttribute("alertMessage", "Successfully added a new book!");
+					redirectAttributes.addFlashAttribute("alertType", "success");
+					
+					return "redirect:/admin1337/products.htm";
+				}				
+			} else {
+				BooksEntity book = listExistBooks.get(0);
+				book.setQuantity(book.getQuantity() + bookEntity.getQuantity());
+				
+				InventoryEntity inventory = book.getInventoryEntity();
+				inventory.setStock_quantity(book.getInventoryEntity().getStock_quantity() + bookEntity.getQuantity());
+				
+				System.out.println(book.getQuantity());
+				System.out.println(inventory.getStock_quantity());
+				
+				boolean result1 = booksService.updateBook(book);
+				boolean result2 = inventoryService.updateQuantityByInventoryId(inventory.getId(), inventory.getStock_quantity(), new Date());
+				
+				System.out.println(result1);
+				System.out.println(result2);
+				
+				if (result1 && result2 ) {
+					redirectAttributes.addFlashAttribute("alertMessage", "This book already exists, proceeding to update the quantity.");
+					redirectAttributes.addFlashAttribute("alertType", "warning");
+					
+					return "redirect:/admin1337/products.htm";
+				}				
+			}
+			
 		}
 		
 		model.addAttribute("alertMessage", "An error occurred while adding the new book!");
@@ -303,5 +361,18 @@ public class ProductsController {
 	    }
 	    return "<span id='categoryId'>No category found</span>";
 	}
+	
+	public static String toLowerCaseNoSpaces(String input) {
+        if (input == null) {
+            return null;
+        }
+        
+        return input.replaceAll("\\s+", "").toLowerCase();
+    }
+	
+	public boolean compareStrings(String str1, String str2) {
+		return toLowerCaseNoSpaces(str1).equals(toLowerCaseNoSpaces(str2));
+	}
+
 
 }

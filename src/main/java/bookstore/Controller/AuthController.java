@@ -125,7 +125,9 @@ public class AuthController {
 	        user.setPassword(hashedPassword);
 	        user.setGender(1);
 
-	        RolesEntity role = (RolesEntity) session.get(RolesEntity.class, 3L);
+//	        RolesEntity role = (RolesEntity) session.get(RolesEntity.class, 3L);
+	        RolesEntity role = getRoleByName("ROLE_USER");
+	        
 	        if (role != null) {
 	            Set<RolesEntity> roles = new HashSet<>();
 	            roles.add(role);
@@ -194,6 +196,12 @@ public class AuthController {
 		    else if (otp.getCode().equals(code)) {
 		        otp.setUsed(true);
 		        otpService.removeOTPCode(code);
+		        
+		        UsersEntity user = userDAO.getUserByEmai(otp.getEmail());
+		        
+		        user.setEnabled(1);
+		        
+		        userDAO.updateUser(user);
 		        
 		        alertMessage = "Congratulations, you have successfully registered!";
 		        alertType = "success";
@@ -349,5 +357,13 @@ public class AuthController {
 	    return user;
 	}
 	
+	@Transactional
+	public RolesEntity getRoleByName(String roleName) {
+		String hql = "FROM RolesEntity r WHERE r.name = :roleName";
+	    return (RolesEntity) factory.getCurrentSession()
+	                                       .createQuery(hql)
+	                                       .setParameter("roleName", roleName)
+	                                       .uniqueResult();
+	}
 
 }

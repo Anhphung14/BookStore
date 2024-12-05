@@ -10,12 +10,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import bookstore.security.CustomAuthenticationSuccessHandler;
+import bookstore.security.CustomLogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -26,6 +30,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Autowired 
 	private CustomAuthenticationSuccessHandler successHandler;
+	
+	@Autowired
+    private CustomLogoutSuccessHandler customLogoutSuccessHandler;
 	
 	@Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -60,7 +67,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 	    http.csrf().disable()
 	        .authorizeRequests()
-	            .antMatchers("/signup.htm","/index.htm", "/categoires/**", "/productdetail/**", "/cart/add.htm/**", "/verify-email.htm/**", "/resend-link.htm/**", "/saveSignup.htm/**").permitAll()
+	            .antMatchers("/signup.htm","/index.htm", "/categories/**", "/productdetail/**", "/cart/add.htm/**", "/verify-email.htm/**", "/resend-link.htm/**", "/saveSignup.htm/**", "/search.htm/**").permitAll()
 	            .antMatchers("/admin1337/**").hasRole("ADMIN")
 	            .antMatchers("/**").hasAnyRole("USER", "ADMIN")
 	            .anyRequest().authenticated()
@@ -74,19 +81,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	            .permitAll()
 	            .and()
 	        .sessionManagement()
-	        	.invalidSessionUrl("/signin.htm")
 	        	.sessionFixation().newSession()
                 .and()
 	        .logout()
 		        .logoutUrl("/signout.htm")            // Đặt URL logout cho phương thức POST
-	            .logoutSuccessUrl("/signin.htm")     // Chuyển hướng sau khi đăng xuất thành công
-	            .invalidateHttpSession(true)         // Xóa session khi đăng xuất
+//	            .logoutSuccessUrl("/signin.htm")     // Chuyển hướng sau khi đăng xuất thành công
+		        .logoutSuccessHandler(customLogoutSuccessHandler)
 	            .permitAll()
 	            .and()
 	        .exceptionHandling()
 	            .accessDeniedPage("/signup.htm");
-	    
 	}
+	
+
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {

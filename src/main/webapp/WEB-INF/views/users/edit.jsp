@@ -10,7 +10,7 @@
 		<c:otherwise>New User</c:otherwise>
 	</c:choose></title>
 
-<base href="${pageContext.servletContext.contextPath}/">
+<base href="${pageContext.servletContext.contextPath}/admin1337/">
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -54,12 +54,12 @@
 					</h2>
 				</div>
 				<div class="col-auto d-none d-sm-block">
-					<img class="page-icon" src="resources/images/page.svg"
+					<img class="page-icon" src="${pageContext.request.contextPath}/resources/images/page.svg"
 						width="120px" alt="Page Icon">
 				</div>
 			</div>
 			<form id="userForm"
-				action="${pageContext.servletContext.contextPath}/user/save.htm"
+				action="user/save.htm"
 				method="POST">
 				<input type="hidden" id="task" name="task" value="${task}">
 
@@ -119,7 +119,7 @@
 
 				<div class="mt-3">
 					<button class="btn btn-primary btn-save" type="submit">Save</button>
-					<a href="<c:url value='/users.htm' />"
+					<a href="<c:url value='/admin1337/users.htm' />"
 						class="btn btn-light btn-cancel">Cancel</a>
 				</div>
 			</form>

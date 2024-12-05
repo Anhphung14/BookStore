@@ -461,7 +461,7 @@
 		if (alertMessage) {
 		    Swal.fire({
 		        icon: alertType, 
-		        title: alertType === "success" ? "Success" : "Error",
+		        title: alertType === "success" ? "Success" : alertType === "error" ? "Error" : "Warning",
 		        text: alertMessage,
 		        confirmButtonText: "OK"
 		    }).then((result) => {
