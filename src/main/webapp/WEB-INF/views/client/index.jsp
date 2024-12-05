@@ -2,6 +2,8 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
@@ -146,8 +148,10 @@
 											                </c:otherwise>
 													</c:choose>
 											</a>
-											</span> <span class="tg-bookprice"> <ins>${book.price}
-													VND</ins>
+											</span> <span class="tg-bookprice"> <ins>
+													<fmt:formatNumber value="${book.price}" type="currency"
+														currencySymbol="VND" />
+												</ins>
 											</span> <a class="tg-btn tg-btnstyletwo btn-add-to-cart"
 												data-quantity="1" data-book-id="${book.id}"
 												href="javascript:void(0);"
@@ -217,7 +221,10 @@
 									</a>
 									</span>
 									<div class="tg-priceandbtn">
-										<span class="tg-bookprice"> <ins>${bestSellingBook.price}</ins>
+										<span class="tg-bookprice"> <ins>
+												<fmt:formatNumber value="${bestSellingBook.price}"
+													type="currency" currencySymbol="VND" />
+											</ins>
 										</span> <a class="tg-btn tg-btnstyletwo tg-active btn-add-to-cart"
 											href="javascript:void(0);"> <i
 											class="fa fa-shopping-basket"></i> <em>Thêm vào giỏ hàng</em>
@@ -376,8 +383,10 @@
 											                </c:otherwise>
 														</c:choose>
 												</a>
-												</span> <span class="tg-bookprice"> <ins>${book.price}
-														VND</ins>
+												</span> <span class="tg-bookprice"> <ins>
+														<fmt:formatNumber value="${book.price}" type="currency"
+															currencySymbol="VND" />
+													</ins>
 												</span> <a class="tg-btn tg-btnstyletwo btn-add-to-cart"
 													href="javascript:void(0);"
 													style="padding-left: 0px; padding-right: 0px;"> <i
