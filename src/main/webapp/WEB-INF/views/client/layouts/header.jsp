@@ -144,7 +144,7 @@
 									<li><i class="fa-solid fa-inbox"></i>&nbsp;&nbsp;<a
 										href="#">Inbox</a></li>
 									<li><i class="fa-solid fa-right-from-bracket"></i>&nbsp;&nbsp;<a
-										href="#">Logout</a></li>
+										href="${pageContext.servletContext.contextPath}/signout.htm">Logout</a></li>
 								</ul>
 							</div>
 						</div>
