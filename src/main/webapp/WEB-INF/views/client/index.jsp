@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
@@ -116,17 +117,42 @@
 													<span class=""></span>
 												</div>
 											</c:if>
-											<div class="tg-booktitle">
-												<h3>
-													<a href="productdetail/${book.id}.htm">${book.title}</a>
-												</h3>
-											</div>
-											<span class="tg-bookwriter">Tác giả: <a
-												href="javascript:void(0);">${book.author}</a></span> <span
-												class="tg-bookprice"> <ins>${book.price} VND</ins>
-											</span> <a class="tg-btn tg-btnstyletwo btn-add-to-cart" data-quantity="1" data-book-id="${book.id}" href="javascript:void(0);"
+											<h4>
+												<a href="productdetail/${book.id}.htm"> <c:choose>
+														<c:when test="${fn:length(fn:split(book.title, ' ')) > 2}">
+															<c:forEach var="word" begin="0" end="2"
+																items="${fn:split(book.title, ' ')}">
+											                    ${word}
+											                </c:forEach>...
+											            </c:when>
+														<c:otherwise>
+											                ${book.title}
+											            </c:otherwise>
+													</c:choose>
+												</a>
+											</h4>
+											<span class="tg-bookwriter"> Tác giả: <a
+												href="javascript:void(0);"> <c:choose>
+														<c:when
+															test="${fn:length(fn:split(book.author, ' ')) > 3}">
+															<c:forEach var="word" begin="0" end="2"
+																items="${fn:split(book.author, ' ')}">
+											                        ${word} 
+											                    </c:forEach>
+											                    ...
+											                </c:when>
+														<c:otherwise>
+											                    ${book.author}
+											                </c:otherwise>
+													</c:choose>
+											</a>
+											</span> <span class="tg-bookprice"> <ins>${book.price}
+													VND</ins>
+											</span> <a class="tg-btn tg-btnstyletwo btn-add-to-cart"
+												data-quantity="1" data-book-id="${book.id}"
+												href="javascript:void(0);"
 												style="padding-left: 0px; padding-right: 0px;"> <i
-												class="fa fa-shopping-basket"  style="padding-left: 10px;"></i>
+												class="fa fa-shopping-basket" style="padding-left: 10px;"></i>
 												<em>Thêm vào giỏ hàng</em>
 											</a>
 										</div>
@@ -139,7 +165,7 @@
 			</div>
 		</section>
 
-		<section class="tg-bglight tg-haslayout" style="padding-top: 2rem;">
+		<section class="tg-haslayout" style="padding-top: 2rem;">
 			<div class="container">
 				<div class="row">
 					<c:if test="${not empty bestSellingBook}">
@@ -159,14 +185,40 @@
 									</div>
 									<div class="tg-booktitle">
 										<h3>
-											<a href="javascript:void(0);">${bestSellingBook.title}</a>
+											<a href="productdetail/${book.id}.htm"> <c:choose>
+													<c:when
+														test="${fn:length(fn:split(bestSellingBook.title, ' ')) > 2}">
+														<c:forEach var="word" begin="0" end="2"
+															items="${fn:split(bestSellingBook.title, ' ')}">
+											                    ${word}
+											                </c:forEach>...
+											            </c:when>
+													<c:otherwise>
+											                ${bestSellingBook.title}
+											            </c:otherwise>
+												</c:choose>
+											</a>
 										</h3>
 									</div>
-									<span class="tg-bookwriter">Tác giả: <a
-										href="javascript:void(0);">${bestSellingBook.author}</a></span>
+									<span class="tg-bookwriter"> Tác giả: <a
+										href="javascript:void(0);"> <c:choose>
+												<c:when
+													test="${fn:length(fn:split(bestSellingBook.author, ' ')) > 3}">
+													<c:forEach var="word" begin="0" end="2"
+														items="${fn:split(book.author, ' ')}">
+											                        ${word} 
+											                    </c:forEach>
+											                    ...
+											                </c:when>
+												<c:otherwise>
+											                    ${bestSellingBook.author}
+											                </c:otherwise>
+											</c:choose>
+									</a>
+									</span>
 									<div class="tg-priceandbtn">
 										<span class="tg-bookprice"> <ins>${bestSellingBook.price}</ins>
-										</span> <a class="tg-btn tg-btnstyletwo tg-active"
+										</span> <a class="tg-btn tg-btnstyletwo tg-active btn-add-to-cart"
 											href="javascript:void(0);"> <i
 											class="fa fa-shopping-basket"></i> <em>Thêm vào giỏ hàng</em>
 										</a>
@@ -233,6 +285,22 @@
 										Farm'.</p>
 								</div>
 							</div>
+							<!-- Tác giả 4 -->
+							<div class="tg-author"
+								style="display: flex; flex-direction: column; align-items: center; width: 200px;">
+								<div class="tg-authorimg"
+									style="width: 150px; height: 150px; margin: 0 auto;">
+									<img
+										src="https://res.cloudinary.com/dsqhfz3xt/image/upload/v1733412213/images/author/roh4tilaj2srebwxk8ju.jpg"
+										alt="Fujiko.F.Fujio"
+										style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+								</div>
+								<div class="tg-authorcontent" style="text-align: center;">
+									<h4>Fujiko F. Fujio</h4>
+									<p>Tác giả của các tác phẩm kinh điển như 'Doraemon',
+										'Ninja Hattori', và 'Perman'.</p>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -277,17 +345,45 @@
 													</div>
 												</c:if>
 												<div class="tg-booktitle">
-													<h3>
-														<a href="productdetail/${book.id}.htm">${book.title}</a>
-													</h3>
+													<h4>
+														<a href="productdetail/${book.id}.htm"> <c:choose>
+																<c:when
+																	test="${fn:length(fn:split(book.title, ' ')) > 2}">
+																	<c:forEach var="word" begin="0" end="2"
+																		items="${fn:split(book.title, ' ')}">
+											                    ${word}
+											                </c:forEach>...
+											            </c:when>
+																<c:otherwise>
+											                ${book.title}
+											            </c:otherwise>
+															</c:choose>
+														</a>
+													</h4>
 												</div>
-												<span class="tg-bookwriter">Tác giả: <a
-													href="javascript:void(0);">${book.author}</a></span> <span
-													class="tg-bookprice"> <ins>${book.price} VND</ins>
-												</span> <a class="tg-btn tg-btnstyletwo btn-add-to-cart" href="javascript:void(0);"
+												<span class="tg-bookwriter"> Tác giả: <a
+													href="javascript:void(0);"> <c:choose>
+															<c:when
+																test="${fn:length(fn:split(book.author, ' ')) > 3}">
+																<c:forEach var="word" begin="0" end="2"
+																	items="${fn:split(book.author, ' ')}">
+											                        ${word} 
+											                    </c:forEach>
+											                    ...
+											                </c:when>
+															<c:otherwise>
+											                    ${book.author}
+											                </c:otherwise>
+														</c:choose>
+												</a>
+												</span> <span class="tg-bookprice"> <ins>${book.price}
+														VND</ins>
+												</span> <a class="tg-btn tg-btnstyletwo btn-add-to-cart"
+													href="javascript:void(0);"
 													style="padding-left: 0px; padding-right: 0px;"> <i
-													class="fa fa-shopping-basket" data-book-id="${book.id}" data-quantity="1" style="padding-left: 15px;"></i>
-													<em>Thêm vào giỏ hàng</em>
+													class="fa fa-shopping-basket" data-book-id="${book.id}"
+													data-quantity="1" style="padding-left: 15px;"></i> <em>Thêm
+														vào giỏ hàng</em>
 												</a>
 											</div>
 										</div>
@@ -320,8 +416,8 @@
 										style="font-size: 50px; color: #ff4500;"><i
 										class="fa-solid fa-rocket"></i></span>
 								</div>
-								<h3 style="font-size: 20px; color: #555;">Fast Delivery</h3>
-								<p style="color: #777;">Shipping Worldwide</p>
+								<h3 style="font-size: 20px; color: #555;">Giao Hàng Nhanh</h3>
+								<p style="color: #777;">Nhanh Chóng, Đúng Hẹn</p>
 							</div>
 
 							<div class="tg-clientservices"
@@ -331,8 +427,8 @@
 									<i class="fa-solid fa-tag"
 										style="font-size: 50px; color: #ff6347;"></i>
 								</div>
-								<h3 style="font-size: 20px; color: #555;">Open Discount</h3>
-								<p style="color: #777;">Offering Open Discount</p>
+								<h3 style="font-size: 20px; color: #555;">Giảm Giá</h3>
+								<p style="color: #777;">Ưu Đãi Mỗi Ngày</p>
 							</div>
 
 							<div class="tg-clientservices"
@@ -342,8 +438,8 @@
 									<i class="fa-solid fa-leaf"
 										style="font-size: 50px; color: #32cd32;"></i>
 								</div>
-								<h3 style="font-size: 20px; color: #555;">Eyes On Quality</h3>
-								<p style="color: #777;">Publishing Quality Work</p>
+								<h3 style="font-size: 20px; color: #555;">Chất Lượng</h3>
+								<p style="color: #777;">Chất Lượng Là Hàng Đầu</p>
 							</div>
 						</div>
 					</div>
@@ -375,7 +471,7 @@
 	<!--************************************
 			Wrapper End
 	*************************************-->
-	
+
 	<script type="text/javascript">
 	document.querySelectorAll('.btn-add-to-cart').forEach(function(button) {
         button.addEventListener('click', function(event) {
@@ -476,10 +572,6 @@
 				}
 			});
 		});
-		
-
 	</script>
 </body>
-
-
 </html>
