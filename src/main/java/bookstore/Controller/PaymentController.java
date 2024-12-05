@@ -20,9 +20,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import bookstore.DAO.CartDAO;
+import bookstore.DAO.CategoriesDAO;
+import bookstore.DAO.DiscountsDAO;
+import bookstore.DAO.InventoryDAO;
 import bookstore.DAO.OrderDAO;
 import bookstore.DAO.OrderDetailDAO;
 import bookstore.DAO.ShippingAddressDAO;
+import bookstore.DAO.SubcategoriesDAO;
 import bookstore.DAO.UserDAO;
 import bookstore.Entity.*;
 
@@ -40,18 +44,33 @@ public class PaymentController {
     private OrderDAO orderDAO;
 
     @Autowired
-    private OrderDetailDAO orderDetailDAO;
+    private OrderDetailDAO orderDetailDAO; 
     
     @Autowired
     private ShippingAddressDAO shippingAddressDAO;
-
+    
+    @Autowired
+    private InventoryDAO inventoryDAO;
+    
+    @Autowired
+    private CategoriesDAO categoriesDAO;
+    @Autowired
+    private SubcategoriesDAO subcategoriesDAO;
+    @Autowired
+    
+    private DiscountsDAO discountsDAO;
     // Hiển thị trang thanh toán
     @RequestMapping(value = "/checkout", method = RequestMethod.POST)
 	public String checkoutPage(/* @RequestParam("userId") Long userId, */
 			 @RequestParam(value = "selectedItems", required = false) List<Long> selectedItemIds,
-		        Model model) {
-
-    	Long userId = 1L; // Giả định userId = 1, bạn có thể lấy từ session
+		        Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+    	System.out.println("selectedItems: " + selectedItemIds);
+    	if (selectedItemIds == null || selectedItemIds.isEmpty()) {
+    		redirectAttributes.addFlashAttribute("alertMessage", "Bạn chưa chọn sản phẩm nào để thanh toán.");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
+            return "redirect:/cart/view.htm";
+        }
+    	
         //System.out.println("List selected: " + selectedItemIds);
     	Map<String, Map<String, List<String>>> locationData = shippingAddressDAO.getProvincesWithDistrictsAndWards();
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -62,13 +81,9 @@ public class PaymentController {
 	        e.printStackTrace(); // Log lỗi nếu có
 	    }
 	    model.addAttribute("locationData", locationDataJson);
-        if (selectedItemIds == null || selectedItemIds.isEmpty()) {
-            model.addAttribute("errorMessage", "Bạn chưa chọn sản phẩm nào để thanh toán.");
-            return "redirect:/cart/view.htm";
-        }
+        
 
-        // Lấy thông tin người dùng
-        UsersEntity user = userDAO.getUserById(userId);
+	    UsersEntity user = (UsersEntity) session.getAttribute("user");
         model.addAttribute("user", user);
 
         // Lấy các sản phẩm đã chọn từ selectedItemIds
@@ -89,7 +104,22 @@ public class PaymentController {
             totalPrice += item.getPrice() * item.getQuantity();
         }
         model.addAttribute("totalPrice", totalPrice);
-        // Chuyển đến trang thanh toán
+        
+        List<DiscountsEntity> listDiscountsAvailable = new ArrayList<DiscountsEntity>();
+        List<DiscountsEntity> listDiscounts = discountsDAO.getAllDiscounts();
+        for(DiscountsEntity discount : listDiscounts) {
+        	if(discount.getApplyTo().equals("user")) {
+        		if(discount.getMinOrderValue() <= totalPrice && discount.getStatus().equals("active")) {
+        			listDiscountsAvailable.add(discount);
+        		}
+        	}
+        }
+        System.out.println("listDiscountsAvailable: " + listDiscountsAvailable);
+        model.addAttribute("listDiscountsAvailable", listDiscountsAvailable);
+        List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
+        List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
+        model.addAttribute("Categories", listCategories);
+        model.addAttribute("SubCategories", listSubCategories);
         return "cart/checkout";
     }
 
@@ -99,8 +129,8 @@ public class PaymentController {
     		@RequestParam("province") String province, @RequestParam("district") String district, @RequestParam("ward") String ward,
     		@RequestParam("street") String street,
 	          @RequestParam("paymentMethod") String paymentMethod,
-	          @RequestParam("selectedItems") List<Long> selectedItemIds, HttpSession session,
-	          RedirectAttributes redirectAttributes) {
+	          @RequestParam("selectedItems") List<Long> selectedItemIds, 
+	          @RequestParam(value = "discountCode", defaultValue = "") String discountCode,  HttpSession session,  RedirectAttributes redirectAttributes) {  	
     	StringBuilder shippingAddressBuilder = new StringBuilder();
 		shippingAddressBuilder.append(street).append(", ")
 		                      .append(ward).append(", ")
@@ -114,19 +144,23 @@ public class PaymentController {
 
             // Kiểm tra phương thức thanh toán
             if (paymentMethod == null || paymentMethod.isEmpty()) {
-                redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng chọn phương thức thanh toán.");
+            	redirectAttributes.addFlashAttribute("alertMessage", "Vui lòng chọn phương thức thanh toán.");
+        		redirectAttributes.addFlashAttribute("alertType", "error");
                 return "redirect:/payment/checkout.htm";
             }
 
             // Kiểm tra xem có sản phẩm nào được chọn hay không
             if (selectedItemIds == null || selectedItemIds.isEmpty()) {
-                redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng chọn sản phẩm để thanh toán.");
+                redirectAttributes.addFlashAttribute("alertMessage", "Vui lòng chọn sản phẩm để thanh toán.");
+        		redirectAttributes.addFlashAttribute("alertType", "error");
                 return "redirect:/payment/checkout.htm";
             }
 
             // Lấy thông tin người dùng
-            UsersEntity user = userDAO.getUserById(userId); // Giả sử bạn đã có UserDAO để tìm người dùng
+            UsersEntity user = userDAO.getUserById(userId);
 
+            
+            
             // Tính tổng giá trị đơn hàng (ví dụ, nếu bạn đã có cách tính giá từ selectedItemIds)
             double totalPrice = 0;
             List<CartItemsEntity> selectedItems = new ArrayList<>();
@@ -139,7 +173,28 @@ public class PaymentController {
                     totalPrice += item.getPrice() * item.getQuantity(); // Tính tổng giá trị
                 }
             }
-
+            
+            DiscountsEntity discount = discountsDAO.getDiscountByCode(discountCode);
+            System.out.println("discount: " + discountCode);
+            System.out.println("discount: " + discount);
+            System.out.println("Tới dòng 180");
+            if(discount == null) {
+            	System.out.println("discount null nè");
+            	redirectAttributes.addFlashAttribute("alertMessage", "Mã giảm giá không hợp lệ!");
+        		redirectAttributes.addFlashAttribute("alertType", "error");
+                return "redirect:/payment/checkout.htm";
+            }else {
+            	System.out.println("discount có nè");
+            	if(discount.getApplyTo().equals("user")) {
+            		System.out.println("Vô điều kiện nè");
+                	if(discount.getDiscountType().equals("percentage")) {
+                		totalPrice = totalPrice * (1- (double) discount.getDiscountValue() / 100);
+                	}else {
+                		totalPrice = totalPrice - discount.getDiscountValue();
+                	}
+                }
+            }
+            System.out.println("Tới dòng 194");
             if (selectedItems.isEmpty()) {
                 throw new Exception("Không có sản phẩm hợp lệ để thanh toán.");
             }
@@ -166,10 +221,21 @@ public class PaymentController {
             if (orderId == null) {
                 throw new Exception("Không thể tạo đơn hàng.");
             }
-
+            System.out.println("Tới dòng 221");
+            Order_DiscountsEntity orderDiscountEntity = new Order_DiscountsEntity();
+            orderDiscountEntity.setDiscount_id(discount);
+            orderDiscountEntity.setOrder_id(newOrder);
+            Boolean isCreateOrderDiscount = discountsDAO.createOrderDiscount(orderDiscountEntity);
+            if(!isCreateOrderDiscount) {
+            	redirectAttributes.addFlashAttribute("alertMessage", "Có lỗi với mã giảm giá");
+        		redirectAttributes.addFlashAttribute("alertType", "error");
+                return "redirect:/payment/checkout.htm";
+            }
+            System.out.println("Tới dòng 231");
+            
             // Lấy đối tượng OrdersEntity từ orderId
             OrdersEntity order = orderDAO.getOrderById(orderId);
-
+            
             // Lưu chi tiết đơn hàng từ các sản phẩm đã chọn
             for (CartItemsEntity cartItem : selectedItems) {
                 OrdersDetailEntity orderDetail = new OrdersDetailEntity();
@@ -179,21 +245,29 @@ public class PaymentController {
                 orderDetail.setPrice(cartItem.getPrice()); // Set giá
                 orderDetail.setCreatedAt(new Date());
                 orderDetail.setUpdatedAt(new Date());
-
                 // Lưu chi tiết đơn hàng
                 orderDetailDAO.saveOrderDetail(orderDetail);
+                
+                InventoryEntity inventoryOfCurrentBook = inventoryDAO.getInventoryByBookId(cartItem.getBook().getId());
+                Integer currentStockQuantity = inventoryOfCurrentBook.getStock_quantity();
+                inventoryOfCurrentBook.setStock_quantity(currentStockQuantity - 1);
+                //System.out.println("currentStockQuantity: " + (currentStockQuantity - 1 ));
+                boolean isUpdateStockQuantity = inventoryDAO.updateInventory(inventoryOfCurrentBook);
+                //System.out.println("isUpdateStockQuantity: " + isUpdateStockQuantity);
             }
 
             // Xóa giỏ hàng sau khi thanh toán thành công
             cartDAO.clearCart(userId, selectedItemIds);
 
             // Redirect với thông báo thành công
-            redirectAttributes.addFlashAttribute("successMessage", "Thanh toán thành công!");
+            redirectAttributes.addFlashAttribute("alertMessage", "Thanh toán thành công!");
+    		redirectAttributes.addFlashAttribute("alertType", "success");
             return "redirect:/index.htm";
 
         } catch (Exception e) {
             e.printStackTrace();
-            redirectAttributes.addFlashAttribute("errorMessage", "Thanh toán thất bại! Vui lòng thử lại.");
+            redirectAttributes.addFlashAttribute("alertMessage", "Thanh toán thất bại! Vui lòng thử lại.");
+    		redirectAttributes.addFlashAttribute("alertType", "error");
             return "redirect:/index.htm";
         }
     }

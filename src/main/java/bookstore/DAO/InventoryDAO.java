@@ -134,6 +134,7 @@ public class InventoryDAO {
 			return true;
 		} catch (Exception e) {
 			t.rollback();
+			e.printStackTrace();
 			
 		} finally {
 			session.close();
@@ -141,4 +142,25 @@ public class InventoryDAO {
 		
 		return false;
 	}
+	
+	public boolean updateInventory(InventoryEntity inventory) {
+		Session session = factory.openSession();
+		Transaction t = session.beginTransaction();
+		
+		try {
+			session.update(inventory);
+			t.commit();
+			
+			return true;
+		} catch (Exception e) {
+			t.rollback();
+			e.printStackTrace();
+			
+		} finally {
+			session.close();
+		}
+		
+		return false;
+	}
+	
 }

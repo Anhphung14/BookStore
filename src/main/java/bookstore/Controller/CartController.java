@@ -22,16 +22,19 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import bookstore.DAO.BooksDAO;
 import bookstore.DAO.CartDAO;
+import bookstore.DAO.CategoriesDAO;
+import bookstore.DAO.SubcategoriesDAO;
 import bookstore.Entity.*;
 
 @Controller
 @RequestMapping("/cart")
 public class CartController {
-
-    @Autowired
-    private BooksDAO bookDAO;
     @Autowired
     private CartDAO cartDAO;
+    @Autowired
+    private CategoriesDAO categoriesDAO;
+    @Autowired
+    private SubcategoriesDAO subcategoriesDAO;
 
     @RequestMapping("/view")
     public String viewCart(Model model, HttpSession session) {
@@ -57,7 +60,10 @@ public class CartController {
         // Đưa danh sách này vào Model để hiển thị
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("totalPrice", totalPrice); // Tổng tiền giỏ hàng
-        
+        List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
+        List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
+        model.addAttribute("Categories", listCategories);
+        model.addAttribute("SubCategories", listSubCategories);
         return "cart/view"; // Trả về trang giỏ hàng
     }
 

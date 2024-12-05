@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -35,9 +37,9 @@
                 <h1 class="text-center">Thông Tin Thanh Toán</h1>
                 <div class="content-wrapper row">
                     <!-- Thông Tin Nhận Hàng -->
+                    <form method="POST" action="${pageContext.servletContext.contextPath}/payment/pay.htm">
                     <div class="info-section col-md-6">
                         <h2>Thông Tin Nhận Hàng</h2>
-                        <form method="post" action="${pageContext.servletContext.contextPath}/payment/pay.htm">
                             <input type="hidden" name="userId" value="${user.id}">
                             <c:forEach var="id" items="${param.selectedItems}">
                                 <input type="hidden" name="selectedItems" value="${id}">
@@ -122,56 +124,54 @@
                                     	<td><img src="${item.book.thumbnail}" width="50px"; height="50px"></td>
                                         <td>${item.book.title}</td>
                                         <td>${item.quantity}</td>
-                                        <td>${item.price} VND</td>
+                                        <td> <fmt:formatNumber value="${item.price}" type="currency" currencySymbol="đ" /></td>
                                     </tr>	
                                 </c:forEach>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <th colspan="2">Tổng cộng</th>
-                                    <td colspan="2">${totalPrice} VND</td>
+                                    <td colspan="2"> <fmt:formatNumber value="${totalPrice}" type="currency" currencySymbol="đ" /></td>
                                 </tr>
-                                <tr>
-                                    <th colspan="2">Mã giảm giá có thể sử dụng</th>
-                                    <td colspan="2"><input type="text" name="discount" id="discount" class="field__input" placeholder="Nhập mã giảm giá"></td>
-                                </tr>
+                              	<tr>
+								    <th colspan="2">Mã giảm giá có thể sử dụng
+								    	<div class="list-group">
+								            <!-- Lặp qua các mã giảm giá có sẵn -->
+								            <c:forEach var="discount" items="${listDiscountsAvailable}">
+											    <button type="button" class="list-group-item list-group-item-action" 
+											            onclick="applyDiscount('${discount.code}', '${discount.discountValue}')">
+											        <span>
+											            <strong>${discount.code}</strong> - Giảm giá 
+											            <c:choose>
+											                <c:when test="${discount.discountType == 'percentage'}">
+											                    <fmt:formatNumber value="${discount.discountValue}" type="currency" currencySymbol="%" />
+											                </c:when>
+											                <c:otherwise>
+											                    <fmt:formatNumber value="${discount.discountValue}" type="currency" currencySymbol="đ" />
+											                </c:otherwise>
+											            </c:choose>
+											            từ đơn   <fmt:formatNumber value="${discount.minOrderValue}" type="currency" currencySymbol="đ" />
+											        </span>
+											    </button>
+											</c:forEach>
+								        </div>
+								    </th>
+								  <td colspan="2" class="center-input">
+								        <input type="text" name="discountCode" id="discount" class="field__input" placeholder="Nhập mã giảm giá" oninput="convertToUpperCase(this);">
+								    </td>
                             </tfoot>
                         </table>
-                        <h3>Phương Thức Thanh Toán</h3>
-                        <!-- <h4 class="text-center mt-5">Paypal Payment Integration</h4>
-                        <form action="/bookstore/paypalPayment/create.htm" method="post" class="mt-5 card p-3">
-                        	<div class="d-flex justify-content-center">
-                        	<input type="hidden" name="payment" value="somePaymentValue" />
-                        		<button type="submit" class="btn btn-primary">Pay with Paypal</button>
-                        	</div>
-                        </form> -->
-                        <div class="radio-group">
-							<label><input type="radio" name="paymentMethod" value="paypal" required> Thanh toán bằng Paypal</label>
-								<div id="paypal-button-container"></div>
-                            <label><input type="radio" name="paymentMethod" value="vnpay" required> Thanh toán qua VNPAY-QR</label>
-                            <label><input type="radio" name="paymentMethod" value="cod" required> Thanh toán khi nhận hàng</label>
-                        </div> 
-                       <%--  <h3 class="text-center">Chọn phương thức thanh toán</h3>
-
-				        <form action="/bookstore/paypalPayment/create.htm" method="post" class="mt-5 card p-3">
-						    <!-- Thêm trường ẩn cho orderId -->
-						    <input type="hidden" name="orderId" value="${orderId}" />  <!-- Giả sử orderId đã có sẵn trong controller hoặc từ phía server -->
-						
-						    <!-- Phương thức thanh toán PayPal -->
-						    <div class="d-flex justify-content-center mb-3">
-						        <button type="submit" class="btn btn-primary" name="paymentMethod" value="paypal">Pay with PayPal</button>
-						    </div>
-						
-						    <!-- Phương thức thanh toán khi nhận hàng -->
-						    <div class="d-flex justify-content-center mb-3">
-						        <button type="submit" class="btn btn-secondary" name="paymentMethod" value="cod">Thanh toán khi nhận hàng</button>
-						    </div>
-						</form> --%>
                         
+                        <h3>Phương Thức Thanh Toán</h3>
+                        <div class="radio-group">
+							<label><input type="radio" name="paymentMethod" value="PayPal" required> Thanh toán bằng Paypal</label>
+								<div id="paypal-button-container"></div>
+                            <label><input type="radio" name="paymentMethod" value="VnPay" required> Thanh toán qua VNPAY-QR</label>
+                            <label><input type="radio" name="paymentMethod" value="COD" required> Thanh toán khi nhận hàng</label>
+                        </div> 
                         <a href="/bookstore/cart/view.htm" class="btn btn-secondary">Quay về giỏ hàng</a>
                         <button type="submit" class="btn btn-primary">Đặt Hàng</button>
                     </div>
-
                     </form>
                 </div>
             </div>
@@ -316,15 +316,23 @@ districtSelect.addEventListener("change", function() {
     }
 });
 
+function applyDiscount(discountCode) {
+    // Lấy phần tử input và gán mã giảm giá vào giá trị của ô input
+    document.getElementById('discount').value = discountCode;
+}
 
+function convertToUpperCase(inputElement) {
+    // Đổi giá trị của input thành chữ in hoa
+    inputElement.value = inputElement.value.toUpperCase();
+}
 
 
 </script>
     <!-- JS Files -->
     <script src="${pageContext.servletContext.contextPath}/resources/assets/js/client/vendor/jquery-library.js"></script>
     <script src="${pageContext.servletContext.contextPath}/resources/assets/js/client/vendor/bootstrap.min.js"></script>
-    <script src="${pageContext.servletContext.contextPath}/resources/assets/js/client/checkout.js"></script>
-
+    <script src="${pageContext.servletContext.contextPath}/resources/assets/js/client/checkout.js">
+</script>
     
 </body>
 </html>
