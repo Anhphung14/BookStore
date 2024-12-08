@@ -94,7 +94,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="account-phone">Số điện thoại</label>
-                        <input class="form-control" type="text" id="account-phone" name="phone" value="${user.phone}" pattern="^(\\+84|0)(9[0-9]{8}|1[2-9][0-9]{7})$" required >
+                        <input class="form-control" type="text" id="account-phone" name="phone" value="${user.phone}" pattern="^0(3|5|7|8|9)[0-9]{8}$" required >
                         <c:if test="${not empty errorPhone}">
                         	 <div class="text-danger">${errorPhone}</div>
                         </c:if>

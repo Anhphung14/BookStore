@@ -122,13 +122,28 @@ public class UsersController {
 
 	@RequestMapping(value = "/user/save", method = RequestMethod.POST)
 	public String saveUser(@ModelAttribute("user") UsersEntity user, @RequestParam("task") String task,
-	        @RequestParam(value = "id", required = false) Long id,
-	        @RequestParam(value = "roleIds", required = false) Set<Long> roleIds, 
-	        RedirectAttributes redirectAttributes,
-	        ModelMap model) {
+	                       @RequestParam(value = "id", required = false) Long id,
+	                       @RequestParam(value = "roleIds", required = false) Set<Long> roleIds,
+	                       @RequestParam(value = "enabled", required = false) Integer enabled,
+	                       RedirectAttributes redirectAttributes, ModelMap model) {
 	    Session session = factory.getCurrentSession();
-	    
+
 	    try {
+	        // Chuẩn hóa tên người dùng để kiểm tra trùng lặp
+	        String normalizedFullname = user.getFullname().trim().toLowerCase();
+
+	        // Kiểm tra tên người dùng trùng lặp
+	        String hql = "FROM UsersEntity WHERE LOWER(TRIM(fullname)) = :fullname AND id != :userId";
+	        Query query = session.createQuery(hql);
+	        query.setParameter("fullname", normalizedFullname);
+	        query.setParameter("userId", id != null ? id : -1L);
+	        List<UsersEntity> existingUsers = query.list();
+
+	        if (!existingUsers.isEmpty()) {
+	            model.addAttribute("message", "This fullname is already registered.");
+	            return "users/edit";
+	        }
+
 	        if ("new".equals(task)) {
 	            if (getUserByEmail(user.getEmail()) != null) {
 	                model.addAttribute("message", "This email is already registered.");
@@ -136,34 +151,18 @@ public class UsersController {
 	            }
 
 	            user.setAvatar("resources/images/default-avatar.png");
-
 	            String hashedPassword = PasswordUtil.hashPassword("bookstore");
 	            user.setPassword(hashedPassword);
 
-	            LocalDateTime now = LocalDateTime.now();
-	            Timestamp currentDate = Timestamp.valueOf(now);
+	            Timestamp currentDate = Timestamp.valueOf(LocalDateTime.now());
 	            user.setCreated_at(currentDate);
 	            user.setUpdated_at(currentDate);
+	            user.setEnabled(1); // Chuyển enabled thành Boolean
 
-	            session.save(user); // Lưu người dùng
-
-	            if (roleIds != null && roleIds.size() > 0) {
-	                Set<RolesEntity> roles = new HashSet<>();
-	                for (Long roleId : roleIds) {
-	                    RolesEntity role = (RolesEntity) session.get(RolesEntity.class, roleId); // Lấy role từ DB
-	                    if (role != null) {
-	                        roles.add(role); // Thêm role vào Set
-	                    }
-	                }
-	                user.setRoles(roles); // Gán roles cho người dùng
-	                session.update(user); // Cập nhật người dùng với các roles
-	                redirectAttributes.addFlashAttribute("alertMessage", "User saved successfully!");
-		            redirectAttributes.addFlashAttribute("alertType", "success");
-	            }
+	            session.save(user);
 
 	        } else if ("edit".equals(task)) {
 	            UsersEntity existingUser = getUserById(id);
-
 	            if (existingUser == null) {
 	                model.addAttribute("message", "User not found.");
 	                return "redirect:/admin1337/users.htm";
@@ -173,8 +172,9 @@ public class UsersController {
 	            existingUser.setEmail(user.getEmail());
 	            existingUser.setPhone(user.getPhone());
 	            existingUser.setGender(user.getGender());
+	            existingUser.setEnabled(enabled);
 
-	            Date currentDate = new Date(System.currentTimeMillis());
+	            Timestamp currentDate = Timestamp.valueOf(LocalDateTime.now());
 	            existingUser.setUpdated_at(currentDate);
 
 	            UsersEntity emailCheck = getUserByEmail(user.getEmail());
@@ -186,21 +186,22 @@ public class UsersController {
 	            if (roleIds != null) {
 	                Set<RolesEntity> roles = new HashSet<>();
 	                for (Long roleId : roleIds) {
-	                    RolesEntity role = (RolesEntity) session.get(RolesEntity.class, roleId); // Lấy role từ DB
+	                    RolesEntity role = (RolesEntity) session.get(RolesEntity.class, roleId);
 	                    if (role != null) {
-	                        roles.add(role); // Thêm role vào Set
+	                        roles.add(role);
 	                    }
 	                }
-	                existingUser.setRoles(roles); // Cập nhật roles cho người dùng
+	                existingUser.setRoles(roles);
 	            } else {
-	                existingUser.setRoles(new HashSet<>()); // Nếu không chọn quyền nào thì xóa hết roles
+	                existingUser.setRoles(new HashSet<>()); // Xóa hết roles nếu không chọn
 	            }
 
-	            session.merge(existingUser); // Cập nhật người dùng
-                redirectAttributes.addFlashAttribute("alertMessage", "User saved successfully!");
-	            redirectAttributes.addFlashAttribute("alertType", "success");
-	            return "redirect:/admin1337/users.htm";
+	            session.merge(existingUser);
 	        }
+
+	        redirectAttributes.addFlashAttribute("alertMessage", "User saved successfully!");
+	        redirectAttributes.addFlashAttribute("alertType", "success");
+
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        redirectAttributes.addFlashAttribute("alertMessage", "Error occurred while saving the User.");
@@ -210,6 +211,7 @@ public class UsersController {
 
 	    return "redirect:/admin1337/users.htm";
 	}
+
 
 
 	public UsersEntity getUserByEmail(String email) {

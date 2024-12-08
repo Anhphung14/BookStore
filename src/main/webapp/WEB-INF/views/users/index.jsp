@@ -62,7 +62,8 @@
 						<p>Manage users, roles, permissions, and profile.</p>
 					</div>
 					<div class="col-auto d-none d-sm-block">
-						<img class="page-icon" src="${pageContext.servletContext.contextPath}/resources/images/page.svg"
+						<img class="page-icon"
+							src="${pageContext.servletContext.contextPath}/resources/images/page.svg"
 							width="120px" alt="Page Icon">
 					</div>
 				</div>
@@ -86,8 +87,7 @@
 								</button>
 							</div>
 							<a class="btn btn-primary text-nowrap btn-add"
-								href="user/new.htm"> <i
-								class="fa fa-plus me-2"></i>Add
+								href="user/new.htm"> <i class="fa fa-plus me-2"></i>Add
 							</a>
 
 						</div>
@@ -96,23 +96,23 @@
 							<div
 								class="table-actionbar bg-primary bg-opacity-10 p-2 ps-3 d-none">
 								<div class="d-flex justify-content-between gap-3">
-									<div class="selected-count align-self-center"></div>
+									<!-- <div class="selected-count align-self-center"></div>
 									<div class="d-flex gap-1">
-										<!-- <a class="btn btn-rounded"> <i class="fa fa-eye"></i></a> <a
+										<a class="btn btn-rounded"> <i class="fa fa-eye"></i></a> <a
 											class="btn btn-rounded"> <i class="fa fa-eye-slash"></i>
-										</a> -->
+										</a>
 										<a class="btn btn-rounded"> <i class="fa fa-trash-alt"></i>
 										</a>
-									</div>
+									</div> -->
 								</div>
 							</div>
 
 							<div class="table-responsive">
 								<table class="table table-centered">
 									<tr>
-										<th width="30px"><input class="form-check-input"
+										<!-- <th width="30px"><input class="form-check-input"
 											type="checkbox" id="toggle" name="toggle"
-											onclick="checkAll()" /></th>
+											onclick="checkAll()" /></th> -->
 										<th width="30px" class="text-end">#</th>
 										<th>Name</th>
 										<th>Email</th>
@@ -123,9 +123,9 @@
 									</tr>
 									<c:forEach var="user" items="${users}" varStatus="status">
 										<tr>
-											<td><input type="checkbox" class="form-check-input"
+											<%-- <td><input type="checkbox" class="form-check-input"
 												id="cb${status.index}" name="cid[]" value="${user.id}"
-												onclick="isChecked(this.checked)"></td>
+												onclick="isChecked(this.checked)"></td> --%>
 											<%-- 											<td class="text-end">${(users.page - 1) * users.pageSize + status.index + 1}</td> --%>
 											<td class="text-end">${user.id}</td>
 											<td><a class="d-flex flex-nowrap align-items-center"
@@ -152,18 +152,21 @@
 
 											<%-- 											<td class="text-end align-middle"><span class="small text-uppercase ${user.isActive ? 'text-success' : 'text-danger'} bg-opacity-10 rounded px-2 py-1">${user.isActive ? 'Active' : 'Inactive'}</span></td> --%>
 											<td class="text-end align-middle"><span
-												class="small text-uppercase text-success bg-opacity-10 rounded px-2 py-1">Active</span></td>
+												class="small text-uppercase 
+        ${user.enabled == 1 ? 'text-success bg-opacity-10' : 'text-danger bg-opacity-10'} 
+        rounded px-2 py-1">
+													${user.enabled == 1 ? 'Active' : 'Inactive'} </span></td>
+
 											<td class="text-center align-middle">${user.updated_at}</td>
 											<td class="text-end">
 												<div class="d-flex gap-1">
-													<a class="btn btn-rounded"
-														href="user/edit/${user.id}.htm"><i
-														class="fa fa-pencil"></i></a> <a
+													<a class="btn btn-rounded" href="user/edit/${user.id}.htm"><i
+														class="fa fa-pencil"></i></a> <%-- <a
 														class="btn btn-rounded btn-delete"
 														href="javascript:void(0);"
-														data-url="user/delete/${user.id}.htm">
-														<i class="fa fa-trash-alt"></i>
-													</a>
+														data-url="user/delete/${user.id}.htm"> <i
+														class="fa fa-trash-alt"></i>
+													</a> --%>
 
 
 												</div>
@@ -186,8 +189,7 @@
 										<!-- Liên kết đến từng trang -->
 										<c:forEach var="i" begin="1" end="${totalPages}">
 											<li class="page-item ${i == currentPage ? 'active' : ''}">
-												<a class="page-link"
-												href="users.htm?page=${i}&size=${size}">${i}</a>
+												<a class="page-link" href="users.htm?page=${i}&size=${size}">${i}</a>
 											</li>
 										</c:forEach>
 

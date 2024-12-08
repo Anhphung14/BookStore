@@ -446,15 +446,16 @@ public class BooksDAO {
 		 }
 		 
 		 public List<BooksEntity> listBooks() {
-				Session session = sessionFactory.getCurrentSession();
-				
-				String hql = "FROM BooksEntity";
-				Query query = session.createQuery(hql);
-				
-				List<BooksEntity> listBooks = query.list();
-				
-				return listBooks;
+			    Session session = sessionFactory.getCurrentSession();
+			    
+			    String hql = "FROM BooksEntity WHERE status = 1";
+			    Query query = session.createQuery(hql);
+			    
+			    List<BooksEntity> listBooks = query.list();
+			    
+			    return listBooks;
 			}
+
 			
 			public BooksEntity getBookById(Long id) {
 				Session session = sessionFactory.getCurrentSession();

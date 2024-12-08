@@ -54,13 +54,12 @@
 					</h2>
 				</div>
 				<div class="col-auto d-none d-sm-block">
-					<img class="page-icon" src="${pageContext.request.contextPath}/resources/images/page.svg"
+					<img class="page-icon"
+						src="${pageContext.request.contextPath}/resources/images/page.svg"
 						width="120px" alt="Page Icon">
 				</div>
 			</div>
-			<form id="userForm"
-				action="user/save.htm"
-				method="POST">
+			<form id="userForm" action="user/save.htm" method="POST">
 				<input type="hidden" id="task" name="task" value="${task}">
 
 				<c:if test="${task != 'new'}">
@@ -80,15 +79,16 @@
 
 						<div class="form-floating mt-3">
 							<input class="form-control" id="email" name="email"
-								value="${user.email}" required> <label
-								class="form-label" for="email">Email <span
+								value="${user.email}" required
+								pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$">
+							<label class="form-label" for="email">Email <span
 								class="text-danger">*</span></label>
 						</div>
 
 						<div class="form-floating mt-3">
 							<input class="form-control" id="phone" name="phone"
-								value="${user.phone}"> <label class="form-label"
-								for="phone">Phone</label>
+								value="${user.phone}" pattern="^0(3|5|7|8|9)[0-9]{8}$" required>
+							<label class="form-label" for="phone">Phone</label>
 						</div>
 						<div class="form-floating mt-3">
 							<select class="form-control" id="gender" name="gender" required>
@@ -101,16 +101,31 @@
 						<div class="form-floating mt-3">
 							<div class="ms-2">Roles</div>
 							<select class="w-100 selectpicker" id="roles" name="roleIds"
-								multiple data-coreui-search="true" data-live-search="true">
+								data-coreui-search="true" data-live-search="true">
 								<c:forEach var="role" items="${roles}">
 									<option value="${role.id}"
 										${user.roles != null && user.roles.contains(role) ? 'selected' : ''}>
-										${role.name}
-									</option>
+										${role.name}</option>
 								</c:forEach>
 							</select>
 
+							<%-- <select class="w-100 selectpicker" id="roles" name="roleIds"
+								data-coreui-search="true" data-live-search="true">
+								<c:forEach var="role" items="${roles}">
+									<option value="${role.id}"
+										${user.roles != null && user.roles.contains(role) ? 'selected' : ''}>
+										${role.name}</option>
+								</c:forEach>
+							</select> --%>
 
+						</div>
+
+						<div class="form-floating mt-3">
+							<select class="form-select" id="employmentStatus" name="enabled"
+								aria-label="Employment Status">
+								<option value="1" ${user.enabled == 1 ? 'selected' : ''}>Active</option>
+								<option value="0" ${user.enabled == 0 ? 'selected' : ''}>Inactive</option>
+							</select> <label for="employmentStatus">Employment Status</label>
 						</div>
 
 

@@ -139,21 +139,21 @@
 								class="table-actionbar bg-primary bg-opacity-10 p-2 ps-3 d-none">
 								<div class="d-flex justify-content-between gap-3">
 									<div class="selected-count align-self-center"></div>
-									<div class="d-flex gap-1">
+									<!-- <div class="d-flex gap-1">
 										<a class="btn btn-rounded"> <i class="fa fa-eye"></i></a> <a
 											class="btn btn-rounded"> <i class="fa fa-eye-slash"></i>
 										</a> <a class="btn btn-rounded"> <i class="fa fa-trash-alt"></i>
 										</a>
-									</div>
+									</div> -->
 								</div>
 							</div>
 
 							<div class="table-responsive">
 								<table class="table table-centered table-hover">
 									<tr>
-										<th width="15px"><input class="text-end	form-check-input"
+										<!-- <th width="15px"><input class="text-end	form-check-input"
 											type="checkbox" id="toggle" name="toggle"
-											onclick="checkAll()" /></th>
+											onclick="checkAll()" /></th> -->
 										<th width="30px" class="text-start">#</th>
 										<th width="200x" class="text-center">Product</th>
 										<th width="30px" class="text-center">Status</th>
@@ -166,9 +166,9 @@
 									</tr>
 									<c:forEach var="book" items="${listBooks}" varStatus="status">
 										<tr>
-											<td class="align-middle">
+											<%-- <td class="align-middle">
 												<input type="checkbox" class="form-check-input" id="cb${status.index}" name="cid[]" value="${book.id}" onclick="isChecked(this.checked)">
-											</td>
+											</td> --%>
 <%-- 											<td class="text-end">${(users.page - 1) * users.pageSize + status.index + 1}</td> --%>
 											<td class="text-start align-middle">${book.id}</td>
 											<td>
@@ -240,9 +240,9 @@
 <!-- 													<a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#exampleModal"> -->
 <!-- 													    <i class="fa fa-plus-circle" aria-hidden="true"></i> -->
 <!-- 													</a> -->
-													<a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="prepareDelete(${book.id}, '${book.title}')">
+													<%-- <a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="prepareDelete(${book.id}, '${book.title}')">
 														<i class="fa fa-trash-alt"></i>
-													</a>
+													</a> --%>
 												</div>
 											</td>
 										</tr>

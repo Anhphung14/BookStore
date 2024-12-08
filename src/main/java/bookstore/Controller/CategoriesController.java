@@ -128,17 +128,29 @@ public class CategoriesController {
 
 	@RequestMapping(value = "/category/save", method = RequestMethod.POST)
 	public String saveCategory(@ModelAttribute("category") CategoriesEntity category, @RequestParam("task") String task,
-	        @RequestParam(value = "id", required = false) Long id,
-	        @RequestParam(value = "subcategoryNames", required = false) String subcategoryNames,
-	        @RequestParam(value = "subcategoryIdsToDelete", required = false) String[] subcategoryIdsToDelete,
-	        ModelMap model, HttpServletRequest request,
-	        RedirectAttributes redirectAttributes) {
+	                           @RequestParam(value = "id", required = false) Long id,
+	                           @RequestParam(value = "subcategoryNames", required = false) String subcategoryNames,
+	                           @RequestParam(value = "subcategoryIdsToDelete", required = false) String[] subcategoryIdsToDelete,
+	                           ModelMap model, HttpServletRequest request,
+	                           RedirectAttributes redirectAttributes) {
 
 	    Session session = factory.getCurrentSession();
 
 	    try {
 	        if ("new".equals(task)) {
-	            // Creating new category
+	            // Kiểm tra tên category trùng
+	            String hql = "FROM CategoriesEntity WHERE name = :name";
+	            Query query = session.createQuery(hql);
+	            query.setParameter("name", category.getName().trim());
+	            List<CategoriesEntity> existingCategories = query.list();
+
+	            if (!existingCategories.isEmpty()) {
+	                redirectAttributes.addFlashAttribute("alertMessage", "Category name already exists.");
+	                redirectAttributes.addFlashAttribute("alertType", "error");
+	                return "redirect:/admin1337/categories.htm";
+	            }
+
+	            // Tạo mới category
 	            LocalDateTime now = LocalDateTime.now();
 	            Timestamp currentDate = Timestamp.valueOf(now);
 	            category.setCreated_at(currentDate);
@@ -161,11 +173,12 @@ public class CategoriesController {
 	            redirectAttributes.addFlashAttribute("alertType", "success");
 
 	        } else if ("edit".equals(task)) {
-	            // Editing existing category
+	            // Chỉnh sửa category hiện có
 	            CategoriesEntity existingCategory = getCategoryById(id);
 	            existingCategory.setName(category.getName());
 	            existingCategory.setUpdated_at(new Date(System.currentTimeMillis()));
 
+	            // Xử lý xóa subcategory
 	            if (subcategoryIdsToDelete != null && subcategoryIdsToDelete.length > 0) {
 	                for (String subcategoryIdToDelete : subcategoryIdsToDelete) {
 	                    Long subcategoryId = Long.valueOf(subcategoryIdToDelete);
@@ -177,6 +190,7 @@ public class CategoriesController {
 	                }
 	            }
 
+	            // Cập nhật subcategory
 	            if (subcategoryNames != null && !subcategoryNames.isEmpty()) {
 	                List<SubcategoriesEntity> subcategories = new ArrayList<>();
 	                String[] subcategoryArray = subcategoryNames.split(",");
@@ -203,32 +217,49 @@ public class CategoriesController {
 	    return "redirect:/admin1337/categories.htm";
 	}
 
-
 	@RequestMapping(value = "/category/saveSubcategory", method = RequestMethod.POST)
 	public String saveSubcategory(@RequestParam("subcategoryId") Long subcategoryId, @RequestParam("name") String name,
-			ModelMap model, HttpServletRequest request) {
-		Session session = factory.getCurrentSession();
+	                              ModelMap model, HttpServletRequest request) {
+	    Session session = factory.getCurrentSession();
 
-		try {
-			SubcategoriesEntity subcategory = (SubcategoriesEntity) session.get(SubcategoriesEntity.class,
-					subcategoryId);
+	    try {
+	        // Chuẩn hóa tên subcategory: loại bỏ khoảng trắng thừa và chuyển về chữ thường
+	        String normalizedSubcategoryName = name.trim().toLowerCase().replaceAll("\\s+", " ");
 
-			if (subcategory != null) {
-				subcategory.setName(name);
-				session.update(subcategory);
-			} else {
-				model.addAttribute("message", "Subcategory not found.");
-				return "redirect:/admin1337/categories.htm";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			model.addAttribute("message", "An error occurred: " + e.getMessage());
-			return "redirect:/admin1337/categories.htm";
-		}
+	        // Kiểm tra trùng lặp tên Subcategory không phân biệt chữ hoa, chữ thường và khoảng trắng
+	        String hql = "FROM SubcategoriesEntity WHERE LOWER(TRIM(REGEXP_REPLACE(name, '\\s+', ' '))) = :name AND id != :subcategoryId";
+	        Query query = session.createQuery(hql);
+	        query.setParameter("name", normalizedSubcategoryName);
+	        query.setParameter("subcategoryId", subcategoryId);
+	        List<SubcategoriesEntity> existingSubcategories = query.list();
 
-		String referer = request.getHeader("Referer");
-		return "redirect:" + referer;
+	        if (!existingSubcategories.isEmpty()) {
+	            model.addAttribute("message", "Subcategory name already exists (case-insensitive, ignoring spaces).");
+	            return "redirect:/admin1337/categories.htm";
+	        }
+
+	        // Tiến hành cập nhật nếu không trùng
+	        SubcategoriesEntity subcategory = (SubcategoriesEntity) session.get(SubcategoriesEntity.class, subcategoryId);
+
+	        if (subcategory != null) {
+	            subcategory.setName(name.trim());
+	            session.update(subcategory);
+	        } else {
+	            model.addAttribute("message", "Subcategory not found.");
+	            return "redirect:/admin1337/categories.htm";
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        model.addAttribute("message", "An error occurred: " + e.getMessage());
+	        return "redirect:/admin1337/categories.htm";
+	    }
+
+	    String referer = request.getHeader("Referer");
+	    return "redirect:" + referer;
 	}
+
+
+
 
 	public CategoriesEntity getCategoryById(Long id) {
 		Session session = factory.getCurrentSession();

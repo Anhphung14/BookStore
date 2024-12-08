@@ -65,13 +65,12 @@ public class HomeController {
 	
 	private List<OrdersEntity> getOrdersWithUserInfo() {
 	    Session session = factory.getCurrentSession();
-	    // Sắp xếp theo ngày tạo giảm dần và giới hạn số lượng đơn hàng là 7
-	    String hql = "SELECT o FROM OrdersEntity o JOIN FETCH o.user ORDER BY o.createdAt DESC";
+	    String hql = "FROM OrdersEntity o WHERE o.orderStatus = :status";
 	    Query query = session.createQuery(hql);
-	    query.setMaxResults(7);  // Giới hạn kết quả trả về là 7
+	    query.setParameter("status", "Chờ xác nhận");
+	    query.setMaxResults(7);  
 	    return query.list();
 	}
-
 
 
     private long getUserCount() {

@@ -103,10 +103,19 @@ public class SuppliersController {
 	                            @RequestParam(value = "id", required = false) Long id, 
 	                            RedirectAttributes redirectAttributes) {
 	    Session session = factory.getCurrentSession();
-	    boolean isSuccess = false; // Biến boolean kiểm tra kết quả
+	    boolean isSuccess = false; // Variable to track success
 
 	    try {
-	        // Nếu task là 'new', tạo một nhà cung cấp mới
+	        // Check if the supplier name already exists in the database
+	        SuppliersEntity existingSupplierByName = getSupplierByName(supplier.getName());
+	        if (existingSupplierByName != null && (id == null || !existingSupplierByName.getId().equals(id))) {
+	            // If a supplier with the same name exists, prevent the update or creation
+	            redirectAttributes.addFlashAttribute("alertMessage", "Supplier name already exists.");
+	            redirectAttributes.addFlashAttribute("alertType", "danger");
+	            return "redirect:/admin1337/suppliers.htm";
+	        }
+
+	        // If task is 'new', create a new supplier
 	        if ("new".equals(task)) {
 	            LocalDateTime now = LocalDateTime.now();
 	            Timestamp currentDate = Timestamp.valueOf(now);
@@ -114,9 +123,9 @@ public class SuppliersController {
 	            supplier.setCreatedAt(currentDate);
 	            supplier.setUpdatedAt(currentDate);
 	            session.save(supplier);
-	            isSuccess = true; // Đặt là true nếu thao tác thành công
+	            isSuccess = true; // Set to true if the operation is successful
 	        }
-	        // Nếu task là 'edit', cập nhật một nhà cung cấp hiện có
+	        // If task is 'edit', update an existing supplier
 	        else if ("edit".equals(task)) {
 	            SuppliersEntity existingSupplier = (SuppliersEntity) session.get(SuppliersEntity.class, id);
 	            if (existingSupplier != null) {
@@ -128,14 +137,14 @@ public class SuppliersController {
 	                Date currentDate = new Date(System.currentTimeMillis());
 	                existingSupplier.setUpdatedAt(currentDate);
 	                session.update(existingSupplier);
-	                isSuccess = true; // Đặt là true nếu thao tác thành công
+	                isSuccess = true; // Set to true if the operation is successful
 	            }
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
 
-	    // Dựa trên giá trị của biến isSuccess, trả thông báo tương ứng
+	    // Based on the value of isSuccess, return the corresponding message
 	    if (isSuccess) {
 	        redirectAttributes.addFlashAttribute("alertMessage", "Supplier saved/updated successfully!");
 	        redirectAttributes.addFlashAttribute("alertType", "success");
@@ -146,6 +155,15 @@ public class SuppliersController {
 
 	    return "redirect:/admin1337/suppliers.htm";
 	}
+
+	// Method to check if a supplier with the same name exists
+	private SuppliersEntity getSupplierByName(String name) {
+	    Session session = factory.getCurrentSession();
+	    Query query = session.createQuery("FROM SuppliersEntity WHERE name = :name");
+	    query.setParameter("name", name);
+	    return (SuppliersEntity) query.uniqueResult();
+	}
+
 
 
 	@RequestMapping(value = "/supplier/delete/{id}.htm", method = RequestMethod.GET)
