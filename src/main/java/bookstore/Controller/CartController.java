@@ -41,6 +41,7 @@ public class CartController {
         // Giả sử cartId là cố định, bạn có thể điều chỉnh cho phù hợp với hệ thống của bạn
     	UsersEntity user = (UsersEntity) session.getAttribute("user");
         Long cartId = user.getCart().getId();
+        
         if (user != null) {
         	Long countBooksInCart = cartDAO.countItemsInCart(cartId);
         	session.setAttribute("countBooksInCart", countBooksInCart);
@@ -98,6 +99,9 @@ public class CartController {
         try {
             // Lấy người dùng từ session
             UsersEntity user = (UsersEntity) session.getAttribute("user");
+            
+            System.out.println(bookId);
+            System.out.println(quantity);
             
             if (user != null) {
             	Long userId = user.getId();  

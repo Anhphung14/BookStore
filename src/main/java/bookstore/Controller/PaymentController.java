@@ -71,6 +71,7 @@ public class PaymentController {
             return "redirect:/cart/view.htm";
         }
     	
+    	
         //System.out.println("List selected: " + selectedItemIds);
     	Map<String, Map<String, List<String>>> locationData = shippingAddressDAO.getProvincesWithDistrictsAndWards();
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -174,6 +175,8 @@ public class PaymentController {
                 }
             }
             
+            System.out.println(">>>>>>>>>>>>>" + totalPrice);
+            
             DiscountsEntity discount = discountsDAO.getDiscountByCode(discountCode);
             if(discount == null && !discountCode.isEmpty()) {
             	redirectAttributes.addFlashAttribute("alertMessage", "Mã giảm giá không hợp lệ!");
@@ -245,8 +248,11 @@ public class PaymentController {
                 orderDetail.setUpdatedAt(new Date());
                 // Lưu chi tiết đơn hàng
                 orderDetailDAO.saveOrderDetail(orderDetail);
-                
+                System.out.println("!!!!!!!!!!!!!!!!!!" + cartItem.getBook().getId());
                 InventoryEntity inventoryOfCurrentBook = inventoryDAO.getInventoryByBookId(cartItem.getBook().getId());
+                
+                System.out.println("1111111111111111" + inventoryOfCurrentBook);
+                
                 Integer currentStockQuantity = inventoryOfCurrentBook.getStock_quantity();
                 inventoryOfCurrentBook.setStock_quantity(currentStockQuantity - 1);
                 //System.out.println("currentStockQuantity: " + (currentStockQuantity - 1 ));
