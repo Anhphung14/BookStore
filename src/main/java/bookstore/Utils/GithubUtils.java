@@ -22,7 +22,7 @@ import bookstore.Models.auth.GithubPojo;
 @Component
 public class GithubUtils {
 	public static String GITHUB_CLIENT_ID = "Ov23liaEWyhUvSt8WkUC";
-	public static String GITHUB_CLIENT_SECRET = "SECRET_TRONG_ZALO";
+	public static String GITHUB_CLIENT_SECRET = "01c8de2e317901393926a96142921071bedf718d";
 	public static String GITHUB_REDIRECT_URI = "http://localhost:8080/login-github.htm";
 	public static String GITHUB_LINK_GET_TOKEN = "https://github.com/login/oauth/access_token";
 	public static String GITHUB_LINK_GET_USER_INFO = "https://api.github.com/user";

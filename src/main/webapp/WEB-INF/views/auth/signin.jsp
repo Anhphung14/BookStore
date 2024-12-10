@@ -97,17 +97,6 @@
 
 											<button onclick="onClick(event)" type="submit"
 												class="btn btn-primary w-100 submit">Đăng nhập</button>
-											<div class="mt-3 row">
-												<div class="text-center col-12">
-													<p class="text-muted">
-														Bạn chưa có tài khoản? <a
-															class="text-primary fw-medium ms-1"
-															href="${pageContext.request.contextPath}/signup.htm">Đăng
-															ký</a>
-													</p>
-												</div>
-											</div>
-
 											<div class="d-flex justify-content-center mx-3 my-1 py-2">
 											    <div class="mx-2">
 											        <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&redirect_uri=http://localhost:8080/bookstore/login-google.htm&response_type=code&client_id=644611492314-nck1gv86bbn2a8jc97ivgf3viuaged1p.apps.googleusercontent.com&approval_prompt=force" target="_blank"
@@ -123,8 +112,17 @@
 											        </a>
 											    </div>
 											</div>
-
 											
+											<div class="mt-3 row">
+												<div class="text-center col-12">
+													<p class="text-muted">
+														Bạn chưa có tài khoản? <a
+															class="text-primary fw-medium ms-1"
+															href="${pageContext.request.contextPath}/signup.htm">Đăng
+															ký</a>
+													</p>
+												</div>
+											</div>
 										</form>
 									</div>
 								</div>
