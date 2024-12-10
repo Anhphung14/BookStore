@@ -95,10 +95,7 @@ public class AuthController {
 	@Autowired private 
 	CustomUserDetailsService userDetailsService;
 	
-	 @Autowired
-	 private RestTemplate restTemplate;
-
-	 private static final String RECAPTCHA_SECRET_KEY = "6LfGAJYqAAAAAB2PBvsV_38QchRbZ5G_bW2SEwpu";
+	private static final String RECAPTCHA_SECRET_KEY = "6LfGAJYqAAAAAB2PBvsV_38QchRbZ5G_bW2SEwpu";
 
 	// LOGIN
 	@Transactional
