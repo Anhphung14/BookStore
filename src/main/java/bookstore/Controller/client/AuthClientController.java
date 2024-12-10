@@ -29,7 +29,7 @@ import bookstore.Entity.RolesEntity;
 import bookstore.Entity.UsersEntity;
 import bookstore.Service.MailService;
 import bookstore.Service.OTPService;
-import bookstore.Util.PasswordUtil;
+import bookstore.Utils.PasswordUtil;
 
 @Controller
 @Transactional

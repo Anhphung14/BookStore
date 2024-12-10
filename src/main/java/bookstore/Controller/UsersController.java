@@ -1,7 +1,5 @@
 package bookstore.Controller;
 
-import bookstore.Util.PasswordUtil;
-
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -33,6 +31,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import bookstore.Entity.RolesEntity;
 import bookstore.Entity.UsersEntity;
+import bookstore.Utils.PasswordUtil;
 
 @Transactional
 @Controller

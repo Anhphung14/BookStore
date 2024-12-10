@@ -2,7 +2,7 @@ package bookstore.Controller;
 
 import bookstore.Entity.UsersEntity;
 import bookstore.Service.UploadService;
-import bookstore.Util.PasswordUtil;
+import bookstore.Utils.PasswordUtil;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;

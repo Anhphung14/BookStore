@@ -1,4 +1,4 @@
-package bookstore.Util;
+package bookstore.Utils;
 
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

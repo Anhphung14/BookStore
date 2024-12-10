@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
+import bookstore.Service.CustomUserDetailsService;
 import bookstore.security.CustomAuthenticationSuccessHandler;
 import bookstore.security.CustomLogoutSuccessHandler;
 
@@ -34,11 +36,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Autowired
     private CustomLogoutSuccessHandler customLogoutSuccessHandler;
 	
+	@Autowired private 
+	CustomUserDetailsService userDetailsService;
+	
 	@Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		// Sử dụng custom UserDetailsService
-        auth.userDetailsService(userDetailsService()) 
+        auth.userDetailsService(userDetailsService) 
         	.passwordEncoder(passwordEncoder());
+    }
+	
+	@Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 	
 	@Bean
@@ -67,7 +78,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 	    http.csrf().disable()
 	        .authorizeRequests()
-	            .antMatchers("/signup.htm","/index.htm", "/categories/**", "/productdetail/**", "/cart/add.htm/**", "/verify-email.htm/**", "/resend-link.htm/**", "/saveSignup.htm/**", "/search.htm/**", "/allProduct.htm/**").permitAll()
+	            .antMatchers("/login-github.htm**", "/login-google.htm**", "/signup.htm","/index.htm", "/categories/**", "/productdetail/**", "/cart/add.htm/**", "/verify-email.htm/**", "/resend-link.htm/**", "/saveSignup.htm/**", "/search.htm/**", "/allProduct.htm/**").permitAll()
 	            .antMatchers("/admin1337/**").hasRole("ADMIN")
 	            .antMatchers("/**").hasAnyRole("USER", "ADMIN")
 	            .anyRequest().authenticated()
@@ -90,7 +101,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	            .permitAll()
 	            .and()
 	        .exceptionHandling()
-	            .accessDeniedPage("/signup.htm");
+	            .accessDeniedPage("/signin.htm?error=true");
 	}
 	
 

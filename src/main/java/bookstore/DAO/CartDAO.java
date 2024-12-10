@@ -253,6 +253,25 @@ public class CartDAO {
             }
         }
     }
+    
+    public boolean saveNewCart(CartsEntity cart) {
+    	Session session = sessionFactory.openSession();
+    	Transaction t = session.beginTransaction();
+    	
+    	try {
+    		session.save(cart);
+    		t.commit();
+    		
+    		return true;
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    		t.rollback();
+    	} finally {
+			session.close();
+		}
+    	
+    	return false;
+    }
 
     
 }

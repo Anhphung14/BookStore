@@ -97,16 +97,23 @@
 												</div>
 											</div>
 
-											<!-- <div class="mx-3 my-1 py-2">
-											<hr class="mt-2 mb-2 border-secondary-subtle">
-												<div class="text-center py-3">
-													<a href="https://www.google.com" target="_blank"
-														class="google-btn"> <img
-														src="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png"
-														alt="Google Login">
-													</a>
-												</div>
-											</div> -->
+											<div class="d-flex justify-content-center mx-3 my-1 py-2">
+											    <div class="mx-2">
+											        <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&redirect_uri=http://localhost:8080/bookstore/login-google.htm&response_type=code&client_id=644611492314-nck1gv86bbn2a8jc97ivgf3viuaged1p.apps.googleusercontent.com&approval_prompt=force" target="_blank"
+											            class="google-btn">
+											            <img src="resources/images/search.png"
+											            alt="Google Login" style="max-width: 30px;">
+											        </a>
+											    </div>
+											    <div class="mx-2">
+											        <a href="https://github.com/login/oauth/authorize?scope=user&client_id=Ov23liaEWyhUvSt8WkUC" target="_blank"
+											            class="google-btn">
+											            <img src="resources/images/github-logo.png" alt="GitHub Login" style="max-width: 30px;">
+											        </a>
+											    </div>
+											</div>
+
+											
 										</form>
 									</div>
 								</div>

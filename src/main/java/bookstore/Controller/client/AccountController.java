@@ -45,7 +45,7 @@ import bookstore.Entity.SubcategoriesEntity;
 //import bookstore.Entity.Order_DiscountsEntity;
 import bookstore.Entity.UsersEntity;
 import bookstore.Service.UploadService;
-import bookstore.Util.PasswordUtil;
+import bookstore.Utils.PasswordUtil;
 
 @Transactional
 @Controller

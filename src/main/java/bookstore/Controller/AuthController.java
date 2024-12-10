@@ -1,5 +1,6 @@
 package bookstore.Controller;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -8,16 +9,24 @@ import java.util.Random;
 import java.util.Set;
 
 import javax.mail.internet.MimeMessage;
-
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
+import org.apache.http.client.ClientProtocolException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -27,14 +36,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import bookstore.DAO.CartDAO;
+import bookstore.DAO.RolesDAO;
 import bookstore.DAO.UserDAO;
 import bookstore.DTO.OTPDTO;
 import bookstore.Entity.CartsEntity;
 import bookstore.Entity.RolesEntity;
 import bookstore.Entity.UsersEntity;
-import bookstore.Util.PasswordUtil;
+import bookstore.Models.auth.GithubPojo;
+import bookstore.Models.auth.GooglePojo;
+import bookstore.Service.CustomUserDetailsService;
 import bookstore.Service.MailService;
 import bookstore.Service.OTPService;
+import bookstore.Utils.GithubUtils;
+import bookstore.Utils.GoogleUtils;
+import bookstore.Utils.PasswordUtil;
 
 @Controller
 public class AuthController {
@@ -49,6 +65,25 @@ public class AuthController {
 	
 	@Autowired
 	OTPService otpService;
+	
+	@Autowired
+	GoogleUtils googleUtils;
+
+	@Autowired
+	GithubUtils githubUtils;
+	
+	@Autowired
+	RolesDAO rolesDAO;
+	
+	@Autowired
+	CartDAO cartDAO;
+	
+	@Autowired
+	private AuthenticationManager authenticationManager;
+	
+	@Autowired private 
+	CustomUserDetailsService userDetailsService;
+	
 
 	// LOGIN
 	@Transactional
@@ -56,6 +91,154 @@ public class AuthController {
 	public String login() {
 		Session session = factory.getCurrentSession();
 		return "auth/signin";
+	}
+	
+	@RequestMapping("/login-google")
+	public String loginGoogle(HttpSession session, HttpServletRequest request) throws ClientProtocolException, IOException {
+		String code = request.getParameter("code");
+		
+		if (code == null || code.isEmpty()) {
+			return "redirect:/index.htm?error=true";
+		}
+		
+		String accessToken = googleUtils.getToken(code);
+		
+		GooglePojo googlePojo = googleUtils.getUserInfo(accessToken);
+		
+		UsersEntity user = userDAO.getUserByEmai(googlePojo.getEmail());
+		
+		if (user == null) {
+			user = new UsersEntity();
+			user.setAvatar(googlePojo.getPicture());
+			user.setEmail(googlePojo.getEmail());
+			user.setPassword("");
+			user.setFullname(googlePojo.getName());
+			user.setGender(1);
+			user.setPhone("");
+			user.setCreated_at(new Date());
+			user.setUpdated_at(new Date());
+			user.setEnabled(1);
+			
+			RolesEntity role = rolesDAO.getRoleByName("ROLE_USER");
+			if (role != null) {
+	            Set<RolesEntity> roles = new HashSet<>();
+	            roles.add(role);
+	            user.setRoles(roles);
+	        }
+			
+			boolean isSavedUser = userDAO.saveNewUser(user);
+			
+			if (isSavedUser) {
+				CartsEntity cart = new CartsEntity();
+		        cart.setUser(user);
+		        cart.setStatus(1); 
+		        cart.setCreatedAt(new Date());
+		        cart.setUpdatedAt(new Date());
+
+		        
+		        boolean isSavedCart = cartDAO.saveNewCart(cart);
+		        if (!isSavedCart) {
+		        	System.out.println("CO LOI ROI!!!!!");
+		        	return "redirect:/signin.htm?error=true";
+		        } else {
+		        	user.setCart(cart);
+		        }
+			}
+		}
+		
+//		UserDetails userDetails = googleUtils.buildUser(googlePojo);
+//		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//		authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//		SecurityContextHolder.getContext().setAuthentication(authentication);
+		
+		
+//		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+//		        user.getEmail(), 
+//		        "", // Không cần mật khẩu trong trường hợp này
+//		        AuthorityUtils.createAuthorityList("ROLE_USER")
+//		    );
+//
+//		    // Xác thực người dùng thông qua AuthenticationManager
+//	    Authentication auth = authenticationManager.authenticate(authentication);
+//
+//	    // Lưu thông tin người dùng vào SecurityContext
+//	    SecurityContextHolder.getContext().setAuthentication(auth);
+		
+		
+		UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		
+		session.setAttribute("user", user);
+
+		
+		return "redirect:/index.htm";
+	}
+	
+	@RequestMapping("/login-github")
+	public String loginGithub(HttpSession session, HttpServletRequest request) throws ClientProtocolException, IOException {
+		String code = request.getParameter("code");
+		
+		System.out.println(code);
+		
+		if (code == null || code.isEmpty()) {
+			return "redirect:/index.htm?error=true";
+		}
+		
+		String accessToken = githubUtils.getToken(code);
+		System.out.println(accessToken);
+		
+		GithubPojo githubPojo = githubUtils.getUserInfo(accessToken);
+		
+		UsersEntity user = userDAO.getUserByEmai(githubPojo.getEmail());
+		
+		if (user == null) {
+			user = new UsersEntity();
+			user.setAvatar(githubPojo.getAvatar_url());
+			user.setEmail(githubPojo.getEmail());
+			user.setPassword("");
+			user.setFullname(githubPojo.getName() != null ? githubPojo.getName() : githubPojo.getLogin());
+			user.setGender(1);
+			user.setPhone("");
+			user.setCreated_at(new Date());
+			user.setUpdated_at(new Date());
+			user.setEnabled(1);
+			
+			RolesEntity role = rolesDAO.getRoleByName("ROLE_USER");
+			if (role != null) {
+	            Set<RolesEntity> roles = new HashSet<>();
+	            roles.add(role);
+	            user.setRoles(roles);
+	        }
+			
+			boolean isSavedUser = userDAO.saveNewUser(user);
+			
+			if (isSavedUser) {
+				CartsEntity cart = new CartsEntity();
+		        cart.setUser(user);
+		        cart.setStatus(1); 
+		        cart.setCreatedAt(new Date());
+		        cart.setUpdatedAt(new Date());
+
+		        
+		        boolean isSavedCart = cartDAO.saveNewCart(cart);
+		        if (!isSavedCart) {
+		        	System.out.println("CO LOI ROI!!!!!");
+		        	return "redirect:/signin.htm?error=true";
+		        } else {
+		        	user.setCart(cart);
+		        }
+			}
+		}
+		
+		UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		
+		session.setAttribute("user", user);
+		
+		
+		return "redirect:/index.htm";
 	}
 
 	@Transactional
@@ -126,7 +309,7 @@ public class AuthController {
 	        user.setGender(1);
 
 //	        RolesEntity role = (RolesEntity) session.get(RolesEntity.class, 3L);
-	        RolesEntity role = getRoleByName("ROLE_USER");
+	        RolesEntity role = rolesDAO.getRoleByName("ROLE_USER");
 	        
 	        if (role != null) {
 	            Set<RolesEntity> roles = new HashSet<>();
@@ -139,8 +322,8 @@ public class AuthController {
 			String emailContent = "<html><body>"
 	                + "<h5>Hello " + user.getEmail() + ",</h5>"
 	                + "<p>Click the following link to confirm and activate your account:</p>"
-	                + "<h5 style=\"color: #4CAF50;\">" + "http://127.0.0.1:8080/bookstore/verify-email.htm?code="+ otpCode + "</h5>"
-	                + "<p>Bạn có 1 phút để xác thực tài khoản 😎</p>"
+	                + "<h5 style=\"color: #4CAF50;\">" + "http://localhost:8080/bookstore/verify-email.htm?code="+ otpCode + "</h5>"
+//	                + "<p>Bạn có 1 phút để xác thực tài khoản 😎</p>"
 	                + "<p>Regards,<br>BookStore</p>"
 	                + "<footer style=\"font-size: 0.8em; color: #777;\">This is an automated email. Please do not reply.</footer>"
 	                + "</body></html>";
@@ -357,13 +540,5 @@ public class AuthController {
 	    return user;
 	}
 	
-	@Transactional
-	public RolesEntity getRoleByName(String roleName) {
-		String hql = "FROM RolesEntity r WHERE r.name = :roleName";
-	    return (RolesEntity) factory.getCurrentSession()
-	                                       .createQuery(hql)
-	                                       .setParameter("roleName", roleName)
-	                                       .uniqueResult();
-	}
 
 }

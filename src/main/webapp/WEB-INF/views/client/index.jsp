@@ -70,7 +70,6 @@
 }
 </style>
 <body class="tg-home tg-homeone">
-
 	<div id="tg-wrapper" class="tg-wrapper tg-haslayout">
 		<!--************************************
 				Header Start

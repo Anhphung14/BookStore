@@ -140,6 +140,9 @@ public class OrderDAO {
 	
     public Long createOrder(OrdersEntity order) {
         Session session = sessionFactory.getCurrentSession();
+        
+        System.out.println(order.toString());
+        
         session.saveOrUpdate(order); // Lưu đơn hàng hoặc cập nhật nếu đã tồn tại
         return order.getId(); // Trả về ID của đơn hàng mới tạo
     }

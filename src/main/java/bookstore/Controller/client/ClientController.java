@@ -57,8 +57,6 @@ public class ClientController {
         List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
         UsersEntity userSession = (UsersEntity) session.getAttribute("user");
 
-
-        
         List<BooksEntity> bookList = booksDAO.listBooks(); 
 
         Map<Long, Double> bookDiscounts = new HashMap<>();

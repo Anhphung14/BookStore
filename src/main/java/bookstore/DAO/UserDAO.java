@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import bookstore.Entity.BooksEntity;
 import bookstore.Entity.UsersEntity;
-import bookstore.Util.PasswordUtil;
+import bookstore.Utils.PasswordUtil;
 
 @Repository
 @Transactional
@@ -33,6 +33,25 @@ public class UserDAO {
                                                 .setParameter("id", id)
                                                 .uniqueResult();
         return user;
+    }
+    
+    public boolean saveNewUser(UsersEntity user) {
+    	Session session = sessionFactory.openSession();
+		Transaction t = session.beginTransaction();
+		
+		try {
+			session.save(user);
+			t.commit();
+
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			t.rollback();
+		} finally {
+			session.close();
+		}
+		
+		return false;
     }
     
     public boolean checkOldPassword(Long userId, String oldPassword) {
