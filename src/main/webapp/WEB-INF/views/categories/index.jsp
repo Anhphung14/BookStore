@@ -95,18 +95,18 @@
 								class="table-actionbar bg-primary bg-opacity-10 p-2 ps-3 d-none">
 								<div class="d-flex justify-content-between gap-3">
 									<div class="selected-count align-self-center"></div>
-									<div class="d-flex gap-1">
+									<!-- <div class="d-flex gap-1">
 										<a class="btn btn-rounded"> <i class="fa fa-trash-alt"></i>
 										</a>
-									</div>
+									</div> -->
 								</div>
 							</div>
 							<div class="table-responsive">
 								<table class="table table-centered">
 									<tr>
-										<th width="30px"><input class="form-check-input"
+										<!-- <th width="30px"><input class="form-check-input"
 											type="checkbox" id="toggle" name="toggle"
-											onclick="checkAll()" /></th>
+											onclick="checkAll()" /></th> -->
 										<th width="30px" class="text-end">#</th>
 										<th>Name</th>
 										<th width="160px" class="text-center">Updated</th>
@@ -116,9 +116,9 @@
 									<c:forEach var="category" items="${categories}"
 										varStatus="status">
 										<tr>
-											<td><input type="checkbox" class="form-check-input"
+										<%-- 	<td><input type="checkbox" class="form-check-input"
 												id="cb${status.index}" name="cid[]" value="${category.id}"
-												onclick="isChecked(this.checked)"></td>
+												onclick="isChecked(this.checked)"></td> --%>
 											<td class="text-end">${category.id}</td>
 											<td>${category.name}</td>
 											<td class="text-center align-middle">${category.updated_at}</td>
@@ -146,11 +146,12 @@
 													<a class="btn btn-rounded"
 														href="category/edit/${category.id}.htm">
 														<i class="fa fa-pencil"></i>
-													</a> <a class="btn btn-rounded btn-delete"
+													</a> 
+												<%-- 	<a class="btn btn-rounded btn-delete"
 														href="javascript:void(0);"
 														data-url="category/delete/${category.id}.htm">
 														<i class="fa fa-trash-alt"></i>
-													</a>
+													</a> --%>
 												</div>
 											</td>
 										</tr>

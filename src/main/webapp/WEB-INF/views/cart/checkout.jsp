@@ -45,16 +45,16 @@
                                 <input type="hidden" name="selectedItems" value="${cartItem.id}">
                             </c:forEach>
                             <div class="field">
-                                <label for="name" class="field__label">Họ và tên</label>
+                                <label for="name" class="field__label">Họ và tên<span class="text-danger">*</span></label>
                                 <input id="name" name="name" type="text" class="field__input" value="${user.fullname}" required>
                             </div>
                             <div class="field">
-                                <label for="phone" class="field__label">Số điện thoại</label>
-                                <input id="phone" name="phone" type="tel" class="field__input" value="${user.phone}" required>
+                                <label for="phone" class="field__label">Số điện thoại<span class="text-danger">*</span></label>
+                                <input id="phone" name="phone" type="tel" class="field__input" value="${user.phone}" required pattern="^0(3|5|7|8|9)[0-9]{8}$">
                             </div>
                             <div class="field">
-                                <label for="email" class="field__label">Email</label>
-                                <input id="email" name="email" type="email" class="field__input" value="${user.email}" required>
+                                <label for="email" class="field__label">Email<span class="text-danger">*</span></label>
+                                <input id="email" name="email" type="email" class="field__input" value="${user.email}" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$">
                             </div>
                             
                             <div class="row mt-3">

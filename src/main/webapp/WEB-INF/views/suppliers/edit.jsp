@@ -99,14 +99,14 @@
 
 						<div class="form-floating mt-3">
 							<input class="form-control" id="email" name="email"
-								value="${supplier.email}" required> <label
+								value="${supplier.email}" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"> <label
 								class="form-label" for="email">Email <span
 								class="text-danger">*</span></label>
 						</div>
 
 						<div class="form-floating mt-3">
 							<input class="form-control" id="phone" name="phone"
-								value="${supplier.phone}"> <label class="form-label"
+								value="${supplier.phone}" pattern="^0(3|5|7|8|9)[0-9]{8}$" required> <label class="form-label"
 								for="phone">Phone <span class="text-danger">*</span></label>
 						</div>
 

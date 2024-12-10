@@ -395,10 +395,12 @@
         	console.log(event.currentTarget.getAttribute('data-book-id'));
         	console.log(event.currentTarget.getAttribute('data-book-id'));
         	 var bookId = event.currentTarget.getAttribute('data-book-id');
-        	 
-			         	
 //              var quantity = event.currentTarget.getAttribute('data-quantity');
              var quantity = document.querySelector('#quantity1').value;
+             
+             if (quantity < 1) {
+				quantity = 1;	
+             } 
              console.log("bookId:", bookId);
              console.log("quantity:", quantity);
             // Gửi GET request để thêm sách vào giỏ hàng

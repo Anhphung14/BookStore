@@ -1,6 +1,11 @@
 package bookstore.Controller;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -14,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.apache.http.client.ClientProtocolException;
+import org.cloudinary.json.JSONObject;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -34,7 +40,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import bookstore.DAO.CartDAO;
 import bookstore.DAO.RolesDAO;
@@ -84,6 +95,10 @@ public class AuthController {
 	@Autowired private 
 	CustomUserDetailsService userDetailsService;
 	
+	 @Autowired
+	 private RestTemplate restTemplate;
+
+	 private static final String RECAPTCHA_SECRET_KEY = "6LfGAJYqAAAAAB2PBvsV_38QchRbZ5G_bW2SEwpu";
 
 	// LOGIN
 	@Transactional
@@ -244,21 +259,28 @@ public class AuthController {
 	@Transactional
 	@RequestMapping(value = "/signin", method = RequestMethod.POST)
 	public String handle_login(@RequestParam("email") String email, @RequestParam("password") String password,
-			HttpSession session) {
+	                           @RequestParam("g-recaptcha-response") String recaptchaResponse, HttpSession session) {
 
-		if (email.isEmpty() || password.isEmpty()) {
-			return "redirect:signin.htm";
-		}
+	    // Kiểm tra reCAPTCHA
+	    if (!verifyCaptcha(recaptchaResponse)) {
+	        return "redirect:signin.htm?error=recaptcha";
+	    }
 
-		UsersEntity user = userDAO.getUserByEmailPass(email, password);
+	    if (email.isEmpty() || password.isEmpty()) {
+	        return "redirect:signin.htm";
+	    }
 
-		if (user == null) {
-			return "redirect:signin.htm";
-		} else {
-			session.setAttribute("user", user);
-			return "redirect:home.htm";
-		}
+	    UsersEntity user = userDAO.getUserByEmailPass(email, password);
+
+	    if (user == null) {
+	        return "redirect:signin.htm";
+	    } else {
+	        session.setAttribute("user", user);
+	        return "redirect:home.htm";
+	    }
 	}
+
+
 	
 	
 	// SIGNOUT
@@ -540,5 +562,40 @@ public class AuthController {
 	    return user;
 	}
 	
+	@Transactional
+	public RolesEntity getRoleByName(String roleName) {
+		String hql = "FROM RolesEntity r WHERE r.name = :roleName";
+	    return (RolesEntity) factory.getCurrentSession()
+	                                       .createQuery(hql)
+	                                       .setParameter("roleName", roleName)
+	                                       .uniqueResult();
+	}
+	
+	//Recaptcha
+	public boolean verifyCaptcha(String recaptchaResponse) {
+        String secretKey = "6LfGAJYqAAAAAB2PBvsV_38QchRbZ5G_bW2SEwpu"; // Thay bằng secret key của bạn
+        try {
+            URL url = new URL("https://www.google.com/recaptcha/api/siteverify");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+
+            String postData = "secret=" + secretKey + "&response=" + recaptchaResponse;
+
+            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+            writer.write(postData);
+            writer.flush();
+
+            InputStreamReader reader = new InputStreamReader(connection.getInputStream());
+            JsonObject responseJson = JsonParser.parseReader(reader).getAsJsonObject();
+
+            return responseJson.get("success").getAsBoolean(); // Kiểm tra xem reCAPTCHA có thành công hay không
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 
 }

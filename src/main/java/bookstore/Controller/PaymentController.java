@@ -250,9 +250,7 @@ public class PaymentController {
                 orderDetailDAO.saveOrderDetail(orderDetail);
                 System.out.println("!!!!!!!!!!!!!!!!!!" + cartItem.getBook().getId());
                 InventoryEntity inventoryOfCurrentBook = inventoryDAO.getInventoryByBookId(cartItem.getBook().getId());
-                
-                System.out.println("1111111111111111" + inventoryOfCurrentBook);
-                
+               
                 Integer currentStockQuantity = inventoryOfCurrentBook.getStock_quantity();
                 inventoryOfCurrentBook.setStock_quantity(currentStockQuantity - 1);
                 //System.out.println("currentStockQuantity: " + (currentStockQuantity - 1 ));

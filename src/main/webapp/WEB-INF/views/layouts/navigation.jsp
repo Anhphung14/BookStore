@@ -100,10 +100,10 @@
 			<li><a class="nav-link" href="roles.htm" style="color: #343a40;">
 					<i class="fa fa-user-check"></i><span>Roles</span>
 			</a></li>
-			<li><a class="nav-link" href="permissions.htm"
+			<!-- <li><a class="nav-link" href="permissions.htm"
 				style="color: #343a40;"> <i class="fa fa-shield-alt fa-fw"></i>
 					<span>Permissions</span>
-			</a></li>
+			</a></li> -->
 		</ul>
 	</div>
 </div>

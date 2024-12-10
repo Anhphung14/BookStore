@@ -19,11 +19,15 @@
 	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
 	crossorigin="anonymous">
 
-<!-- Custom CSS -->
+<script
+	src="https://www.google.com/recaptcha/api.js?render=6LfGAJYqAAAAAB0X5ZPkvqjkKV0yhiA3zsSHhkeW&onload=onRecaptchaLoad"
+	async defer></script>
+
 <style>
 .mt-5 {
-    margin-top: 7rem !important;
+	margin-top: 7rem !important;
 }
+
 .auth-logo img {
 	max-width: 150px;
 }
@@ -52,13 +56,16 @@
 										<form id="signinform" class="needs-validation" novalidate
 											action="${pageContext.request.contextPath}/perform_login"
 											method="POST">
+											<input type="hidden" id="g-recaptcha-response"
+												name="g-recaptcha-response" />
 
 											<!-- Email Input -->
 											<div class="mb-3">
 												<label for="email" class="form-label">Email</label> <input
 													type="email" class="form-control" name="email" id="email"
 													placeholder="Vui lòng nhập email" required>
-												<div class="invalid-feedback">Vui lòng nhập email.</div>
+												<div class="invalid-feedback">Vui lòng nhập email hợp
+													lệ.</div>
 											</div>
 
 											<!-- Password Input -->
@@ -76,23 +83,27 @@
 												</div>
 											</div>
 											<div
-												class="form-check mb-3 d-flex justify-content-between align-items-center">
-												<div>
-													<input class="form-check-input" type="checkbox" value=""
-														id="remember-me"> <label class="form-check-label"
-														for="remember-me">Remember me</label>
-												</div>
+												class="form-check mb-3 d-flex justify-content-end align-items-end">
 												<a class="text-primary fw-medium ms-1"
 													href="forgotpassword.htm">Quên mật khẩu</a>
 											</div>
+											<div class="d-flex flex-column align-items-center">
+												<div class="g-recaptcha mb-3"
+													data-sitekey="6LfGAJYqAAAAAB0X5ZPkvqjkKV0yhiA3zsSHhkeW"></div>
+												<div id="recaptcha-error" class="invalid-feedback"
+													style="display: none;">Vui lòng xác thực reCAPTCHA.</div>
+											</div>
 
-											<button type="submit" class="btn btn-primary w-100 submit">Đăng
-												nhập</button>
+
+											<button onclick="onClick(event)" type="submit"
+												class="btn btn-primary w-100 submit">Đăng nhập</button>
 											<div class="mt-3 row">
 												<div class="text-center col-12">
-													<p class="text-muted">Bạn chưa có tài khoản?
-														<a class="text-primary fw-medium ms-1"
-															href="${pageContext.request.contextPath}/signup.htm"> Đăng ký</a>
+													<p class="text-muted">
+														Bạn chưa có tài khoản? <a
+															class="text-primary fw-medium ms-1"
+															href="${pageContext.request.contextPath}/signup.htm">Đăng
+															ký</a>
 													</p>
 												</div>
 											</div>
@@ -125,72 +136,109 @@
 		</div>
 	</div>
 
-	<!-- jQuery and Bootstrap JS -->
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 	<script>
-		$(document).ready(function() {
-			showPassword();
-			handleValidationForm();
-		});
+  $(document).ready(function() {
+	    showPassword();
+	    handleValidationForm();
+	});
 
-		// Toggle password visibility
-		function showPassword() {
-			$(".input-password").each(function() {
-				var grp = $(this);
-				var btn = grp.find("button");
-				btn.on("click", function() {
-					var input = grp.find("input");
-					var icon = btn.find("i");
-					if (input.attr("type") == "password") {
-						input.attr("type", "text");
-						icon.removeClass("fa-eye");
-						icon.addClass("fa-eye-slash");
-					} else {
-						input.attr("type", "password");
-						icon.removeClass("fa-eye-slash");
-						icon.addClass("fa-eye");
-					}
-				});
-			});
-		}
+	// Toggle password visibility
+	function showPassword() {
+	    $(".input-password").each(function() {
+	        var grp = $(this);
+	        var btn = grp.find("button");
+	        btn.on("click", function() {
+	            var input = grp.find("input");
+	            var icon = btn.find("i");
+	            if (input.attr("type") == "password") {
+	                input.attr("type", "text");
+	                icon.removeClass("fa-eye");
+	                icon.addClass("fa-eye-slash");
+	            } else {
+	                input.attr("type", "password");
+	                icon.removeClass("fa-eye-slash");
+	                icon.addClass("fa-eye");
+	            }
+	        });
+	    });
+	}
 
-		// Form validation
-		function handleValidationForm() {
-			$("#signinform").on("submit", function(e) {
-				let isValid = true;
-				const emailInput = $("#email");
-				const passwordInput = $("#password");
-				const emailValue = emailInput.val().trim();
-				const passwordValue = passwordInput.val().trim();
+	// Form validation
+	// Form validation
+function handleValidationForm() {
+    $("#signinform").on("submit", function(e) {
+        let isValid = true;
+        const emailInput = $("#email");
+        const passwordInput = $("#password");
+        const emailValue = emailInput.val().trim();
+        const passwordValue = passwordInput.val().trim();
+        const recaptchaResponse = grecaptcha.getResponse(); 
+        const recaptchaContainer = $("#recaptcha-container");
+        const recaptchaError = $("#recaptcha-error");
 
-				if (emailInput == "" || !validateEmail(emailValue)) {
-					emailInput.addClass("is-invalid");
-					isValid = false;
-				} else {
-					emailInput.removeClass("is-invalid");
-				}
+        // Validate email
+        if (emailValue == "" || !validateEmail(emailValue)) {
+            emailInput.addClass("is-invalid");
+            isValid = false;
+        } else {
+            emailInput.removeClass("is-invalid");
+        }
 
-				if (passwordValue == "") {
-					passwordInput.addClass("is-invalid");
-					isValid = false;
-				} else {
-					passwordInput.removeClass("is-invalid");
-				}
+        // Validate password
+        if (passwordValue == "") {
+            passwordInput.addClass("is-invalid");
+            isValid = false;
+        } else {
+            passwordInput.removeClass("is-invalid");
+        }
 
-				if (!isValid) {
-					e.preventDefault();
-				}
-			});
-		}
+        // Validate reCAPTCHA
+        if (recaptchaResponse == "") {
+            recaptchaError.show(); 
+            isValid = false;
+        } else {
+            recaptchaError.hide(); 
+        }
 
-		// Email validation
-		function validateEmail(email) {
-			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-			return emailRegex.test(email);
-		}
-	</script>
+        if (isValid) {
+            e.preventDefault();
+
+            if (recaptchaReady) {
+                grecaptcha.execute('6LfGAJYqAAAAAB0X5ZPkvqjkKV0yhiA3zsSHhkeW', { action: 'LOGIN' })
+                    .then((token) => {
+                        document.getElementById('g-recaptcha-response').value = token; 
+                        document.getElementById('signinform').submit();
+                    })
+                    .catch((error) => {
+                        console.error("Lỗi khi thực hiện reCAPTCHA:", error);
+                    });
+            } else {
+                console.error("reCAPTCHA chưa được tải!");
+            }
+        } else {
+            e.preventDefault();
+        }
+    });
+}
+
+
+	// Email validation regex
+	function validateEmail(email) {
+	    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	    return emailRegex.test(email);
+	}
+
+	let recaptchaReady = false;
+
+	// Hàm onRecaptchaLoad được gọi khi reCAPTCHA đã tải xong
+	function onRecaptchaLoad() {
+	    recaptchaReady = true;
+	}
+
+  </script>
 </body>
 </html>

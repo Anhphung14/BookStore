@@ -131,7 +131,8 @@ public class RolesController {
 	        if ("new".equals(task)) {
 	            RolesEntity existingRole = getRoleByName(role.getName());
 	            if (existingRole != null) {
-	                model.addAttribute("message", "Role name already exists.");
+	                redirectAttributes.addFlashAttribute("alertMessage", "Role name already exists.");
+	    	        redirectAttributes.addFlashAttribute("alertType", "error");
 	                return "roles/edit";
 	            }
 

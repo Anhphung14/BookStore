@@ -9,6 +9,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BookStore - Dashboard</title>
+<base href="${pageContext.servletContext.contextPath}/admin1337/">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -150,8 +151,10 @@ canvas {
 
 												<td><c:choose>
 														<c:when test="${order.orderStatus == 'Chờ xác nhận'}">
-															<i class="fas fa-clock text-warning"></i> Chờ xác nhận
-        												</c:when>
+															<a class="btn btn-rounded" href="${pageContext.servletContext.contextPath}/admin1337/orders.htm"> <i class="fas fa-clock text-warning"></i> Chờ xác
+																nhận
+															</a>
+														</c:when>
 														<c:when test="${order.orderStatus == 'Xác nhận đơn hàng'}">
 															<i class="fas fa-check-circle text-primary"></i> Đã xác nhận
         												</c:when>
