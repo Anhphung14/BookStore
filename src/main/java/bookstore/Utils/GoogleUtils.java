@@ -28,7 +28,7 @@ public class GoogleUtils {
 	private RestTemplate restTemplate = new RestTemplate();
 	
 	public static String GOOGLE_CLIENT_ID = "644611492314-nck1gv86bbn2a8jc97ivgf3viuaged1p.apps.googleusercontent.com";
-	public static String GOOGLE_CLIENT_SECRET = "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";
+	public static String GOOGLE_CLIENT_SECRET = "SECRET_TRONG_ZALO";
 	public static String GOOGLE_REDIRECT_URI = "http://localhost:8080/bookstore/login-google.htm";
 	public static String GOOGLE_LINK_GET_TOKEN = "https://oauth2.googleapis.com/token";
 	public static String GOOGLE_LINK_GET_USER_INFO = "https://www.googleapis.com/oauth2/v2/userinfo?access_token=";
