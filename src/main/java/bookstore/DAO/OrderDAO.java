@@ -22,6 +22,8 @@ import bookstore.Entity.InventoryEntity;
 import bookstore.Entity.Order_DiscountsEntity;
 import bookstore.Entity.OrdersDetailEntity;
 import bookstore.Entity.OrdersEntity;
+import bookstore.Entity.UsersEntity;
+import bookstore.Service.MailService;
 @Repository
 @Transactional
 public class OrderDAO {
@@ -29,6 +31,8 @@ public class OrderDAO {
     private SessionFactory sessionFactory;
     @Autowired
     private InventoryDAO inventoryDAO;
+    @Autowired
+	MailService mailService;
     
     
     public List<OrdersEntity> listOrders(){
