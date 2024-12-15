@@ -173,7 +173,8 @@ public class PaymentController {
                 CartItemsEntity item = cartDAO.getSelectedItemById(itemId);
                 if (item != null) {
                     selectedItems.add(item);
-                    totalPrice += item.getPrice() * item.getQuantity(); // Tính tổng giá trị
+                    //totalPrice += item.getPrice() * item.getQuantity(); // Tính tổng giá trị
+                    totalPrice += item.getPrice(); // Tính tổng giá trị
                 }
             }
             

@@ -69,7 +69,7 @@
 					</div>
 				</div>
 			</div>
-			<form id="frm-admin" name="adminForm" action="${pageContext.request.contextPath}/orders.htm" method="GET">
+			<form id="frm-admin" name="adminForm" action="orders.htm" method="GET">
 				<!-- Tìm kiếm theo tên khách hàng -->
 				<div class="card mx-3">
 					<div class="card-body">

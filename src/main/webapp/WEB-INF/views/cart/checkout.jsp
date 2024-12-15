@@ -124,7 +124,7 @@
                                     	<td><img src="${item.book.thumbnail}" width="50px"; height="50px"></td>
                                         <td>${item.book.title}</td>
                                         <td>${item.quantity}</td>
-                                        <td> <fmt:formatNumber value="${item.price}" type="currency" currencySymbol="đ" /></td>
+                                        <td> <fmt:formatNumber value="${item.price / item.quantity}" type="currency" currencySymbol="đ" /></td>
                                     </tr>	
                                 </c:forEach>
                             </tbody>

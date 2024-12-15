@@ -320,4 +320,21 @@ public class OrderDAO {
 		}
 		return isUpdate;
 	}
+	
+	public List<OrdersEntity> autoCancelUnconfirmedOrders() {
+	    List<OrdersEntity> listOrdersEntities = listOrders(); // Lấy danh sách tất cả đơn hàng
+	    List<OrdersEntity> listOrdersEntitiesAutoCancel = new ArrayList<OrdersEntity>();
+	    long currentTime = System.currentTimeMillis(); // Thời gian hiện tại tính bằng mili giây
+	    for (OrdersEntity orderEntity : listOrdersEntities) {
+	        Date orderDate = orderEntity.getCreatedAt(); // Thời gian đặt đơn hàng
+	        long timeElapsed = currentTime - orderDate.getTime(); // Khoảng thời gian đã qua (ms)
+	        if (timeElapsed >= 3 * 24 * 60 *  60 * 1000 && orderEntity.getOrderStatus().equals("Chờ xác nhận")) { 
+	            //updateOrderStatusToCancel(orderEntity.getId()); 
+	            updateOrderStatus(orderEntity.getId(), "Huỷ đơn hàng");
+	            listOrdersEntitiesAutoCancel.add(orderEntity);
+	        }
+	    }
+	    return listOrdersEntitiesAutoCancel;
+	}
+
 }

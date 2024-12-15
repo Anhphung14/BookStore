@@ -68,6 +68,21 @@ public class OrdersController {
 			}
 			order.setDiscountValue(discountValue);
 		}
+		List<OrdersEntity> listOrderAutoCancelEntities =  orderDAO.autoCancelUnconfirmedOrders();
+		if(listOrderAutoCancelEntities.size() != 0) {
+			String notify = "Đơn hàng ";
+			for(OrdersEntity order: listOrderAutoCancelEntities) {
+				notify += order.getId() + " ,";
+			}
+			if(notify.endsWith(",")) {
+				 notify = notify.substring(0, notify.length() - 1);
+			}
+			notify += " đã được huỷ tự động!";
+			modelMap.addAttribute("alertMessage", notify);
+			modelMap.addAttribute("alertType", "error");
+	        
+		}
+		
 		
 		modelMap.addAttribute("customerName", customerName);
 		modelMap.addAttribute("fromDate", fromDate);
