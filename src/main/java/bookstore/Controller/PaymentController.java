@@ -102,8 +102,10 @@ public class PaymentController {
         // Tính tổng giá trị giỏ hàng (nếu cần)
         double totalPrice = 0;
         for (CartItemsEntity item : selectedItems) {
-            totalPrice += item.getPrice() * item.getQuantity();
+            //totalPrice += (item.getPrice() * item.getQuantity());
+            totalPrice += (item.getPrice());
         }
+        //System.out.println("totalPrice: " + totalPrice);
         model.addAttribute("totalPrice", totalPrice);
         
         List<DiscountsEntity> listDiscountsAvailable = new ArrayList<DiscountsEntity>();
@@ -252,8 +254,8 @@ public class PaymentController {
                 InventoryEntity inventoryOfCurrentBook = inventoryDAO.getInventoryByBookId(cartItem.getBook().getId());
                
                 Integer currentStockQuantity = inventoryOfCurrentBook.getStock_quantity();
-                inventoryOfCurrentBook.setStock_quantity(currentStockQuantity - 1);
-                //System.out.println("currentStockQuantity: " + (currentStockQuantity - 1 ));
+                inventoryOfCurrentBook.setStock_quantity(currentStockQuantity - cartItem.getQuantity());
+               // System.out.println("currentStockQuantity: " + (currentStockQuantity - cartItem.getQuantity() ));
                 boolean isUpdateStockQuantity = inventoryDAO.updateInventory(inventoryOfCurrentBook);
                 //System.out.println("isUpdateStockQuantity: " + isUpdateStockQuantity);
             }

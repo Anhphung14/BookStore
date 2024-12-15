@@ -113,7 +113,8 @@ public class OrderDAO {
         	        	System.out.println("orderDetail.getBook().getId(): " + orderDetail.getBook().getId());
         	        	InventoryEntity inventoryOfCurrentBook = inventoryDAO.getInventoryByBookId(orderDetail.getBook().getId());
                         Integer currentStockQuantity = inventoryOfCurrentBook.getStock_quantity();
-                        inventoryOfCurrentBook.setStock_quantity(currentStockQuantity + 1);
+                        inventoryOfCurrentBook.setStock_quantity(currentStockQuantity + orderDetail.getQuantity());
+                        System.out.println("currentStockQuantity + orderDetail.getQuantity(): " + currentStockQuantity + orderDetail.getQuantity());
                         boolean isUpdateStockQuantity = inventoryDAO.updateInventory(inventoryOfCurrentBook);
         	        }
                 }
