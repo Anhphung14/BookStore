@@ -99,6 +99,14 @@
 								class="text-danger">*</span></label>
 						</div>
 						<div class="form-floating mt-3">
+							<select class="form-select" id="employmentStatus" name="enabled"
+								aria-label="Employment Status">
+								<option value="1" ${user.enabled == 1 ? 'selected' : ''}>Active</option>
+								<option value="0" ${user.enabled == 0 ? 'selected' : ''}>Inactive</option>
+							</select> <label for="employmentStatus">Employment Status</label>
+						</div>
+
+						<div class="form-floating mt-3">
 							<div class="ms-2">Roles</div>
 							<select class="w-100 selectpicker" id="roles" name="roleIds"
 								data-coreui-search="true" data-live-search="true">
@@ -119,15 +127,6 @@
 							</select> --%>
 
 						</div>
-
-						<div class="form-floating mt-3">
-							<select class="form-select" id="employmentStatus" name="enabled"
-								aria-label="Employment Status">
-								<option value="1" ${user.enabled == 1 ? 'selected' : ''}>Active</option>
-								<option value="0" ${user.enabled == 0 ? 'selected' : ''}>Inactive</option>
-							</select> <label for="employmentStatus">Employment Status</label>
-						</div>
-
 
 					</div>
 				</div>
