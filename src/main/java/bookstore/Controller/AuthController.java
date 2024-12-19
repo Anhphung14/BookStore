@@ -95,7 +95,6 @@ public class AuthController {
 	@Autowired private 
 	CustomUserDetailsService userDetailsService;
 	
-	private static final String RECAPTCHA_SECRET_KEY = "6LfGAJYqAAAAAB2PBvsV_38QchRbZ5G_bW2SEwpu";
 
 	// LOGIN
 	@Transactional
@@ -313,7 +312,7 @@ public class AuthController {
 	        if (getUserByEmail(user.getEmail()) != null) {
 	            model.addAttribute("alertMessage", "Email đã tồn tại vui lòng nhập email khác!");
 	            model.addAttribute("alertType", "error");
-	            return "auth/signup";
+	            return "redirect:signup.htm";
 	        }
 
 	        user.setAvatar("https://res.cloudinary.com/dsqhfz3xt/image/upload/v1733041850/images/avatars/vo-anh-phungg/drmxjyaok8d8b8ofgiwl.png");
