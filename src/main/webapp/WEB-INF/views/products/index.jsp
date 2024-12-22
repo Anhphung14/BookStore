@@ -186,7 +186,7 @@
 											       data-createdAt="<fmt:formatDate value='${book.updatedAt}' pattern='dd-MM-yyyy HH:mm' />"
 											       data-updatedAt="<fmt:formatDate value='${book.createdAt}' pattern='dd-MM-yyyy HH:mm' />"
 											       data-price=<fmt:formatNumber value="${book.price}" type="currency" maxFractionDigits="0" currencySymbol="₫"/>
-											       data-description="${fn:escapeXml(book.description)}" 
+											       data-description="${fn:escapeXml(book.description)}"
 											       data-thumbnail="${book.thumbnail}"
 											       data-images="${book.images}"
 											       data-quantity="${book.quantity} in stock"
@@ -206,7 +206,7 @@
 												<c:otherwise>
 													<td class="text-center align-middle"><span class="small text-uppercase text-danger bg-danger bg-opacity-10 rounded px-2 py-1">disable</span></td>
 												</c:otherwise>
-											</c:choose></title>
+											</c:choose>
 <!-- 											<td class="text-center align-middle"><span class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">active</span></td> -->
 <%-- 											<td class="text-end align-middle"><span class="small text-uppercase ${user.isActive ? 'text-success' : 'text-danger'} bg-opacity-10 rounded px-2 py-1">${user.isActive ? 'Active' : 'Inactive'}</span></td> --%>
 											
@@ -334,7 +334,7 @@
 			                
 			                <div class="mb-3">
 			                    <label for="productDescription" class="form-label">Description</label>
-			                    <textarea class="form-control" id="productDescription" rows="3" disabled></textarea>
+			                    <div id="productDescription" class="form-control" style="white-space: pre-wrap; word-wrap: break-word;"></div>
 			                </div>
 			                
 			                <div class="d-flex">
@@ -455,6 +455,8 @@
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
 	</script>
 	<script type="text/javascript">
+		
+	
 		const alertMessage = "${alertMessage}";
 		const alertType = "${alertType}";
 		
@@ -509,12 +511,10 @@
 		    var productImages = link.getAttribute('data-images');
 		    var productQuantity = link.getAttribute('data-quantity');
 			
-		    
-		    
 		    // Điền thông tin vào modal
 		    document.getElementById('productTitle').value = productTitle;
 		    document.getElementById('productAuthor').value = productAuthor;
-		    document.getElementById('productDescription').value = productDescription;
+ 		    document.getElementById('productDescription').innerHTML = productDescription;
 		    document.getElementById('productPrice').value = productPrice;
 		    document.getElementById('productCategory').value = productCategory;
 		    document.getElementById('productSubcategory').value = productSubcategory;

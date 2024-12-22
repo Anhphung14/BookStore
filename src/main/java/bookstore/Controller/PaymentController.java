@@ -223,6 +223,25 @@ public class PaymentController {
                 	}
                 }
             }
+            
+            List<DiscountsEntity> listDiscountsAvailable = new ArrayList<DiscountsEntity>();
+            List<DiscountsEntity> listDiscounts = discountsDAO.getAllDiscounts();
+            for(DiscountsEntity discountCheck : listDiscounts) {
+            	if(discountCheck.getApplyTo().equals("user")) {
+            		if(discountCheck.getMinOrderValue() <= totalPrice && discount.getStatus().equals("active")) {
+            			listDiscountsAvailable.add(discountCheck);
+            		}
+            	}
+            }
+            
+            if (!listDiscountsAvailable.contains(discount)) {
+            	redirectAttributes.addFlashAttribute("alertMessage", "Mã giảm giá không hợp lệ!");
+        		redirectAttributes.addFlashAttribute("alertType", "error");
+                return "redirect:/cart/view.htm";
+            }
+            
+            
+            
             if (selectedItems.isEmpty()) {
                 throw new Exception("Không có sản phẩm hợp lệ để thanh toán.");
             }

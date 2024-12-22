@@ -44,6 +44,7 @@ import bookstore.Entity.SubcategoriesEntity;
 //import bookstore.Entity.OrderEntity;
 //import bookstore.Entity.Order_DiscountsEntity;
 import bookstore.Entity.UsersEntity;
+import bookstore.Service.MailService;
 import bookstore.Service.UploadService;
 import bookstore.Utils.PasswordUtil;
 
@@ -71,13 +72,15 @@ public class AccountController {
     private CategoriesDAO categoriesDAO;
     @Autowired
     private SubcategoriesDAO subcategoriesDAO;
+    @Autowired
+    MailService mailService;
 	
 	@RequestMapping(value = "account_orders", method = RequestMethod.GET)
 	public String account_order(ModelMap model, HttpServletRequest request) {
 		HttpSession session = request.getSession();
 	    UsersEntity currentUser = (UsersEntity) session.getAttribute("user");
 	    if (currentUser == null) {
-	    	return "redirect:/client/signin.htm";
+	    	return "redirect:/signin.htm";
 	    }
 	    UsersEntity user = userDAO.getUserById(currentUser.getId());
 	    model.addAttribute("user", user);
@@ -142,7 +145,7 @@ public class AccountController {
 		HttpSession session = request.getSession();
 	    UsersEntity currentUser = (UsersEntity) session.getAttribute("user");
 	    if (currentUser == null) {
-	    	return "redirect:/client/signin.htm";
+	    	return "redirect:/signin.htm";
 	    }
 	    UsersEntity user = userDAO.getUserById(currentUser.getId());
 	    user.setEmail(user.getEmail().toLowerCase());
@@ -163,15 +166,12 @@ public class AccountController {
             @RequestParam(value = "avatar", required = false) MultipartFile avatar) throws IOException
 	{
 		HttpSession session = request.getSession();
-	    UsersEntity currentUser = (UsersEntity) session.getAttribute("user");
-	    UsersEntity user = userDAO.getUserById(currentUser.getId());
+	   
+	    UsersEntity user = (UsersEntity) session.getAttribute("user");
 	    
-	    UsersEntity userUpdate = user;
-	    userUpdate.setFullname(fullname.trim());
-		userUpdate.setPhone(phone.trim());
 		
 	    int isError = 0;
-	    if(userUpdate.getFullname().trim().length() == 0){
+	    if(fullname.trim().length() == 0){
 	    	redirectAttributes.addFlashAttribute("errorfn", "Vui lòng nhập họ tên!");
 			isError++;
 		}
@@ -179,10 +179,10 @@ public class AccountController {
 	    String regex = "^0(3|5|7|8|9)[0-9]{8}$";
         
         Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(userUpdate.getPhone());
+        Matcher matcher = pattern.matcher(phone.trim());
         
 
-		if(userUpdate.getPhone().trim().length() == 0){
+		if(phone.trim().length() == 0){
 			redirectAttributes.addFlashAttribute("errorPhone", "Vui lòng nhập số điện thoại!");
 			isError++;
 		}
@@ -198,21 +198,20 @@ public class AccountController {
 			return "redirect:/account/profile_settings.htm";
 		}
 		
-	    user.setFullname(userUpdate.getFullname());
-	    user.setPhone(userUpdate.getPhone());
+	    user.setFullname(fullname.trim());
+	    user.setPhone(phone.trim());
 	    if (!avatar.isEmpty()) {
 	    	String avatarPath = uploadService.uploadByCloudinary(avatar, "images/avatar/" + uploadService.toSlug(fullname));
 	    	System.out.println(avatarPath);
-	    	userUpdate.setAvatar(avatarPath);
 	    	user.setAvatar(avatarPath);
-		    if (userDAO.updateUserById(user.getId(), userUpdate) > 0) {
+		    if (userDAO.updateUserById(user.getId(), user) > 0) {
 		    	redirectAttributes.addFlashAttribute("successUpdate", "Cập nhật thông tin thành công!");
 		    	session.setAttribute("user", user);
 		    }else {
 		    	redirectAttributes.addFlashAttribute("errorUpdate", "Cập nhật thông tin không thành công!");
 		    }
 	    }else {
-	    	if (userDAO.updateUserById(user.getId(), userUpdate) > 0) {
+	    	if (userDAO.updateUserById(user.getId(), user) > 0) {
 	    		redirectAttributes.addFlashAttribute("successUpdate", "Cập nhật thông tin thành công!");
 		    	session.setAttribute("user", user);
 		    }else {
@@ -225,8 +224,7 @@ public class AccountController {
 	@RequestMapping(value = "change_password", method = RequestMethod.POST)
 	public String acoount_change_passwowrd(ModelMap model, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 		HttpSession session = request.getSession();
-	    UsersEntity currentUser = (UsersEntity) session.getAttribute("user");
-	    UsersEntity user = userDAO.getUserById(currentUser.getId());
+	    UsersEntity user = (UsersEntity) session.getAttribute("user");
 	    
 	    String oldPass = request.getParameter("oldPassword");
 	    if (oldPass.trim().length() == 0) {
@@ -241,6 +239,15 @@ public class AccountController {
 	    		redirectAttributes.addFlashAttribute("alertType", "success");
 	    		user.setPassword(hashNewPass);
 	    		session.setAttribute("user",user);
+	    		String emailContent = "<html><body>"
+	    		        + "<h5>Hello " + user.getFullname() + ",</h5>"
+	    		        + "<p>We are pleased to inform you that your password has been successfully changed.</p>"
+	    		        + "<p>If you did not request this change, please contact our support team immediately to secure your account.</p>"
+	    		        + "<p>Thank you for using our services.</p>"
+	    		        + "<p>Best regards,</p>"
+	    		        + "<p>Book Store ALDPT</p>"
+	    		        + "</body></html>";
+	    		mailService.sendMail(emailContent, user.getEmail(), "Password Changed Successfully");
 	    	}else {
 	    		redirectAttributes.addFlashAttribute("messagePassword", "Đổi password không thành công!");
 	    		redirectAttributes.addFlashAttribute("alertType", "error");
@@ -254,7 +261,7 @@ public class AccountController {
 		HttpSession session = request.getSession();
 	    UsersEntity currentUser = (UsersEntity) session.getAttribute("user");
 	    if (currentUser == null) {
-	    	return "redirect:/client/signin.htm";
+	    	return "redirect:/signin.htm";
 	    }
 	    UsersEntity user = userDAO.getUserById(currentUser.getId());
 	    model.addAttribute("user", user);
@@ -342,14 +349,5 @@ public class AccountController {
 		}
 		return "redirect:/account/my_ratings.htm"; 
 	}
-	private String[] splitFullName(String fullname) {
-        if (fullname == null || fullname.isEmpty()) {
-            return new String[]{"", ""};
-        }
-        String[] parts = fullname.split(" ", 2);
-        if (parts.length == 1) {
-            return new String[]{parts[0], ""};
-        }
-        return parts;
-    }
+	
 }

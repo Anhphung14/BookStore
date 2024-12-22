@@ -18,7 +18,9 @@
 	<base href="${pageContext.servletContext.contextPath}/admin1337/">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="https://cdn.tiny.cloud/1/qjgg733gwn27prv36gfx8wtpreihq9zyai825aanjkdnkjf0/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
 <style>
 .main-content {
@@ -110,7 +112,7 @@
 					<p>Manage users, roles, permissions, and profile.</p>
 				</div>
 				<div class="col-auto d-none d-sm-block">
-					<img class="page-icon" src="resources/images/page.svg"
+					<img class="page-icon" src="${pageContext.servletContext.contextPath}/resources/images/page.svg"
 						width="120px" alt="Page Icon">
 				</div>
 			</div>
@@ -361,6 +363,18 @@
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 	<script>
+	
+	tinymce.init({
+        selector: '#description',
+        plugins: 'bold italic underline',
+        toolbar: 'bold italic underline | alignleft aligncenter alignright',
+        menubar: 'view format',
+        setup: function(editor) {
+        	editor.on('init', function() {
+        		editor.setContent(`${book.description}`)
+        	})
+        }
+    });
 
 	let initialInput = true;
 
@@ -467,7 +481,7 @@
 		    }
 
 		    // Gửi yêu cầu AJAX đến server
-		    fetch('/bookstore/product/getSubcategories.htm?categoryId=' + categoryId)
+		    fetch('/bookstore/admin1337/product/getSubcategories.htm?categoryId=' + categoryId)
 		    .then(response => response.text())
 		    .then(data => {
 		        const subcategorySelect = document.getElementById('subcategory_id');
@@ -480,7 +494,7 @@
 		function loadCategory(subcategoryId) {
 		    if (!subcategoryId) return;
 
-		    fetch(`/bookstore/product/getCategory.htm?subcategoryId=` + subcategoryId)
+		    fetch(`/bookstore/admin1337/product/getCategory.htm?subcategoryId=` + subcategoryId)
 		        .then(response => response.text()) // Đọc response dạng text
 		        .then(data => {
 		            const parser = new DOMParser();
