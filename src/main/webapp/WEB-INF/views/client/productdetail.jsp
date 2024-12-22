@@ -178,10 +178,10 @@
 
 														</ul>
 														<div class="tg-quantityholder">
-															<em class="minus">-</em> <input type="text"
+															<em class="minus">-</em> <input type="text" oninput="validateNumberInput(this)"
 																class="result" value="1" id="quantity1" name="quantity">
 															<em class="plus">+</em>
-														</div>
+														</div> 
 														<a class="tg-btn tg-active tg-btn-lg btn-add-to-cart"
 															data-book-id="${book.id}" data-quantity="1"
 															style="text-decoration: none;">Thêm vào giỏ hàng</a>
@@ -211,7 +211,7 @@
 
 													<div class="tg-description"></div>
 													<div class="tg-sectionhead">
-														<h2>Product Details</h2>
+														<h2>Chi tiết sản phẩm</h2>
 													</div>
 													<ul class="tg-productinfo">
 														<li><span>Nhà cung cấp:</span><span>${book.supplier.name }</span></li>
@@ -241,7 +241,7 @@
 														<div role="tabpanel" class="tg-tab-pane tab-pane active"
 															id="description">
 															<div class="tg-description">
-																<c:set var="description" value="${book.description}" />
+																<%-- <%-- <c:set var="description" value="${book.description}" />
 																<c:choose>
 																	<c:when
 																		test="${description != null && fn:length(description) > 100}">
@@ -252,7 +252,8 @@
 																	<c:otherwise>
 																		<p style="font-size: 1.4rem;">${description != null ? description : 'Không có mô tả'}</p>
 																	</c:otherwise>
-																</c:choose>
+																</c:choose> --%>
+																<p id="book-description" style="font-size: 1.4rem;">${book.description}</p>
 															</div>
 														</div>
 														<div role="tabpanel" class="tg-tab-pane tab-pane"
@@ -303,7 +304,7 @@
 																		<div class="tg-booktitle">
 																			<h3>
 																				<a style="text-decoration: none;"
-																					href="/productdetail/${book.id}.htm">${book.title}</a>
+																					href="${pageContext.servletContext.contextPath}/productdetail/${book.id}.htm">${book.title}</a>
 																			</h3>
 																		</div>
 																		<span class="tg-bookwriter">Tác giả: <a
@@ -387,6 +388,33 @@
 	</div>
 <!-- 	<!--************************************ -->
 	<script>
+	
+	let initialInput = true;
+
+	function validateNumberInput(input) {
+	    let value = input.value.replace(/[^0-9]/g, '');
+
+	    if (value === "") {
+	        input.value = "0";
+	        initialInput = true;
+	        return;
+	    }
+	    
+	    if (parseInt(value, 10) < 1) {
+	        value = "1"; // Đặt giá trị thành 1 nếu âm
+	    }
+
+	    if (initialInput) {
+	        value = value.replace(/^0+/, '');
+	        initialInput = false;
+	    }
+
+	    value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+	    input.value = value;
+	}
+	
+	
 	var isFullDescription = false;  // Biến để theo dõi trạng thái của mô tả
 
 	
@@ -401,6 +429,12 @@
              if (quantity < 1) {
 				quantity = 1;	
              } 
+             if(quantity > ${book.inventoryEntity.stock_quantity}){
+            	 quantity = ${book.inventoryEntity.stock_quantity};
+             }
+             if(isNaN(quantity)){
+            	 quantity = 1;
+             }
              console.log("bookId:", bookId);
              console.log("quantity:", quantity);
             // Gửi GET request để thêm sách vào giỏ hàng

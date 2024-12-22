@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.google.gson.Gson;
 
+import bookstore.DAO.OrderDetailDAO;
+import bookstore.Entity.BooksEntity;
 import bookstore.Entity.OrdersEntity;
 import bookstore.Entity.UsersEntity;
 
@@ -31,6 +34,8 @@ public class HomeController {
 	@Autowired
 	SessionFactory factory;
 	
+    @Autowired
+    private OrderDetailDAO orderDetailDAO;
 
 	@RequestMapping(value = "/home")
 	public String home(ModelMap model, HttpSession session) {
@@ -59,6 +64,19 @@ public class HomeController {
 	    List<OrdersEntity> orders = getOrdersWithUserInfo(); 
 	    model.addAttribute("orders", orders);
 	    
+	    List<BooksEntity> books = getLowStockBooks();
+	    model.addAttribute("books",books);
+	    
+	    Map<String, Object> bestSellingData = orderDetailDAO.getBestSellingBook();
+	    if (bestSellingData != null) {
+	        BooksEntity bestSellingBook = (BooksEntity) bestSellingData.get("bestSellingBook");
+	        Long totalQuantity = (Long) bestSellingData.get("totalQuantity");
+
+	        model.addAttribute("bestSellingBook", bestSellingBook);
+	        model.addAttribute("totalQuantity", totalQuantity); 
+	    }
+
+	    
 
 	    return "statistics/index";
 	}
@@ -71,6 +89,20 @@ public class HomeController {
 	    query.setMaxResults(7);  
 	    return query.list();
 	}
+	private List<BooksEntity> getLowStockBooks() {
+	    Session session = factory.getCurrentSession();
+	    String hql = "FROM BooksEntity b WHERE b.quantity < :quantity";
+	    Query query = session.createQuery(hql);
+	    query.setParameter("quantity", 5); 
+	    query.setMaxResults(7);           
+	    return query.list();
+	}
+
+	/*
+	 * private long lowStockBooks() { Session session = factory.getCurrentSession();
+	 * String hql = "SELECT COUNT(*) FROM BooksEntity WHERE quantity < 5"; Query
+	 * query = session.createQuery(hql); return (long) query.uniqueResult(); }
+	 */
 
 
     private long getUserCount() {

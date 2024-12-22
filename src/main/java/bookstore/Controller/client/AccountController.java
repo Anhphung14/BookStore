@@ -44,6 +44,7 @@ import bookstore.Entity.SubcategoriesEntity;
 //import bookstore.Entity.OrderEntity;
 //import bookstore.Entity.Order_DiscountsEntity;
 import bookstore.Entity.UsersEntity;
+import bookstore.Service.MailService;
 import bookstore.Service.UploadService;
 import bookstore.Utils.PasswordUtil;
 
@@ -71,6 +72,8 @@ public class AccountController {
     private CategoriesDAO categoriesDAO;
     @Autowired
     private SubcategoriesDAO subcategoriesDAO;
+    @Autowired
+    MailService mailService;
 	
 	@RequestMapping(value = "account_orders", method = RequestMethod.GET)
 	public String account_order(ModelMap model, HttpServletRequest request) {
@@ -126,7 +129,7 @@ public class AccountController {
 	        for(OrdersDetailEntity orderDetail : order.getOrderDetails()) {
 	        	InventoryEntity inventoryOfCurrentBook = inventoryDAO.getInventoryByBookId(orderDetail.getBook().getId());
                 Integer currentStockQuantity = inventoryOfCurrentBook.getStock_quantity();
-                inventoryOfCurrentBook.setStock_quantity(currentStockQuantity + 1);
+                inventoryOfCurrentBook.setStock_quantity(currentStockQuantity + orderDetail.getQuantity());
                 boolean isUpdateStockQuantity = inventoryDAO.updateInventory(inventoryOfCurrentBook);
 	        }
 	        redirectAttributes.addFlashAttribute("successMessage", "Order has been successfully canceled.");
@@ -163,9 +166,10 @@ public class AccountController {
             @RequestParam(value = "avatar", required = false) MultipartFile avatar) throws IOException
 	{
 		HttpSession session = request.getSession();
- 
+	   
 	    UsersEntity user = (UsersEntity) session.getAttribute("user");
 	    
+		
 	    int isError = 0;
 	    if(fullname.trim().length() == 0){
 	    	redirectAttributes.addFlashAttribute("errorfn", "Vui lòng nhập họ tên!");
@@ -220,8 +224,7 @@ public class AccountController {
 	@RequestMapping(value = "change_password", method = RequestMethod.POST)
 	public String acoount_change_passwowrd(ModelMap model, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 		HttpSession session = request.getSession();
-	    UsersEntity currentUser = (UsersEntity) session.getAttribute("user");
-	    UsersEntity user = userDAO.getUserById(currentUser.getId());
+	    UsersEntity user = (UsersEntity) session.getAttribute("user");
 	    
 	    String oldPass = request.getParameter("oldPassword");
 	    if (oldPass.trim().length() == 0) {
@@ -236,6 +239,15 @@ public class AccountController {
 	    		redirectAttributes.addFlashAttribute("alertType", "success");
 	    		user.setPassword(hashNewPass);
 	    		session.setAttribute("user",user);
+	    		String emailContent = "<html><body>"
+	    		        + "<h5>Hello " + user.getFullname() + ",</h5>"
+	    		        + "<p>We are pleased to inform you that your password has been successfully changed.</p>"
+	    		        + "<p>If you did not request this change, please contact our support team immediately to secure your account.</p>"
+	    		        + "<p>Thank you for using our services.</p>"
+	    		        + "<p>Best regards,</p>"
+	    		        + "<p>Book Store ALDPT</p>"
+	    		        + "</body></html>";
+	    		mailService.sendMail(emailContent, user.getEmail(), "Password Changed Successfully");
 	    	}else {
 	    		redirectAttributes.addFlashAttribute("messagePassword", "Đổi password không thành công!");
 	    		redirectAttributes.addFlashAttribute("alertType", "error");
@@ -337,14 +349,5 @@ public class AccountController {
 		}
 		return "redirect:/account/my_ratings.htm"; 
 	}
-	private String[] splitFullName(String fullname) {
-        if (fullname == null || fullname.isEmpty()) {
-            return new String[]{"", ""};
-        }
-        String[] parts = fullname.split(" ", 2);
-        if (parts.length == 1) {
-            return new String[]{parts[0], ""};
-        }
-        return parts;
-    }
+	
 }

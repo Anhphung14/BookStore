@@ -223,7 +223,8 @@
 												<fmt:formatNumber value="${bestSellingBook.price}"
 													type="currency" currencySymbol="VND" />
 											</ins>
-										</span> <a class="tg-btn tg-btnstyletwo tg-active btn-add-to-cart" data-book-id="${bestSellingBook.id}" data-quantity="1"
+										</span> <a class="tg-btn tg-btnstyletwo tg-active btn-add-to-cart"
+											data-book-id="${bestSellingBook.id}" data-quantity="1"
 											href="javascript:void(0);"> <i
 											class="fa fa-shopping-basket"></i> <em>Thêm vào giỏ hàng</em>
 										</a>
@@ -317,85 +318,80 @@
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<h2 class="text-center">Sách Đang Giảm Giá</h2>
 						<div id="tg-discountbooksslider" class="owl-carousel">
-							<c:forEach var="book" items="${bookList}">
-								<c:if test="${bookDiscounts[book.id] != 0.0}">
-									<div class="item">
-										<div class="tg-postbook">
-											<div class="tg-bookimg">
-												<div class="tg-frontcover">
-													<a
-														href="${pageContext.request.contextPath}/productdetail/${book.id}.htm">
+							<!-- Kiểm tra xem có sách giảm giá -->
+							<c:if test="${not empty bookDiscounts}">
+								<c:forEach var="book" items="${bookList}">
+									<!-- Chỉ hiển thị sách có giảm giá -->
+									<c:if test="${bookDiscounts[book.id] != 0.0}">
+										<div class="item">
+											<div class="tg-postbook">
+												<div class="tg-bookimg">
+													<div class="tg-frontcover">
+														<a
+															href="${pageContext.request.contextPath}/productdetail/${book.id}.htm">
+															<img src="${book.thumbnail}" alt="${book.title}" />
+														</a>
+													</div>
+													<div class="tg-backcover">
 														<img src="${book.thumbnail}" alt="${book.title}" />
-													</a>
+													</div>
 												</div>
-												<div class="tg-backcover">
-													<img src="${book.thumbnail}" alt="${book.title}" />
-												</div>
-											</div>
-											<div class="tg-postbookcontent">
-												<ul class="tg-bookscategories" style="padding-top: 10px">
-													<li><a href="javascript:void(0);">${book.subcategoriesEntity.name}</a></li>
-												</ul>
-												<c:if test="${bookDiscounts[book.id] != 0.0}">
+												<div class="tg-postbookcontent">
+													<ul class="tg-bookscategories" style="padding-top: 10px">
+														<li><a href="javascript:void(0);">${book.subcategoriesEntity.name}</a></li>
+													</ul>
 													<div class="tg-themetagbox">
 														<span class="tg-themetag"> Giảm giá <fmt:formatNumber
 																value="${bookDiscounts[book.id]}" pattern="##" />%
 														</span>
 													</div>
-												</c:if>
-												<c:if test="${bookDiscounts[book.id] == 0.0}">
-													<div class="tg-themetagbox">
-														<span class=""></span>
+													<div class="tg-booktitle">
+														<h4>
+															<a href="productdetail/${book.id}.htm"> <c:choose>
+																	<c:when
+																		test="${fn:length(fn:split(book.title, ' ')) > 2}">
+																		<c:forEach var="word" begin="0" end="2"
+																			items="${fn:split(book.title, ' ')}">
+                                                                    ${word}
+                                                                </c:forEach>...
+                                                            </c:when>
+																	<c:otherwise>
+                                                                ${book.title}
+                                                            </c:otherwise>
+																</c:choose>
+															</a>
+														</h4>
 													</div>
-												</c:if>
-												<div class="tg-booktitle">
-													<h4>
-														<a href="productdetail/${book.id}.htm"> <c:choose>
+													<span class="tg-bookwriter">Tác giả: <a
+														href="javascript:void(0);"> <c:choose>
 																<c:when
-																	test="${fn:length(fn:split(book.title, ' ')) > 2}">
+																	test="${fn:length(fn:split(book.author, ' ')) > 3}">
 																	<c:forEach var="word" begin="0" end="2"
-																		items="${fn:split(book.title, ' ')}">
-											                    ${word}
-											                </c:forEach>...
-											            </c:when>
+																		items="${fn:split(book.author, ' ')}">
+                                                            ${word} 
+                                                        </c:forEach>...
+                                                    </c:when>
 																<c:otherwise>
-											                ${book.title}
-											            </c:otherwise>
+                                                        ${book.author}
+                                                    </c:otherwise>
 															</c:choose>
-														</a>
-													</h4>
+													</a></span> <span class="tg-bookprice"> <ins>
+															<fmt:formatNumber value="${book.price}" type="currency"
+																currencySymbol="VND" />
+														</ins>
+													</span> <a class="tg-btn tg-btnstyletwo btn-add-to-cart"
+														data-book-id="${book.id}" data-quantity="1"
+														href="javascript:void(0);"
+														style="padding-left: 0px; padding-right: 0px;"> <i
+														class="fa fa-shopping-basket" style="padding-left: 15px;"></i>
+														<em>Thêm vào giỏ hàng</em>
+													</a>
 												</div>
-												<span class="tg-bookwriter"> Tác giả: <a
-													href="javascript:void(0);"> <c:choose>
-															<c:when
-																test="${fn:length(fn:split(book.author, ' ')) > 3}">
-																<c:forEach var="word" begin="0" end="2"
-																	items="${fn:split(book.author, ' ')}">
-											                        ${word} 
-											                    </c:forEach>
-											                    ...
-											                </c:when>
-															<c:otherwise>
-											                    ${book.author}
-											                </c:otherwise>
-														</c:choose>
-												</a>
-												</span> <span class="tg-bookprice"> <ins>
-														<fmt:formatNumber value="${book.price}" type="currency"
-															currencySymbol="VND" />
-													</ins>
-												</span> <a class="tg-btn tg-btnstyletwo btn-add-to-cart"
-													data-book-id="${book.id}"
-													data-quantity="1" href="javascript:void(0);"
-													style="padding-left: 0px; padding-right: 0px;"> <i
-													class="fa fa-shopping-basket"  style="padding-left: 15px;"></i> <em>Thêm
-														vào giỏ hàng</em>
-												</a>
 											</div>
 										</div>
-									</div>
-								</c:if>
-							</c:forEach>
+									</c:if>
+								</c:forEach>
+							</c:if>
 						</div>
 					</div>
 				</div>
@@ -531,6 +527,11 @@
 	<script src="resources/assets/js/client/gmap3.js"></script>
 	<script src="resources/assets/js/client/main.js"></script>
 	<script type="text/javascript">
+	$('#tg-discountbooksslider').owlCarousel({
+	    loop: false,  // Không lặp lại
+	    items: 4
+	});
+
 		const alertMessage = "${alertMessage}";
 		const alertType = "${alertType}";
 		toastr.options = {

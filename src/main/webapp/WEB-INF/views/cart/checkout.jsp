@@ -37,7 +37,7 @@
                 <h1 class="text-center">Thông Tin Thanh Toán</h1>
                 <div class="content-wrapper row">
                     <!-- Thông Tin Nhận Hàng -->
-                    <form method="POST" action="${pageContext.servletContext.contextPath}/payment/pay.htm">
+                    <form id="paymentForm" method="POST" action="${pageContext.servletContext.contextPath}/payment/pay.htm">
                     <div class="info-section col-md-6">
                         <h2>Thông Tin Nhận Hàng</h2>
                             <input type="hidden" name="userId" value="${user.id}">
@@ -124,7 +124,7 @@
                                     	<td><img src="${item.book.thumbnail}" width="50px"; height="50px"></td>
                                         <td>${item.book.title}</td>
                                         <td>${item.quantity}</td>
-                                        <td> <fmt:formatNumber value="${item.price}" type="currency" currencySymbol="đ" /></td>
+                                        <td> <fmt:formatNumber value="${item.price / item.quantity}" type="currency" currencySymbol="đ" /></td>
                                     </tr>	
                                 </c:forEach>
                             </tbody>
@@ -166,10 +166,11 @@
                         <div class="radio-group">
 							<label><input type="radio" name="paymentMethod" value="PayPal" required> Thanh toán bằng Paypal</label>
 								<div id="paypal-button-container"></div>
-                            <label><input type="radio" name="paymentMethod" value="VnPay" required> Thanh toán qua VNPAY-QR</label>
+                            <label><input type="radio" name="paymentMethod" value="VnPay" required> Thanh toán qua VNPAY</label>
                             <label><input type="radio" name="paymentMethod" value="COD" required> Thanh toán khi nhận hàng</label>
                         </div> 
                         <a href="/bookstore/cart/view.htm" class="btn btn-secondary">Quay về giỏ hàng</a>
+                        <input type="hidden" name="totalPrice" value="${totalPrice}">
                         <button type="submit" class="btn btn-primary">Đặt Hàng</button>
                     </div>
                     </form>
@@ -326,6 +327,28 @@ function convertToUpperCase(inputElement) {
     inputElement.value = inputElement.value.toUpperCase();
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+    // Lấy form và các radio button
+    const paymentForm = document.getElementById("paymentForm");
+    const paymentMethods = document.getElementsByName("paymentMethod");
+
+    // Thêm sự kiện 'change' cho các radio button
+    paymentMethods.forEach(function (radio) {
+        radio.addEventListener("change", function () {
+            // Kiểm tra giá trị được chọn
+            if (this.value === "PayPal") {
+                // Nếu chọn PayPal, đổi action thành trang PayPal
+                paymentForm.action = "${pageContext.servletContext.contextPath}/payment/authorize_paypal.htm";
+            } else if (this.value === "VnPay"){
+            	paymentForm.action = "${pageContext.servletContext.contextPath}/payment/createMethodVnPay.htm";
+            }
+            else {
+                // Nếu không, giữ nguyên action mặc định
+                paymentForm.action = "${pageContext.servletContext.contextPath}/payment/pay.htm";
+            }
+        });
+    });
+});
 
 </script>
     <!-- JS Files -->

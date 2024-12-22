@@ -430,7 +430,7 @@
     }
 
     // Sử dụng fetch để lấy subcategories từ server, nối chuỗi bằng toán tử "+"
-    fetch("http://localhost:8080/bookstore/discount/getSubcategories.htm?categoryId=" + categoryId)
+    fetch("http://localhost:8080/bookstore/admin1337/discount/getSubcategories.htm?categoryId=" + categoryId)
         .then(response => {
             // Kiểm tra xem yêu cầu có thành công hay không
             if (!response.ok) {

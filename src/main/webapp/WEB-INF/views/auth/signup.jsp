@@ -30,8 +30,8 @@
 	max-width: 150px;
 }
 
-.google-btn img {
-	max-width: 25px;
+.no-bullet {
+	list-style-type: none;
 }
 </style>
 </head>
@@ -56,8 +56,8 @@
 											method="POST">
 											<div class="mb-3">
 												<label for="fullname" class="form-label">Họ tên</label> <input
-													type="text" class="form-control" name="fullname" id="fullname"
-													placeholder="Vui lòng nhập Họ tên" required>
+													type="text" class="form-control" name="fullname"
+													id="fullname" placeholder="Vui lòng nhập Họ tên" required>
 												<div class="invalid-feedback">Vui lòng nhập Họ tên.</div>
 											</div>
 											<!-- Email Input -->
@@ -67,13 +67,15 @@
 													placeholder="Vui lòng nhập email" required>
 												<div class="invalid-feedback">Vui lòng nhập email.</div>
 											</div>
-											
+
 											<!-- PhoneNumber Input -->
 											<div class="mb-3">
-												<label for="email" class="form-label">Số điện thoại</label> <input
-													type="text" class="form-control" name="phone" id="phone"
-													placeholder="Vui lòng nhập số điện thoại" required>
-												<div class="invalid-feedback">Vui lòng nhập số điện thoại.</div>
+												<label for="email" class="form-label">Số điện thoại</label>
+												<input type="text" class="form-control" name="phone"
+													id="phone" placeholder="Vui lòng nhập số điện thoại"
+													required>
+												<div class="invalid-feedback">Vui lòng nhập số điện
+													thoại.</div>
 											</div>
 
 											<!-- Password Input -->
@@ -89,6 +91,24 @@
 													</button>
 													<div class="invalid-feedback">Vui lòng nhập mật khẩu.</div>
 												</div>
+												<div class="form-group password-strength"
+													id="password-strength" style="display: none;">
+													<ul class="no-bullet">
+														<li id="minLength"><i
+															class="fas fa-times text-danger"></i> Tối thiểu 8 ký tự</li>
+														<li id="uppercase"><i
+															class="fas fa-times text-danger"></i> Ít nhất một chữ cái
+															viết hoa</li>
+														<li id="lowercase"><i
+															class="fas fa-times text-danger"></i> Ít nhất một chữ cái
+															viết thường</li>
+														<li id="symbol"><i class="fas fa-times text-danger"></i>
+															Ít nhất một ký tự đặc biệt (@$!%*?&)</li>
+														<li id="number"><i class="fas fa-times text-danger"></i>
+															Ít nhất một chữ số</li>
+													</ul>
+												</div>
+
 											</div>
 
 											<!-- Confirm Password Input -->
@@ -115,21 +135,10 @@
 													<p class="text-muted">
 														Bạn đã có tài khoản? <a
 															class="text-primary fw-medium ms-1"
-															href="client/signin.htm"> Đăng nhập</a>
+															href="signin.htm"> Đăng nhập</a>
 													</p>
 												</div>
 											</div>
-
-											<!-- <div class="mx-3 my-1 py-2">
-												<hr class="mt-2 mb-2 border-secondary-subtle">
-												<div class="text-center py-3">
-													<a href="https://www.google.com" target="_blank"
-														class="google-btn"> <img
-														src="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png"
-														alt="Google Login">
-													</a>
-												</div>
-											</div> -->
 										</form>
 									</div>
 								</div>
@@ -173,52 +182,141 @@
 			});
 		}
 
-		// Form validation
 		function handleValidationForm() {
-			$("#signupform").on("submit", function(e) {
-				let isValid = true;
-				const emailInput = $("#email");
-				const passwordInput = $("#password");
-				const confirmPasswordInput = $("#confirm-password");
-				const emailValue = emailInput.val().trim();
-				const passwordValue = passwordInput.val().trim();
-				const confirmPasswordValue = confirmPasswordInput.val().trim();
+		    const fullnameInput = $("#fullname");
+		    const emailInput = $("#email");
+		    const phoneInput = $("#phone");
+		    const passwordInput = $("#password");
+		    const confirmPasswordInput = $("#confirm-password");
 
-				if (emailInput == "" || !validateEmail(emailValue)) {
-					emailInput.addClass("is-invalid");
-					isValid = false;
-				} else {
-					emailInput.removeClass("is-invalid");
+		    function validateField(input, isValid, errorMessage) {
+		        if (!isValid) {
+		            input.addClass("is-invalid");
+		            input.next(".invalid-feedback").text(errorMessage).show();
+		        } else {
+		            input.removeClass("is-invalid");
+		            input.next(".invalid-feedback").hide();
+		        }
+		    }
+		    
+		    fullnameInput.on("input blur", function(){
+				const value = $(this).val().trim()
+				if(value === ""){
+					validateField($(this),false, "Vui lòng nhập Họ tên");
+				}else{
+		            validateField($(this), true, "");
 				}
+		    });
 
-				if (passwordValue == "") {
-					passwordInput.addClass("is-invalid");
-					isValid = false;
-				} else {
-					passwordInput.removeClass("is-invalid");
-				}
+		    emailInput.on("input blur", function () {
+		        const value = $(this).val().trim();
+		        if (value === "") {
+		            validateField($(this), false, "Vui lòng nhập địa chỉ Email.");
+		        } else if (!validateEmail(value)) {
+		            validateField($(this), false, "Địa chỉ email không hợp lệ.");
+		        } else {
+		            validateField($(this), true, "");
+		        }
+		    });
 
-				if (confirmPasswordValue == "" || confirmPasswordValue !== passwordValue) {
-					confirmPasswordInput.addClass("is-invalid");
-					isValid = false;
-				} else {
-					confirmPasswordInput.removeClass("is-invalid");
-				}
+		    phoneInput.on("input blur", function () {
+		        const value = $(this).val().trim();
+		        if (value === "") {
+		            validateField($(this), false, "Vui lòng nhập số điện thoại.");
+		        } else if (!validatePhone(value)) {
+		            validateField($(this), false, "Số điện thoại không hợp lệ.");
+		        } else {
+		            validateField($(this), true, "");
+		        }
+		    });
 
-				if (!isValid) {
-					e.preventDefault();
-				}
-			});
+		    passwordInput.on("input blur", function () {
+		        const value = $(this).val().trim(); // Lấy giá trị và xóa khoảng trắng
+
+		        // Kiểm tra nếu mật khẩu trống
+		        if (value === "") {
+		            validateField($(this), false, "Mật khẩu không được để trống.");
+		        }
+		        // Kiểm tra mật khẩu có đủ mạnh không
+		        else if (!validatePassword(value)) {
+		            validateField($(this), false, "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.");
+		        }
+		        // Mật khẩu hợp lệ
+		        else {
+		            validateField($(this), true, "");
+		        }
+		    });
+
+		    confirmPasswordInput.on("input blur", function () {
+		        const passwordValue = passwordInput.val().trim();
+		        const confirmPasswordValue = $(this).val().trim();
+		        if (confirmPasswordValue !== passwordValue) {
+		            validateField($(this), false, "Mật khẩu xác nhận không khớp.");
+		        } else {
+		            validateField($(this), true, "");
+		        }
+		    });
+
+		    $("#signupform").on("submit", function (e) {
+		        let isValid = true;
+
+		        const fullnameValue = fullnameInput.val().trim();
+		        const emailValue = emailInput.val().trim();
+		        const phoneValue = phoneInput.val().trim();
+		        const passwordValue = passwordInput.val().trim();
+		        const confirmPasswordValue = confirmPasswordInput.val().trim();
+
+		        if (fullnameValue === "") {
+		            validateField(fullnameInput, false, "Vui lòng nhập họ tên.");
+		            isValid = false;
+		        }
+
+		        if (emailValue === "") {
+		            validateField(emailInput, false, "Vui lòng nhập địa chỉ Email.");
+		            isValid = false;
+		        } else if (!validateEmail(emailValue)) {
+		            validateField(emailInput, false, "Địa chỉ email không hợp lệ.");
+		            isValid = false;
+		        }
+
+		        if (phoneValue === "") {
+		            validateField(phoneInput, false, "Vui lòng nhập số điện thoại.");
+		            isValid = false;
+		        } else if (!validatePhone(phoneValue)) {
+		            validateField(phoneInput, false, "Số điện thoại không hợp lệ.");
+		            isValid = false;
+		        }
+
+		        if (passwordValue === "") {
+		            validateField(passwordInput, false, "Mật khẩu không được để trống.");
+		            isValid = false;
+		        } else if (!validatePassword(passwordValue)) {
+		            validateField(passwordInput, false, "Mật khẩu không đủ mạnh.");
+		            isValid = false;
+		        }
+
+		        if (confirmPasswordValue !== passwordValue) {
+		            validateField(confirmPasswordInput, false, "Mật khẩu xác nhận không khớp.");
+		            isValid = false;
+		        }
+
+		        if (!isValid) {
+		            e.preventDefault(); 
+		        }
+		    });
 		}
 
-		// Email validation
+
 		function validateEmail(email) {
 			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 			return emailRegex.test(email);
 		}
 		
-	</script>
-	<script>
+		function validatePhone(phone) {
+			const regexPhoneNumber = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
+			return regexPhoneNumber.test(phone);
+		}
+		
     const alertMessage = "${alertMessage}";
     const alertType = "${alertType}";
     
@@ -236,6 +334,57 @@
 	        }
         });
     }
+    
+	function showPasswordStrength() {
+		var passwordInput = document.getElementById('password');
+		var strengthDiv = document.getElementById('password-strength');
+
+		if (passwordInput.value.length > 0) {
+			strengthDiv.style.display = 'block';
+		} else {
+			strengthDiv.style.display = 'none';
+		}
+	}
+
+	document.getElementById('password').addEventListener('input',
+			showPasswordStrength);
+
+	function validatePassword(password) {
+        let isValid = true;
+
+        const minLengthValid = password.length >= 8;
+        document.getElementById('minLength').innerHTML = minLengthValid 
+            ? '<i class="fas fa-check text-success"></i> Tối thiểu 8 ký tự'
+            : '<i class="fas fa-times text-danger"></i> Tối thiểu 8 ký tự';
+        isValid = isValid && minLengthValid;
+
+        const uppercaseValid = /[A-Z]/.test(password);
+        document.getElementById('uppercase').innerHTML = uppercaseValid 
+            ? '<i class="fas fa-check text-success"></i> Ít nhất một chữ cái viết hoa'
+            : '<i class="fas fa-times text-danger"></i> Ít nhất một chữ cái viết thường';
+        isValid = isValid && uppercaseValid;
+
+        const lowercaseValid = /[a-z]/.test(password);
+        document.getElementById('lowercase').innerHTML = lowercaseValid 
+            ? '<i class="fas fa-check text-success"></i> Ít nhất một chữ cái viết thường'
+            : '<i class="fas fa-times text-danger"></i> Ít nhất một chữ cái viết thường';
+        isValid = isValid && lowercaseValid;
+
+        const symbolValid = /[@$!%*?&]/.test(password);
+        document.getElementById('symbol').innerHTML = symbolValid 
+            ? '<i class="fas fa-check text-success"></i> Ít nhất một ký tự đặc biệt (@$!%*?&)'
+            : '<i class="fas fa-times text-danger"></i> Ít nhất một ký tự đặc biệt (@$!%*?&)';
+        isValid = isValid && symbolValid;
+
+        const numberValid = /\d/.test(password);
+        document.getElementById('number').innerHTML = numberValid 
+            ? '<i class="fas fa-check text-success"></i> Ít nhất một chữ số'
+            : '<i class="fas fa-times text-danger"></i> Ít nhất một chữ số';
+        isValid = isValid && numberValid;
+
+        return isValid; 
+    }
+
 </script>
 </body>
 </html>

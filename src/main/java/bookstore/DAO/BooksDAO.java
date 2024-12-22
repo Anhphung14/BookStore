@@ -255,58 +255,6 @@ public class BooksDAO {
 			    return resultsWithSlug;
 			}
 
-		/* public List<BooksEntity> search(String searchQuery, int pageNumber, int pageSize ) {
-			    // Khởi tạo phiên làm việc (Hibernate Session)
-			    Session session = sessionFactory.getCurrentSession();
-			    
-			    BigDecimal minPrice = null;
-			    BigDecimal maxPrice = null;
-			    if (searchQuery.contains("-")) {
-			        String[] parts = searchQuery.split("-");
-			        try {
-			            // Chuyển đổi các giá trị thành BigDecimal (nếu hợp lệ)
-			            minPrice = new BigDecimal(parts[0].trim());
-			            maxPrice = new BigDecimal(parts[1].trim());
-			        } catch (NumberFormatException e) {
-			            // Không phải là khoảng giá hợp lệ, tiếp tục tìm kiếm theo text
-			            minPrice = null;
-			            maxPrice = null;
-			        }
-			    }
-			    
-			    
-			    // HQL query để tìm kiếm dữ liệu phù hợp với searchQuery
-			    String hql = "FROM BooksEntity b " +
-			                 "LEFT JOIN FETCH b.supplier s " +
-			                 "WHERE LOWER(b.title) LIKE :searchQuery " + // Tìm theo tên sách
-			                 "   OR LOWER(b.author) LIKE :searchQuery " + // Tìm theo tên tác giả
-			                 "   OR LOWER(s.name) LIKE :searchQuery";    // Tìm theo tên nhà cung cấp
-			    
-			    // Nếu là khoảng giá hợp lệ, thêm điều kiện tìm kiếm theo giá
-			    if (minPrice != null && maxPrice != null) {
-			        hql += " OR b.price BETWEEN :minPrice AND :maxPrice ";
-			    }
-			    
-			    
-			    Query query = session.createQuery(hql);
-			    // Thêm tham số cho query với giá trị tìm kiếm
-			    query.setParameter("searchQuery", "%" + searchQuery.toLowerCase() + "%");
-			    
-			    if (minPrice != null && maxPrice != null) {
-			        query.setParameter("minPrice", minPrice);
-			        query.setParameter("maxPrice", maxPrice);
-			    }
-			    
-			    
-			    
-			    // Thiết lập phân trang
-			    query.setFirstResult((pageNumber - 1) * pageSize); // Vị trí bản ghi bắt đầu
-			    query.setMaxResults(pageSize); // Số lượng bản ghi trên mỗi trang
-			    List<BooksEntity> bookList = query.list();
-			   
-			    return bookList;
-			} */
-		 
 		 public List<BooksEntity> search(String searchQuery, int pageNumber, int pageSize, String sortBy) {
 			    // Khởi tạo phiên làm việc (Hibernate Session)
 			    Session session = sessionFactory.getCurrentSession();

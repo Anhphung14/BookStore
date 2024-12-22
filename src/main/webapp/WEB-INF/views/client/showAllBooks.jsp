@@ -188,7 +188,7 @@
 										        <c:choose>
 										            <c:when test="${currentPage > 1}">
 										                <li class="page-item">
-										                    <a class="page-link" href="categories/${danhMuc[2]}/${danhMuc[3]}.htm?page=${currentPage - 1}" aria-label="Previous">
+										                    <a class="page-link" href="allProduct.htm?q=${searchQuery }&sortBy=${sortBy}&page=${currentPage - 1}&pageSize=${pageSize}" aria-label="Previous">
 										                        <span aria-hidden="true">&laquo;</span>
 										                    </a>
 										                </li>
@@ -205,7 +205,7 @@
 										        <!-- Các trang -->
 										        <c:forEach var="page" begin="1" end="${totalPages}">
 										            <li class="page-item ${page == currentPage ? 'active' : ''}">
-										                <a class="page-link" href="categories/${danhMuc[2]}/${danhMuc[3]}.htm?page=${page}">${page}</a>
+										                <a class="page-link" href="allProduct.htm?q=${searchQuery }&sortBy=${sortBy}&page=${page}&pageSize=${pageSize}">${page}</a>
 										            </li>
 										        </c:forEach>
 										
@@ -213,7 +213,7 @@
 										        <c:choose>
 										            <c:when test="${currentPage < totalPages}">
 										                <li class="page-item">
-										                    <a class="page-link" href="categories/${danhMuc[2]}/${danhMuc[3]}.htm?page=${currentPage + 1}" aria-label="Next">
+										                    <a class="page-link" href="allProduct.htm?q=${searchQuery }&sortBy=${sortBy}&page=${currentPage + 1}&pageSize=${pageSize}" aria-label="Next">
 										                        <span aria-hidden="true">&raquo;</span>
 										                    </a>
 										                </li>
@@ -323,7 +323,7 @@
 
 	        const currentUrl = new URL(window.location.href); // Lấy URL hiện tại
 	        const searchQuery = currentUrl.searchParams.get("q") || ""; // Lấy từ khóa tìm kiếm (nếu có)
-	        const pageSize = currentUrl.searchParams.get("pageSize") || "10"; // Lấy số lượng sản phẩm mỗi trang (mặc định là 10)
+	        const pageSize = currentUrl.searchParams.get("pageSize") || "16"; // Lấy số lượng sản phẩm mỗi trang (mặc định là 10)
 
 	        const currentPage = currentUrl.searchParams.get("page") || "1"; // Lấy số trang hiện tại (mặc định là trang 1)
 

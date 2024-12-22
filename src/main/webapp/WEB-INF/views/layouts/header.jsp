@@ -49,7 +49,7 @@ nav.navbar {
 
 <nav class="navbar navbar-topbar navbar-expand-lg sticky-top">
 	<div
-		class="container-fluid d-flex justify-content-between align-items-center ">
+		class="container-fluid d-flex justify-content-between align-items-center">
 		<ul
 			class="list-unstyled topbar-menu mb-0 d-flex align-items-center justify-content-start">
 			<li class="dropdown d-none d-sm-block">
@@ -66,6 +66,13 @@ nav.navbar {
 		<div class="toggle-btn p-5" onclick="toggleSidebar()">
 			<i class="fa fa-bars"></i>
 		</div>
+
+		<a href="${pageContext.servletContext.contextPath}/index.htm" 
+			class="btn btn-outline-dark d-flex align-items-center gap-2">
+			<i class="fa fa-globe fa-lg"></i> <span>Trang chủ BookStore</span>
+		</a>
+
+
 		<ul
 			class="list-unstyled topbar-menu ms-auto mb-0 d-flex align-items-center justify-item-center fixed">
 			<li></li>
@@ -73,29 +80,30 @@ nav.navbar {
 				href="#" id="userDropdown" role="button" data-bs-toggle="dropdown"
 				aria-expanded="false">
 					<div class="avatar">
-						<img alt="User Avatar" src="${user.avatar}"
+						<img alt="User Avatar" src="${sessionScope.user.avatar}"
 							class="rounded-circle bg-white border border-3 border-white">
 					</div>
 			</a>
-				<ul class="dropdown-menu dropdown-menu-end border-0 shadow "
+
+				<ul class="dropdown-menu dropdown-menu-end border-0 shadow"
 					aria-labelledby="userDropdown">
 					<li class="text-center p-3 border-bottom mb-3">
 						<div class="avatar avatar-xxl">
-							<img alt="User Avatar" src="${user.avatar}"
+							<img alt="User Avatar" src="${sessionScope.user.avatar}"
 								class="rounded-circle bg-white border border-3 border-white">
 						</div>
 						<div class="mt-3">
-							<h5>${user.fullname}</h5>
-							<div class="text-muted">${user.email}</div>
+							<h5>${sessionScope.user.fullname}</h5>
+							<div class="text-muted">${sessionScope.user.email}</div>
 						</div>
 					</li>
 					<li><a class="dropdown-item" href="profile.htm"><i
-							class="fa fa-user"></i>Profile</a></li>
-					<form id="signoutForm" action="${pageContext.servletContext.contextPath}/signout.htm" method="POST"
-						style="display: none;">
+							class="fa fa-user"></i> Profile</a></li>
+					<form id="signoutForm"
+						action="${pageContext.servletContext.contextPath}/signout.htm"
+						method="POST" style="display: none;">
 						<input type="hidden" name="signout" value="true">
 					</form>
-					<%--                     <li><a class="dropdown-item" href="${pageContext.servletContext.contextPath}/signout.html"><i class="fa fa-sign-out"></i>Sign Out</a></li> --%>
 					<li><a class="dropdown-item" href="javascript:void(0);"
 						onclick="document.getElementById('signoutForm').submit();"><i
 							class="fa fa-sign-out"></i> Sign Out</a></li>

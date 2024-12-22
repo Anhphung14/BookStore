@@ -56,7 +56,7 @@
     <c:forEach var="review" items="${reviews}">
         <div class="review">
             <div class="product-info">
-                <p style="font-size: 1.4rem;"><strong style="color: white;">Mã đơn hàng:</strong> ${review.order.id}</p> <!-- Mã đơn hàng -->
+                <p style="font-size: 1.4rem;"><strong style="color: white;">Người dùng:</strong> ${review.user.fullname}</p> <!-- Mã đơn hàng -->
                 <p style="font-size: 1.4rem;"><strong style="color: white;">Sách:</strong> 
                     <a>${review.book.title}</a>
                 </p>

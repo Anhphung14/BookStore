@@ -25,6 +25,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import bookstore.Entity.*;
+import bookstore.Service.MailService;
 import bookstore.DAO.DiscountsDAO;
 import bookstore.DAO.OrderDAO;
 import bookstore.DAO.ShippingAddressDAO;
@@ -40,6 +41,9 @@ public class OrdersController {
 	ShippingAddressDAO shippingAddressDAO;
 	@Autowired
 	DiscountsDAO discountsDAO;
+	@Autowired
+	MailService mailService;
+	
 	
 	@RequestMapping("/orders")
 	public String index(ModelMap modelMap, @RequestParam(value = "customerName", required = false) String customerName, @RequestParam(value = "fromDate", required = false) String fromDate, @RequestParam(value = "toDate", required = false) String toDate, 
@@ -68,6 +72,33 @@ public class OrdersController {
 			}
 			order.setDiscountValue(discountValue);
 		}
+		List<OrdersEntity> listOrderAutoCancelEntities =  orderDAO.autoCancelUnconfirmedOrders();
+		if(listOrderAutoCancelEntities.size() != 0) {
+			String notify = "Đơn hàng ";
+			for(OrdersEntity order: listOrderAutoCancelEntities) {
+				notify += order.getId() + " ,";
+				
+				
+				String emailContent = "<html><body>"
+		                + "<h5>Hello " + order.getUser().getFullname() + ",</h5>"
+		                + "<p>We regret to inform you that your order with Order ID: " + order.getId() + " has been cancelled due to some unforeseen circumstances from the seller's side.</p>"
+		                + "<p>We apologize for any inconvenience this may have caused. If you have any questions or concerns, please feel free to contact our support team.</p>"
+		                + "<p>Thank you for your understanding.</p>"
+		                + "<p>Best regards,</p>"
+		                + "<p>Book Store ALDPT</p>"
+		                + "</body></html>";
+					
+				 mailService.sendMail(emailContent, order.getUser().getEmail(), "Notice of order cancellation due to special circumstances from our side.");
+			}
+			if(notify.endsWith(",")) {
+				 notify = notify.substring(0, notify.length() - 1);
+			}
+			notify += " đã được huỷ tự động!";
+			modelMap.addAttribute("alertMessage", notify);
+			modelMap.addAttribute("alertType", "error");
+	        
+		}
+		
 		
 		modelMap.addAttribute("customerName", customerName);
 		modelMap.addAttribute("fromDate", fromDate);

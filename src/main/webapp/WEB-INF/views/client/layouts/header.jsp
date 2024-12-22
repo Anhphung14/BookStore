@@ -24,10 +24,10 @@
 }
 
 .btn-signin {
-	text-decoration: underline; 
+	text-decoration: underline;
 	font-weight: 600;
 	color: #404040;
-	background: ;
+	background:;
 }
 
 .btn-signin:hover {
@@ -105,9 +105,9 @@
 								<a
 									href="${pageContext.servletContext.contextPath}/cart/view.htm"
 									id="tg-minicart" class="tg-btnthemedropdown"
-									aria-haspopup="true"
-									aria-expanded="false"> <span class="tg-themebadge">${sessionScope.countBooksInCart}</span>
-									<i class="fa-solid fa-cart-shopping"></i>
+									aria-haspopup="true" aria-expanded="false"> <span
+									class="tg-themebadge">${sessionScope.countBooksInCart}</span> <i
+									class="fa-solid fa-cart-shopping"></i>
 								</a>
 							</div>
 						</div>
@@ -138,12 +138,22 @@
 									<div class="menu">
 										<h3>${user.fullname}</h3>
 										<ul>
+											<c:if test="${sessionScope.role == 'ROLE_ADMIN'}">
+												<li><i class="fa-solid fa-tachometer-alt"></i>&nbsp;&nbsp;
+													<a
+													href="${pageContext.servletContext.contextPath}/admin1337/home.htm">Trang
+														quản lý</a></li>
+											</c:if>
+
 											<li><i class="fa-solid fa-user"></i>&nbsp;&nbsp;<a
-												href="${pageContext.servletContext.contextPath}/account/profile_settings.htm">Trang cá nhân</a></li>
+												href="${pageContext.servletContext.contextPath}/account/profile_settings.htm">Trang
+													cá nhân</a></li>
 											<li><i class="fa-solid fa-shop"></i>&nbsp;&nbsp;<a
-												href="${pageContext.servletContext.contextPath}/account/account_orders.htm">Đơn hàng của bạn</a></li>
+												href="${pageContext.servletContext.contextPath}/account/account_orders.htm">Đơn
+													hàng của bạn</a></li>
 											<li><i class="fa-solid fa-right-from-bracket"></i>&nbsp;&nbsp;<a
-												href="${pageContext.servletContext.contextPath}/signout.htm">Đăng xuất</a></li>
+												href="${pageContext.servletContext.contextPath}/signout.htm">Đăng
+													xuất</a></li>
 										</ul>
 									</div>
 								</c:when>
@@ -151,7 +161,8 @@
 									<div class="signin-container">
 										<a href="${pageContext.servletContext.contextPath}/signin.htm"
 											class="btn-signin"> <span
-											style="font-weight: 600; line-height: 20px; color: #404040;">Đăng nhập</span>
+											style="font-weight: 600; line-height: 20px; color: #404040;">Đăng
+												nhập</span>
 										</a>
 									</div>
 

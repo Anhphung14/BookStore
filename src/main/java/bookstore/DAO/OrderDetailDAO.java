@@ -1,6 +1,8 @@
 package bookstore.DAO;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -38,30 +40,37 @@ public class OrderDetailDAO {
         Session session = sessionFactory.getCurrentSession();
         session.saveOrUpdate(orderDetail); // Lưu hoặc cập nhật đối tượng OrdersDetailEntity
     }
-    public BooksEntity getBestSellingBook() {
+    public Map<String, Object> getBestSellingBook() {
         try {
             Session session = sessionFactory.getCurrentSession();
-            // Sửa câu lệnh HQL để lấy ID của sách và tổng số lượng, sau đó chọn sách bán chạy nhất
             String hql = "SELECT od.book.id, SUM(od.quantity) FROM OrdersDetailEntity od " +
-                         "GROUP BY od.book.id " +  // Nhóm theo ID của sách
-                         "ORDER BY SUM(od.quantity) DESC"; // Sắp xếp theo tổng số lượng bán ra
+                         "GROUP BY od.book.id " +
+                         "ORDER BY SUM(od.quantity) DESC";
             Query query = session.createQuery(hql);
-            query.setMaxResults(1); // Lấy quyển sách bán chạy nhất
+            query.setMaxResults(1);
 
-            // Lấy kết quả, đây là một mảng Object, phần tử đầu tiên là ID của sách
             Object[] result = (Object[]) query.uniqueResult();
-            
-            if (result != null) {
-                Long bookId = (Long) result[0];  // ID của sách bán chạy nhất
-                // Lấy thông tin chi tiết sách bán chạy nhất từ ID
+
+            if (result != null && result.length == 2) {
+                Long bookId = (Long) result[0];
+                Long totalQuantity = (Long) result[1];
+
+                // Lấy thông tin sách bán chạy nhất từ ID
                 BooksEntity bestSellingBook = (BooksEntity) session.get(BooksEntity.class, bookId);
-                return bestSellingBook; // Trả về sách bán chạy nhất
+
+                // Tạo một Map chứa sách bán chạy nhất và tổng số lượng bán ra
+                Map<String, Object> resultMap = new HashMap<>();
+                resultMap.put("bestSellingBook", bestSellingBook);
+                resultMap.put("totalQuantity", totalQuantity);
+
+                return resultMap;
             }
         } catch (Exception e) {
             throw new RuntimeException("Error fetching best selling book", e);
         }
-        return null; // Trả về null nếu không có sách nào
+        return null;
     }
+
 
 
 

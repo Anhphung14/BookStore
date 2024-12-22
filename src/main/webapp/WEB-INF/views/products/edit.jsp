@@ -112,7 +112,7 @@
 					<p>Manage users, roles, permissions, and profile.</p>
 				</div>
 				<div class="col-auto d-none d-sm-block">
-					<img class="page-icon" src="resources/images/page.svg"
+					<img class="page-icon" src="${pageContext.servletContext.contextPath}/resources/images/page.svg"
 						width="120px" alt="Page Icon">
 				</div>
 			</div>
@@ -481,7 +481,7 @@
 		    }
 
 		    // Gửi yêu cầu AJAX đến server
-		    fetch('/bookstore/product/getSubcategories.htm?categoryId=' + categoryId)
+		    fetch('/bookstore/admin1337/product/getSubcategories.htm?categoryId=' + categoryId)
 		    .then(response => response.text())
 		    .then(data => {
 		        const subcategorySelect = document.getElementById('subcategory_id');
@@ -494,7 +494,7 @@
 		function loadCategory(subcategoryId) {
 		    if (!subcategoryId) return;
 
-		    fetch(`/bookstore/product/getCategory.htm?subcategoryId=` + subcategoryId)
+		    fetch(`/bookstore/admin1337/product/getCategory.htm?subcategoryId=` + subcategoryId)
 		        .then(response => response.text()) // Đọc response dạng text
 		        .then(data => {
 		            const parser = new DOMParser();

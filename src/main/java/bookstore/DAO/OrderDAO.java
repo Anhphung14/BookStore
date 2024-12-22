@@ -22,6 +22,8 @@ import bookstore.Entity.InventoryEntity;
 import bookstore.Entity.Order_DiscountsEntity;
 import bookstore.Entity.OrdersDetailEntity;
 import bookstore.Entity.OrdersEntity;
+import bookstore.Entity.UsersEntity;
+import bookstore.Service.MailService;
 @Repository
 @Transactional
 public class OrderDAO {
@@ -29,6 +31,8 @@ public class OrderDAO {
     private SessionFactory sessionFactory;
     @Autowired
     private InventoryDAO inventoryDAO;
+    @Autowired
+	MailService mailService;
     
     
     public List<OrdersEntity> listOrders(){
@@ -113,7 +117,8 @@ public class OrderDAO {
         	        	System.out.println("orderDetail.getBook().getId(): " + orderDetail.getBook().getId());
         	        	InventoryEntity inventoryOfCurrentBook = inventoryDAO.getInventoryByBookId(orderDetail.getBook().getId());
                         Integer currentStockQuantity = inventoryOfCurrentBook.getStock_quantity();
-                        inventoryOfCurrentBook.setStock_quantity(currentStockQuantity + 1);
+                        inventoryOfCurrentBook.setStock_quantity(currentStockQuantity + orderDetail.getQuantity());
+                        System.out.println("currentStockQuantity + orderDetail.getQuantity(): " + currentStockQuantity + orderDetail.getQuantity());
                         boolean isUpdateStockQuantity = inventoryDAO.updateInventory(inventoryOfCurrentBook);
         	        }
                 }
@@ -319,4 +324,86 @@ public class OrderDAO {
 		}
 		return isUpdate;
 	}
+	
+	public List<OrdersEntity> autoCancelUnconfirmedOrders() {
+	    List<OrdersEntity> listOrdersEntities = listOrders(); // Lấy danh sách tất cả đơn hàng
+	    List<OrdersEntity> listOrdersEntitiesAutoCancel = new ArrayList<OrdersEntity>();
+	    long currentTime = System.currentTimeMillis(); // Thời gian hiện tại tính bằng mili giây
+	    for (OrdersEntity orderEntity : listOrdersEntities) {
+	        Date orderDate = orderEntity.getCreatedAt(); // Thời gian đặt đơn hàng
+	        long timeElapsed = currentTime - orderDate.getTime(); // Khoảng thời gian đã qua (ms)
+	        if (timeElapsed >= 3 * 24 * 60 *  60 * 1000 && orderEntity.getOrderStatus().equals("Chờ xác nhận")) { 
+	            //updateOrderStatusToCancel(orderEntity.getId()); 
+	            updateOrderStatus(orderEntity.getId(), "Huỷ đơn hàng");
+	            listOrdersEntitiesAutoCancel.add(orderEntity);
+	        }
+	    }
+	    return listOrdersEntitiesAutoCancel;
+	}
+
+	public boolean deleteOrder(Long orderId) {
+	    try {
+	        // Lấy session hiện tại
+	        Session session = sessionFactory.getCurrentSession();
+
+	        // Lấy đơn hàng cần xóa
+	        OrdersEntity order = (OrdersEntity) session.get(OrdersEntity.class, orderId);
+	        if (order == null) {
+	            throw new EntityNotFoundException("Không tìm thấy đơn hàng với ID: " + orderId);
+	        }
+
+	        // Kiểm tra và cập nhật tồn kho từ các chi tiết đơn hàng
+	        List<OrdersDetailEntity> orderDetails = order.getOrderDetails();
+	        if (orderDetails != null && !orderDetails.isEmpty()) {
+	            for (OrdersDetailEntity orderDetail : orderDetails) {
+	                InventoryEntity inventoryOfCurrentBook = inventoryDAO.getInventoryByBookId(orderDetail.getBook().getId());
+	                if (inventoryOfCurrentBook != null) {
+	                    Integer currentStockQuantity = inventoryOfCurrentBook.getStock_quantity();
+	                    inventoryOfCurrentBook.setStock_quantity(currentStockQuantity + orderDetail.getQuantity());
+	                    System.out.println("Cập nhật tồn kho: " + currentStockQuantity + " + " + orderDetail.getQuantity());
+	                    boolean isUpdated = inventoryDAO.updateInventory(inventoryOfCurrentBook);
+	                    if (!isUpdated) {
+	                        throw new IllegalStateException("Không thể cập nhật tồn kho cho sách ID: " + orderDetail.getBook().getId());
+	                    }
+	                } else {
+	                    System.err.println("Không tìm thấy tồn kho cho sách ID: " + orderDetail.getBook().getId());
+	                }
+	            }
+	        }
+
+//	        // Xóa chi tiết đơn hàng
+//	        if (orderDetails != null && !orderDetails.isEmpty()) {
+//	            for (OrdersDetailEntity orderDetail : orderDetails) {
+//	                session.delete(orderDetail);
+//	            }
+//	        }
+//
+//	        // Xóa giảm giá liên quan nếu có
+//	        List<Order_DiscountsEntity> orderDiscounts = getOrderDiscountsByOrderId(orderId);
+//	        if (orderDiscounts != null && !orderDiscounts.isEmpty()) {
+//	            for (Order_DiscountsEntity orderDiscount : orderDiscounts) {
+//	                session.delete(orderDiscount);
+//	            }
+//	        }
+
+	        // Xóa đơn hàng
+//	        session.delete(order);
+	        String hql = "DELETE FROM OrdersEntity o WHERE o.id = :orderId";
+	        Query query = session.createQuery(hql);
+			query = query.setParameter("orderId", orderId);
+			int orderDeleted = query.executeUpdate();
+			if(orderDeleted != 0) {
+				return true;
+			}else {
+				return false;
+			}
+	        
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+
+
 }
