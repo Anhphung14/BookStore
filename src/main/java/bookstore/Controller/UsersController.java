@@ -142,14 +142,15 @@ public class UsersController {
 					return "users/edit";
 				}
 
-				user.setAvatar("resources/images/default-avatar.png");
+				user.setAvatar(
+						"https://res.cloudinary.com/dsqhfz3xt/image/upload/v1733041850/images/avatars/vo-anh-phungg/drmxjyaok8d8b8ofgiwl.png");
 				String hashedPassword = PasswordUtil.hashPassword("bookstore");
 				user.setPassword(hashedPassword);
 
 				Timestamp currentDate = Timestamp.valueOf(LocalDateTime.now());
 				user.setCreated_at(currentDate);
 				user.setUpdated_at(currentDate);
-				user.setEnabled(1); // Chuyển enabled thành Boolean
+				user.setEnabled(1); 
 
 				session.save(user);
 
