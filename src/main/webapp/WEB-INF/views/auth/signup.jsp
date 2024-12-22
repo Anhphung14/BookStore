@@ -135,7 +135,7 @@
 													<p class="text-muted">
 														Bạn đã có tài khoản? <a
 															class="text-primary fw-medium ms-1"
-															href="client/signin.htm"> Đăng nhập</a>
+															href="signin.htm"> Đăng nhập</a>
 													</p>
 												</div>
 											</div>

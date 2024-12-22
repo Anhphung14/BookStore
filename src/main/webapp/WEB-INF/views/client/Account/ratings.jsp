@@ -86,26 +86,27 @@
 			                    <input type="text" readonly class="form-control" value="${orderDetail.book.title}" id="productName${orderDetail.book.id}">
 			                </div>
 			                <div class="my-2">
-			                    <strong style="font-size: 1.5rem;">Đánh giá:</strong><br>
-			                    <label class="rating" style="font-size: 1.5rem;">
-			                        <input type="radio" name="rating${orderDetail.order.id}_${orderDetail.book.id}" value="1"> 1 ⭐
-			                    </label><br>
-			                    <label class="rating" style="font-size: 1.5rem;">
-			                        <input type="radio" name="rating${orderDetail.order.id}_${orderDetail.book.id}" value="2"> 2 ⭐
-			                    </label><br>
-			                    <label class="rating" style="font-size: 1.5rem;">
-			                        <input type="radio" name="rating${orderDetail.order.id}_${orderDetail.book.id}" value="3"> 3 ⭐
-			                    </label><br>
-			                    <label class="rating" style="font-size: 1.5rem;">
-			                        <input type="radio" name="rating${orderDetail.order.id}_${orderDetail.book.id}" value="4"> 4 ⭐
-			                    </label><br>
-			                    <label class="rating" style="font-size: 1.5rem;">
-			                        <input type="radio" name="rating${orderDetail.order.id}_${orderDetail.book.id}" value="5"> 5 ⭐
-			                    </label>
-			                </div>
+							    <strong style="font-size: 1.5rem;">Đánh giá:</strong>
+							    <div class="btn-group" role="group" aria-label="Rating group" style="font-size: 1.5rem;">
+							        <input type="radio" class="btn-check" name="rating${orderDetail.order.id}_${orderDetail.book.id}" id="rating1_${orderDetail.order.id}_${orderDetail.book.id}" value="1" required>
+							        <label class="btn btn-outline-dark" for="rating1_${orderDetail.order.id}_${orderDetail.book.id}" style="font-size: 1.5rem;">1 ⭐</label>
+							
+							        <input type="radio" class="btn-check" name="rating${orderDetail.order.id}_${orderDetail.book.id}" id="rating2_${orderDetail.order.id}_${orderDetail.book.id}" value="2">
+							        <label class="btn btn-outline-dark" for="rating2_${orderDetail.order.id}_${orderDetail.book.id}" style="font-size: 1.5rem;">2 ⭐</label>
+							
+							        <input type="radio" class="btn-check" name="rating${orderDetail.order.id}_${orderDetail.book.id}" id="rating3_${orderDetail.order.id}_${orderDetail.book.id}" value="3">
+							        <label class="btn btn-outline-dark" for="rating3_${orderDetail.order.id}_${orderDetail.book.id}" style="font-size: 1.5rem;">3 ⭐</label>
+							
+							        <input type="radio" class="btn-check" name="rating${orderDetail.order.id}_${orderDetail.book.id}" id="rating4_${orderDetail.order.id}_${orderDetail.book.id}" value="4">
+							        <label class="btn btn-outline-dark" for="rating4_${orderDetail.order.id}_${orderDetail.book.id}" style="font-size: 1.5rem;">4 ⭐</label>
+							
+							        <input type="radio" class="btn-check" name="rating${orderDetail.order.id}_${orderDetail.book.id}" id="rating5_${orderDetail.order.id}_${orderDetail.book.id}" value="5">
+							        <label class="btn btn-outline-dark" for="rating5_${orderDetail.order.id}_${orderDetail.book.id}" style="font-size: 1.5rem;">5 ⭐</label>
+							    </div>
+							</div>
 			                <div class="my-2">
 			                    <strong style="font-size: 1.5rem;">Đánh giá:</strong>
-			                    <textarea class="form-control" name="review${orderDetail.order.id}_${orderDetail.book.id}" rows="3" placeholder="Nhập đánh giá của bạn..." style="font-size: 1.5rem;"></textarea>
+			                    <textarea class="form-control" name="review${orderDetail.order.id}_${orderDetail.book.id}" rows="3" placeholder="Nhập đánh giá của bạn..." style="font-size: 1.5rem;" required="required"></textarea>
 			                </div>
 			            </div>
 			        </div>

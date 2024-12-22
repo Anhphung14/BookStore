@@ -176,7 +176,7 @@ public class AccountController {
 			isError++;
 		}
 	    
-	    String regex = "^(\\+84|0)(9[0-9]{8}|1[2-9][0-9]{7})$";
+	    String regex = "^0(3|5|7|8|9)[0-9]{8}$";
         
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(userUpdate.getPhone());
