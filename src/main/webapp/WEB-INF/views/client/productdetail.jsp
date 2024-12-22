@@ -315,17 +315,15 @@
 																				<span class="tg-bookprice"> <ins>
 																						<f:formatNumber
 																							value="${book.price - book.price * discounts[status.index] / 100}"
-																							type="currency" />
+																							type="currency" maxFractionDigits="0" currencySymbol="₫"/>
 																					</ins> <del>
-																						<f:formatNumber value="${book.price}"
-																							type="currency" />
+																						<f:formatNumber value="${book.price}" type="currency" maxFractionDigits="0" currencySymbol="₫" />
 																					</del>
 																				</span>
 																			</c:when>
 																			<c:otherwise>
 																				<span class="tg-bookprice"> <ins>
-																						<f:formatNumber value="${book.price}"
-																							type="currency" />
+																						<f:formatNumber value="${book.price}" type="currency" maxFractionDigits="0" currencySymbol="₫" />
 																					</ins>
 																				</span>
 																			</c:otherwise>

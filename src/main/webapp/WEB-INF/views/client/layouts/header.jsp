@@ -138,7 +138,7 @@
 									<div class="menu">
 										<h3>${user.fullname}</h3>
 										<ul>
-											<c:if test="${sessionScope.role == 'ROLE_ADMIN'}">
+											<c:if test="${sessionScope.role == 'ROLE_ADMIN' || sessionScope.role == 'ROLE_STAFF'}">
 												<li><i class="fa-solid fa-tachometer-alt"></i>&nbsp;&nbsp;
 													<a
 													href="${pageContext.servletContext.contextPath}/admin1337/home.htm">Trang
