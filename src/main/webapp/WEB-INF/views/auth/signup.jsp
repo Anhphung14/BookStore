@@ -83,8 +83,8 @@
 												<label for="password" class="form-label">Mật khẩu</label>
 												<div class="input-group input-password">
 													<input type="password" class="form-control" name="password"
-														id="password" oninput="validatePassword(this.value)"
-														placeholder="Vui lòng nhập mật khẩu" required>
+														id="password" placeholder="Vui lòng nhập mật khẩu"
+														required>
 													<button type="button" class="btn btn-light border"
 														id="password-toggle">
 														<i class="fa fa-eye fa-fw"></i>
@@ -231,12 +231,18 @@
 		    });
 
 		    passwordInput.on("input blur", function () {
-		        const value = $(this).val().trim();
+		        const value = $(this).val().trim(); // Lấy giá trị và xóa khoảng trắng
+
+		        // Kiểm tra nếu mật khẩu trống
 		        if (value === "") {
 		            validateField($(this), false, "Mật khẩu không được để trống.");
-		        } else if (!validatePassword(value)) {
-		            validateField($(this), false, "Mật khẩu không đủ mạnh.");
-		        } else {
+		        }
+		        // Kiểm tra mật khẩu có đủ mạnh không
+		        else if (!validatePassword(value)) {
+		            validateField($(this), false, "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.");
+		        }
+		        // Mật khẩu hợp lệ
+		        else {
 		            validateField($(this), true, "");
 		        }
 		    });
@@ -344,27 +350,40 @@
 			showPasswordStrength);
 
 	function validatePassword(password) {
+        let isValid = true;
 
-	    document.getElementById('minLength').innerHTML = password.length >= 8 
-	    ? '<i class="fas fa-check text-success"></i> Tối thiểu 8 ký tự'
-	    : '<i class="fas fa-times text-danger"></i> Tối thiểu 8 ký tự';
+        const minLengthValid = password.length >= 8;
+        document.getElementById('minLength').innerHTML = minLengthValid 
+            ? '<i class="fas fa-check text-success"></i> Tối thiểu 8 ký tự'
+            : '<i class="fas fa-times text-danger"></i> Tối thiểu 8 ký tự';
+        isValid = isValid && minLengthValid;
 
-	document.getElementById('uppercase').innerHTML = /[A-Z]/.test(password) 
-	    ? '<i class="fas fa-check text-success"></i> Ít nhất một chữ cái viết hoa'
-	    : '<i class="fas fa-times text-danger"></i> Ít nhất một chữ cái viết hoa';
+        const uppercaseValid = /[A-Z]/.test(password);
+        document.getElementById('uppercase').innerHTML = uppercaseValid 
+            ? '<i class="fas fa-check text-success"></i> Ít nhất một chữ cái viết hoa'
+            : '<i class="fas fa-times text-danger"></i> Ít nhất một chữ cái viết thường';
+        isValid = isValid && uppercaseValid;
 
-	document.getElementById('lowercase').innerHTML = /[a-z]/.test(password) 
-	    ? '<i class="fas fa-check text-success"></i> Ít nhất một chữ cái viết thường'
-	    : '<i class="fas fa-times text-danger"></i> Ít nhất một chữ cái viết thường';
+        const lowercaseValid = /[a-z]/.test(password);
+        document.getElementById('lowercase').innerHTML = lowercaseValid 
+            ? '<i class="fas fa-check text-success"></i> Ít nhất một chữ cái viết thường'
+            : '<i class="fas fa-times text-danger"></i> Ít nhất một chữ cái viết thường';
+        isValid = isValid && lowercaseValid;
 
-	document.getElementById('symbol').innerHTML = /[@$!%*?&]/.test(password) 
-	    ? '<i class="fas fa-check text-success"></i> Ít nhất một ký tự đặc biệt (@$!%*?&)'
-	    : '<i class="fas fa-times text-danger"></i> Ít nhất một ký tự đặc biệt (@$!%*?&)';
+        const symbolValid = /[@$!%*?&]/.test(password);
+        document.getElementById('symbol').innerHTML = symbolValid 
+            ? '<i class="fas fa-check text-success"></i> Ít nhất một ký tự đặc biệt (@$!%*?&)'
+            : '<i class="fas fa-times text-danger"></i> Ít nhất một ký tự đặc biệt (@$!%*?&)';
+        isValid = isValid && symbolValid;
 
-	document.getElementById('number').innerHTML = /\d/.test(password) 
-	    ? '<i class="fas fa-check text-success"></i> Ít nhất một chữ số'
-	    : '<i class="fas fa-times text-danger"></i> Ít nhất một chữ số';
-	}
+        const numberValid = /\d/.test(password);
+        document.getElementById('number').innerHTML = numberValid 
+            ? '<i class="fas fa-check text-success"></i> Ít nhất một chữ số'
+            : '<i class="fas fa-times text-danger"></i> Ít nhất một chữ số';
+        isValid = isValid && numberValid;
+
+        return isValid; 
+    }
 
 </script>
 </body>
