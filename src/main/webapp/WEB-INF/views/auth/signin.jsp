@@ -58,6 +58,8 @@
 											method="POST">
 											<input type="hidden" id="g-recaptcha-response"
 												name="g-recaptcha-response" />
+											
+											<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
 											<!-- Email Input -->
 											<div class="mb-3">
@@ -87,12 +89,12 @@
 												<a class="text-primary fw-medium ms-1"
 													href="forgotpassword.htm">Quên mật khẩu</a>
 											</div>
-											<div class="d-flex flex-column align-items-center">
-												<div class="g-recaptcha mb-3"
-													data-sitekey="6LfGAJYqAAAAAB0X5ZPkvqjkKV0yhiA3zsSHhkeW"></div>
-												<div id="recaptcha-error" class="invalid-feedback"
-													style="display: none;">Vui lòng xác thực reCAPTCHA.</div>
-											</div>
+<!-- 											<div class="d-flex flex-column align-items-center"> -->
+<!-- 												<div class="g-recaptcha mb-3" -->
+<!-- 													data-sitekey="6LfGAJYqAAAAAB0X5ZPkvqjkKV0yhiA3zsSHhkeW"></div> -->
+<!-- 												<div id="recaptcha-error" class="invalid-feedback" -->
+<!-- 													style="display: none;">Vui lòng xác thực reCAPTCHA.</div> -->
+<!-- 											</div> -->
 
 
 											<button onclick="onClick(event)" type="submit"

@@ -256,12 +256,12 @@ public class AuthController {
 	@Transactional
 	@RequestMapping(value = "/signin", method = RequestMethod.POST)
 	public String handle_login(@RequestParam("email") String email, @RequestParam("password") String password,
-	                           @RequestParam("g-recaptcha-response") String recaptchaResponse, HttpSession session) {
+	                           /*@RequestParam("g-recaptcha-response") String recaptchaResponse,*/ HttpSession session) {
 
 	    // Kiểm tra reCAPTCHA
-	    if (!verifyCaptcha(recaptchaResponse)) {
-	        return "redirect:signin.htm?error=recaptcha";
-	    }
+//	    if (!verifyCaptcha(recaptchaResponse)) {
+//	        return "redirect:signin.htm?error=recaptcha";
+//	    }
 
 	    if (email.isEmpty() || password.isEmpty()) {
 	        return "redirect:signin.htm";
@@ -425,8 +425,6 @@ public class AuthController {
 	public String resend(@RequestParam("email") String email) {
 		
 		String otpCode = otpService.storeOtp(email);
-		long start_time = System.currentTimeMillis();
-		
 		String emailContent = "<html><body>"
                 + "<h5>Hello " + email + ",</h5>"
                 + "<p>Click the following link to confirm and activate your account:</p>"
@@ -437,9 +435,6 @@ public class AuthController {
                 + "</body></html>";
 		
 		mailService.sendMail(emailContent, email,  "Complete Your Registration with This Re-Link");
-		long end_time = System.currentTimeMillis();
-		
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>" + (end_time - start_time));
 		
 		return "auth/signup";
 	}

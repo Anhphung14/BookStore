@@ -245,7 +245,7 @@
 																<c:choose>
 																	<c:when
 																		test="${description != null && fn:length(description) > 100}">
-																		<p id="book-description" style="font-size: 1.4rem;">${description.substring(0, 100)}...</p>
+																		<p id="book-description" style="font-size: 1.4rem;">${description.substring(0, 205)}...</p>
 																		<a id="more_less" href="javascript:void(0);"
 																			onclick="showMore()" style="font-size: 1.4rem;">More</a>
 																	</c:when>
