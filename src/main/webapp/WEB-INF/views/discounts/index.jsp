@@ -321,7 +321,7 @@
 			            	<div class="d-flex">
 			                    <div class="mb-3 me-3" style="flex: 1;">
 				                    <label for="code" class="form-label">Code</label>
-				                    <input type="text" class="form-control" id="discountCode" readonly="readonly">
+				                    <input type="text" class="form-control" id="discountCodeDetail" readonly="readonly">
 			                	</div>
 			                    <div class="mb-3" style="flex: 1;">
 			                        <label for="discountType" class="form-label">Discount Type</label>
@@ -514,7 +514,7 @@
            	document.getElementById("subcategoriesModal").style.display = "none";
         }
         
-        document.getElementById("discountCode").value = discountCode;
+        document.getElementById("discountCodeDetail").value = discountCode;
         document.getElementById("discountType").value = discountType;
         document.getElementById("discountValue").value = discountValue;
         document.getElementById("applyTo").value = applyTo;
