@@ -139,10 +139,12 @@
 										<h3>${user.fullname}</h3>
 										<ul>
 											<c:if test="${sessionScope.role == 'ROLE_ADMIN'}">
-												<li><i class="fa-solid fa-user"></i>&nbsp;&nbsp; <a
+												<li><i class="fa-solid fa-tachometer-alt"></i>&nbsp;&nbsp;
+													<a
 													href="${pageContext.servletContext.contextPath}/admin1337/home.htm">Trang
 														quản lý</a></li>
 											</c:if>
+
 											<li><i class="fa-solid fa-user"></i>&nbsp;&nbsp;<a
 												href="${pageContext.servletContext.contextPath}/account/profile_settings.htm">Trang
 													cá nhân</a></li>
