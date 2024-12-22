@@ -12,10 +12,10 @@
 <base href="${pageContext.servletContext.contextPath}/admin1337/">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 <!-- Bootstrap CSS -->
 <link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 <link
 	href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap"
 	rel="stylesheet">
@@ -142,7 +142,7 @@ canvas {
 													Danh mục: <span>${bestSellingBook.subcategoriesEntity.name}</span>
 												</p>
 												<p class="card-text">
-													Còn: <span class="fw-bold text-success">${bestSellingBook.quantity}</span>
+													Còn: <span class="fw-bold text-success">${bestSellingBook.inventoryEntity.stock_quantity}</span>
 												</p>
 											</div>
 											<div>
@@ -161,40 +161,46 @@ canvas {
 						<div class="card h-100">
 							<div class="card-header text-center">Sách sắp hết</div>
 							<div class="card-body">
-								<table class="table table-striped table-hover text-center">
-									<thead>
-										<tr>
-											<th>ID</th>
-											<th>Tên sách</th>
-											<th>Số lượng</th>
-											<th>Tác giả</th>
-											<th>Trạng thái</th>
-										</tr>
-									</thead>
-									<tbody>
-										<c:forEach var="books" items="${books}">
-											<tr>
-												<td>${books.id}</td>
-												<td>${books.title}</td>
-												<td>${books.quantity}</td>
-												<td>${books.author}</td>
-												<td><c:choose>
-														<c:when test="${books.quantity > 0}">
-															<span class="text-warning"> <i
-																class="fa-solid fa-exclamation-circle me-1"></i> Sắp hết
-															</span>
-														</c:when>
+								<c:if test="${empty books}">
+									<p class="text-center">Hiện tại không có sách sắp hết</p>
+								</c:if>
 
-														<c:otherwise>
-															<span class="text-danger"> <i
-																class="fa-solid fa-times-circle me-1"></i> Hết hàng
-															</span>
-														</c:otherwise>
-													</c:choose></td>
+								<c:if test="${not empty books}">
+									<table class="table table-striped table-hover text-center">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>Tên sách</th>
+												<th>Số lượng</th>
+												<th>Tác giả</th>
+												<th>Trạng thái</th>
 											</tr>
-										</c:forEach>
-									</tbody>
-								</table>
+										</thead>
+										<tbody>
+											<c:forEach var="book" items="${books}">
+												<tr>
+													<td>${book.id}</td>
+													<td>${book.title}</td>
+													<td>${book.inventoryEntity.stock_quantity}</td>
+													<td>${book.author}</td>
+													<td><c:choose>
+															<c:when test="${book.inventoryEntity.stock_quantity > 0}">
+																<span class="text-warning"> <i
+																	class="fa-solid fa-exclamation-circle me-1"></i> Sắp
+																	hết
+																</span>
+															</c:when>
+															<c:otherwise>
+																<span class="text-danger"> <i
+																	class="fa-solid fa-times-circle me-1"></i> Hết hàng
+																</span>
+															</c:otherwise>
+														</c:choose></td>
+												</tr>
+											</c:forEach>
+										</tbody>
+									</table>
+								</c:if>
 							</div>
 						</div>
 					</div>
@@ -214,50 +220,41 @@ canvas {
 						<div class="card" style="height: 400px; overflow-y: auto;">
 							<div class="card-header text-center">Thống kê đơn hàng</div>
 							<div class="card-body">
-								<table class="table table-striped table-hover text-center">
-									<thead>
-										<tr>
-											<th>ID</th>
-											<th>Tên khách hàng</th>
-											<th>Ngày đặt hàng</th>
-											<th>Tổng tiền</th>
-											<th>Trạng thái</th>
-										</tr>
-									</thead>
-									<tbody>
-										<c:forEach var="order" items="${orders}">
-											<tr>
-												<td>${order.id}</td>
-												<td>${order.user.fullname}</td>
-												<td><fmt:formatDate value="${order.createdAt}"
-														pattern="dd/MM/yyyy HH:mm" /></td>
-												<td><fmt:formatNumber value="${order.totalPrice}"
-														type="currency" currencySymbol="đ" /></td>
+								<c:if test="${empty orders}">
+									<p class="text-center">Hiện tại không có đơn chờ xác nhận</p>
+								</c:if>
 
-												<td><c:choose>
-														<c:when test="${order.orderStatus == 'Chờ xác nhận'}">
-															<a class="btn btn-rounded"
-																href="${pageContext.servletContext.contextPath}/admin1337/orders.htm">
-																<i class="fas fa-clock text-warning"></i> Chờ xác nhận
-															</a>
-														</c:when>
-														<c:when test="${order.orderStatus == 'Xác nhận đơn hàng'}">
-															<i class="fas fa-check-circle text-primary"></i> Đã xác nhận
-        												</c:when>
-														<c:when test="${order.orderStatus == 'Đang giao hàng'}">
-															<i class="fas fa-truck text-info"></i> Vận chuyển
-       													</c:when>
-														<c:when test="${order.orderStatus == 'Hoàn thành'}">
-															<i class="fas fa-check-circle text-success"></i> Hoàn thành
-        												</c:when>
-														<c:when test="${order.orderStatus == 'Huỷ đơn hàng'}">
-															<i class="fas fa-times-circle text-danger"></i> Huỷ đơn hàng
-														</c:when>
-													</c:choose></td>
+								<c:if test="${not empty orders}">
+									<table class="table table-striped table-hover text-center">
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>Tên khách hàng</th>
+												<th>Ngày đặt hàng</th>
+												<th>Tổng tiền</th>
+												<th>Trạng thái</th>
 											</tr>
-										</c:forEach>
-									</tbody>
-								</table>
+										</thead>
+										<tbody>
+											<c:forEach var="order" items="${orders}">
+												<c:if test="${order.orderStatus == 'Chờ xác nhận'}">
+													<tr>
+														<td>${order.id}</td>
+														<td>${order.user.fullname}</td>
+														<td><fmt:formatDate value="${order.createdAt}"
+																pattern="dd/MM/yyyy HH:mm" /></td>
+														<td><fmt:formatNumber value="${order.totalPrice}"
+																type="currency" currencySymbol="đ" /></td>
+														<td><a class="btn btn-rounded"
+															href="${pageContext.servletContext.contextPath}/admin1337/orders.htm">
+																<i class="fas fa-clock text-warning"></i> Chờ xác nhận
+														</a></td>
+													</tr>
+												</c:if>
+											</c:forEach>
+										</tbody>
+									</table>
+								</c:if>
 							</div>
 						</div>
 					</div>
