@@ -65,6 +65,7 @@ public class ClientController {
 				discountValue = 0.0;
 			}
 			bookDiscounts.put(book.getId(), discountValue);
+			System.out.println(bookDiscounts);
 		}
 
 		if (userSession != null) {
@@ -161,7 +162,7 @@ public class ClientController {
 		model.addAttribute("totalPages", totalPages); // Tổng số trang
 		model.addAttribute("pageSize", pageSize); // Số lượng sách 1 trang
 		model.addAttribute("searchQuery", searchQuery);
-
+		model.addAttribute("sortBy", sortBy);
 		return "client/search";
 	}
 

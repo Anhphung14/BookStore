@@ -211,7 +211,7 @@
 
 													<div class="tg-description"></div>
 													<div class="tg-sectionhead">
-														<h2>Product Details</h2>
+														<h2>Chi tiết sản phẩm</h2>
 													</div>
 													<ul class="tg-productinfo">
 														<li><span>Nhà cung cấp:</span><span>${book.supplier.name }</span></li>
@@ -303,7 +303,7 @@
 																		<div class="tg-booktitle">
 																			<h3>
 																				<a style="text-decoration: none;"
-																					href="/productdetail/${book.id}.htm">${book.title}</a>
+																					href="${pageContext.servletContext.contextPath}/productdetail/${book.id}.htm">${book.title}</a>
 																			</h3>
 																		</div>
 																		<span class="tg-bookwriter">Tác giả: <a
