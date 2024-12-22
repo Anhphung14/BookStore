@@ -8,8 +8,6 @@
 <head>
     <meta charset="utf-8">
     <base href="${pageContext.servletContext.contextPath}/">
-    <!--  This file has been downloaded from bootdey.com @bootdey on twitter -->
-    <!--  All snippets are MIT license http://bootdey.com/license -->
     <title>Profile Settings</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -135,9 +133,18 @@
                 </div>
                 <div class="form-group">
                     <label for="new-password">Mật khẩu mới</label>
-                    <input type="password" class="form-control" id="new-password" name="newPassword" required>
+                    <input type="password" class="form-control" id="new-password" name="newPassword" required oninput="validatePassword(this.value)">
                     <div id="error-new-password" class="text-danger" style="display: none;">Không được để trống ô New Password.</div>
                 </div>
+                <div class="form-group password-strength" id="password-strength" style="display: none;">
+					<ul class="no-bullet">
+					<li id="minLength"><i class="fas fa-times text-danger"></i> Tối thiểu 8 ký tự</li>
+					<li id="uppercase"><i class="fas fa-times text-danger"></i> Ít nhất một chữ cái viết hoa</li>
+					<li id="lowercase"><i class="fas fa-times text-danger"></i> Ít nhất một chữ cái viết thường</li>
+					<li id="symbol"><i class="fas fa-times text-danger"></i> Ít nhất một ký tự đặc biệt (@$!%*?&)</li>
+					<li id="number"><i class="fas fa-times text-danger"></i> Ít nhất một chữ số</li>
+					</ul>
+				</div>
                 <div class="form-group">
                     <label for="confirm-password">Xác nhận mật khẩu mới</label>
                     <input type="password" class="form-control" id="confirm-password" name="confirmPassword" required>
@@ -169,11 +176,39 @@
 <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
+	function validatePassword(password) {
+	    document.getElementById('minLength').innerHTML = password.length >= 8 
+	        ? '<i class="fas fa-check text-success"></i> Tối thiểu 8 ký tự'
+	        : '<i class="fas fa-times text-danger"></i> Tối thiểu 8 ký tự';
+	
+	    document.getElementById('uppercase').innerHTML = /[A-Z]/.test(password) 
+	        ? '<i class="fas fa-check text-success"></i> Ít nhất một chữ cái viết hoa'
+	        : '<i class="fas fa-times text-danger"></i> Ít nhất một chữ cái viết hoa';
+	
+	    document.getElementById('lowercase').innerHTML = /[a-z]/.test(password) 
+	        ? '<i class="fas fa-check text-success"></i> Ít nhất một chữ cái viết thường'
+	        : '<i class="fas fa-times text-danger"></i> Ít nhất một chữ cái viết thường';
+	
+	    document.getElementById('symbol').innerHTML = /[@$!%*?&]/.test(password) 
+	        ? '<i class="fas fa-check text-success"></i> Ít nhất một ký tự đặc biệt (@$!%*?&)'
+	        : '<i class="fas fa-times text-danger"></i> Ít nhất một ký tự đặc biệt (@$!%*?&)';
+	
+	    document.getElementById('number').innerHTML = /\d/.test(password) 
+	        ? '<i class="fas fa-check text-success"></i> Ít nhất một chữ số'
+	        : '<i class="fas fa-times text-danger"></i> Ít nhất một chữ số';
+	}
+	
     document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("change-password-form");
     const oldPasswordField = document.getElementById("old-password");
     const newPasswordField = document.getElementById("new-password");
     const confirmPasswordField = document.getElementById("confirm-password");
+    
+    newPasswordField.addEventListener("input", function () {
+        const password = newPasswordField.value;
+        validatePassword(password);
+        document.getElementById("password-strength").style.display = password ? "block" : "none";
+    });
 
     const errorOldPassword = document.getElementById("error-old-password");
     const errorNewPassword = document.getElementById("error-new-password");
@@ -197,6 +232,18 @@
         if (newPasswordField.value.trim() === "") {
             errorNewPassword.style.display = "block";
             isValid = false;
+        } else {
+            // Kiểm tra điều kiện mật khẩu mới
+            const password = newPasswordField.value;
+            if (password.length < 8 ||                // Tối thiểu 8 ký tự
+                !/[A-Z]/.test(password) ||           // Ít nhất một chữ hoa
+                !/[a-z]/.test(password) ||           // Ít nhất một chữ thường
+                !/\d/.test(password) ||              // Ít nhất một chữ số
+                !/[@$!%*?&]/.test(password)) {       // Ít nhất một ký tự đặc biệt
+                errorNewPassword.textContent = "Mật khẩu mới không thỏa mãn các điều kiện.";
+                errorNewPassword.style.display = "block";
+                isValid = false;
+            }
         }
         if (confirmPasswordField.value.trim() === "") {
             errorConfirmPassword.style.display = "block";
@@ -212,6 +259,7 @@
             event.preventDefault();
         }
     });
+
 });
     </script>
 <script type="text/javascript">

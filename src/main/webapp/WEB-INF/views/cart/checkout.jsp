@@ -54,7 +54,7 @@
                             </div>
                             <div class="field">
                                 <label for="email" class="field__label">Email<span class="text-danger">*</span></label>
-                                <input id="email" name="email" type="email" class="field__input" value="${user.email}" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$">
+                                <input id="email" name="email" type="email" class="field__input" value="${user.email}" required readonly="readonly" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$">
                             </div>
                             
                             <div class="row mt-3">

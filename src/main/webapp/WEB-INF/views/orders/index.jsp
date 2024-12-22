@@ -150,7 +150,7 @@
 											onclick="checkAll()" /></th>
 										<th width="30px" class="text-start">#</th>
 										<th width="10%" class="text-center">Created At</th>
-										<th width="64px" class="text-center">Customer name</th>
+										<th width="64px" class="text-center">Account</th>
 										<th width="90px" class="text-center">Total Price</th>
 										<th width="100px" class="text-center">Payment method</th>
 										<th width="100px" class="text-center">Payment status</th>
@@ -245,7 +245,8 @@
 													<a class="btn btn-rounded" href="order/edit/${order.id}.htm"><i class="fa fa-pencil"></i></a>
 													<a class="btn btn-rounded"
 													 data-createdAt="<fmt:formatDate value='${order.createdAt}' pattern='dd-MM-yyyy HH:mm' />"
-													 data-fullname="${order.user.fullname}"
+													 data-fullname="${order.customerName}"
+													 data-phone="${order.customerPhone}"
 													 data-totalPrice="${order.totalPrice}"
 													 data-paymentMethod="${order.paymentMethod}"
 													 data-paymentStatus="${order.paymentStatus}"
@@ -329,8 +330,8 @@
 					                            <input type="text" class="form-control" id="customerName" readonly>
 					                        </div>
 					                        <div class="col-md-4 mb-3">
-					                            <label class="form-label">Created At:</label>
-					                            <input type="text" class="form-control" id="createdAt" readonly>
+					                            <label class="form-label">Customer Phone:</label>
+					                            <input type="text" class="form-control" id="customerPhone" readonly>
 					                        </div>
 					                        <div class="col-md-4 mb-3">
 					                            <label class="form-label">Total Price:</label>
@@ -362,8 +363,8 @@
 					                            <input type="text" class="form-control" id="discountValue" readonly>
 					                        </div>
 					                        <div class="col-md-4 mb-3">
-					                            <label class="form-label">Original Price:</label>
-					                            <input type="text" class="form-control" id="originalPriceee" readonly>
+					                            <label class="form-label">Created At:</label>
+					                            <input type="text" class="form-control" id="createdAt" readonly>
 					                        </div>
 					                    </div>
 					                </div>
@@ -483,6 +484,7 @@
 	
 	function showDiscountDetails(link) {
 		var customerName = link.getAttribute('data-fullName');
+		var customerPhone = link.getAttribute('data-phone');
 	    var createdAt = link.getAttribute('data-createdAt');
 	    var totalPrice = link.getAttribute('data-totalPrice');
 	    var paymentMethod = link.getAttribute('data-paymentMethod');
@@ -509,15 +511,27 @@
 	    }
 	    console.log(products);
 	    
+	    var formattedTotalPrice = new Intl.NumberFormat('vi-VN', {
+	        style: 'currency',
+	        currency: 'VND',
+	        maximumFractionDigits: 0
+	    }).format(totalPrice);
+	    
+	    var formatteddiscountValue = new Intl.NumberFormat('vi-VN', {
+	        style: 'currency',
+	        currency: 'VND',
+	        maximumFractionDigits: 0
+	    }).format(discountValue);
+	    
 	    document.getElementById('customerName').value = customerName;
+	    document.getElementById('customerPhone').value = customerPhone;
 	    document.getElementById('createdAt').value = createdAt;
-	    document.getElementById('totalPrice').value = totalPrice;
+	    document.getElementById('totalPrice').value = formattedTotalPrice;
 	    document.getElementById('paymentMethod').value = paymentMethod;
 	    document.getElementById('paymentStatus').value = paymentStatus;
 	    document.getElementById('orderStatuss').value = orderStatus;
 	    document.getElementById('shippingAddress').value = shippingAddress;
-	    document.getElementById('discountValue').value = discountValue;
-	    document.getElementById('originalPriceee').value = originalPrice;
+	    document.getElementById('discountValue').value = formatteddiscountValue;
 	    
 	    var tbody = document.getElementById('order-items-body');
 	    tbody.innerHTML = ""; // Xóa mọi nội dung cũ trong tbody trước khi thêm mới
@@ -537,12 +551,22 @@
 
 	        // Cột 3: Giá
 	        var cell3 = row.insertCell(2);
-	        cell3.innerHTML = product.price; // Hiển thị giá với 2 chữ số sau dấu thập phân
+	        var formattedPrice = new Intl.NumberFormat('vi-VN', {
+	            style: 'currency',
+	            currency: 'VND',
+	            maximumFractionDigits: 0
+	        }).format(product.price);
+	        cell3.innerHTML = formattedPrice;
 
 	        // Cột 4: Tổng giá (Giá * Số lượng)
 	        var cell4 = row.insertCell(3);
-	        var totalPrice = (product.price * product.quantity); // Tính tổng giá
-	        cell4.innerHTML = (product.price * product.quantity);
+	        var totalItemPrice = product.price * product.quantity;
+	        var formattedTotalItemPrice = new Intl.NumberFormat('vi-VN', {
+	            style: 'currency',
+	            currency: 'VND',
+	            maximumFractionDigits: 0
+	        }).format(totalItemPrice);
+	        cell4.innerHTML = formattedTotalItemPrice;
 	    });
 
 	    // Mở modal

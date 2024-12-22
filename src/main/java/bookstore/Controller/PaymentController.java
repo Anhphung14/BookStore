@@ -47,6 +47,7 @@ import bookstore.DAO.SubcategoriesDAO;
 import bookstore.DAO.UserDAO;
 import bookstore.DTO.PaymentResDTO;
 import bookstore.Entity.*;
+import bookstore.Service.MailService;
 import bookstore.Service.VNPAYService;
 import bookstore.config.VNPAYConfig;
 
@@ -83,6 +84,9 @@ public class PaymentController {
     
     @Autowired
     private DiscountsDAO discountsDAO;
+    
+    @Autowired
+    MailService mailService;
     
     
     // Hiển thị trang thanh toán
@@ -228,18 +232,21 @@ public class PaymentController {
             List<DiscountsEntity> listDiscounts = discountsDAO.getAllDiscounts();
             for(DiscountsEntity discountCheck : listDiscounts) {
             	if(discountCheck.getApplyTo().equals("user")) {
-            		if(discountCheck.getMinOrderValue() <= totalPrice && discount.getStatus().equals("active")) {
+            		if(discountCheck.getMinOrderValue() <= totalPrice && discountCheck.getStatus().equals("active")) {
             			listDiscountsAvailable.add(discountCheck);
             		}
             	}
             }
             
-            if (!listDiscountsAvailable.contains(discount)) {
-            	redirectAttributes.addFlashAttribute("alertMessage", "Mã giảm giá không hợp lệ!");
-        		redirectAttributes.addFlashAttribute("alertType", "error");
-                return "redirect:/cart/view.htm";
+            if (!discountCode.isEmpty()) {
+                boolean isDiscountValid = listDiscountsAvailable.stream()
+                        .anyMatch(d -> d.getCode().equals(discountCode));
+                if (!isDiscountValid) {
+                    redirectAttributes.addFlashAttribute("alertMessage", "Mã giảm giá không hợp lệ!");
+                    redirectAttributes.addFlashAttribute("alertType", "error");
+                    return "redirect:/cart/view.htm";
+                }
             }
-            
             
             
             if (selectedItems.isEmpty()) {
@@ -312,6 +319,7 @@ public class PaymentController {
             // Redirect với thông báo thành công
             redirectAttributes.addFlashAttribute("alertMessage", "Thanh toán thành công!");
     		redirectAttributes.addFlashAttribute("alertType", "success");
+    		sendMailOrderSuccess(order);
             return "redirect:/index.htm";
 
         } catch (Exception e) {
@@ -375,6 +383,26 @@ public class PaymentController {
             	redirectAttributes.addFlashAttribute("alertMessage", "Mã giảm giá không hợp lệ!");
         		redirectAttributes.addFlashAttribute("alertType", "error");
                 return "redirect:/cart/view.htm";
+            }
+            
+            List<DiscountsEntity> listDiscountsAvailable = new ArrayList<DiscountsEntity>();
+            List<DiscountsEntity> listDiscounts = discountsDAO.getAllDiscounts();
+            for(DiscountsEntity discountCheck : listDiscounts) {
+            	if(discountCheck.getApplyTo().equals("user")) {
+            		if(discountCheck.getMinOrderValue() <= totalPrice && discountCheck.getStatus().equals("active")) {
+            			listDiscountsAvailable.add(discountCheck);
+            		}
+            	}
+            }
+            
+            if (!discountCode.isEmpty()) {
+                boolean isDiscountValid = listDiscountsAvailable.stream()
+                        .anyMatch(d -> d.getCode().equals(discountCode));
+                if (!isDiscountValid) {
+                    redirectAttributes.addFlashAttribute("alertMessage", "Mã giảm giá không hợp lệ!");
+                    redirectAttributes.addFlashAttribute("alertType", "error");
+                    return "redirect:/cart/view.htm";
+                }
             }
             
             if(discount != null) {
@@ -483,6 +511,7 @@ public class PaymentController {
                 orderDAO.updateOrder(order);
                 redirectAttributes.addFlashAttribute("alertMessage", "Thanh toán thành công!");
                 redirectAttributes.addFlashAttribute("alertType", "success");
+                sendMailOrderSuccess(order);
                 return "redirect:/index.htm";
             } else{
                 // Xóa đơn hàng nếu thanh toán thất bại
@@ -505,5 +534,25 @@ public class PaymentController {
     public String paymentSuccess() {
         return "cart/success";
     }
+    
+    public void sendMailOrderSuccess(OrdersEntity order) {
+        String emailContent = "<html><body>"
+                + "<h5>Hello " + order.getUser().getFullname() + ",</h5>"
+                + "<p>Congratulations! Your order with Order ID: " + order.getId() + " has been placed successfully.</p>"
+                + "<p>Order Details:</p>"
+                + "<ul>"
+                + "<li><strong>Customer Name:</strong> " + order.getCustomerName() + "</li>"
+                + "<li><strong>Shipping Address:</strong> " + order.getShippingAddress() + "</li>"
+                + "<li><strong>Total Price:</strong> " + String.format("%,.2f", order.getTotalPrice()) + " VND</li>"
+                + "</ul>"
+                + "<p>Your order is currently under processing. We will notify you once it is shipped.</p>"
+                + "<p>Thank you for shopping with us!</p>"
+                + "<p>Best regards,</p>"
+                + "<p>Book Store ALDPT</p>"
+                + "</body></html>";
+
+        mailService.sendMail(emailContent, order.getUser().getEmail(), "Order Confirmation - Order ID: " + order.getId());
+    }
+
 }
 
