@@ -78,14 +78,16 @@ public class ClientController {
 
 		discountsDAO.updateStatusDiscounts();
 
-		Map<String, Object> bestSellingData = orderDetailDAO.getBestSellingBook();
+	    Map<String, Object> bestSellingData = orderDetailDAO.getBestSellingBook();
+	    if (bestSellingData != null) {
+	        BooksEntity bestSellingBook = (BooksEntity) bestSellingData.get("bestSellingBook");
 
-		BooksEntity bestSellingBook = (BooksEntity) bestSellingData.get("bestSellingBook");
+	        model.addAttribute("bestSellingBook", bestSellingBook);
+	    }
 
 		model.addAttribute("Categories", listCategories);
 		model.addAttribute("SubCategories", listSubCategories);
 
-		model.addAttribute("bestSellingBook", bestSellingBook);
 		model.addAttribute("user", userSession);
 		model.addAttribute("bookList", bookList);
 		model.addAttribute("bookDiscounts", bookDiscounts);
