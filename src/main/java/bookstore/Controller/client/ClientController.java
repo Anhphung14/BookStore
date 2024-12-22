@@ -1,6 +1,5 @@
 package bookstore.Controller.client;
 
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,183 +29,183 @@ import bookstore.Entity.RatingsEntity;
 import bookstore.Entity.SubcategoriesEntity;
 import bookstore.Entity.UsersEntity;
 
-
 @Controller
 public class ClientController {
-    @Autowired
-    private CategoriesDAO categoriesDAO;
-    @Autowired
-    private SubcategoriesDAO subcategoriesDAO;
-    @Autowired
-    private BooksDAO booksDAO;
-    @Autowired
-    private DiscountsDAO discountsDAO;
-    @Autowired
-    private RatingsDAO ratingsDAO;
-    @Autowired
-    private InventoryDAO inventoryDAO;
-    @Autowired
-    private OrderDetailDAO orderDetailDAO;
-    @Autowired
-    private CartDAO cartDAO;
+	@Autowired
+	private CategoriesDAO categoriesDAO;
+	@Autowired
+	private SubcategoriesDAO subcategoriesDAO;
+	@Autowired
+	private BooksDAO booksDAO;
+	@Autowired
+	private DiscountsDAO discountsDAO;
+	@Autowired
+	private RatingsDAO ratingsDAO;
+	@Autowired
+	private InventoryDAO inventoryDAO;
+	@Autowired
+	private OrderDetailDAO orderDetailDAO;
+	@Autowired
+	private CartDAO cartDAO;
 
-    
-    @RequestMapping(value = "/index")
-    public String index(ModelMap model, HttpSession session) {
-        List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
-        List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
-        UsersEntity userSession = (UsersEntity) session.getAttribute("user");
+	@RequestMapping(value = "/index")
+	public String index(ModelMap model, HttpSession session) {
+		List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
+		List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
+		UsersEntity userSession = (UsersEntity) session.getAttribute("user");
 
-        List<BooksEntity> bookList = booksDAO.listBooks(); 
+		List<BooksEntity> bookList = booksDAO.listBooks();
 
-        Map<Long, Double> bookDiscounts = new HashMap<>();
-        
-        for (BooksEntity book : bookList) {
-            Double discountValue = discountsDAO.getDiscountValueByBookId(book.getId());
-            
-            if (discountValue == null) {
-                discountValue = 0.0;
-            }
-            bookDiscounts.put(book.getId(), discountValue);
-        }
+		Map<Long, Double> bookDiscounts = new HashMap<>();
 
+		for (BooksEntity book : bookList) {
+			Double discountValue = discountsDAO.getDiscountValueByBookId(book.getId());
 
-        if(userSession != null){
-        	Long countBooksInCart = cartDAO.countItemsInCart(userSession.getCart().getId());
-        	session.setAttribute("countBooksInCart", countBooksInCart);
-        }else {
-        	session.setAttribute("countBooksInCart", 0);
-        }
-            
-        model.addAttribute("user", userSession);
+			if (discountValue == null) {
+				discountValue = 0.0;
+			}
+			bookDiscounts.put(book.getId(), discountValue);
+		}
 
-        discountsDAO.updateStatusDiscounts();
-        
-        BooksEntity bestSellingBook = orderDetailDAO.getBestSellingBook();
+		if (userSession != null) {
+			Long countBooksInCart = cartDAO.countItemsInCart(userSession.getCart().getId());
+			session.setAttribute("countBooksInCart", countBooksInCart);
+		} else {
+			session.setAttribute("countBooksInCart", 0);
+		}
 
-        
-        model.addAttribute("Categories", listCategories);
-        model.addAttribute("SubCategories", listSubCategories);
+		model.addAttribute("user", userSession);
 
-        model.addAttribute("user", userSession);
-        model.addAttribute("bookList", bookList);
-        model.addAttribute("bookDiscounts", bookDiscounts); 
-        model.addAttribute("bestSellingBook", bestSellingBook); 
-        return "client/index"; 
-    }
+		discountsDAO.updateStatusDiscounts();
+
+		Map<String, Object> bestSellingData = orderDetailDAO.getBestSellingBook();
+
+		BooksEntity bestSellingBook = (BooksEntity) bestSellingData.get("bestSellingBook");
+
+		model.addAttribute("Categories", listCategories);
+		model.addAttribute("SubCategories", listSubCategories);
+
+		model.addAttribute("bestSellingBook", bestSellingBook);
+		model.addAttribute("user", userSession);
+		model.addAttribute("bookList", bookList);
+		model.addAttribute("bookDiscounts", bookDiscounts);
+		return "client/index";
+	}
 
 	@RequestMapping("/allProduct")
-	public String allProduct(@RequestParam(value = "page", defaultValue = "1") int page, 
-    		@RequestParam(value = "pageSize", defaultValue = "16") int pageSize, @RequestParam(value = "sortBy", defaultValue = "newest", required = false) String sortBy,
-    		ModelMap model) {
-		
+	public String allProduct(@RequestParam(value = "page", defaultValue = "1") int page,
+			@RequestParam(value = "pageSize", defaultValue = "16") int pageSize,
+			@RequestParam(value = "sortBy", defaultValue = "newest", required = false) String sortBy, ModelMap model) {
+
 		List<BooksEntity> listAllBook = booksDAO.getAllBook(page, pageSize, sortBy);
 		int totalPages = booksDAO.getTotalPagesOfAllBooks(pageSize);
-		
+
 		List<Object[]> countBookEachCategory = booksDAO.countBookEachCategory();
-		
+
 		List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
-        List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
-        
-        Map<Long, Double> bookDiscounts = new HashMap<>();
-        
-        for (BooksEntity book : listAllBook) {
-            Double discountValue = discountsDAO.getDiscountValueByBookId(book.getId());
-            
-            if (discountValue == null) {
-                discountValue = 0.0;
-            }
-            bookDiscounts.put(book.getId(), discountValue);
-        }
-        
-        long countAllBooks = booksDAO.countAllBook();
-        model.addAttribute("countAllBooks", countAllBooks);
-        
-        model.addAttribute("Categories", listCategories);
-        model.addAttribute("SubCategories", listSubCategories);
-	     model.addAttribute("countBookEachCategory", countBookEachCategory);
-	     model.addAttribute("bookDiscounts", bookDiscounts); 
-	     model.addAttribute("bookList", listAllBook);
-	     model.addAttribute("currentPage", page); // Trang hiện tại
-	     model.addAttribute("totalPages", totalPages); // Tổng số trang
-	     model.addAttribute("pageSize", pageSize);
-	     model.addAttribute("sortBy", sortBy);
+		List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
+
+		Map<Long, Double> bookDiscounts = new HashMap<>();
+
+		for (BooksEntity book : listAllBook) {
+			Double discountValue = discountsDAO.getDiscountValueByBookId(book.getId());
+
+			if (discountValue == null) {
+				discountValue = 0.0;
+			}
+			bookDiscounts.put(book.getId(), discountValue);
+		}
+
+		long countAllBooks = booksDAO.countAllBook();
+		model.addAttribute("countAllBooks", countAllBooks);
+
+		model.addAttribute("Categories", listCategories);
+		model.addAttribute("SubCategories", listSubCategories);
+		model.addAttribute("countBookEachCategory", countBookEachCategory);
+		model.addAttribute("bookDiscounts", bookDiscounts);
+		model.addAttribute("bookList", listAllBook);
+		model.addAttribute("currentPage", page); // Trang hiện tại
+		model.addAttribute("totalPages", totalPages); // Tổng số trang
+		model.addAttribute("pageSize", pageSize);
+		model.addAttribute("sortBy", sortBy);
 		return "client/showAllBooks";
 	}
-	
-    @RequestMapping("/search")
-    public String searchBooks(@RequestParam(value = "q", required = false) String searchQuery, @RequestParam(value = "page", defaultValue = "1") int page, 
-    		@RequestParam(value = "pageSize", defaultValue = "16") int pageSize, @RequestParam(value = "sortBy", defaultValue = "newest", required = false) String sortBy,
-    		ModelMap model) {
-    	//System.out.println("pageSize: " + pageSize);
-        //System.out.println("Search Query: " + searchQuery);
-        List<BooksEntity> bookList = booksDAO.search(searchQuery, page, pageSize, sortBy);
-        //System.out.println(bookList.size());
-        int totalPages = booksDAO.getTotalPagesOfSearch(searchQuery, pageSize);
-        //System.out.println(totalPages);
-        List<Object[]> countBookEachCategory = booksDAO.countBookEachCategory();
-        
-        long countAllBooks = booksDAO.countAllBook();
-        model.addAttribute("countAllBooks", countAllBooks);
-        
-        List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
-        List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
 
-        model.addAttribute("Categories", listCategories);
-        model.addAttribute("SubCategories", listSubCategories);
-        
-        model.addAttribute("countBookEachCategory", countBookEachCategory);
-        model.addAttribute("bookList", bookList);
-        model.addAttribute("currentPage", page); // Trang hiện tại
-        model.addAttribute("totalPages", totalPages); // Tổng số trang
-        model.addAttribute("pageSize", pageSize); // Số lượng sách 1 trang
-        model.addAttribute("searchQuery", searchQuery);
-        
-        return "client/search";
-    }
+	@RequestMapping("/search")
+	public String searchBooks(@RequestParam(value = "q", required = false) String searchQuery,
+			@RequestParam(value = "page", defaultValue = "1") int page,
+			@RequestParam(value = "pageSize", defaultValue = "16") int pageSize,
+			@RequestParam(value = "sortBy", defaultValue = "newest", required = false) String sortBy, ModelMap model) {
+		// System.out.println("pageSize: " + pageSize);
+		// System.out.println("Search Query: " + searchQuery);
+		List<BooksEntity> bookList = booksDAO.search(searchQuery, page, pageSize, sortBy);
+		// System.out.println(bookList.size());
+		int totalPages = booksDAO.getTotalPagesOfSearch(searchQuery, pageSize);
+		// System.out.println(totalPages);
+		List<Object[]> countBookEachCategory = booksDAO.countBookEachCategory();
 
-    @RequestMapping(value = "productdetail/{productId}", method = RequestMethod.GET)
+		long countAllBooks = booksDAO.countAllBook();
+		model.addAttribute("countAllBooks", countAllBooks);
+
+		List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
+		List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
+
+		model.addAttribute("Categories", listCategories);
+		model.addAttribute("SubCategories", listSubCategories);
+
+		model.addAttribute("countBookEachCategory", countBookEachCategory);
+		model.addAttribute("bookList", bookList);
+		model.addAttribute("currentPage", page); // Trang hiện tại
+		model.addAttribute("totalPages", totalPages); // Tổng số trang
+		model.addAttribute("pageSize", pageSize); // Số lượng sách 1 trang
+		model.addAttribute("searchQuery", searchQuery);
+
+		return "client/search";
+	}
+
+	@RequestMapping(value = "productdetail/{productId}", method = RequestMethod.GET)
 	public String productdetail(ModelMap model, @PathVariable("productId") Long id) {
 		BooksEntity book = booksDAO.getBookByIdHQL(id);
-        model.addAttribute("book", book);
-        Double discount = discountsDAO.getDiscountValueByBookId(id);
-		model.addAttribute("discount",discount);
-		 
-		//System.out.println(discount); 
-		List<BooksEntity> books_category = booksDAO.listBookOfCategoryRan(book.getSubcategoriesEntity().getCategoriesEntity().getId());
-		System.out.println(books_category); 
-		model.addAttribute("books_category", books_category); 
-		
+		model.addAttribute("book", book);
+		Double discount = discountsDAO.getDiscountValueByBookId(id);
+		model.addAttribute("discount", discount);
+
+		// System.out.println(discount);
+		List<BooksEntity> books_category = booksDAO
+				.listBookOfCategoryRan(book.getSubcategoriesEntity().getCategoriesEntity().getId());
+		System.out.println(books_category);
+		model.addAttribute("books_category", books_category);
+
 		List<Double> discounts = discountsDAO.getDiscountsValueByBookId(books_category);
-		model.addAttribute("discounts",discounts);
-		
+		model.addAttribute("discounts", discounts);
+
 		Double ratingAVR = ratingsDAO.getAverageRatingByBookId(id);
 		int averageRating = (int) Math.floor(ratingAVR);
 		model.addAttribute("ratingAVR", averageRating);
-		
+
 //		InventoryEntity inventory = inventoryDAO.getInventoryByBookId(id);
 //		model.addAttribute("stock_quantity", inventory.getStock_quantity());
 		List<Object[]> countBookEachCategory = booksDAO.countBookEachCategory();
 		model.addAttribute("countBookEachCategory", countBookEachCategory);
-		
-		List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
-        List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
 
-        model.addAttribute("Categories", listCategories);
-        model.addAttribute("SubCategories", listSubCategories);
+		List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
+		List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
+
+		model.addAttribute("Categories", listCategories);
+		model.addAttribute("SubCategories", listSubCategories);
 		return "client/productdetail";
 	}
-    
-    @RequestMapping(value = "productdetail/{productId}/reviews", method = RequestMethod.GET)
+
+	@RequestMapping(value = "productdetail/{productId}/reviews", method = RequestMethod.GET)
 	public String getReviewsByProductId(ModelMap model, @PathVariable("productId") Long productId) {
-	    // Gọi DAO để lấy danh sách đánh giá
-	    List<RatingsEntity> reviews = ratingsDAO.getRatingsByBookIdApp(productId);
+		// Gọi DAO để lấy danh sách đánh giá
+		List<RatingsEntity> reviews = ratingsDAO.getRatingsByBookIdApp(productId);
 
-	    // Thêm danh sách reviews vào model
-	    model.addAttribute("reviews", reviews);
-	    model.addAttribute("bookId", productId);
+		// Thêm danh sách reviews vào model
+		model.addAttribute("reviews", reviews);
+		model.addAttribute("bookId", productId);
 
-	    // Trả về view reviews.jsp
-	    return "client/reviews";
+		// Trả về view reviews.jsp
+		return "client/reviews";
 	}
 }

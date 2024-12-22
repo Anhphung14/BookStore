@@ -95,7 +95,6 @@ canvas {
 							</div>
 						</div>
 					</div>
-
 					<div class="col-md-4">
 						<div class="card text-white" style="background-color: #66b3a6;">
 							<div class="card-body">
@@ -110,6 +109,92 @@ canvas {
 							<div class="card-body">
 								<h5 class="card-title">Doanh thu tháng này</h5>
 								<h2 class="card-text">${totalAmountForStatus3}</h2>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<c:if test="${not empty bestSellingBook}">
+							<div class="card shadow-sm h-100 rounded-3 bg-light">
+								<div class="row g-0 h-100">
+									<!-- Hình ảnh -->
+									<div class="col-md-4 h-100">
+										<img src="${bestSellingBook.thumbnail}"
+											alt="${bestSellingBook.title}"
+											class="img-fluid rounded-start h-100"
+											style="object-fit: cover;" />
+									</div>
+									<!-- Nội dung -->
+									<div class="col-md-8">
+										<div
+											class="card-body d-flex flex-column justify-content-between h-100">
+											<div>
+												<h3 class="card-title fw-bold mb-3 text-primary">Sách
+													bán chạy</h3>
+												<h4 class="card-title fw-bold mb-2">
+													Tên sách: <span class="text-dark">${bestSellingBook.title}</span>
+												</h4>
+												<p class="card-subtitle mb-2 text-muted">
+													Tác giả: <span>${bestSellingBook.author}</span>
+												</p>
+												<p class="card-subtitle mb-3 text-secondary">
+													Danh mục: <span>${bestSellingBook.subcategoriesEntity.name}</span>
+												</p>
+												<p class="card-text">
+													Còn: <span class="fw-bold text-success">${bestSellingBook.quantity}</span>
+												</p>
+											</div>
+											<div>
+												<h4 class="card-text fw-bold text-danger">Đã bán:
+													${totalQuantity}</h4>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</c:if>
+					</div>
+
+
+					<div class="col-md-6">
+						<div class="card h-100">
+							<div class="card-header text-center">Sách sắp hết</div>
+							<div class="card-body">
+								<table class="table table-striped table-hover text-center">
+									<thead>
+										<tr>
+											<th>ID</th>
+											<th>Tên sách</th>
+											<th>Số lượng</th>
+											<th>Tác giả</th>
+											<th>Trạng thái</th>
+										</tr>
+									</thead>
+									<tbody>
+										<c:forEach var="books" items="${books}">
+											<tr>
+												<td>${books.id}</td>
+												<td>${books.title}</td>
+												<td>${books.quantity}</td>
+												<td>${books.author}</td>
+												<td><c:choose>
+														<c:when test="${books.quantity > 0}">
+															<span class="text-warning"> <i
+																class="fa-solid fa-exclamation-circle me-1"></i> Sắp hết
+															</span>
+														</c:when>
+
+														<c:otherwise>
+															<span class="text-danger"> <i
+																class="fa-solid fa-times-circle me-1"></i> Hết hàng
+															</span>
+														</c:otherwise>
+													</c:choose></td>
+											</tr>
+										</c:forEach>
+									</tbody>
+								</table>
 							</div>
 						</div>
 					</div>
@@ -151,8 +236,9 @@ canvas {
 
 												<td><c:choose>
 														<c:when test="${order.orderStatus == 'Chờ xác nhận'}">
-															<a class="btn btn-rounded" href="${pageContext.servletContext.contextPath}/admin1337/orders.htm"> <i class="fas fa-clock text-warning"></i> Chờ xác
-																nhận
+															<a class="btn btn-rounded"
+																href="${pageContext.servletContext.contextPath}/admin1337/orders.htm">
+																<i class="fas fa-clock text-warning"></i> Chờ xác nhận
 															</a>
 														</c:when>
 														<c:when test="${order.orderStatus == 'Xác nhận đơn hàng'}">
