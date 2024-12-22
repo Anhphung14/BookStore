@@ -88,23 +88,32 @@
 									<option value="">All Status</option>
 									<option value="1" ${param.enabled == '1' ? 'selected' : ''}>Active</option>
 									<option value="0" ${param.enabled == '0' ? 'selected' : ''}>Inactive</option>
-								</select> <select class="form-select" id="roles" name="role">
+								</select>
+
+								<select name="role" class="form-select" id="roles">
 									<option value="">All Roles</option>
 									<c:forEach var="role" items="${roles}">
 										<option value="${role.name}"
 											${role.name == selectedRole ? 'selected' : ''}>
 											${role.name}</option>
 									</c:forEach>
-								</select> <input class="form-control" type="date" name="fromDate"
+								</select>
+
+								<input class="form-control" type="date" name="fromDate"
 									id="fromDate" onchange="checkDates()" value="${fromDate}"
-									placeholder="From Date"> <span class="input-group-text">to</span>
+									placeholder="From Date">
+
+								<span class="input-group-text">to</span>
+
 								<input class="form-control" type="date" name="toDate"
 									id="toDate" onchange="checkDates()" value="${toDate}"
 									placeholder="To Date">
+
 								<button type="submit" class="btn btn-secondary">
 									<i class="fa fa-filter"></i>
 								</button>
 							</div>
+
 
 							<div>
 								<button type="button" class="btn btn-search"

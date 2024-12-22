@@ -160,9 +160,8 @@ public class UserDAO {
 		if (fullname != null && !fullname.isEmpty()) {
 			hql += " AND u.fullname LIKE :fullname";
 		}
-
 		if (role != null && !role.isEmpty()) {
-			hql += " AND u.role = :role";
+		    hql += " AND EXISTS (SELECT r FROM u.roles r WHERE r.name = :role)";
 		}
 
 		if (enabled != null) {
@@ -198,35 +197,13 @@ public class UserDAO {
 		List<UsersEntity> users = query.list();
 
 		for (UsersEntity user : users) {
-			user.setRoles(user.getRoles()); // Ensure roles are loaded
+			user.setRoles(user.getRoles()); 
 		}
 
-		// Query for roles
 		Query queryRole = session.createQuery("FROM RolesEntity");
 		List<RolesEntity> roles = queryRole.list();
 		return users;
 	}
 
-	/*
-	 * public long countUsers(String search, String role, Integer enabled) { Session
-	 * session = sessionFactory.getCurrentSession(); StringBuilder countQuery = new
-	 * StringBuilder("SELECT count(u) FROM bookstore.Entity.UsersEntity u WHERE 1=1"
-	 * );
-	 * 
-	 * if (search != null && !search.isEmpty()) {
-	 * countQuery.append(" AND (u.fullname LIKE :search OR u.email LIKE :search)");
-	 * } if (role != null && !role.isEmpty()) { countQuery.
-	 * append(" AND EXISTS (SELECT r FROM u.roles r WHERE r.name = :role)"); } if
-	 * (enabled != null) { countQuery.append(" AND u.enabled = :enabled"); }
-	 * 
-	 * Query query = session.createQuery(countQuery.toString());
-	 * 
-	 * if (search != null && !search.isEmpty()) { query.setParameter("search", "%" +
-	 * search + "%"); } if (role != null && !role.isEmpty()) {
-	 * query.setParameter("role", role); } if (enabled != null) {
-	 * query.setParameter("enabled", enabled); }
-	 * 
-	 * return (long) query.uniqueResult(); }
-	 */
 
 }

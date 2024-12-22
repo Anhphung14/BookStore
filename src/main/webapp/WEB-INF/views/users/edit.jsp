@@ -116,16 +116,6 @@
 										${role.name}</option>
 								</c:forEach>
 							</select>
-
-							<%-- <select class="w-100 selectpicker" id="roles" name="roleIds"
-								data-coreui-search="true" data-live-search="true">
-								<c:forEach var="role" items="${roles}">
-									<option value="${role.id}"
-										${user.roles != null && user.roles.contains(role) ? 'selected' : ''}>
-										${role.name}</option>
-								</c:forEach>
-							</select> --%>
-
 						</div>
 
 					</div>
