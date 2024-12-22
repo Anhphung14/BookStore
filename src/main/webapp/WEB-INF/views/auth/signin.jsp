@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -93,26 +95,33 @@
 												<div id="recaptcha-error" class="invalid-feedback"
 													style="display: none;">Vui lòng xác thực reCAPTCHA.</div>
 											</div>
+											<c:if test="${param.error != null}">
+												<div class="alert alert-danger mt-3" role="alert">Đăng nhập thất bại! Vui lòng kiểm tra lại email hoặc mật
+													khẩu của bạn.</div>
+											</c:if>
 
 
 											<button onclick="onClick(event)" type="submit"
 												class="btn btn-primary w-100 submit">Đăng nhập</button>
 											<div class="d-flex justify-content-center mx-3 my-1 py-2">
-											    <div class="mx-2">
-											        <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&redirect_uri=http://localhost:8080/bookstore/login-google.htm&response_type=code&client_id=644611492314-nck1gv86bbn2a8jc97ivgf3viuaged1p.apps.googleusercontent.com&approval_prompt=force" target="_blank"
-											            class="google-btn">
-											            <img src="resources/images/search.png"
-											            alt="Google Login" style="max-width: 30px;">
-											        </a>
-											    </div>
-											    <div class="mx-2">
-											        <a href="https://github.com/login/oauth/authorize?scope=user&client_id=Ov23liaEWyhUvSt8WkUC" target="_blank"
-											            class="google-btn">
-											            <img src="resources/images/github-logo.png" alt="GitHub Login" style="max-width: 30px;">
-											        </a>
-											    </div>
+												<div class="mx-2">
+													<a
+														href="https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&redirect_uri=http://localhost:8080/bookstore/login-google.htm&response_type=code&client_id=644611492314-nck1gv86bbn2a8jc97ivgf3viuaged1p.apps.googleusercontent.com&approval_prompt=force"
+														target="_blank" class="google-btn"> <img
+														src="resources/images/search.png" alt="Google Login"
+														style="max-width: 30px;">
+													</a>
+												</div>
+												<div class="mx-2">
+													<a
+														href="https://github.com/login/oauth/authorize?scope=user&client_id=Ov23liaEWyhUvSt8WkUC"
+														target="_blank" class="google-btn"> <img
+														src="resources/images/github-logo.png" alt="GitHub Login"
+														style="max-width: 30px;">
+													</a>
+												</div>
 											</div>
-											
+
 											<div class="mt-3 row">
 												<div class="text-center col-12">
 													<p class="text-muted">
