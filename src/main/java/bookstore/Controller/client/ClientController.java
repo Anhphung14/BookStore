@@ -3,6 +3,7 @@ package bookstore.Controller.client;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -26,6 +27,7 @@ import bookstore.Entity.BooksEntity;
 import bookstore.Entity.CategoriesEntity;
 import bookstore.Entity.InventoryEntity;
 import bookstore.Entity.RatingsEntity;
+import bookstore.Entity.RolesEntity;
 import bookstore.Entity.SubcategoriesEntity;
 import bookstore.Entity.UsersEntity;
 
@@ -55,43 +57,47 @@ public class ClientController {
 		UsersEntity userSession = (UsersEntity) session.getAttribute("user");
 
 		List<BooksEntity> bookList = booksDAO.listBooks();
-
 		Map<Long, Double> bookDiscounts = new HashMap<>();
 
 		for (BooksEntity book : bookList) {
 			Double discountValue = discountsDAO.getDiscountValueByBookId(book.getId());
-
 			if (discountValue == null) {
 				discountValue = 0.0;
 			}
 			bookDiscounts.put(book.getId(), discountValue);
-			System.out.println(bookDiscounts);
 		}
 
 		if (userSession != null) {
 			Long countBooksInCart = cartDAO.countItemsInCart(userSession.getCart().getId());
 			session.setAttribute("countBooksInCart", countBooksInCart);
+
+			Set<RolesEntity> roles = userSession.getRoles();
+			String roleName = "ROLE_USER"; 
+
+			if (roles != null && !roles.isEmpty()) {
+				roleName = roles.iterator().next().getName(); 
+			}
+
+			session.setAttribute("role", roleName); 
+			model.addAttribute("user", userSession);
 		} else {
 			session.setAttribute("countBooksInCart", 0);
+			session.setAttribute("role", "Guest"); 
 		}
-
-		model.addAttribute("user", userSession);
 
 		discountsDAO.updateStatusDiscounts();
 
-	    Map<String, Object> bestSellingData = orderDetailDAO.getBestSellingBook();
-	    if (bestSellingData != null) {
-	        BooksEntity bestSellingBook = (BooksEntity) bestSellingData.get("bestSellingBook");
-
-	        model.addAttribute("bestSellingBook", bestSellingBook);
-	    }
+		Map<String, Object> bestSellingData = orderDetailDAO.getBestSellingBook();
+		if (bestSellingData != null) {
+			BooksEntity bestSellingBook = (BooksEntity) bestSellingData.get("bestSellingBook");
+			model.addAttribute("bestSellingBook", bestSellingBook);
+		}
 
 		model.addAttribute("Categories", listCategories);
 		model.addAttribute("SubCategories", listSubCategories);
-
-		model.addAttribute("user", userSession);
 		model.addAttribute("bookList", bookList);
 		model.addAttribute("bookDiscounts", bookDiscounts);
+
 		return "client/index";
 	}
 
