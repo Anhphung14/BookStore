@@ -426,20 +426,17 @@ public class AuthController {
 	public String resend(@RequestParam("email") String email) {
 
 		String otpCode = otpService.storeOtp(email);
-		long start_time = System.currentTimeMillis();
-
-		String emailContent = "<html><body>" + "<h5>Hello " + email + ",</h5>"
-				+ "<p>Click the following link to confirm and activate your account:</p>"
-				+ "<h5 style=\"color: #4CAF50;\">" + "http://127.0.0.1:8080/bookstore/verify-email.htm?code=" + otpCode
-				+ "</h5>" + "<p>Bạn có 1 phút để xác thực tài khoản 😎</p>" + "<p>Regards,<br>BookStore</p>"
-				+ "<footer style=\"font-size: 0.8em; color: #777;\">This is an automated email. Please do not reply.</footer>"
-				+ "</body></html>";
-
-		mailService.sendMail(emailContent, email, "Complete Your Registration with This Re-Link");
-		long end_time = System.currentTimeMillis();
-
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>" + (end_time - start_time));
-
+		String emailContent = "<html><body>"
+                + "<h5>Hello " + email + ",</h5>"
+                + "<p>Click the following link to confirm and activate your account:</p>"
+                + "<h5 style=\"color: #4CAF50;\">" + "http://127.0.0.1:8080/bookstore/verify-email.htm?code="+ otpCode + "</h5>"
+                + "<p>Bạn có 1 phút để xác thực tài khoản 😎</p>"
+                + "<p>Regards,<br>BookStore</p>"
+                + "<footer style=\"font-size: 0.8em; color: #777;\">This is an automated email. Please do not reply.</footer>"
+                + "</body></html>";
+		
+		mailService.sendMail(emailContent, email,  "Complete Your Registration with This Re-Link");
+		
 		return "auth/signup";
 	}
 

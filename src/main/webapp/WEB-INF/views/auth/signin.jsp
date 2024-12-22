@@ -60,6 +60,8 @@
 											method="POST">
 											<input type="hidden" id="g-recaptcha-response"
 												name="g-recaptcha-response" />
+											
+											<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
 											<!-- Email Input -->
 											<div class="mb-3">
