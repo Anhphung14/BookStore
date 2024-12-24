@@ -62,6 +62,7 @@ import bookstore.Service.InventoryService;
 import bookstore.Service.SubcategoriesService;
 import bookstore.Service.SuppliersService;
 import bookstore.Service.UploadService;
+import bookstore.Utils.EscapeHtmlUtil;
 
 @Controller
 @Transactional
@@ -170,7 +171,7 @@ public class ProductsController {
 //	@PreAuthorize("hasAuthority('UPDATE_PRODUCT')")
 	@RequestMapping(value = "/product/edit", method = RequestMethod.POST)
 	public String productEdit (ModelMap model, RedirectAttributes redirectAttributes, @ModelAttribute BooksDTO bookDTO) {
-
+		
 		BooksMapper booksMapper = new BooksMapper();
 		BooksEntity bookEntity = booksMapper.DTOtoEntity(bookDTO);
 		BooksEntity bookGetById = booksService.getBookById(bookEntity.getId());
@@ -183,7 +184,10 @@ public class ProductsController {
 		booksService.editThumbnail_Images(bookDTO, bookEntity, bookGetById);
 
 		if (!booksService.handleBookErrors(model, bookEntity)) {
+			bookEntity.setAuthor(EscapeHtmlUtil.encodeHtml(bookEntity.getAuthor()));
 			
+			bookEntity.setLanguage(EscapeHtmlUtil.encodeHtml(bookEntity.getLanguage()));
+			bookEntity.setTitle(EscapeHtmlUtil.encodeHtml(bookEntity.getTitle()));
 			if (booksService.checkUpdateQuantity(model, bookGetById, bookEntity)) {
 				boolean result = booksService.updateBook(bookEntity);
 				
@@ -259,7 +263,10 @@ public class ProductsController {
 					break;
 				}
 			}
-			
+			bookEntity.setAuthor(EscapeHtmlUtil.encodeHtml(bookEntity.getAuthor()));
+
+			bookEntity.setLanguage(EscapeHtmlUtil.encodeHtml(bookEntity.getLanguage()));
+			bookEntity.setTitle(EscapeHtmlUtil.encodeHtml(bookEntity.getTitle()));
 			if (listExistBooks.size() == 0) {
 				InventoryEntity inventory = new InventoryEntity(bookEntity, bookEntity.getQuantity(), new Date(), new Date());
 				

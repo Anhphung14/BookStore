@@ -34,9 +34,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import bookstore.DAO.UserDAO;
+import bookstore.Entity.CartsEntity;
 import bookstore.Entity.OrdersEntity;
 import bookstore.Entity.RolesEntity;
 import bookstore.Entity.UsersEntity;
+import bookstore.Utils.EscapeHtmlUtil;
 import bookstore.Utils.PasswordUtil;
 import bookstore.Utils.UUIDUtil;
 
@@ -127,16 +129,19 @@ public class UsersController {
 			@RequestParam(value = "enabled", required = false) Integer enabled, RedirectAttributes redirectAttributes,
 			ModelMap model) {
 		Session session = factory.getCurrentSession();
-
+		
 		try {
 			if (uuid == null || uuid.isEmpty()) {
 				uuid = UUID.randomUUID().toString();
 				user.setUuid(uuid);
 			}
-
+			user.setEmail(EscapeHtmlUtil.encodeHtml(user.getEmail()));
+			user.setFullname(EscapeHtmlUtil.encodeHtml(user.getFullname()));
+			user.setPhone(EscapeHtmlUtil.encodeHtml(user.getPhone()));
+			
 			// Chuẩn hóa tên người dùng để kiểm tra trùng lặp
 			String normalizedFullname = user.getFullname().trim().toLowerCase();
-
+			
 			// Kiểm tra tên người dùng trùng lặp
 			String hql = "FROM UsersEntity WHERE LOWER(TRIM(fullname)) = :fullname AND uuid != :userUuid";
 			Query query = session.createQuery(hql);
@@ -167,6 +172,13 @@ public class UsersController {
 
 				// Lưu người dùng mới
 				session.save(user);
+				CartsEntity cart = new CartsEntity();
+				cart.setUser(user);
+				cart.setStatus(1);
+				cart.setCreatedAt(new java.util.Date());
+				cart.setUpdatedAt(new java.util.Date());
+
+				session.save(cart);
 
 			} else if ("edit".equals(task)) {
 				UsersEntity existingUser = getUserByUuid(uuid); // Sử dụng UUID để tìm người dùng
@@ -208,6 +220,7 @@ public class UsersController {
 
 				// Merge và lưu người dùng đã cập nhật
 				session.merge(existingUser);
+				
 
 				// Thông báo thành công
 				redirectAttributes.addFlashAttribute("alertMessage", "User saved successfully!");

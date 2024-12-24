@@ -32,6 +32,7 @@ import bookstore.Entity.DiscountsEntity;
 import bookstore.Entity.Order_DiscountsEntity;
 import bookstore.Entity.OrdersEntity;
 import bookstore.Entity.SubcategoriesEntity;
+import bookstore.Utils.EscapeHtmlUtil;
 
 @Controller
 @RequestMapping("/admin1337")
@@ -107,6 +108,7 @@ public class DiscountsController {
 	        @RequestParam(value = "minOrderValue", required = false) Long minOrderValue, @RequestParam(value = "maxUses", required = false) Integer maxUses, 
 	        @RequestParam("status") String status, @RequestParam(value = "category", required = false) Long category_id, 
 	        @RequestParam(value = "subcategory[]", required = false) List<Long> subcategories_id, RedirectAttributes redirectAttributes) {
+		code = EscapeHtmlUtil.encodeHtml(code);
 		
 	    DiscountsEntity newDiscount = new DiscountsEntity();
 	    newDiscount.setCode(code);

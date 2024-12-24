@@ -43,7 +43,9 @@
 	crossorigin="anonymous"></script>
 <script
 	src="resources/assets/js/client/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
-
+	<!-- Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <style>
 .modal-content {
 	background-color: white;
@@ -198,12 +200,12 @@ th, td {
 							</c:forEach>
 						</tbody>
 					</table>
-					<c:if test="${not empty successMessage}">
+				<%-- 	<c:if test="${not empty successMessage}">
 						<div class="alert alert-success">${successMessage}</div>
 					</c:if>
 					<c:if test="${not empty errorMessage}">
 						<div class="alert alert-danger">${errorMessage}</div>
-					</c:if>
+					</c:if> --%>
 				</div>
 			</div>
 		</div>
@@ -346,6 +348,39 @@ th, td {
             }
         });
     });
+    
+    const alertMessage = "${messagePassword}";
+    const alertType = "${alertType}";
+
+    
+	toastr.options = {
+		    "closeButton": true, // Cho phép nút đóng
+		    "debug": false,
+		    "newestOnTop": true,
+		    "progressBar": true, // Hiển thị thanh tiến trình
+		    "positionClass": "toast-top-right", // Vị trí hiển thị thông báo
+		    "preventDuplicates": true,
+		    "onclick": null,
+		    "showDuration": "200", // Thời gian hiển thị
+		    "hideDuration": "1000",
+		    "timeOut": "5000", // Thời gian thông báo sẽ tự động ẩn
+		    "extendedTimeOut": "1000", // Thời gian mở rộng nếu hover vào
+		    "showEasing": "swing",
+		    "hideEasing": "linear",
+		    "showMethod": "fadeIn",
+		    "hideMethod": "fadeOut"
+		};
+	// Kiểm tra và hiển thị toastr nếu có thông báo
+    if (alertMessage) {
+        if (alertType === "success") {
+            toastr.success(alertMessage);
+        } else if (alertType === "error") {
+            toastr.error(alertMessage);
+        } else {
+            toastr.info(alertMessage);  // Default to info if no type is specified
+        }
+    }
+    
 </script>
 <script type="text/javascript">
 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();

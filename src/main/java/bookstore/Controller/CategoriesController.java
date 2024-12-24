@@ -1,6 +1,7 @@
 package bookstore.Controller;
 
 import bookstore.Service.CategoriesService;
+import bookstore.Utils.EscapeHtmlUtil;
 import bookstore.DAO.CartDAO;
 import bookstore.Entity.CategoriesEntity;
 import bookstore.Entity.RolesEntity;
@@ -135,7 +136,8 @@ public class CategoriesController {
 	                           RedirectAttributes redirectAttributes) {
 
 	    Session session = factory.getCurrentSession();
-
+	    category.setName(EscapeHtmlUtil.encodeHtml(category.getName()));
+	    subcategoryNames = EscapeHtmlUtil.encodeHtml(subcategoryNames);
 	    try {
 	        if ("new".equals(task)) {
 	            // Kiểm tra tên category trùng
@@ -221,11 +223,11 @@ public class CategoriesController {
 	public String saveSubcategory(@RequestParam("subcategoryId") Long subcategoryId, @RequestParam("name") String name,
 	                              ModelMap model, HttpServletRequest request) {
 	    Session session = factory.getCurrentSession();
-
+	    name = EscapeHtmlUtil.encodeHtml(name);
 	    try {
 	        // Chuẩn hóa tên subcategory: loại bỏ khoảng trắng thừa và chuyển về chữ thường
 	        String normalizedSubcategoryName = name.trim().toLowerCase().replaceAll("\\s+", " ");
-
+	        
 	        // Kiểm tra trùng lặp tên Subcategory không phân biệt chữ hoa, chữ thường và khoảng trắng
 	        String hql = "FROM SubcategoriesEntity WHERE LOWER(TRIM(REGEXP_REPLACE(name, '\\s+', ' '))) = :name AND id != :subcategoryId";
 	        Query query = session.createQuery(hql);

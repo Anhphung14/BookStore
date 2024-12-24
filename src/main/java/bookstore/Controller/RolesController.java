@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import bookstore.Entity.RolesEntity;
 import bookstore.Entity.UsersEntity;
+import bookstore.Utils.EscapeHtmlUtil;
 
 @Transactional
 @Controller
@@ -127,7 +128,8 @@ public class RolesController {
 	public String saveRole(@ModelAttribute("role") RolesEntity role, @RequestParam("task") String task,
 	        @RequestParam(value = "id", required = false) Long id, RedirectAttributes redirectAttributes, ModelMap model) {
 	    Session session = factory.getCurrentSession();
-
+	    role.setDescription(EscapeHtmlUtil.encodeHtml(role.getDescription()));
+	    role.setName(EscapeHtmlUtil.encodeHtml(role.getName()));
 	    try {
 	        if ("new".equals(task)) {
 	            RolesEntity existingRole = getRoleByName(role.getName());

@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import bookstore.DAO.DiscountsDAO;
 import bookstore.Entity.DiscountsEntity;
 import bookstore.Service.PaymentService;
+import bookstore.Utils.EscapeHtmlUtil;
 
 @Controller
 public class AuthPaymentController {
@@ -30,13 +31,17 @@ public class AuthPaymentController {
 	                               @RequestParam("phone") String phone,
 	                               @RequestParam("province") String province, @RequestParam("district") String district, @RequestParam("ward") String ward,
 	                       		@RequestParam("street") String street,
-	                               @RequestParam(value = "discountCode", defaultValue = "") String discountCode,
+	                               @RequestParam(value = "discountCode", defaultValue = "") String discountCoded,
 	                               @RequestParam("totalPrice") double totalPrice,
 	                               @RequestParam("selectedItems") List<Long> selectedItemIds,
 	                               //@RequestParam("address") String address,
 	                               Model model, RedirectAttributes redirectAttributes) {
 
 	    try {
+	    	String discountCode = EscapeHtmlUtil.encodeHtml(discountCoded.trim());
+	    	name = EscapeHtmlUtil.encodeHtml(name.trim());
+	        phone = EscapeHtmlUtil.encodeHtml(phone.trim());
+	        street = EscapeHtmlUtil.encodeHtml(street.trim());
 	    	StringBuilder shippingAddressBuilder = new StringBuilder();
 			shippingAddressBuilder.append(street).append(", ")
 			                      .append(ward).append(", ")
@@ -69,6 +74,7 @@ public class AuthPaymentController {
 	                    return "redirect:/cart/view.htm";
 	                }
 	            }
+	        
 	        String approvalLink = paymentService.authorizePayment(name, phone, selectedItemIds, discountCode, totalPrice, address);
 	        // Chuyển hướng người dùng đến URL thanh toán
 	        return "redirect:" + approvalLink;

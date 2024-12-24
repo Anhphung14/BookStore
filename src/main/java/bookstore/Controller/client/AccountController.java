@@ -46,6 +46,7 @@ import bookstore.Entity.SubcategoriesEntity;
 import bookstore.Entity.UsersEntity;
 import bookstore.Service.MailService;
 import bookstore.Service.UploadService;
+import bookstore.Utils.EscapeHtmlUtil;
 import bookstore.Utils.PasswordUtil;
 
 @Transactional
@@ -132,9 +133,11 @@ public class AccountController {
                 inventoryOfCurrentBook.setStock_quantity(currentStockQuantity + orderDetail.getQuantity());
                 boolean isUpdateStockQuantity = inventoryDAO.updateInventoryStock(inventoryOfCurrentBook);
 	        }
-	        redirectAttributes.addFlashAttribute("successMessage", "Order has been successfully canceled.");
+	        redirectAttributes.addFlashAttribute("alertMessage", "Đơn hàng đã hủy thành công!");
+	        redirectAttributes.addFlashAttribute("alertType", "success");
 	    } catch (Exception e) {
-	        redirectAttributes.addFlashAttribute("errorMessage", "Failed to cancel the order. Please try again.");
+	    	redirectAttributes.addFlashAttribute("alertMessage", "Có lỗi xảy ra khi hủy đơn hàng!");
+	        redirectAttributes.addFlashAttribute("alertType", "error");
 	    }
 		return "redirect:/account/account_orders.htm";
 	}
@@ -325,7 +328,7 @@ public class AccountController {
 	            if (allRequestParams.get(reviewKey) != null && allRequestParams.get(reviewKey).length() > 0) {
 	                reviewValue = allRequestParams.get(reviewKey);  // Lấy giá trị review
 	            }
-
+	            reviewValue = EscapeHtmlUtil.encodeHtml(reviewValue.trim());
 	            // Kiểm tra giá trị null và xử lý
 	            if (ratingValue != null) {
 	            	OrdersEntity order = orderDAO.getOrderById(Long.parseLong(orderId));

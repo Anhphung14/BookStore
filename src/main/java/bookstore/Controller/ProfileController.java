@@ -2,6 +2,7 @@ package bookstore.Controller;
 
 import bookstore.Entity.UsersEntity;
 import bookstore.Service.UploadService;
+import bookstore.Utils.EscapeHtmlUtil;
 import bookstore.Utils.PasswordUtil;
 
 import org.hibernate.SessionFactory;
@@ -45,12 +46,14 @@ public class ProfileController {
 			@RequestParam("avatarFile") MultipartFile avatarFile, HttpSession session, RedirectAttributes redirectAttributes) {
 		try {
 			UsersEntity sessionUser = (UsersEntity) session.getAttribute("user");
-
+			
 			// Cập nhật các thông tin cá nhân
 			if (user.getFullname() != null) {
+				user.setFullname(EscapeHtmlUtil.encodeHtml(user.getFullname()));
 				sessionUser.setFullname(user.getFullname());
 			}
 			if (user.getPhone() != null) {
+				user.setPhone(EscapeHtmlUtil.encodeHtml(user.getPhone()));
 				sessionUser.setPhone(user.getPhone());
 			}
 			if (user.getGender() != null) {
