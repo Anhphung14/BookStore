@@ -27,6 +27,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.comparator.InvertibleComparator;
@@ -137,7 +139,7 @@ public class ProductsController {
 	    return "products/index";
 	}
 
-	
+//	@PreAuthorize("hasAuthority('UPDATE_PRODUCT')")
 	@RequestMapping("/product/edit/{id}")
 	public String productEdit(@PathVariable("id") Long id, ModelMap model) {
 		
@@ -153,6 +155,7 @@ public class ProductsController {
 		return "products/edit";
 	}
 	
+	@PreAuthorize("hasAuthority('ADD_PRODUCT')")
 	@RequestMapping("/product/new")
 	public String productNew(ModelMap model) {
 		
@@ -164,6 +167,7 @@ public class ProductsController {
 		return "products/new";
 	}
 	
+//	@PreAuthorize("hasAuthority('UPDATE_PRODUCT')")
 	@RequestMapping(value = "/product/edit", method = RequestMethod.POST)
 	public String productEdit (ModelMap model, RedirectAttributes redirectAttributes, @ModelAttribute BooksDTO bookDTO) {
 
@@ -203,6 +207,7 @@ public class ProductsController {
 		return "products/edit";
 	}
 	
+	@PreAuthorize("hasAuthority('ADD_PRODUCT')")
 	@RequestMapping(value = "/product/add", method = RequestMethod.POST)
 	public String productAdd (ModelMap model, RedirectAttributes redirectAttributes,
 			@ModelAttribute BooksDTO bookDTO, @RequestParam("subcategory_id") Long subcategory_id) {
@@ -230,33 +235,24 @@ public class ProductsController {
 
 				if (compareStrings(bookEntity.getTitle(), book.getTitle())) {
 					count += 1;
-					System.out.println("Vo day 1");
 				}
 				
 				if (compareStrings(bookEntity.getAuthor(), book.getAuthor())) {
 					count += 1;
-					System.out.println("Vo day 2");
 				}
 				
 				if (compareStrings(bookEntity.getSupplier().getName(), book.getSupplier().getName())) {
 					count += 1;
-					System.out.println("Vo day 3");
 				}
-				
-				System.out.println("111111" + bookEntity.getPublication_year());
-				System.out.println("222222" + book.getPublication_year());
 				
 				if (bookEntity.getPublication_year().toString().equals(book.getPublication_year().toString())) {
 					count += 1;
-					System.out.println("Vo day 4");
 				}
 				
 				if (compareStrings(bookEntity.getLanguage(), book.getLanguage())) {
 					count += 1;
-					System.out.println("Vo day 5");
 				}
 				
-				System.out.println(">>>>>>>>>>>>>>>>>" + count);
 				
 				if (count == 5) {
 					listExistBooks.add(book);
@@ -327,6 +323,7 @@ public class ProductsController {
         return "redirect:/admin1337/products.htm";
     }
 	
+	@PreAuthorize("hasAuthority('UPDATE_PRODUCT')")
 	@RequestMapping(value = "/product/changeStatus", method = RequestMethod.POST)
 	public String changeStatus(ModelMap model, RedirectAttributes redirectAttributes,
 			@RequestParam("bookId") Long bookId, @RequestParam("newStatus") int newStatus) {
