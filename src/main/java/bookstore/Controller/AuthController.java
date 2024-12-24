@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
@@ -184,7 +185,7 @@ public class AuthController {
 	}
 
 	@RequestMapping("/login-github")
-	public String loginGithub(HttpSession session, HttpServletRequest request)
+	public String loginGithub(@RequestParam(value = "uuid", required = false) String uuid, HttpSession session, HttpServletRequest request)
 			throws ClientProtocolException, IOException {
 		String code = request.getParameter("code");
 
@@ -203,6 +204,10 @@ public class AuthController {
 
 		if (user == null) {
 			user = new UsersEntity();
+			if (uuid == null || uuid.isEmpty()) {
+				uuid = UUID.randomUUID().toString();
+				user.setUuid(uuid);
+			}
 			user.setAvatar(githubPojo.getAvatar_url());
 			user.setEmail(githubPojo.getEmail());
 			user.setPassword("");
@@ -254,6 +259,7 @@ public class AuthController {
 	public String handle_login(
 	        @RequestParam("email") String email, 
 	        @RequestParam("password") String password,
+	        @RequestParam(value = "uuid", required = false) String uuid,
 	        @RequestParam(value = "g-recaptcha-response", required = false) String recaptchaResponse, 
 	        HttpSession session) {
 
@@ -273,6 +279,12 @@ public class AuthController {
 	        System.out.println("Invalid email or password.");
 	        return "redirect:signin.htm?error=loginFailed";
 	    }
+	    
+	    if (uuid == null || uuid.isEmpty()) {
+	        uuid = UUID.randomUUID().toString();
+	    }
+
+	    user.setUuid(uuid);
 
 	    session.setAttribute("user", user);
 	    System.out.println("Login successful for user: " + user.getEmail());
@@ -304,7 +316,7 @@ public class AuthController {
 
 	@Transactional
 	@RequestMapping(value = "/saveSignup", method = RequestMethod.POST)
-	public String saveUser(@ModelAttribute("user") UsersEntity user, Model model,
+	public String saveUser(@RequestParam(value = "uuid", required = false) String uuid,@ModelAttribute("user") UsersEntity user, Model model,
 			RedirectAttributes redirectAttributes) {
 		Session session = factory.getCurrentSession();
 
@@ -315,6 +327,11 @@ public class AuthController {
 				return "redirect:signup.htm";
 			}
 
+			  if (uuid == null || uuid.isEmpty()) {
+			        uuid = UUID.randomUUID().toString();
+			    }
+
+			    user.setUuid(uuid);
 			user.setAvatar(
 					"https://res.cloudinary.com/dsqhfz3xt/image/upload/v1733041850/images/avatars/vo-anh-phungg/drmxjyaok8d8b8ofgiwl.png");
 
