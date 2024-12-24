@@ -334,28 +334,30 @@ public class OrderDAO {
 	}
 	
 	public int updateOrderStatusToCancel(Long orderId) {
-		Session session = sessionFactory.openSession();
-		Transaction t = session.beginTransaction();
-		int isUpdate = 0;
-		try {
-			String hql = "FROM OrdersEntity WHERE id = :orderId";
-			OrdersEntity updateOrder = (OrdersEntity) session.createQuery(hql).setParameter("orderId", orderId).uniqueResult();
-			//OrderEntity updateOrder = getOrderByOrderId(orderId);
-			if(updateOrder.getPaymentStatus().equals("Đã thanh toán")) {
-				updateOrder.setPaymentStatus("Đã hoàn tiền");
-			}
-			updateOrder.setUpdatedAt(new Date());
-			updateOrder.setOrderStatus("Huỷ đơn hàng");
-			session.update(updateOrder);
-			t.commit();
-			isUpdate = 1;
-		} catch (Exception e) {
-			e.printStackTrace();
-			t.rollback();
-		} finally {
-			session.close();
-		}
-		return isUpdate;
+	    Session session = sessionFactory.openSession();
+	    Transaction t = session.beginTransaction();
+	    int isUpdate = 0;
+
+	    try {
+	        // Chuỗi SQL để gọi stored procedure
+	        String sql = "EXEC UpdateOrderStatusToCancel :orderId";
+
+	        // Tạo Query và thiết lập các tham số
+	        Query query = session.createSQLQuery(sql)
+	                             .setParameter("orderId", orderId);
+
+	        // Thực thi stored procedure và lấy kết quả
+	        isUpdate = (Integer) query.uniqueResult();
+
+	        t.commit();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        t.rollback();
+	    } finally {
+	        session.close();
+	    }
+
+	    return isUpdate;
 	}
 	
 	public List<OrdersEntity> autoCancelUnconfirmedOrders() {
