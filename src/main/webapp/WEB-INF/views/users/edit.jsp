@@ -114,7 +114,10 @@
 								data-coreui-search="true" data-live-search="true">
 								<c:forEach var="role" items="${roles}">
 									<option value="${role.id}"
-										${user.roles != null && user.roles.contains(role) ? 'selected' : ''}>
+										${user.roles != null && user.roles.contains(role) ? 'selected' : ''}
+										${role.name == 'ROLE_ADMIN' && (isAdmin || isUser || isStaff) ? 'disabled' : ''}
+										${role.name == 'ROLE_USER' && (isAdmin || isUser || isStaff) ? 'disabled' : ''}
+										${role.name == 'ROLE_STAFF' && (isAdmin || isUser || isStaff) ? 'disabled' : ''}>
 										${role.name}</option>
 								</c:forEach>
 							</select>

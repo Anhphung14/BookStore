@@ -67,10 +67,16 @@ nav.navbar {
 			<i class="fa fa-bars"></i>
 		</div>
 
-		<a href="${pageContext.servletContext.contextPath}/index.htm" 
-			class="btn btn-outline-dark d-flex align-items-center gap-2">
-			<i class="fa fa-globe fa-lg"></i> <span>Trang chủ BookStore</span>
-		</a>
+		<div class="d-flex gap-3">
+			<a href="${pageContext.servletContext.contextPath}/index.htm"
+				class="btn btn-outline-dark d-flex align-items-center gap-2"> <i
+				class="fa fa-globe fa-lg"></i> <span>Trang chủ BookStore</span>
+			</a> <a href="https://dashboard.tawk.to/#/chat"
+				class="btn btn-outline-dark d-flex align-items-center gap-2 px-2">
+				<i class="fa fa-comments"></i> <span>Chat</span>
+			</a>
+		</div>
+
 
 
 		<ul

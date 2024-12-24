@@ -7,32 +7,45 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Book Library</title>
-    <base href="${pageContext.servletContext.contextPath}/">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Book Library</title>
+<base href="${pageContext.servletContext.contextPath}/">
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Apple touch icon -->
-    <link rel="apple-touch-icon" href="${pageContext.servletContext.contextPath}/resources/images/client/apple-touch-icon.png">
+<!-- Apple touch icon -->
+<link rel="apple-touch-icon"
+	href="${pageContext.servletContext.contextPath}/resources/images/client/apple-touch-icon.png">
 
-    <!-- External CSS Files -->
-  	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/bootstrap.min.css" />
-	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/normalize.css" />
-	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/font-awesome.min.css" />
-	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/icomoon.css" />
-	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/jquery-ui.css" />
-	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/owl.carousel.css" />
-	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/transitions.css" />
-	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/main.css" />
-	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/color.css" />
-	<link rel="stylesheet" href="${pageContext.servletContext.contextPath}/resources/assets/css/client/responsive.css" />
+<!-- External CSS Files -->
+<link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/assets/css/client/bootstrap.min.css" />
+<link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/assets/css/client/normalize.css" />
+<link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/assets/css/client/font-awesome.min.css" />
+<link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/assets/css/client/icomoon.css" />
+<link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/assets/css/client/jquery-ui.css" />
+<link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/assets/css/client/owl.carousel.css" />
+<link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/assets/css/client/transitions.css" />
+<link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/assets/css/client/main.css" />
+<link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/assets/css/client/color.css" />
+<link rel="stylesheet"
+	href="${pageContext.servletContext.contextPath}/resources/assets/css/client/responsive.css" />
 
-	<script src="https://kit.fontawesome.com/e70d1e2fed.js" crossorigin="anonymous"></script>
-    
-    <!-- Modernizr JS -->
-    <script src="resources/assets/js/client/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+<script src="https://kit.fontawesome.com/e70d1e2fed.js"
+	crossorigin="anonymous"></script>
+
+<!-- Modernizr JS -->
+<script
+	src="resources/assets/js/client/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 </head>
 
 <body>
@@ -48,7 +61,10 @@
 		<!--************************************
 				Inner Banner Start
 		*************************************-->
-		<div class="tg-innerbanner tg-haslayout tg-parallax tg-bginnerbanner" data-z-index="-100" data-appear-top-offset="600" data-parallax="scroll" data-image-src="images/parallax/bgparallax-07.jpg">
+		<div class="tg-innerbanner tg-haslayout tg-parallax tg-bginnerbanner"
+			data-z-index="-100" data-appear-top-offset="600"
+			data-parallax="scroll"
+			data-image-src="images/parallax/bgparallax-07.jpg">
 			<div class="container">
 				<div class="row">
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -85,153 +101,170 @@
 												<form class="tg-formtheme tg-formsortshoitems">
 													<fieldset>
 														<div class="form-group">
-															<label>sort by:</label>
-															<span class="tg-select">
-																<select name="sortby" onchange="handleSortChange()">
-																    <option value="newest" ${sortBy.equals('newest') ? 'selected="selected"' : ''}>Mới nhất</option>
-																    <option value="oldest" ${sortBy.equals('oldest') ? 'selected="selected"' : ''}>Cũ nhất</option>
-																    <option value="priceAsc" ${sortBy.equals('priceAsc') ? 'selected="selected"' : ''}>Giá: Tăng dần</option>
-																    <option value="priceDesc" ${sortBy.equals('priceDesc') ? 'selected="selected"' : ''}>Giá: Giảm dần</option>
-																    <option value="nameAsc" ${sortBy.equals('nameAsc') ? 'selected="selected"' : ''}>Tên: A - Z</option>
-																    <option value="nameDesc" ${sortBy.equals('nameDesc') ? 'selected="selected"' : ''}>Tên: Z - A</option>
-																</select>
+															<label>sort by:</label> <span class="tg-select"> <select
+																name="sortby" onchange="handleSortChange()">
+																	<option value="newest"
+																		${sortBy.equals('newest') ? 'selected="selected"' : ''}>Mới
+																		nhất</option>
+																	<option value="oldest"
+																		${sortBy.equals('oldest') ? 'selected="selected"' : ''}>Cũ
+																		nhất</option>
+																	<option value="priceAsc"
+																		${sortBy.equals('priceAsc') ? 'selected="selected"' : ''}>Giá:
+																		Tăng dần</option>
+																	<option value="priceDesc"
+																		${sortBy.equals('priceDesc') ? 'selected="selected"' : ''}>Giá:
+																		Giảm dần</option>
+																	<option value="nameAsc"
+																		${sortBy.equals('nameAsc') ? 'selected="selected"' : ''}>Tên:
+																		A - Z</option>
+																	<option value="nameDesc"
+																		${sortBy.equals('nameDesc') ? 'selected="selected"' : ''}>Tên:
+																		Z - A</option>
+															</select>
 															</span>
 														</div>
 														<div class="form-group">
-														    <label>Show:</label>
-														    <span class="tg-select">
-														        <select id="pageSizeSelect" name="pageSizeValue" onchange="handlePageSizeChange()">
-														            <option value="16" ${pageSize == 16 ? 'selected="selected"' : ''}>16</option>
-														            <option value="32" ${pageSize == 32 ? 'selected="selected"' : ''}>32</option>
-														            <option value="48" ${pageSize == 48 ? 'selected="selected"' : ''}>48</option>
-														        </select>
-														    </span>
+															<label>Show:</label> <span class="tg-select"> <select
+																id="pageSizeSelect" name="pageSizeValue"
+																onchange="handlePageSizeChange()">
+																	<option value="16"
+																		${pageSize == 16 ? 'selected="selected"' : ''}>16</option>
+																	<option value="32"
+																		${pageSize == 32 ? 'selected="selected"' : ''}>32</option>
+																	<option value="48"
+																		${pageSize == 48 ? 'selected="selected"' : ''}>48</option>
+															</select>
+															</span>
 														</div>
 													</fieldset>
 												</form>
 											</div>
-											
-											
+
+
 											<c:forEach var="book" items="${bookList}">
 												<div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
 													<div class="tg-postbook">
-															<div class="tg-bookimg">
-																<div class="tg-frontcover"><img src="${book.thumbnail }" alt="image description"></div>
-																<div class="tg-backcover"><img src="${book.thumbnail }" alt="image description"></div>
+														<div class="tg-bookimg">
+															<div class="tg-frontcover">
+																<img src="${book.thumbnail }" alt="image description">
 															</div>
+															<div class="tg-backcover">
+																<img src="${book.thumbnail }" alt="image description">
+															</div>
+														</div>
 														<div class="tg-postbookcontent">
-																<ul class="tg-bookscategories" style="padding-top: 10px">
-																	<li><a href="javascript:void(0);">${book.subcategoriesEntity.name }</a></li>
-																</ul>
-																<c:if test="${bookDiscounts[book.id] != 0.0}">
-																	<div class="tg-themetagbox">
-																		<span class="tg-themetag">Giảm giá
-																			${bookDiscounts[book.id]}%</span>
-																	</div>
-																</c:if>
-																<c:if test="${bookDiscounts[book.id] == 0.0}">
-																	<div class="tg-themetagbox">
-																		<span class=""></span>
-																	</div>
-																</c:if>
-																
-																<h4>
-												<a href="productdetail/${book.id}.htm"> <c:choose>
-														<c:when test="${fn:length(fn:split(book.title, ' ')) > 2}">
-															<c:forEach var="word" begin="0" end="2"
-																items="${fn:split(book.title, ' ')}">
+															<ul class="tg-bookscategories" style="padding-top: 10px">
+																<li><a href="javascript:void(0);">${book.subcategoriesEntity.name }</a></li>
+															</ul>
+															<c:if test="${bookDiscounts[book.id] != 0.0}">
+																<div class="tg-themetagbox">
+																	<span class="tg-themetag">Giảm giá
+																		${bookDiscounts[book.id]}%</span>
+																</div>
+															</c:if>
+															<c:if test="${bookDiscounts[book.id] == 0.0}">
+																<div class="tg-themetagbox">
+																	<span class=""></span>
+																</div>
+															</c:if>
+
+															<h4>
+																<a href="productdetail/${book.id}.htm"> <c:choose>
+																		<c:when
+																			test="${fn:length(fn:split(book.title, ' ')) > 2}">
+																			<c:forEach var="word" begin="0" end="2"
+																				items="${fn:split(book.title, ' ')}">
 											                    ${word}
 											                </c:forEach>...
 											            </c:when>
-														<c:otherwise>
+																		<c:otherwise>
 											                ${book.title}
 											            </c:otherwise>
-													</c:choose>
-												</a>
-											</h4>
-											<span class="tg-bookwriter"> Tác giả: <a
-												href="javascript:void(0);"> <c:choose>
-														<c:when
-															test="${fn:length(fn:split(book.author, ' ')) > 3}">
-															<c:forEach var="word" begin="0" end="2"
-																items="${fn:split(book.author, ' ')}">
+																	</c:choose>
+																</a>
+															</h4>
+															<span class="tg-bookwriter"> Tác giả: <a
+																href="javascript:void(0);"> <c:choose>
+																		<c:when
+																			test="${fn:length(fn:split(book.author, ' ')) > 3}">
+																			<c:forEach var="word" begin="0" end="2"
+																				items="${fn:split(book.author, ' ')}">
 											                        ${word} 
 											                    </c:forEach>
 											                    ...
 											                </c:when>
-														<c:otherwise>
+																		<c:otherwise>
 											                    ${book.author}
 											                </c:otherwise>
-													</c:choose>
-											</a>
-											</span> <span class="tg-bookprice"> <ins>
-													<fmt:formatNumber value="${book.price}" type="currency"
-														currencySymbol="VND" />
-												</ins>
-											</span> <a class="tg-btn tg-btnstyletwo btn-add-to-cart"
-												data-quantity="1" data-book-id="${book.id}"
-												href="javascript:void(0);"
-												style="padding-left: 0px; padding-right: 0px;"> <i
-												class="fa fa-shopping-basket" style="padding-left: 10px;"></i>
-												<em>Thêm vào giỏ hàng</em>
-											</a>
+																	</c:choose>
+															</a>
+															</span> <span class="tg-bookprice"> <ins>
+																	<fmt:formatNumber value="${book.price}" type="currency"
+																		currencySymbol="VND" />
+																</ins>
+															</span> <a class="tg-btn tg-btnstyletwo btn-add-to-cart"
+																data-quantity="1" data-book-id="${book.id}"
+																href="javascript:void(0);"
+																style="padding-left: 0px; padding-right: 0px;"> <i
+																class="fa fa-shopping-basket"
+																style="padding-left: 10px;"></i> <em>Thêm vào giỏ
+																	hàng</em>
+															</a>
 														</div>
 													</div>
 												</div>
 											</c:forEach>
 										</div>
-										
+
 										<!-- Phân trang -->
-										<nav aria-label="Page navigation example" >
-										    <ul class="pagination">
-										        <!-- Nút Previous -->
-										        <c:choose>
-										            <c:when test="${currentPage > 1}">
-										                <li class="page-item">
-										                    <a class="page-link" href="allProduct.htm?q=${searchQuery }&sortBy=${sortBy}&page=${currentPage - 1}&pageSize=${pageSize}" aria-label="Previous">
-										                        <span aria-hidden="true">&laquo;</span>
-										                    </a>
-										                </li>
-										            </c:when>
-										            <c:otherwise>
-										                <li class="page-item disabled">
-										                    <a class="page-link"  aria-disabled="true" aria-label="Previous">
-										                        <span aria-hidden="true">&laquo;</span>
-										                    </a>
-										                </li>
-										            </c:otherwise>
-										        </c:choose>
-										
-										        <!-- Các trang -->
-										        <c:forEach var="page" begin="1" end="${totalPages}">
-										            <li class="page-item ${page == currentPage ? 'active' : ''}">
-										                <a class="page-link" href="allProduct.htm?q=${searchQuery }&sortBy=${sortBy}&page=${page}&pageSize=${pageSize}">${page}</a>
-										            </li>
-										        </c:forEach>
-										
-										        <!-- Nút Next -->
-										        <c:choose>
-										            <c:when test="${currentPage < totalPages}">
-										                <li class="page-item">
-										                    <a class="page-link" href="allProduct.htm?q=${searchQuery }&sortBy=${sortBy}&page=${currentPage + 1}&pageSize=${pageSize}" aria-label="Next">
-										                        <span aria-hidden="true">&raquo;</span>
-										                    </a>
-										                </li>
-										            </c:when>
-										            <c:otherwise>
-										                <li class="page-item disabled">
-										                    <a class="page-link" aria-label="Next">
-										                        <span aria-hidden="true">&raquo;</span>
-										                    </a>
-										                </li>
-										            </c:otherwise>
-										        </c:choose>
-										    </ul>
+										<nav aria-label="Page navigation example">
+											<ul class="pagination">
+												<!-- Nút Previous -->
+												<c:choose>
+													<c:when test="${currentPage > 1}">
+														<li class="page-item"><a class="page-link"
+															href="allProduct.htm?q=${searchQuery }&sortBy=${sortBy}&page=${currentPage - 1}&pageSize=${pageSize}"
+															aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+														</a></li>
+													</c:when>
+													<c:otherwise>
+														<li class="page-item disabled"><a class="page-link"
+															aria-disabled="true" aria-label="Previous"> <span
+																aria-hidden="true">&laquo;</span>
+														</a></li>
+													</c:otherwise>
+												</c:choose>
+
+												<!-- Các trang -->
+												<c:forEach var="page" begin="1" end="${totalPages}">
+													<li
+														class="page-item ${page == currentPage ? 'active' : ''}">
+														<a class="page-link"
+														href="allProduct.htm?q=${searchQuery }&sortBy=${sortBy}&page=${page}&pageSize=${pageSize}">${page}</a>
+													</li>
+												</c:forEach>
+
+												<!-- Nút Next -->
+												<c:choose>
+													<c:when test="${currentPage < totalPages}">
+														<li class="page-item"><a class="page-link"
+															href="allProduct.htm?q=${searchQuery }&sortBy=${sortBy}&page=${currentPage + 1}&pageSize=${pageSize}"
+															aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+														</a></li>
+													</c:when>
+													<c:otherwise>
+														<li class="page-item disabled"><a class="page-link"
+															aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+														</a></li>
+													</c:otherwise>
+												</c:choose>
+											</ul>
 										</nav>
 									</div>
 								</div>
 							</div>
-							
+
 							<div class="col-xs-12 col-sm-4 col-md-4 col-lg-3 pull-left">
 								<aside id="tg-sidebar" class="tg-sidebar">
 									<div class="tg-widget tg-catagories">
@@ -239,17 +272,18 @@
 											<h3>Categories</h3>
 										</div>
 										<div class="tg-widgetcontent">
-											
-											<ul>	
+
+											<ul>
 												<li><a href=""><span>Tất cả sách</span><em>${countAllBooks }</em></a></li>
 												<c:forEach var="item" items="${countBookEachCategory }">
-													<li><a href="http://localhost:8080/bookstore/categories/${item[3]}.htm"><span>${item[0]}</span><em>${item[2] }</em></a></li>
-												
+													<li><a
+														href="http://localhost:8080/bookstore/categories/${item[3]}.htm"><span>${item[0]}</span><em>${item[2] }</em></a></li>
+
 												</c:forEach>
 											</ul>
 										</div>
 									</div>
-									
+
 								</aside>
 							</div>
 						</div>
@@ -276,7 +310,8 @@
 	*************************************-->
 	<script src="resources/assets/js/client/vendor/jquery-library.js"></script>
 	<script src="resources/assets/js/client/vendor/bootstrap.min.js"></script>
-	<script src="https://maps.google.com/maps/api/js?key=AIzaSyCR-KEWAVCn52mSdeVeTqZjtqbmVJyfSus&amp;language=en"></script>
+	<script
+		src="https://maps.google.com/maps/api/js?key=AIzaSyCR-KEWAVCn52mSdeVeTqZjtqbmVJyfSus&amp;language=en"></script>
 	<script src="resources/assets/js/client/owl.carousel.min.js"></script>
 	<script src="resources/assets/js/client/jquery.vide.min.js"></script>
 	<script src="resources/assets/js/client/countdown.js"></script>
@@ -286,7 +321,7 @@
 	<script src="resources/assets/js/client/appear.js"></script>
 	<script src="resources/assets/js/client/gmap3.js"></script>
 	<script src="resources/assets/js/client/main.js"></script>
-	
+
 	<script type="text/javascript">
 	    function handlePageSizeChange() {
 	        const pageSizeSelect = document.getElementById("pageSizeSelect");
@@ -379,7 +414,18 @@
 
 	    
 	</script>
-	
+	<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/67685e74af5bfec1dbe01c1d/1ifnr1ubt';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+
 </body>
 
 

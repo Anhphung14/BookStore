@@ -50,7 +50,7 @@
 		                            </div>
 		                            <div class="mb-3">
 		                                <label for="phone" class="form-label">Số điện thoại <span class="text-danger">*</span></label>
-		                                <input id="phone" name="phone" type="tel" class="form-control" value="${user.phone}" required pattern="^0(3|5|7|8|9)[0-9]{8}$">
+		                                <input id="phone" name="phone" type="tel" class="form-control" value="${transaction.itemList.shippingPhoneNumber}" required pattern="^0(3|5|7|8|9)[0-9]{8}$">
 		                            </div>
 		                            <div class="mb-3">
 		                                <label for="email" class="form-label">Email <span class="text-danger">*</span></label>

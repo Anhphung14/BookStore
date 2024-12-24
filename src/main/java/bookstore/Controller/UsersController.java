@@ -96,20 +96,28 @@ public class UsersController {
 
 	@RequestMapping(value = "/user/edit/{id}", method = RequestMethod.GET)
 	public String userEdit(@PathVariable("id") Long id, ModelMap model) {
-		UsersEntity user = getUserById(id);
+	    UsersEntity user = getUserById(id);
 
-		// Initialize the roles collection to avoid LazyInitializationException
-		Hibernate.initialize(user.getRoles());
+	    // Initialize the roles collection to avoid LazyInitializationException
+	    Hibernate.initialize(user.getRoles());
 
-		// Fetch roles for the user
-		Session session = factory.getCurrentSession();
-		Query query = session.createQuery("FROM RolesEntity");
-		List<RolesEntity> roles = query.list();
+	    // Fetch roles for the user
+	    Session session = factory.getCurrentSession();
+	    Query query = session.createQuery("FROM RolesEntity");
+	    List<RolesEntity> roles = query.list();
 
-		model.addAttribute("user", user);
-		model.addAttribute("roles", roles);
-		model.addAttribute("task", "edit");
-		return "users/edit";
+	    // Check if user has specific roles
+	    boolean isAdmin = user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
+	    boolean isUser = user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_USER"));
+	    boolean isStaff = user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_STAFF"));
+
+	    model.addAttribute("user", user);
+	    model.addAttribute("roles", roles);
+	    model.addAttribute("isAdmin", isAdmin);
+	    model.addAttribute("isUser", isUser);
+	    model.addAttribute("isStaff", isStaff);
+	    model.addAttribute("task", "edit");
+	    return "users/edit";
 	}
 
 	@RequestMapping(value = "/user/save", method = RequestMethod.POST)
@@ -150,7 +158,7 @@ public class UsersController {
 				Timestamp currentDate = Timestamp.valueOf(LocalDateTime.now());
 				user.setCreated_at(currentDate);
 				user.setUpdated_at(currentDate);
-				user.setEnabled(1); 
+				user.setEnabled(1);
 
 				session.save(user);
 

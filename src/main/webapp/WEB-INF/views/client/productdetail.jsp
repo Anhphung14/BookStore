@@ -43,34 +43,33 @@
 <style type="text/css">
 /* Thay đổi màu nền cho toastr success */
 .toast-success {
-    background-color: #28a745 !important; /* Màu xanh lá */
-    color: #fff !important; /* Màu chữ trắng */
+	background-color: #28a745 !important; /* Màu xanh lá */
+	color: #fff !important; /* Màu chữ trắng */
 }
 
 /* Thay đổi màu nền cho toastr error */
 .toast-error {
-    background-color: #dc3545 !important; /* Màu đỏ */
-    color: #fff !important; /* Màu chữ trắng */
+	background-color: #dc3545 !important; /* Màu đỏ */
+	color: #fff !important; /* Màu chữ trắng */
 }
 
 /* Thay đổi màu nền cho toastr warning */
 .toast-warning {
-    background-color: #ffc107 !important; /* Màu vàng */
-    color: #000 !important; /* Màu chữ đen */
+	background-color: #ffc107 !important; /* Màu vàng */
+	color: #000 !important; /* Màu chữ đen */
 }
 
 /* Thay đổi màu nền cho toastr info */
 .toast-info {
-    background-color: #17a2b8 !important; /* Màu xanh lam */
-    color: #fff !important; /* Màu chữ trắng */
+	background-color: #17a2b8 !important; /* Màu xanh lam */
+	color: #fff !important; /* Màu chữ trắng */
 }
 
 /* Tùy chỉnh chung cho toastr */
 .toast {
-    border-radius: 5px; /* Bo góc */
-    font-size: 14px; /* Kích thước chữ */
+	border-radius: 5px; /* Bo góc */
+	font-size: 14px; /* Kích thước chữ */
 }
-
 </style>
 <script src="https://kit.fontawesome.com/e70d1e2fed.js"
 	crossorigin="anonymous"></script>
@@ -178,10 +177,11 @@
 
 														</ul>
 														<div class="tg-quantityholder">
-															<em class="minus">-</em> <input type="text" oninput="validateNumberInput(this)"
-																class="result" value="1" id="quantity1" name="quantity">
-															<em class="plus">+</em>
-														</div> 
+															<em class="minus">-</em> <input type="text"
+																oninput="validateNumberInput(this)" class="result"
+																value="1" id="quantity1" name="quantity"> <em
+																class="plus">+</em>
+														</div>
 														<a class="tg-btn tg-active tg-btn-lg btn-add-to-cart"
 															data-book-id="${book.id}" data-quantity="1"
 															style="text-decoration: none;">Thêm vào giỏ hàng</a>
@@ -290,7 +290,8 @@
 
 																	<div class="tg-postbookcontent">
 																		<ul class="tg-bookscategories">
-																			<li style="padding-top: 10px"><a style="text-decoration: none;"
+																			<li style="padding-top: 10px"><a
+																				style="text-decoration: none;"
 																				href="javascript:void(0);">${book.subcategoriesEntity.name}</a></li>
 																		</ul>
 																		<c:if test="${discount > 0}">
@@ -315,15 +316,20 @@
 																				<span class="tg-bookprice"> <ins>
 																						<f:formatNumber
 																							value="${book.price - book.price * discounts[status.index] / 100}"
-																							type="currency" maxFractionDigits="0" currencySymbol="₫"/>
+																							type="currency" maxFractionDigits="0"
+																							currencySymbol="₫" />
 																					</ins> <del>
-																						<f:formatNumber value="${book.price}" type="currency" maxFractionDigits="0" currencySymbol="₫" />
+																						<f:formatNumber value="${book.price}"
+																							type="currency" maxFractionDigits="0"
+																							currencySymbol="₫" />
 																					</del>
 																				</span>
 																			</c:when>
 																			<c:otherwise>
 																				<span class="tg-bookprice"> <ins>
-																						<f:formatNumber value="${book.price}" type="currency" maxFractionDigits="0" currencySymbol="₫" />
+																						<f:formatNumber value="${book.price}"
+																							type="currency" maxFractionDigits="0"
+																							currencySymbol="₫" />
 																					</ins>
 																				</span>
 																			</c:otherwise>
@@ -384,7 +390,7 @@
 				Footer End
 		*************************************-->
 	</div>
-<!-- 	<!--************************************ -->
+	<!-- 	<!--************************************ -->
 	<script>
 	
 	let initialInput = true;
@@ -466,8 +472,8 @@
 
 	
 	</script>
-<!-- 			Wrapper End -->
-<!-- 	************************************* -->
+	<!-- 			Wrapper End -->
+	<!-- 	************************************* -->
 	<script src="resources/assets/js/client/vendor/jquery-library.js"></script>
 	<script src="resources/assets/js/client/vendor/bootstrap.min.js"></script>
 	<script
@@ -486,5 +492,16 @@
 	
 	
 	</script>
+	<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/67685e74af5bfec1dbe01c1d/1ifnr1ubt';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
 </body>
 </html>

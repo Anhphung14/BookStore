@@ -68,17 +68,37 @@
 .tg-clientservices:hover {
 	transform: scale(1.05);
 }
+
+.chat-window {
+	position: fixed;
+	top: 70px;
+	right: 20px;
+	width: 400px;
+	height: 500px;
+	background-color: white;
+	border: 1px solid #ccc;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	display: none;
+	z-index: 10000;
+}
+
+iframe {
+	width: 100%;
+	height: 100%;
+	border: none;
+}
+
+.chat-window.show {
+	display: block;
+}
 </style>
 <body class="tg-home tg-homeone">
 	<div id="tg-wrapper" class="tg-wrapper tg-haslayout">
-		<!--************************************
-				Header Start
-		*************************************-->
 		<%@ include file="../client/layouts/header.jsp"%>
 		<div class="banner-container"
 			style="text-align: center; margin: 20px auto; width: 100%; position: relative;">
 			<img
-				src="${pageContext.servletContext.contextPath}/resources/images/client/BANNER.gif"
+				src="https://res.cloudinary.com/dsqhfz3xt/image/upload/v1734896841/images/y9s5swwde8qowxxeseoi.gif"
 				alt="Banner"
 				style="width: 100%; max-width: 1500px; height: auto; display: inline-block; border-radius: 15px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.3s ease;">
 		</div>
@@ -316,13 +336,13 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<h2 class="text-center">Sách Đang Giảm Giá</h2>
 						<div id="tg-discountbooksslider" class="owl-carousel">
 							<!-- Kiểm tra xem có sách giảm giá -->
 							<c:if test="${not empty bookDiscounts}">
 								<c:forEach var="book" items="${bookList}">
 									<!-- Chỉ hiển thị sách có giảm giá -->
 									<c:if test="${bookDiscounts[book.id] != 0.0}">
+										<h2 class="text-center">Sách Đang Giảm Giá</h2>
 										<div class="item">
 											<div class="tg-postbook">
 												<div class="tg-bookimg">
@@ -449,30 +469,8 @@
 			</div>
 		</section>
 
-
-
-
-		<!--************************************
-					Featured Item End
-			*************************************-->
-		<!--************************************
-					New Release Start
-			*************************************-->
-
-		<!--************************************
-				Main End
-		*************************************-->
-		<!--************************************
-				Footer Start
-		*************************************-->
 		<%@ include file="../client/layouts/footer.jsp"%>
-		<!--************************************
-				Footer End
-		*************************************-->
 	</div>
-	<!--************************************
-			Wrapper End
-	*************************************-->
 
 	<script type="text/javascript">
 	document.querySelectorAll('.btn-add-to-cart').forEach(function(button) {
@@ -583,5 +581,23 @@
 		});
 
 	</script>
+	<script>
+        function toggleChatWindow() {
+            var chatWindow = document.getElementById('chat-window');
+            chatWindow.classList.toggle('show'); 
+        }
+    </script>
+	<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/67685e74af5bfec1dbe01c1d/1ifnr1ubt';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+
 </body>
 </html>
