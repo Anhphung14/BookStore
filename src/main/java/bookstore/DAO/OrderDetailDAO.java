@@ -35,11 +35,32 @@ public class OrderDetailDAO {
             throw new RuntimeException("Error fetching cart items for user ID: " + userId, e);
         }
     }
+    
+    
     //lưu vào order_detail
     public void saveOrderDetail(OrdersDetailEntity orderDetail) {
         Session session = sessionFactory.getCurrentSession();
-        session.saveOrUpdate(orderDetail); // Lưu hoặc cập nhật đối tượng OrdersDetailEntity
+        try {
+            // Chuỗi SQL để gọi stored procedure
+            String sql = "EXEC SaveOrderDetail :orderId, :bookId, :quantity, :price, :createdAt, :updatedAt";
+
+            // Tạo Query và thiết lập tham số
+            Query query = session.createSQLQuery(sql)
+                                 .setParameter("orderId", orderDetail.getOrder().getId()) // Lấy orderId từ đối tượng
+                                 .setParameter("bookId", orderDetail.getBook().getId()) // Lấy bookId từ đối tượng
+                                 .setParameter("quantity", orderDetail.getQuantity()) // Lấy số lượng từ đối tượng
+                                 .setParameter("price", orderDetail.getPrice()) // Lấy giá từ đối tượng
+                                 .setParameter("createdAt", orderDetail.getCreatedAt()) // Lấy thời gian tạo
+                                 .setParameter("updatedAt", orderDetail.getUpdatedAt()); // Lấy thời gian cập nhật
+
+            // Thực thi stored procedure
+            query.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Không thể lưu chi tiết đơn hàng: " + e.getMessage(), e);
+        }
     }
+    
     public Map<String, Object> getBestSellingBook() {
         try {
             Session session = sessionFactory.getCurrentSession();

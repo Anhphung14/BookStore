@@ -2,6 +2,7 @@ package bookstore.DAO;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -63,23 +64,29 @@ public class CartDAO {
             //System.out.println("giỏ hàng: " + cart);
 
             if (cart == null) {
-                // Nếu giỏ hàng chưa tồn tại, tạo mới
-                cart = new CartsEntity();
-                String hqlUser = "FROM UsersEntity u WHERE u.id = :userId";
-                Query queryUser = session.createQuery(hqlUser);
-                queryUser.setParameter("userId", userId);
-                UsersEntity user = (UsersEntity) queryUser.uniqueResult();
-                //System.out.println("user: " + user);
+                try {
+                    // Gọi stored procedure để tạo mới giỏ hàng
+                    String storedProcedure = "EXEC CreateNewCart :userId, :status";
+                    Query query = session.createSQLQuery(storedProcedure)
+                                         .setParameter("userId", userId)
+                                         .setParameter("status", 0); // Trạng thái giỏ hàng: 0 = đang mở
 
-                if (user == null) {
-                    throw new IllegalArgumentException("User with ID " + userId + " not found!");
+                    // Lấy ID của giỏ hàng vừa được tạo
+                    List<Object> result = query.list();
+
+                    if (!result.isEmpty()) {
+                        Long cartId = Long.valueOf(result.get(0).toString());
+                        cart = (CartsEntity) session.get(CartsEntity.class, cartId); // Lấy lại đối tượng Cart từ ID
+                        System.out.println("Tạo giỏ mới thành công với ID: " + cartId);
+                    } else {
+                        throw new RuntimeException("Không thể tạo giỏ hàng mới cho userId: " + userId);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("Lỗi khi tạo giỏ hàng mới: " + e.getMessage(), e);
                 }
-
-                cart.setUser(user);
-                cart.setStatus(0); // Trạng thái giỏ hàng: 0 = đang mở
-                session.persist(cart); // Sử dụng persist để lưu giỏ hàng
-                //System.out.println("Tạo giỏ mới thành công");
             }
+
 
             // Truy vấn để kiểm tra xem sản phẩm đã có trong giỏ hàng hay chưa
             String hqlCartItem = "FROM CartItemsEntity ci WHERE ci.cart.id = :cartId AND ci.book.id = :bookId";
@@ -90,12 +97,27 @@ public class CartDAO {
             //System.out.println("cartItem: " + cartItem);
 
             if (cartItem != null) {
-                // Nếu đã có, cập nhật số lượng và giá
-                cartItem.setQuantity(cartItem.getQuantity() + quantity);
-                cartItem.setPrice(cartItem.getBook().getPrice() * cartItem.getQuantity());
-                cartItem.setUpdatedAt(new Date());
-                session.update(cartItem); // Cập nhật thông tin giỏ hàng
-                //System.out.println("Cập nhật thành công sản phẩm trong giỏ hàng");
+                try {
+                    // Gọi stored procedure để cập nhật thông tin sản phẩm trong giỏ hàng
+                    String storedProcedure = "EXEC UpdateCartItemQuantity :cartItemId, :quantity";
+                    Query query = session.createSQLQuery(storedProcedure)
+                                         .setParameter("cartItemId", cartItem.getId())
+                                         .setParameter("quantity", cartItem.getQuantity() + quantity);
+
+                    // Thực thi stored procedure
+                    List<Object> result = query.list();
+
+                    // Kiểm tra kết quả trả về
+                    if (!result.isEmpty()) {
+                        String message = result.get(0).toString();
+                        System.out.println(message); // Log kết quả trả về
+                    } else {
+                        throw new RuntimeException("Không thể cập nhật sản phẩm trong giỏ hàng.");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("Lỗi khi cập nhật sản phẩm trong giỏ hàng: " + e.getMessage(), e);
+                }
             } else {
                 // Nếu chưa có, thêm sản phẩm mới vào giỏ hàng
                 String hqlBook = "FROM BooksEntity b WHERE b.id = :bookId";
@@ -108,14 +130,26 @@ public class CartDAO {
                     throw new IllegalArgumentException("Book with ID " + bookId + " not found!");
                 }
 
-                cartItem = new CartItemsEntity();
-                cartItem.setCart(cart);
-                cartItem.setBook(book);
-                cartItem.setQuantity(quantity);
-                cartItem.setPrice(book.getPrice() * quantity);
-                cartItem.setCreatedAt(new Date());
-                cartItem.setUpdatedAt(new Date());
-                session.persist(cartItem); // Sử dụng persist để lưu sản phẩm mới vào giỏ hàng
+             // Thay thế đoạn code bằng việc gọi Stored Procedure
+//                cartItem = new CartItemsEntity();
+//                cartItem.setCart(cart);
+//                cartItem.setBook(book);
+//                cartItem.setQuantity(quantity);
+//                cartItem.setPrice(book.getPrice() * quantity);
+//                cartItem.setCreatedAt(new Date());
+//                cartItem.setUpdatedAt(new Date());
+//                session.persist(cartItem); // Sử dụng persist để lưu sản phẩm mới vào giỏ hàng
+                
+                String storedProcedure = "EXEC AddCartItem :cart_id, :book_id, :quantity, :price";
+                Query query = session.createSQLQuery(storedProcedure);
+                query.setParameter("cart_id", cart.getId());
+                query.setParameter("book_id", book.getId());
+                query.setParameter("quantity", quantity);
+                query.setParameter("price", book.getPrice() * quantity);
+
+                // Thực thi Stored Procedure
+                query.executeUpdate();
+
                 //System.out.println("Thêm sản phẩm vào giỏ hàng thành công");
             }
         } catch (Exception e) {
@@ -130,44 +164,49 @@ public class CartDAO {
             return;  // Không làm gì nếu không có sản phẩm nào được chọn
         }
 
-        // Viết câu truy vấn HQL để chỉ xóa những sản phẩm đã chọn trong giỏ hàng của user
-        String hql = "DELETE FROM CartItemsEntity ci WHERE ci.cart.id IN (SELECT od.id FROM CartsEntity od WHERE od.user.id = :userId) AND ci.id IN :selectedItemIds";
-
-
-        // Mở session và bắt đầu transaction
         Session session = sessionFactory.getCurrentSession();
-        // Không cần explicit Transaction, vì @Transactional sẽ quản lý việc này
         try {
-            // Thực hiện câu truy vấn xóa sản phẩm trong giỏ hàng theo các ID được chọn
-            Query query = session.createQuery(hql);  // Không cần phải sử dụng Query<?> nữa
-            query.setParameter("userId", userId); // Set parameter userId
-            query.setParameterList("selectedItemIds", selectedItemIds); // Set parameter selectedItemIds
-            query.executeUpdate(); // Thực hiện câu truy vấn
+            // Chuỗi ID, ví dụ: "1,2,3"
+            String selectedIds = selectedItemIds.stream()
+                                                 .map(String::valueOf)
+                                                 .collect(Collectors.joining(","));
 
-            // No need to commit, @Transactional will handle it
+            // Gọi stored procedure
+            String storedProcedure = "EXEC ClearSelectedCartItems :userId, :selectedItemIds";
+            Query query = session.createSQLQuery(storedProcedure)
+                                 .setParameter("userId", userId)
+                                 .setParameter("selectedItemIds", selectedIds);
+
+            // Thực thi stored procedure
+            query.executeUpdate();
+
         } catch (Exception e) {
-            // Nếu có lỗi, Spring @Transactional sẽ tự động rollback
-            throw e;
+            e.printStackTrace();
+            throw e; // Spring @Transactional sẽ tự động rollback nếu có lỗi
         }
     }
 
-    
     public String removeCartItem(Long cartItemId) {
         try {
-        	Session session = sessionFactory.getCurrentSession();
-            CartItemsEntity cartItem = (CartItemsEntity) session.get(CartItemsEntity.class, cartItemId);
-            if (cartItem != null) {
-                session.delete(cartItem); 
-                session.flush();
-                return "Xóa thành công!";
-            } else {
-                return "Sản phẩm không tồn tại!";
-            }
+            Session session = sessionFactory.getCurrentSession();
+
+            // Use a native query to call the stored procedure
+            String storedProcedure = "EXEC DeleteCartItem :cart_item_id";
+            Query query = session.createSQLQuery(storedProcedure);
+            query.setParameter("cart_item_id", cartItemId);
+
+            
+            List<String> result = query.list();
+
+           
+            return result.isEmpty() ? "Có lỗi khi xoá!" : result.get(0);
+
         } catch (Exception e) {
             e.printStackTrace();
             return "Có lỗi khi xoá!";
         }
     }
+
     
     //đếm số lượng sản phẩm trong giỏ hàng
     public int getCartItemCount(Long userId) {
@@ -211,48 +250,29 @@ public class CartDAO {
 	 */
    
     public void updateQuantity(Long cartItemId, int quantity) {
-        // Mở session và bắt đầu transaction
-        Session session = sessionFactory.openSession();
-        Transaction transaction = null;
-
+        Session session = sessionFactory.getCurrentSession();
         try {
-            transaction = session.beginTransaction();
+            // Gọi stored procedure
+            String storedProcedure = "EXEC UpdateCartItemQuantity :cartItemId, :quantity";
+            Query query = session.createSQLQuery(storedProcedure)
+                                 .setParameter("cartItemId", cartItemId)
+                                 .setParameter("quantity", quantity);
 
-            // Truy vấn CartItem theo cartItemId
-            CartItemsEntity cartItem = (CartItemsEntity) session.get(CartItemsEntity.class, cartItemId);
-
-            if (cartItem != null) {
-                // Cập nhật số lượng mới
-                cartItem.setQuantity(quantity);
-
-                // Cập nhật giá lại dựa trên số lượng mới
-                cartItem.setPrice(cartItem.getBook().getPrice() * quantity);
-
-                // Cập nhật thời gian chỉnh sửa
-                cartItem.setUpdatedAt(new Date());
-
-                // Cập nhật CartItem vào cơ sở dữ liệu
-                session.update(cartItem);
-                System.out.println("Cập nhật số lượng thành công!");
-
-                // Commit transaction
-                transaction.commit();
+            // Thực thi stored procedure
+            List<String> result = query.list();
+            
+            // Kiểm tra kết quả trả về
+            if (!result.isEmpty()) {
+                System.out.println(result.get(0)); // In ra thông báo từ stored procedure
             } else {
-                throw new IllegalArgumentException("CartItem không tồn tại với ID: " + cartItemId);
+                System.out.println("Không nhận được phản hồi từ stored procedure.");
             }
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             e.printStackTrace();
             throw new RuntimeException("Lỗi khi cập nhật số lượng sản phẩm: " + e.getMessage(), e);
-        } finally {
-            // Đảm bảo đóng session
-            if (session != null) {
-                session.close();
-            }
         }
     }
+
     
     public boolean saveNewCart(CartsEntity cart) {
     	Session session = sessionFactory.openSession();

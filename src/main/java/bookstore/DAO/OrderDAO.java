@@ -8,12 +8,15 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureQuery;
 import javax.transaction.Transactional;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -119,7 +122,7 @@ public class OrderDAO {
                         Integer currentStockQuantity = inventoryOfCurrentBook.getStock_quantity();
                         inventoryOfCurrentBook.setStock_quantity(currentStockQuantity + orderDetail.getQuantity());
                         System.out.println("currentStockQuantity + orderDetail.getQuantity(): " + currentStockQuantity + orderDetail.getQuantity());
-                        boolean isUpdateStockQuantity = inventoryDAO.updateInventory(inventoryOfCurrentBook);
+                        boolean isUpdateStockQuantity = inventoryDAO.updateInventoryStock(inventoryOfCurrentBook);
         	        }
                 }
                 order.setOrderStatus(orderStatus);
@@ -142,17 +145,47 @@ public class OrderDAO {
         query.setParameter("id", id);
         return (OrdersEntity) query.uniqueResult();
     }
+    
 	
-    public Long createOrder(OrdersEntity order) {
+    public Long createOrder(OrdersEntity newOrder) {
         Session session = sessionFactory.getCurrentSession();
-        
-        System.out.println(order.toString());
-        
-        session.saveOrUpdate(order); // Lưu đơn hàng hoặc cập nhật nếu đã tồn tại
-        return order.getId(); // Trả về ID của đơn hàng mới tạo
+
+        try {
+            // Tạo SQL để gọi stored procedure
+            String sql = "DECLARE @orderId BIGINT; " +
+                         "EXEC CreateNewOrder :userId, :customerName, :customerPhone, :shippingAddress, " +
+                         ":totalPrice, :paymentMethod, :paymentStatus, :orderStatus, :createdAt, :updatedAt, @orderId OUTPUT; " +
+                         "SELECT @orderId AS orderId";
+
+            // Tạo Query và thiết lập tham số
+            Query query = session.createSQLQuery(sql)
+                                 .setParameter("userId", newOrder.getUser().getId())
+                                 .setParameter("customerName", newOrder.getCustomerName())
+                                 .setParameter("customerPhone", newOrder.getCustomerPhone())
+                                 .setParameter("shippingAddress", newOrder.getShippingAddress())
+                                 .setParameter("totalPrice", newOrder.getTotalPrice())
+                                 .setParameter("paymentMethod", newOrder.getPaymentMethod())
+                                 .setParameter("paymentStatus", newOrder.getPaymentStatus())
+                                 .setParameter("orderStatus", newOrder.getOrderStatus())
+                                 .setParameter("createdAt", newOrder.getCreatedAt())
+                                 .setParameter("updatedAt", newOrder.getUpdatedAt());
+
+            // Thực thi stored procedure và lấy kết quả
+            Object result = query.uniqueResult();
+
+            // Kiểm tra kết quả trả về
+            if (result != null) {
+                return ((Number) result).longValue(); // Chuyển đổi kết quả thành Long
+            } else {
+                throw new RuntimeException("Không thể lấy ID của đơn hàng mới.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Lỗi khi tạo đơn hàng: " + e.getMessage(), e);
+        }
     }
-    
-    
+
     // Phương thức lấy đơn hàng theo ID 
     public OrdersEntity getOrderById(Long orderId) {
         // Lấy session mới từ sessionFactory
@@ -361,7 +394,7 @@ public class OrderDAO {
 	                    Integer currentStockQuantity = inventoryOfCurrentBook.getStock_quantity();
 	                    inventoryOfCurrentBook.setStock_quantity(currentStockQuantity + orderDetail.getQuantity());
 	                    System.out.println("Cập nhật tồn kho: " + currentStockQuantity + " + " + orderDetail.getQuantity());
-	                    boolean isUpdated = inventoryDAO.updateInventory(inventoryOfCurrentBook);
+	                    boolean isUpdated = inventoryDAO.updateInventoryStock(inventoryOfCurrentBook);
 	                    if (!isUpdated) {
 	                        throw new IllegalStateException("Không thể cập nhật tồn kho cho sách ID: " + orderDetail.getBook().getId());
 	                    }

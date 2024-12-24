@@ -302,13 +302,13 @@ public class PaymentController {
                 orderDetail.setUpdatedAt(new Date());
                 // Lưu chi tiết đơn hàng
                 orderDetailDAO.saveOrderDetail(orderDetail);
-                System.out.println("!!!!!!!!!!!!!!!!!!" + cartItem.getBook().getId());
+                //System.out.println("!!!!!!!!!!!!!!!!!!" + cartItem.getBook().getId());
                 InventoryEntity inventoryOfCurrentBook = inventoryDAO.getInventoryByBookId(cartItem.getBook().getId());
                
                 Integer currentStockQuantity = inventoryOfCurrentBook.getStock_quantity();
                 inventoryOfCurrentBook.setStock_quantity(currentStockQuantity - cartItem.getQuantity());
                // System.out.println("currentStockQuantity: " + (currentStockQuantity - cartItem.getQuantity() ));
-                boolean isUpdateStockQuantity = inventoryDAO.updateInventory(inventoryOfCurrentBook);
+                boolean isUpdateStockQuantity = inventoryDAO.updateInventoryStock(inventoryOfCurrentBook);
                 //System.out.println("isUpdateStockQuantity: " + isUpdateStockQuantity);
             }
 
@@ -318,7 +318,7 @@ public class PaymentController {
             // Redirect với thông báo thành công
             redirectAttributes.addFlashAttribute("alertMessage", "Thanh toán thành công!");
     		redirectAttributes.addFlashAttribute("alertType", "success");
-    		sendMailOrderSuccess(order);
+    		//sendMailOrderSuccess(order);
             return "redirect:/index.htm";
 
         } catch (Exception e) {
@@ -467,7 +467,7 @@ public class PaymentController {
                 Integer currentStockQuantity = inventoryOfCurrentBook.getStock_quantity();
                 inventoryOfCurrentBook.setStock_quantity(currentStockQuantity - cartItem.getQuantity());
                // System.out.println("currentStockQuantity: " + (currentStockQuantity - cartItem.getQuantity() ));
-                boolean isUpdateStockQuantity = inventoryDAO.updateInventory(inventoryOfCurrentBook);
+                boolean isUpdateStockQuantity = inventoryDAO.updateInventoryStock(inventoryOfCurrentBook);
                 //System.out.println("isUpdateStockQuantity: " + isUpdateStockQuantity);
             }
 

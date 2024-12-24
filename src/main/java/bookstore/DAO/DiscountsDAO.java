@@ -467,14 +467,29 @@ public class DiscountsDAO {
 	}
 
 	public boolean createOrderDiscount(Order_DiscountsEntity orderDiscount) {
-		try {
-			Session session = sessionFactory.getCurrentSession();
-			session.save(orderDiscount);
-			return true;
-		} catch (Exception e) {
-			// Spring sẽ tự động rollback nếu exception xảy ra
-			e.printStackTrace();
-			return false;
-		}
+	    Session session = sessionFactory.getCurrentSession();
+	    try {
+	        // Chuỗi SQL để gọi stored procedure
+	        String sql = "EXEC CreateOrderDiscount :orderId, :discountId";
+
+	        // Tạo Query và thiết lập tham số
+	        Query query = session.createSQLQuery(sql)
+	                             .setParameter("orderId", orderDiscount.getOrder_id().getId()) // Lấy orderId từ đối tượng
+	                             .setParameter("discountId", orderDiscount.getDiscount_id().getId()); // Lấy discountId từ đối tượng
+
+	        // Thực thi stored procedure
+	        List<Object> result = query.list();
+
+	        // Kiểm tra kết quả trả về
+	        if (!result.isEmpty() && "SUCCESS".equalsIgnoreCase(result.get(0).toString())) {
+	            return true; // Tạo thành công
+	        } else {
+	            return false; // Tạo thất bại
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false; // Lỗi trong quá trình tạo
+	    }
 	}
+
 }

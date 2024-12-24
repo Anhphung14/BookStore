@@ -72,43 +72,85 @@ public class UserDAO {
 		return false; // Trường hợp người dùng không tồn tại
 	}
 
+//	public int updateUserById(Long id, UsersEntity updatedUser) {
+//		Session session = sessionFactory.openSession();
+//		Transaction t = session.beginTransaction();
+//		int result = 0;
+//		try {
+//			String hql = "UPDATE UsersEntity "
+//					+ "SET fullname = :fullname, phone = :phone, avatar = :avatar, updated_at = :updatedAt WHERE id = :id";
+//			result = session.createQuery(hql).setParameter("fullname", updatedUser.getFullname())
+//					.setParameter("phone", updatedUser.getPhone()).setParameter("avatar", updatedUser.getAvatar())
+//					.setParameter("updatedAt", new Date()).setParameter("id", id).executeUpdate();
+//			t.commit();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			t.rollback();
+//		} finally {
+//			session.close();
+//		}
+//		return result;
+//	}
+	
 	public int updateUserById(Long id, UsersEntity updatedUser) {
-		Session session = sessionFactory.openSession();
-		Transaction t = session.beginTransaction();
-		int result = 0;
-		try {
-			String hql = "UPDATE UsersEntity "
-					+ "SET fullname = :fullname, phone = :phone, avatar = :avatar, updated_at = :updatedAt WHERE id = :id";
-			result = session.createQuery(hql).setParameter("fullname", updatedUser.getFullname())
-					.setParameter("phone", updatedUser.getPhone()).setParameter("avatar", updatedUser.getAvatar())
-					.setParameter("updatedAt", new Date()).setParameter("id", id).executeUpdate();
-			t.commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-			t.rollback();
-		} finally {
-			session.close();
-		}
-		return result;
+	    Session session = sessionFactory.openSession();
+	    Transaction t = session.beginTransaction();
+	    int result = 0;
+
+	    try {
+	        // Chuỗi SQL để gọi stored procedure
+	        String sql = "EXEC UpdateUserById :id, :fullname, :phone, :avatar, :updatedAt";
+
+	        // Tạo Query và thiết lập các tham số
+	        Query query = session.createSQLQuery(sql)
+	                             .setParameter("id", id)
+	                             .setParameter("fullname", updatedUser.getFullname())
+	                             .setParameter("phone", updatedUser.getPhone())
+	                             .setParameter("avatar", updatedUser.getAvatar())
+	                             .setParameter("updatedAt", new Date());
+
+	        // Thực thi stored procedure
+	        result = query.executeUpdate();
+	        System.out.println("result: " + result) ;
+	        t.commit();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        t.rollback();
+	    } finally {
+	        session.close();
+	    }
+
+	    return result;
 	}
 
+
 	public int updatePasswordUserById(Long id, String newPassword) {
-		Session session = sessionFactory.openSession();
-		Transaction t = session.beginTransaction();
-		int result = 0;
-		try {
-			String hql = "UPDATE UsersEntity SET password = :password, updated_at = :updatedAt WHERE id = :id";
-			result = session.createQuery(hql).setParameter("password", newPassword)
-					.setParameter("updatedAt", new Date()).setParameter("id", id).executeUpdate();
-			t.commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-			t.rollback();
-		} finally {
-			session.close();
-		}
-		return result;
+	    Session session = sessionFactory.openSession();
+	    Transaction t = session.beginTransaction();
+	    int result = 0;
+
+	    try {
+	        // Chuỗi SQL để gọi stored procedure
+	        String sql = "EXEC UpdatePasswordUserById :id, :newPassword, :updatedAt";
+
+	        // Tạo Query và thiết lập các tham số
+	        Query query = session.createSQLQuery(sql)
+	                             .setParameter("id", id)
+	                             .setParameter("newPassword", newPassword)
+	                             .setParameter("updatedAt", new Date());
+
+	        result = query.executeUpdate();
+	        System.out.println("result: " + result) ;
+	        t.commit();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        t.rollback();
+	    } finally {
+	        session.close();
+	    }
+	    return result;
 	}
+
 
 	public UsersEntity getUserByEmailPass(String email, String password) {
 		Session session = sessionFactory.getCurrentSession();

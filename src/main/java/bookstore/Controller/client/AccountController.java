@@ -130,7 +130,7 @@ public class AccountController {
 	        	InventoryEntity inventoryOfCurrentBook = inventoryDAO.getInventoryByBookId(orderDetail.getBook().getId());
                 Integer currentStockQuantity = inventoryOfCurrentBook.getStock_quantity();
                 inventoryOfCurrentBook.setStock_quantity(currentStockQuantity + orderDetail.getQuantity());
-                boolean isUpdateStockQuantity = inventoryDAO.updateInventory(inventoryOfCurrentBook);
+                boolean isUpdateStockQuantity = inventoryDAO.updateInventoryStock(inventoryOfCurrentBook);
 	        }
 	        redirectAttributes.addFlashAttribute("successMessage", "Order has been successfully canceled.");
 	    } catch (Exception e) {

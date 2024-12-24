@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -51,15 +52,23 @@ public class InventoryDAO {
 		return (InventoryEntity) query.uniqueResult();
 	}
 	
-	public InventoryEntity getInventoryByBookId (Long id) {
-		Session session = factory.getCurrentSession();
-		
-		String hql = "FROM InventoryEntity i WHERE i.book.id = :bookId";
-		Query query = session.createQuery(hql);
-		query.setParameter("bookId", id);
-		
-		return (InventoryEntity) query.uniqueResult();
+	public InventoryEntity getInventoryByBookId(Long id) {
+	    Session session = factory.getCurrentSession();
+
+	    String hql = "FROM InventoryEntity i WHERE i.book.id = :bookId";
+	    Query query = session.createQuery(hql);
+	    query.setParameter("bookId", id);
+
+	    InventoryEntity inventory = (InventoryEntity) query.uniqueResult();
+	    
+	    // Khởi tạo lazy object để tránh LazyInitializationException
+	    if (inventory != null) {
+	        Hibernate.initialize(inventory.getBook());
+	    }
+
+	    return inventory;
 	}
+
 	
 	public boolean updateQuantityByBookId(InventoryEntity inventory, Integer quantity) {
 		Session session = factory.getCurrentSession();
@@ -143,24 +152,27 @@ public class InventoryDAO {
 		return false;
 	}
 	
-	public boolean updateInventory(InventoryEntity inventory) {
-		Session session = factory.openSession();
-		Transaction t = session.beginTransaction();
-		
-		try {
-			session.update(inventory);
-			t.commit();
-			
-			return true;
-		} catch (Exception e) {
-			t.rollback();
-			e.printStackTrace();
-			
-		} finally {
-			session.close();
-		}
-		
-		return false;
+	public boolean updateInventoryStock(InventoryEntity inventory) {
+	    Session session = factory.getCurrentSession();
+	    try {
+	    	
+	        // Chuỗi SQL để gọi stored procedure
+	        String sql = "EXEC UpdateInventoryStock :bookId, :newStockQuantity";
+
+	        // Tạo Query và thiết lập tham số
+	        Query query = session.createSQLQuery(sql)
+	                             .setParameter("bookId", inventory.getBook().getId())
+	                             .setParameter("newStockQuantity", inventory.getStock_quantity());
+
+	        // Thực thi stored procedure
+	        query.executeUpdate();
+
+	        return true; // Nếu không có lỗi, trả về true
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false; // Trả về false nếu có lỗi
+	    }
 	}
+
 	
 }
