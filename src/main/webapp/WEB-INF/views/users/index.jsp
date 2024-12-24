@@ -88,22 +88,16 @@
 									<option value="">All Status</option>
 									<option value="1" ${param.enabled == '1' ? 'selected' : ''}>Active</option>
 									<option value="0" ${param.enabled == '0' ? 'selected' : ''}>Inactive</option>
-								</select>
-
-								<select name="role" class="form-select" id="roles">
+								</select> <select name="role" class="form-select" id="roles">
 									<option value="">All Roles</option>
 									<c:forEach var="role" items="${roles}">
 										<option value="${role.name}"
 											${role.name == selectedRole ? 'selected' : ''}>
 											${role.name}</option>
 									</c:forEach>
-								</select>
-
-								<input class="form-control" type="date" name="fromDate"
+								</select> <input class="form-control" type="date" name="fromDate"
 									id="fromDate" onchange="checkDates()" value="${fromDate}"
-									placeholder="From Date">
-
-								<span class="input-group-text">to</span>
+									placeholder="From Date"> <span class="input-group-text">to</span>
 
 								<input class="form-control" type="date" name="toDate"
 									id="toDate" onchange="checkDates()" value="${toDate}"
@@ -145,7 +139,7 @@
 											<tr>
 												<td class="text-end">${user.id}</td>
 												<td><a class="d-flex flex-nowrap align-items-center"
-													href="user/edit/${user.id}.htm">
+													href="user/edit/${user.uuid}.htm">
 														<div>
 															<img alt="User Avatar" src="${user.avatar}"
 																class="rounded-circle bg-white border border-3 border-white"
@@ -169,7 +163,8 @@
 
 												<td class="text-end">
 													<div class="d-flex gap-1">
-														<a class="btn btn-rounded" href="user/edit/${user.id}.htm"><i
+														<a class="btn btn-rounded"
+															href="user/edit/${user.uuid}.htm"><i
 															class="fa fa-pencil"></i></a>
 													</div>
 												</td>
@@ -213,6 +208,35 @@
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script type="text/javascript">
+		const alertMessage = "${alertMessage}";
+		const alertType = "${alertType}";
+
+		toastr.options = {
+			"closeButton" : true,
+			"debug" : false,
+			"newestOnTop" : true,
+			"progressBar" : true,
+			"positionClass" : "toast-top-right",
+			"preventDuplicates" : true,
+			"onclick" : null,
+			"showDuration" : "200",
+			"hideDuration" : "1000",
+			"timeOut" : "5000",
+			"extendedTimeOut" : "1000",
+			"showEasing" : "swing",
+			"hideEasing" : "linear",
+			"showMethod" : "fadeIn",
+			"hideMethod" : "fadeOut"
+		};
+		if (alertMessage) {
+			if (alertType === "success") {
+				toastr.success(alertMessage, "Success");
+			} else if (alertType === "error") {
+				toastr.error(alertMessage, "Error");
+			}
+		}
+	</script>
 	<script>
 		function refreshPage() {
 			window.location.href = window.location.origin

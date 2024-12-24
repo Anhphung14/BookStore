@@ -64,8 +64,9 @@
 			<form id="userForm" action="user/save.htm" method="POST">
 				<input type="hidden" id="task" name="task" value="${task}">
 
+				<!-- UUID handling -->
 				<c:if test="${task != 'new'}">
-					<input type="hidden" id="id" name="id" value="${user.id}">
+					<input type="hidden" id="uuid" name="uuid" value="${user.uuid}">
 				</c:if>
 
 				<div class="card">
@@ -114,10 +115,7 @@
 								data-coreui-search="true" data-live-search="true">
 								<c:forEach var="role" items="${roles}">
 									<option value="${role.id}"
-										${user.roles != null && user.roles.contains(role) ? 'selected' : ''}
-										${role.name == 'ROLE_ADMIN' && (isAdmin || isUser || isStaff) ? 'disabled' : ''}
-										${role.name == 'ROLE_USER' && (isAdmin || isUser || isStaff) ? 'disabled' : ''}
-										${role.name == 'ROLE_STAFF' && (isAdmin || isUser || isStaff) ? 'disabled' : ''}>
+										${user.roles != null && user.roles.contains(role) ? 'selected' : ''}>
 										${role.name}</option>
 								</c:forEach>
 							</select>

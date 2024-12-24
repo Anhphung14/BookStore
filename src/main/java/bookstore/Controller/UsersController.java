@@ -94,19 +94,16 @@ public class UsersController {
 		return "users/edit";
 	}
 
-	@RequestMapping(value = "/user/edit/{id}", method = RequestMethod.GET)
-	public String userEdit(@PathVariable("id") Long id, ModelMap model) {
-	    UsersEntity user = getUserById(id);
+	@RequestMapping(value = "/user/edit/{uuid}", method = RequestMethod.GET)
+	public String userEdit(@PathVariable("uuid") String uuid, ModelMap model) {
+	    UsersEntity user = getUserByUuid(uuid);
 
-	    // Initialize the roles collection to avoid LazyInitializationException
 	    Hibernate.initialize(user.getRoles());
 
-	    // Fetch roles for the user
 	    Session session = factory.getCurrentSession();
 	    Query query = session.createQuery("FROM RolesEntity");
 	    List<RolesEntity> roles = query.list();
 
-	    // Check if user has specific roles
 	    boolean isAdmin = user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
 	    boolean isUser = user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_USER"));
 	    boolean isStaff = user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_STAFF"));
@@ -120,97 +117,98 @@ public class UsersController {
 	    return "users/edit";
 	}
 
+
 	@RequestMapping(value = "/user/save", method = RequestMethod.POST)
 	public String saveUser(@ModelAttribute("user") UsersEntity user, @RequestParam("task") String task,
-			@RequestParam(value = "id", required = false) Long id,
-			@RequestParam(value = "roleIds", required = false) Set<Long> roleIds,
-			@RequestParam(value = "enabled", required = false) Integer enabled, RedirectAttributes redirectAttributes,
-			ModelMap model) {
-		Session session = factory.getCurrentSession();
+	        @RequestParam(value = "uuid", required = false) String uuid,
+	        @RequestParam(value = "roleIds", required = false) Set<Long> roleIds,
+	        @RequestParam(value = "enabled", required = false) Integer enabled, RedirectAttributes redirectAttributes,
+	        ModelMap model) {
+	    Session session = factory.getCurrentSession();
 
-		try {
-			// Chuẩn hóa tên người dùng để kiểm tra trùng lặp
-			String normalizedFullname = user.getFullname().trim().toLowerCase();
+	    try {
+	        // Chuẩn hóa tên người dùng để kiểm tra trùng lặp
+	        String normalizedFullname = user.getFullname().trim().toLowerCase();
 
-			// Kiểm tra tên người dùng trùng lặp
-			String hql = "FROM UsersEntity WHERE LOWER(TRIM(fullname)) = :fullname AND id != :userId";
-			Query query = session.createQuery(hql);
-			query.setParameter("fullname", normalizedFullname);
-			query.setParameter("userId", id != null ? id : -1L);
-			List<UsersEntity> existingUsers = query.list();
+	        // Kiểm tra tên người dùng trùng lặp
+	        String hql = "FROM UsersEntity WHERE LOWER(TRIM(fullname)) = :fullname AND uuid != :userUuid";
+	        Query query = session.createQuery(hql);
+	        query.setParameter("fullname", normalizedFullname);
+	        query.setParameter("userUuid", uuid != null ? uuid : "");
+	        List<UsersEntity> existingUsers = query.list();
 
-			if (!existingUsers.isEmpty()) {
-				model.addAttribute("message", "This fullname is already registered.");
-				return "users/edit";
-			}
+	        if (!existingUsers.isEmpty()) {
+	            model.addAttribute("message", "This fullname is already registered.");
+	            return "users/edit";
+	        }
 
-			if ("new".equals(task)) {
-				if (getUserByEmail(user.getEmail()) != null) {
-					model.addAttribute("message", "This email is already registered.");
-					return "users/edit";
-				}
+	        if ("new".equals(task)) {
+	            if (getUserByEmail(user.getEmail()) != null) {
+	                model.addAttribute("message", "This email is already registered.");
+	                return "users/edit";
+	            }
 
-				user.setAvatar(
-						"https://res.cloudinary.com/dsqhfz3xt/image/upload/v1733041850/images/avatars/vo-anh-phungg/drmxjyaok8d8b8ofgiwl.png");
-				String hashedPassword = PasswordUtil.hashPassword("bookstore");
-				user.setPassword(hashedPassword);
+	            user.setAvatar("https://res.cloudinary.com/dsqhfz3xt/image/upload/v1733041850/images/avatars/vo-anh-phungg/drmxjyaok8d8b8ofgiwl.png");
+	            String hashedPassword = PasswordUtil.hashPassword("bookstore");
+	            user.setPassword(hashedPassword);
 
-				Timestamp currentDate = Timestamp.valueOf(LocalDateTime.now());
-				user.setCreated_at(currentDate);
-				user.setUpdated_at(currentDate);
-				user.setEnabled(1);
+	            Timestamp currentDate = Timestamp.valueOf(LocalDateTime.now());
+	            user.setCreated_at(currentDate);
+	            user.setUpdated_at(currentDate);
+	            user.setEnabled(1);
 
-				session.save(user);
+	            // Lưu người dùng mới
+	            session.save(user);
 
-			} else if ("edit".equals(task)) {
-				UsersEntity existingUser = getUserById(id);
-				if (existingUser == null) {
-					model.addAttribute("message", "User not found.");
-					return "redirect:/admin1337/users.htm";
-				}
+	        } else if ("edit".equals(task)) {
+	            UsersEntity existingUser = getUserByUuid(uuid);  // Sử dụng UUID để tìm người dùng
+	            if (existingUser == null) {
+	                model.addAttribute("message", "User not found.");
+	                return "redirect:/admin1337/users.htm";
+	            }
 
-				existingUser.setFullname(user.getFullname());
-				existingUser.setEmail(user.getEmail());
-				existingUser.setPhone(user.getPhone());
-				existingUser.setGender(user.getGender());
-				existingUser.setEnabled(enabled);
+	            existingUser.setFullname(user.getFullname());
+	            existingUser.setEmail(user.getEmail());
+	            existingUser.setPhone(user.getPhone());
+	            existingUser.setGender(user.getGender());
+	            existingUser.setEnabled(enabled);
 
-				Timestamp currentDate = Timestamp.valueOf(LocalDateTime.now());
-				existingUser.setUpdated_at(currentDate);
+	            Timestamp currentDate = Timestamp.valueOf(LocalDateTime.now());
+	            existingUser.setUpdated_at(currentDate);
 
-				UsersEntity emailCheck = getUserByEmail(user.getEmail());
-				if (emailCheck != null && !emailCheck.getId().equals(existingUser.getId())) {
-					model.addAttribute("message", "This email is already registered.");
-					return "users/edit";
-				}
+	            UsersEntity emailCheck = getUserByEmail(user.getEmail());
+	            if (emailCheck != null && !emailCheck.getUuid().equals(existingUser.getUuid())) {  // So sánh UUID
+	                model.addAttribute("message", "This email is already registered.");
+	                return "users/edit";
+	            }
 
-				if (roleIds != null) {
-					Set<RolesEntity> roles = new HashSet<>();
-					for (Long roleId : roleIds) {
-						RolesEntity role = (RolesEntity) session.get(RolesEntity.class, roleId);
-						if (role != null) {
-							roles.add(role);
-						}
-					}
-					existingUser.setRoles(roles);
-				} else {
-					existingUser.setRoles(new HashSet<>()); // Xóa hết roles nếu không chọn
-				}
+	            if (roleIds != null) {
+	                Set<RolesEntity> roles = new HashSet<>();
+	                for (Long roleId : roleIds) {
+	                    RolesEntity role = (RolesEntity) session.get(RolesEntity.class, roleId);
+	                    if (role != null) {
+	                        roles.add(role);
+	                    }
+	                }
+	                existingUser.setRoles(roles);
+	            } else {
+	                existingUser.setRoles(new HashSet<>());  // Xóa hết roles nếu không chọn
+	            }
 
-				session.merge(existingUser);
-			}
+	            session.merge(existingUser);
+	        }
 
-			redirectAttributes.addFlashAttribute("alertMessage", "User saved successfully!");
-			redirectAttributes.addFlashAttribute("alertType", "success");
+	        redirectAttributes.addFlashAttribute("alertMessage", "User saved successfully!");
+	        redirectAttributes.addFlashAttribute("alertType", "success");
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			redirectAttributes.addFlashAttribute("alertMessage", "Error occurred while saving the User.");
-			redirectAttributes.addFlashAttribute("alertType", "error");
-			return "redirect:/admin1337/users.htm";
-		}
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        redirectAttributes.addFlashAttribute("alertMessage", "Error occurred while saving the User.");
+	        redirectAttributes.addFlashAttribute("alertType", "error");
+	        return "redirect:/admin1337/users.htm";
+	    }
 
-		return "redirect:/admin1337/users.htm";
+	    return "redirect:/admin1337/users.htm";
 	}
 
 	public UsersEntity getUserByEmail(String email) {
@@ -244,4 +242,12 @@ public class UsersController {
 		Session session = factory.getCurrentSession();
 		return (UsersEntity) session.get(UsersEntity.class, id);
 	}
+	
+	public UsersEntity getUserByUuid(String uuid) {
+	    Session session = factory.getCurrentSession();
+	    Query query = session.createQuery("FROM UsersEntity WHERE uuid = :uuid");
+	    query.setParameter("uuid", uuid);
+	    return (UsersEntity) query.uniqueResult();
+	}
+
 }

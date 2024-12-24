@@ -27,9 +27,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Table(name = "Users")
 public class UsersEntity {
-    @Id
+   
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+	
+    @Column(name = "uuid", columnDefinition = "nvarchar(255)")
+    private String uuid;
 
     @Column(name = "avatar", columnDefinition = "nvarchar")
     private String avatar;
@@ -111,6 +115,14 @@ public class UsersEntity {
         this.id = id;
     }
 
+    public String getUuid() {
+    	return uuid;
+    }
+    
+    public void setUuid(String uuid) {
+    	this.uuid = uuid;
+    }
+    
     public String getAvatar() {
         return avatar;
     }
