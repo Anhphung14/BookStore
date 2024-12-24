@@ -44,7 +44,7 @@
             <div class="author-card pb-3">
                 <div class="author-card-cover" style="background-image: url(https://bootdey.com/img/Content/flores-amarillas-wallpaper.jpeg);"></div>
                 <div class="author-card-profile">
-                    <div class="author-card-avatar"><img src="${user.avatar}" alt="${user.fullname}">
+                    <div class="author-card-avatar"><img src="${user.getAvatar()}" alt="${user.getFullname()}">
                     </div>
                     <div class="author-card-details">
                         <h5 class="author-card-name text-lg">${user.fullname}</h5><span class="author-card-position">Tham gia ${user.created_at}</span>
