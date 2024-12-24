@@ -346,8 +346,11 @@ public class OrderDAO {
 	        Query query = session.createSQLQuery(sql)
 	                             .setParameter("orderId", orderId);
 
-	        // Thực thi stored procedure và lấy kết quả
-	        isUpdate = (Integer) query.uniqueResult();
+	        // Thực thi stored procedure
+	        query.executeUpdate(); // Không sử dụng uniqueResult()
+
+	        // Set isUpdate = 1 nếu thực thi thành công
+	        isUpdate = 1;
 
 	        t.commit();
 	    } catch (Exception e) {
@@ -359,6 +362,7 @@ public class OrderDAO {
 
 	    return isUpdate;
 	}
+
 	
 	public List<OrdersEntity> autoCancelUnconfirmedOrders() {
 	    List<OrdersEntity> listOrdersEntities = listOrders(); // Lấy danh sách tất cả đơn hàng
