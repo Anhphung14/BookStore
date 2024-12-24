@@ -48,6 +48,7 @@ import bookstore.DAO.UserDAO;
 import bookstore.Entity.*;
 import bookstore.Service.MailService;
 import bookstore.Service.VNPAYService;
+import bookstore.Utils.EscapeHtmlUtil;
 import bookstore.config.VNPAYConfig;
 
 @Controller
@@ -162,7 +163,11 @@ public class PaymentController {
     		@RequestParam("street") String street,
 	          @RequestParam("paymentMethod") String paymentMethod,
 	          @RequestParam("selectedItems") List<Long> selectedItemIds, 
-	          @RequestParam(value = "discountCode", defaultValue = "") String discountCode,  HttpSession session,  RedirectAttributes redirectAttributes) {  	
+	          @RequestParam(value = "discountCode", defaultValue = "") String discountCoded,  HttpSession session,  RedirectAttributes redirectAttributes) {  
+    	name = EscapeHtmlUtil.encodeHtml(name);
+    	phone = EscapeHtmlUtil.encodeHtml(phone);
+    	street = EscapeHtmlUtil.encodeHtml(street);
+    	String discountCode = EscapeHtmlUtil.encodeHtml(discountCoded);
     	StringBuilder shippingAddressBuilder = new StringBuilder();
 		shippingAddressBuilder.append(street).append(", ")
 		                      .append(ward).append(", ")
@@ -335,9 +340,12 @@ public class PaymentController {
     		@RequestParam("street") String street,
 	          //@RequestParam("paymentMethod") String paymentMethod,
 	          @RequestParam("selectedItems") List<Long> selectedItemIds, 
-	          @RequestParam(value = "discountCode", defaultValue = "") String discountCode, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes){
+	          @RequestParam(value = "discountCode", defaultValue = "") String discountCoded, HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes){
     		
-    		
+    	name = EscapeHtmlUtil.encodeHtml(name);
+    	phone = EscapeHtmlUtil.encodeHtml(phone);
+    	street = EscapeHtmlUtil.encodeHtml(street);
+    	String discountCode = EscapeHtmlUtil.encodeHtml(discountCoded);
     	StringBuilder shippingAddressBuilder = new StringBuilder();
 		shippingAddressBuilder.append(street).append(", ")
 		                      .append(ward).append(", ")

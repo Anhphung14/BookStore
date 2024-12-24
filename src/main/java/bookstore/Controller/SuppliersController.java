@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import bookstore.Service.SuppliersService;
+import bookstore.Utils.EscapeHtmlUtil;
 import bookstore.Entity.SuppliersEntity;
 
 @Controller
@@ -104,7 +105,11 @@ public class SuppliersController {
 	                            RedirectAttributes redirectAttributes) {
 	    Session session = factory.getCurrentSession();
 	    boolean isSuccess = false; // Variable to track success
-
+	    supplier.setAddress(EscapeHtmlUtil.encodeHtml(supplier.getAddress()));
+	    supplier.setContactPerson(EscapeHtmlUtil.encodeHtml(supplier.getContactPerson()));
+	    supplier.setEmail(EscapeHtmlUtil.encodeHtml(supplier.getEmail()));
+	    supplier.setName(EscapeHtmlUtil.encodeHtml(supplier.getName()));
+	    supplier.setPhone(EscapeHtmlUtil.encodeHtml(supplier.getPhone()));
 	    try {
 	        // Check if the supplier name already exists in the database
 	        SuppliersEntity existingSupplierByName = getSupplierByName(supplier.getName());

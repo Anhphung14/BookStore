@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import bookstore.Entity.*;
 import bookstore.Service.MailService;
+import bookstore.Utils.EscapeHtmlUtil;
 import bookstore.DAO.DiscountsDAO;
 import bookstore.DAO.OrderDAO;
 import bookstore.DAO.ShippingAddressDAO;
@@ -152,6 +153,7 @@ public class OrdersController {
 			@RequestParam("ward") String ward, @RequestParam("street") String street,
 			RedirectAttributes redirectAttributes) {
 		//System.out.println("total: " + totalPrice);
+		street = EscapeHtmlUtil.encodeHtml(street);
 		StringBuilder shippingAddressBuilder = new StringBuilder();
 		shippingAddressBuilder.append(street).append(", ")
 		                      .append(ward).append(", ")

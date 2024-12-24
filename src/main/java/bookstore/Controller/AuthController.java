@@ -60,6 +60,7 @@ import bookstore.Models.auth.GooglePojo;
 import bookstore.Service.CustomUserDetailsService;
 import bookstore.Service.MailService;
 import bookstore.Service.OTPService;
+import bookstore.Utils.EscapeHtmlUtil;
 import bookstore.Utils.GithubUtils;
 import bookstore.Utils.GoogleUtils;
 import bookstore.Utils.PasswordUtil;
@@ -326,7 +327,7 @@ public class AuthController {
 				model.addAttribute("alertType", "error");
 				return "redirect:signup.htm";
 			}
-
+			user.setEmail(EscapeHtmlUtil.encodeHtml(user.getEmail()));
 			  if (uuid == null || uuid.isEmpty()) {
 			        uuid = UUID.randomUUID().toString();
 			    }
