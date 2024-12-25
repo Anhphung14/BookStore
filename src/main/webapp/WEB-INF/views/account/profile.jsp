@@ -131,7 +131,7 @@
 									style="display: none;">
 									<ul class="no-bullet">
 										<li id="minLength"><i class="fas fa-times text-danger"></i>
-											Minimum 8 characters</li>
+											Minimum 12 characters</li>
 										<li id="uppercase"><i class="fas fa-times text-danger"></i>
 											At least one uppercase letter</li>
 										<li id="lowercase"><i class="fas fa-times text-danger"></i>
@@ -183,8 +183,8 @@
 		function validatePassword(password) {
 			const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-			document.getElementById('minLength').innerHTML = password.length >= 8 ? '<i class="fas fa-check text-success"></i> Minimum 8 characters'
-					: '<i class="fas fa-times text-danger"></i> Minimum 8 characters';
+			document.getElementById('minLength').innerHTML = password.length >= 12 ? '<i class="fas fa-check text-success"></i> Minimum 12 characters'
+					: '<i class="fas fa-times text-danger"></i> Minimum 12 characters';
 			document.getElementById('uppercase').innerHTML = /[A-Z]/
 					.test(password) ? '<i class="fas fa-check text-success"></i> At least one uppercase letter'
 					: '<i class="fas fa-times text-danger"></i> At least one uppercase letter';
