@@ -130,8 +130,7 @@ public class AccountController {
 	        for(OrdersDetailEntity orderDetail : order.getOrderDetails()) {
 	        	InventoryEntity inventoryOfCurrentBook = inventoryDAO.getInventoryByBookId(orderDetail.getBook().getId());
                 Integer currentStockQuantity = inventoryOfCurrentBook.getStock_quantity();
-                inventoryOfCurrentBook.setStock_quantity(currentStockQuantity + orderDetail.getQuantity());
-                boolean isUpdateStockQuantity = inventoryDAO.updateInventoryStock(inventoryOfCurrentBook);
+                boolean isUpdateStockQuantity = inventoryDAO.updateInventoryStock2(inventoryOfCurrentBook, currentStockQuantity + orderDetail.getQuantity());
 	        }
 	        redirectAttributes.addFlashAttribute("alertMessage", "Đơn hàng đã hủy thành công!");
 	        redirectAttributes.addFlashAttribute("alertType", "success");
@@ -200,8 +199,8 @@ public class AccountController {
 			redirectAttributes.addFlashAttribute("errorUpdate", "Vui lòng sửa các lỗi sau đây !");
 			return "redirect:/account/profile_settings.htm";
 		}
-		
-	    user.setFullname(fullname.trim());
+		String fullnameSafe = EscapeHtmlUtil.encodeHtml(fullname.trim());
+	    user.setFullname(fullnameSafe);
 	    user.setPhone(phone.trim());
 	    if (!avatar.isEmpty()) {
 	    	String avatarPath = uploadService.uploadByCloudinary(avatar, "images/avatar/" + uploadService.toSlug(fullname));

@@ -185,7 +185,8 @@ public class ProductsController {
 
 		if (!booksService.handleBookErrors(model, bookEntity)) {
 			bookEntity.setAuthor(EscapeHtmlUtil.encodeHtml(bookEntity.getAuthor()));
-			
+			bookEntity.setThumbnail(EscapeHtmlUtil.encodeHtml(bookEntity.getThumbnail()));
+			bookEntity.setImages(EscapeHtmlUtil.encodeHtml(bookEntity.getImages()));
 			bookEntity.setLanguage(EscapeHtmlUtil.encodeHtml(bookEntity.getLanguage()));
 			bookEntity.setTitle(EscapeHtmlUtil.encodeHtml(bookEntity.getTitle()));
 			if (booksService.checkUpdateQuantity(model, bookGetById, bookEntity)) {
@@ -263,10 +264,13 @@ public class ProductsController {
 					break;
 				}
 			}
+			
 			bookEntity.setAuthor(EscapeHtmlUtil.encodeHtml(bookEntity.getAuthor()));
-
+			bookEntity.setThumbnail(EscapeHtmlUtil.encodeHtml(bookEntity.getThumbnail()));
+			bookEntity.setImages(EscapeHtmlUtil.encodeHtml(bookEntity.getImages()));
 			bookEntity.setLanguage(EscapeHtmlUtil.encodeHtml(bookEntity.getLanguage()));
 			bookEntity.setTitle(EscapeHtmlUtil.encodeHtml(bookEntity.getTitle()));
+			
 			if (listExistBooks.size() == 0) {
 				InventoryEntity inventory = new InventoryEntity(bookEntity, bookEntity.getQuantity(), new Date(), new Date());
 				
