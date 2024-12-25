@@ -104,7 +104,7 @@ public class SuppliersController {
 		    
 	    Long id = Long.parseLong(idd);
 		SuppliersEntity supplier = getSupplierById(id);
-		if(supplier != null) {
+		if(supplier == null) {
 			return "redirect:/admin1337/suppliers";
 		}
 		model.addAttribute("supplier", supplier);
