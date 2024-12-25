@@ -107,7 +107,7 @@
 						width="120px" alt="Page Icon">
 				</div>
 			</div>
-			<form id="productForm" action="inventory/edit.htm" method="POST">
+			<form id="productForm" action="inventory/edit" method="POST">
 				<input type="hidden" id="task" name="task" value="${task}">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				<input type="hidden" id="hehe" name="hehe" value="123123">
@@ -135,7 +135,7 @@
 
 				<div class="mt-3">
 					<button class="btn btn-primary btn-save" type="submit">Save</button>
-					<a href="<c:url value='/admin1337/inventories.htm' />"
+					<a href="<c:url value='/admin1337/inventories' />"
 						class="btn btn-light btn-cancel">Cancel</a>
 				</div>
 			</form>
@@ -160,7 +160,7 @@
 		        confirmButtonText: "OK"
 		    }).then((result) => {
 		        if (result.isConfirmed && alertType === "success") {
-		            window.location.href = '${pageContext.servletContext.contextPath}/inventories.htm';
+		            window.location.href = '${pageContext.servletContext.contextPath}/inventories';
 		        }
 		    });
 		}

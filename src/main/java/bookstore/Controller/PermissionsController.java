@@ -115,7 +115,7 @@ public class PermissionsController {
     }
     
     @PreAuthorize("hasAuthority('UPDATE_PERMISSION')")
-    @RequestMapping("/permission/edit/{id}.htm")
+    @RequestMapping("/permission/edit/{id}")
     public String editPermission(@PathVariable("id") Long id, ModelMap model) {
     	RolesEntity role = rolesService.getRoleById(id);
     	
@@ -156,7 +156,7 @@ public class PermissionsController {
     		
     		redirectAttributes.addFlashAttribute("alertMessage", "Successfully updated Permission!");
 			redirectAttributes.addFlashAttribute("alertType", "success");
-			return "redirect:/admin1337/permissions.htm"; 
+			return "redirect:/admin1337/permissions"; 
     	}
     	
     	model.addAttribute("alertMessage", "An error occurred while updating the Permission");

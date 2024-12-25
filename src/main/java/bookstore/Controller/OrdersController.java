@@ -126,7 +126,7 @@ public class OrdersController {
 			redirectAttributes.addFlashAttribute("alertType", "error");
 		}
 		
-		return "redirect:/admin1337/orders.htm";
+		return "redirect:/admin1337/orders";
 	}
 	
 	@PreAuthorize("hasAuthority('UPDATE_ORDER')")
@@ -189,7 +189,7 @@ public class OrdersController {
 		}
 		
 		
-		return "redirect:/admin1337/orders.htm";
+		return "redirect:/admin1337/orders";
 	}
 	
 	@PreAuthorize("hasAuthority('UPDATE_ORDER')")
@@ -247,7 +247,7 @@ public class OrdersController {
 
 	    redirectAttributes.addFlashAttribute("alertMessage", "Order items updated successfully.");
         redirectAttributes.addFlashAttribute("alertType", "success");
-	    return "redirect:/admin1337/orders.htm";
+	    return "redirect:/admin1337/orders";
 	}
 
 

@@ -26,7 +26,7 @@ if (alertMessage) {
         confirmButtonText: "OK"
     }).then((result) => {
         if (result.isConfirmed && alertType === "success") {
-            window.location.href = '${pageContext.servletContext.contextPath}/signin.htm';
+            window.location.href = '${pageContext.servletContext.contextPath}/signin';
         } else if (result.dismiss === Swal.DismissReason.cancel) {
             // Thực hiện yêu cầu POST khi nhấn nút "Resend link"
             Swal.fire({
@@ -37,7 +37,7 @@ if (alertMessage) {
 //                 confirmButtonText: 'OK'
             });
 
-            fetch('resend-link.htm', {
+            fetch('resend-link', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -57,7 +57,7 @@ if (alertMessage) {
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // Chuyển hướng sau khi nhấn "OK"
-                        window.location.href = '${pageContext.servletContext.contextPath}/signin.htm';
+                        window.location.href = '${pageContext.servletContext.contextPath}/signin';
                     }
                 });
             }).catch(error => {

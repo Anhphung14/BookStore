@@ -81,11 +81,11 @@ public class CartController {
             cartDAO.addToCart(userId, bookId, quantity);
             redirectAttributes.addFlashAttribute("alertMessage", "Sản phẩm đã được thêm vào giỏ hàng!");
     		redirectAttributes.addFlashAttribute("alertType", "success");
-            return "redirect:/index.htm"; // Quay lại trang chủ
+            return "redirect:/index"; // Quay lại trang chủ
         } catch (Exception e) {
         	redirectAttributes.addFlashAttribute("alertMessage", "Không thể thêm sản phẩm vào giỏ hàng. Có lỗi xảy ra!");
     		redirectAttributes.addFlashAttribute("alertType", "error");
-            return "redirect:/index.htm"; // Quay lại trang chủ
+            return "redirect:/index"; // Quay lại trang chủ
         }
     }*/
     
@@ -125,19 +125,19 @@ public class CartController {
             if(isDeleted.equals("Xóa thành công!")) {
             	redirectAttributes.addFlashAttribute("alertMessage", "Sản phẩm đã được xóa khỏi giỏ hàng!");
         		redirectAttributes.addFlashAttribute("alertType", "success");
-                return "redirect:/cart/view.htm";
+                return "redirect:/cart/view";
             }else if(isDeleted.equals("Sản phẩm không tồn tại!")) {
             	redirectAttributes.addFlashAttribute("alertMessage", "Sản phẩm không tồn tại!");
         		redirectAttributes.addFlashAttribute("alertType", "error");
-                return "redirect:/cart/view.htm";
+                return "redirect:/cart/view";
             }else {
             	redirectAttributes.addFlashAttribute("alertMessage", "Có lỗi xảy ra!");
         		redirectAttributes.addFlashAttribute("alertType", "error");
-                return "redirect:/cart/view.htm";
+                return "redirect:/cart/view";
             }
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Không thể xóa sản phẩm khỏi giỏ hàng. Vui lòng thử lại!");
-            return "redirect:/cart/view.htm";
+            return "redirect:/cart/view";
         }
         
     }
@@ -155,11 +155,11 @@ public class CartController {
 		// Sau khi cập nhật, bạn có thể quay lại trang giỏ hàng hoặc trang khác
 		redirectAttributes.addFlashAttribute("alertMessage", "Số lượng sản phẩm đã được cập nhật thành công!");
 		redirectAttributes.addFlashAttribute("alertType", "success");
-		return "redirect:/cart/view.htm";  // Điều hướng đến trang giỏ hàng sau khi cập nhật
+		return "redirect:/cart/view";  // Điều hướng đến trang giỏ hàng sau khi cập nhật
 		} catch (Exception e) {
 			redirectAttributes.addFlashAttribute("alertMessage", "Lỗi khi cập nhật số lượng sản phẩm!");
 			redirectAttributes.addFlashAttribute("alertType", "error");
-			return "redirect:/cart/view.htm";  // Điều hướng đến trang giỏ hàng nếu có lỗi
+			return "redirect:/cart/view";  // Điều hướng đến trang giỏ hàng nếu có lỗi
 		}
 	}
 }

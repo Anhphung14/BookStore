@@ -66,7 +66,7 @@ public class InventoriesController {
 		if(inventory.getStock_quantity() < 0 || inventory.getStock_quantity() > 1000) {
 			redirectAttributes.addFlashAttribute("alertMessage", "Stock quantity must be between 0 and 1000");
 			redirectAttributes.addFlashAttribute("alertType", "error");
-			return "redirect:/admin1337/inventories.htm";
+			return "redirect:/admin1337/inventories";
 		}
 		InventoryEntity inventoryGetById = inventoryService.getInventoryById(inventory.getId());
 		
@@ -80,7 +80,7 @@ public class InventoriesController {
 					redirectAttributes.addFlashAttribute("alertMessage", "Successfully updated Inventory Id: " + inventory.getId());
 					redirectAttributes.addFlashAttribute("alertType", "success");
 
-					return "redirect:/admin1337/inventories.htm";
+					return "redirect:/admin1337/inventories";
 				}
 			}
 		}
@@ -101,7 +101,7 @@ public class InventoriesController {
 		if (totalQuantity + addQuantity > 1000) { 
 			redirectAttributes.addFlashAttribute("alertMessage", "Add quantity exceeds the allowed total quantity"); 
 			redirectAttributes.addFlashAttribute("alertType", "error"); 
-			return "redirect:/admin1337/inventories.htm";
+			return "redirect:/admin1337/inventories";
 		}
 		
 		InventoryEntity inventory = inventoryService.getInventoryById(inventoryId);
@@ -127,6 +127,6 @@ public class InventoriesController {
 		}
 		
 		
-		return "redirect:/admin1337/inventories.htm"; 
+		return "redirect:/admin1337/inventories"; 
 	}
 }

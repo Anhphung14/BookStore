@@ -246,7 +246,7 @@ canvas {
 														<td><fmt:formatNumber value="${order.totalPrice}"
 																type="currency" currencySymbol="đ" /></td>
 														<td><a class="btn btn-rounded"
-															href="${pageContext.servletContext.contextPath}/admin1337/orders.htm">
+															href="${pageContext.servletContext.contextPath}/admin1337/orders">
 																<i class="fas fa-clock text-warning"></i> Chờ xác nhận
 														</a></td>
 													</tr>

@@ -52,7 +52,7 @@
 						</div>
 					</c:when>
 					<c:otherwise>
-						<form action="/bookstore/payment/checkout.htm" method="POST"
+						<form action="/bookstore/payment/checkout" method="POST"
 							style="width: 1170px">
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 							<table class="cart-table table table-hover table-bordered">
@@ -104,11 +104,11 @@
 											<td>
 												<%--  <button type="button" class="btn btn-warning btn-sm" onclick="updateQuantityLink(${item.id}, this.previousElementSibling.value)">Update</button> --%>
 												<a
-												href="/bookstore/cart/view.htm?book_id=${item.book.id}&quantity=${item.quantity}"
+												href="/bookstore/cart/view?book_id=${item.book.id}&quantity=${item.quantity}"
 												class="btn btn-warning" id="update-link-${item.id}"
 												style="font-size: 11px;">Cập nhật</a>
 												<button type="button" class="btn btn-danger btn-sm"
-													onclick="location.href='/bookstore/cart/remove.htm?cartItemId=${item.id}'">Xoá</button>
+													onclick="location.href='/bookstore/cart/remove?cartItemId=${item.id}'">Xoá</button>
 											</td>
 										</tr>
 									</c:forEach>
@@ -125,7 +125,7 @@
 								<div class="col-md-4 d-flex justify-content-center" style="left: 130px">
 									<button type="button" class="btn btn-light btn-lg w-100"
 										style="padding: 7px 31px; font-size: 16px; border-radius: 13px; background-color: #6C63FF; color: #404040; border: none; transition: background-color 0.3s ease;"
-										onclick="window.location.href='/bookstore/index.htm'">
+										onclick="window.location.href='/bookstore/index'">
 										Trang chủ</button>
 								</div>
 
@@ -222,7 +222,7 @@
         //cập nhật số lượng sp trong giỏ hàng
         function updateQuantityLink(cartItemId, newQuantity) {
             var updateLink = document.getElementById('update-link-' + cartItemId);
-            var newHref = '/bookstore/cart/update_quantity.htm?cartItemId=' + cartItemId + '&quantity=' + newQuantity;
+            var newHref = '/bookstore/cart/update_quantity?cartItemId=' + cartItemId + '&quantity=' + newQuantity;
             updateLink.href = newHref;
         }
         

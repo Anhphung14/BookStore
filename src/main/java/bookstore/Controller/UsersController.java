@@ -198,7 +198,7 @@ public class UsersController {
 
 				if (existingUser == null) {
 					model.addAttribute("message", "User not found.");
-					return "redirect:/admin1337/users.htm";
+					return "redirect:/admin1337/users";
 				}
 
 				existingUser.setUuid(uuid); // Đảm bảo UUID được gán vào người dùng
@@ -243,10 +243,10 @@ public class UsersController {
 			e.printStackTrace();
 			redirectAttributes.addFlashAttribute("alertMessage", "Error occurred while saving the User.");
 			redirectAttributes.addFlashAttribute("alertType", "error");
-			return "redirect:/admin1337/users.htm";
+			return "redirect:/admin1337/users";
 		}
 
-		return "redirect:/admin1337/users.htm";
+		return "redirect:/admin1337/users";
 	}
 
 	public UsersEntity getUserByEmail(String email) {
@@ -257,14 +257,14 @@ public class UsersController {
 		return (UsersEntity) query.uniqueResult();
 	}
 
-	@RequestMapping(value = "/user/delete/{id}.htm", method = RequestMethod.GET)
+	@RequestMapping(value = "/user/delete/{id}", method = RequestMethod.GET)
 	public String deleteUser(@PathVariable("id") Long id) {
 		Session session = factory.getCurrentSession();
 		UsersEntity user = (UsersEntity) session.get(UsersEntity.class, id);
 		if (user != null) {
 			session.delete(user);
 		}
-		return "redirect:/admin1337/users.htm";
+		return "redirect:/admin1337/users";
 	}
 
 	@SuppressWarnings("unchecked")

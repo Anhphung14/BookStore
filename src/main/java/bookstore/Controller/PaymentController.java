@@ -100,7 +100,7 @@ public class PaymentController {
     	if (selectedItemIds == null || selectedItemIds.isEmpty()) {
     		redirectAttributes.addFlashAttribute("alertMessage", "Bạn chưa chọn sản phẩm nào để thanh toán.");
     		redirectAttributes.addFlashAttribute("alertType", "error");
-            return "redirect:/cart/view.htm";
+            return "redirect:/cart/view";
         }
     	
     	
@@ -176,7 +176,7 @@ public class PaymentController {
     			street.length() > 255 || paymentMethod.length() > 255 || discountCode.length() > 50) { 
     		redirectAttributes.addFlashAttribute("alertMessage", "One or more fields exceed the allowed length."); 
     		redirectAttributes.addFlashAttribute("alertType", "error"); 
-    		return "redirect:/cart/view.htm"; 
+    		return "redirect:/cart/view"; 
     	} 
     	
     	
@@ -196,14 +196,14 @@ public class PaymentController {
             if (paymentMethod == null || paymentMethod.isEmpty()) {
             	redirectAttributes.addFlashAttribute("alertMessage", "Vui lòng chọn phương thức thanh toán.");
         		redirectAttributes.addFlashAttribute("alertType", "error");
-        		return "redirect:/cart/view.htm";
+        		return "redirect:/cart/view";
             }
 
             // Kiểm tra xem có sản phẩm nào được chọn hay không
             if (selectedItemIds == null || selectedItemIds.isEmpty()) {
                 redirectAttributes.addFlashAttribute("alertMessage", "Vui lòng chọn sản phẩm để thanh toán.");
         		redirectAttributes.addFlashAttribute("alertType", "error");
-        		return "redirect:/cart/view.htm";
+        		return "redirect:/cart/view";
             }
 
             // Lấy thông tin người dùng
@@ -231,7 +231,7 @@ public class PaymentController {
             if(discount == null && !discountCode.isEmpty()) {
             	redirectAttributes.addFlashAttribute("alertMessage", "Mã giảm giá không hợp lệ!");
         		redirectAttributes.addFlashAttribute("alertType", "error");
-                return "redirect:/cart/view.htm";
+                return "redirect:/cart/view";
             }
             
             if(discount != null) {
@@ -261,7 +261,7 @@ public class PaymentController {
                 if (!isDiscountValid) {
                     redirectAttributes.addFlashAttribute("alertMessage", "Mã giảm giá không hợp lệ!");
                     redirectAttributes.addFlashAttribute("alertType", "error");
-                    return "redirect:/cart/view.htm";
+                    return "redirect:/cart/view";
                 }
             }
             
@@ -305,7 +305,7 @@ public class PaymentController {
                 if(!isCreateOrderDiscount) {
                 	redirectAttributes.addFlashAttribute("alertMessage", "Có lỗi với mã giảm giá");
             		redirectAttributes.addFlashAttribute("alertType", "error");
-            		return "redirect:/cart/view.htm";
+            		return "redirect:/cart/view";
                 }
             }
             
@@ -342,13 +342,13 @@ public class PaymentController {
             redirectAttributes.addFlashAttribute("alertMessage", "Thanh toán thành công!");
     		redirectAttributes.addFlashAttribute("alertType", "success");
     		sendMailOrderSuccess(order);
-            return "redirect:/index.htm";
+            return "redirect:/index";
 
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("alertMessage", "Thanh toán thất bại! Vui lòng thử lại.");
     		redirectAttributes.addFlashAttribute("alertType", "error");
-            return "redirect:/index.htm";
+            return "redirect:/index";
         }
     }
 
@@ -380,7 +380,7 @@ public class PaymentController {
             if (selectedItemIds == null || selectedItemIds.isEmpty()) {
                 redirectAttributes.addFlashAttribute("alertMessage", "Vui lòng chọn sản phẩm để thanh toán.");
         		redirectAttributes.addFlashAttribute("alertType", "error");
-        		return "redirect:/cart/view.htm";
+        		return "redirect:/cart/view";
             }
 
             // Lấy thông tin người dùng
@@ -407,7 +407,7 @@ public class PaymentController {
             if(discount == null && !discountCode.isEmpty()) {
             	redirectAttributes.addFlashAttribute("alertMessage", "Mã giảm giá không hợp lệ!");
         		redirectAttributes.addFlashAttribute("alertType", "error");
-                return "redirect:/cart/view.htm";
+                return "redirect:/cart/view";
             }
             
             List<DiscountsEntity> listDiscountsAvailable = new ArrayList<DiscountsEntity>();
@@ -426,7 +426,7 @@ public class PaymentController {
                 if (!isDiscountValid) {
                     redirectAttributes.addFlashAttribute("alertMessage", "Mã giảm giá không hợp lệ!");
                     redirectAttributes.addFlashAttribute("alertType", "error");
-                    return "redirect:/cart/view.htm";
+                    return "redirect:/cart/view";
                 }
             }
             
@@ -469,7 +469,7 @@ public class PaymentController {
                 if(!isCreateOrderDiscount) {
                 	redirectAttributes.addFlashAttribute("alertMessage", "Có lỗi với mã giảm giá");
             		redirectAttributes.addFlashAttribute("alertType", "error");
-            		return "redirect:/cart/view.htm";
+            		return "redirect:/cart/view";
                 }
             }
             
@@ -508,7 +508,7 @@ public class PaymentController {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("alertMessage", "Thanh toán thất bại! Vui lòng thử lại.");
     		redirectAttributes.addFlashAttribute("alertType", "error");
-            return "redirect:/index.htm";
+            return "redirect:/index";
         }
 	
 		
@@ -537,19 +537,19 @@ public class PaymentController {
                 redirectAttributes.addFlashAttribute("alertMessage", "Thanh toán thành công!");
                 redirectAttributes.addFlashAttribute("alertType", "success");
                 sendMailOrderSuccess(order);
-                return "redirect:/index.htm";
+                return "redirect:/index";
             } else{
                 // Xóa đơn hàng nếu thanh toán thất bại
                 orderDAO.deleteOrder(orderId);
                 redirectAttributes.addFlashAttribute("alertMessage", "Đã huỷ thanh toán!");
                 redirectAttributes.addFlashAttribute("alertType", "error");
-                return "redirect:/cart/view.htm";
+                return "redirect:/cart/view";
             }
     	} catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("alertMessage", "Đã xảy ra lỗi trong quá trình xử lý đơn hàng.");
             redirectAttributes.addFlashAttribute("alertType", "error");
-            return "redirect:/cart/view.htm";
+            return "redirect:/cart/view";
         }
     }
     

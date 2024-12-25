@@ -111,7 +111,7 @@ public class AuthController {
 		String code = request.getParameter("code");
 
 		if (code == null || code.isEmpty()) {
-			return "redirect:/index.htm?error=true";
+			return "redirect:/index?error=true";
 		}
 
 		String accessToken = googleUtils.getToken(code);
@@ -151,7 +151,7 @@ public class AuthController {
 				boolean isSavedCart = cartDAO.saveNewCart(cart);
 				if (!isSavedCart) {
 					System.out.println("CO LOI ROI!!!!!");
-					return "redirect:/signin.htm?error=true";
+					return "redirect:/signin?error=true";
 				} else {
 					user.setCart(cart);
 				}
@@ -182,7 +182,7 @@ public class AuthController {
 
 		session.setAttribute("user", user);
 
-		return "redirect:/index.htm";
+		return "redirect:/index";
 	}
 
 	@RequestMapping("/login-github")
@@ -193,7 +193,7 @@ public class AuthController {
 		System.out.println(code);
 
 		if (code == null || code.isEmpty()) {
-			return "redirect:/index.htm?error=true";
+			return "redirect:/index?error=true";
 		}
 
 		String accessToken = githubUtils.getToken(code);
@@ -238,7 +238,7 @@ public class AuthController {
 				boolean isSavedCart = cartDAO.saveNewCart(cart);
 				if (!isSavedCart) {
 					System.out.println("CO LOI ROI!!!!!");
-					return "redirect:/signin.htm?error=true";
+					return "redirect:/signin?error=true";
 				} else {
 					user.setCart(cart);
 				}
@@ -252,7 +252,7 @@ public class AuthController {
 
 		session.setAttribute("user", user);
 
-		return "redirect:/index.htm";
+		return "redirect:/index";
 	}
 
 	@Transactional
@@ -267,18 +267,18 @@ public class AuthController {
 	    // Kiểm tra captcha
 	    if (recaptchaResponse == null || !verifyCaptcha(recaptchaResponse)) {
 	        System.out.println("Captcha verification failed.");
-	        return "redirect:signin.htm?error=recaptcha";
+	        return "redirect:signin?error=recaptcha";
 	    }
 
 	    if (email.isEmpty() || password.isEmpty()) {
-	        return "redirect:signin.htm?error=emptyFields";
+	        return "redirect:signin?error=emptyFields";
 	    }
 
 	    UsersEntity user = userDAO.getUserByEmailPass(email, password);
 
 	    if (user == null) {
 	        System.out.println("Invalid email or password.");
-	        return "redirect:signin.htm?error=loginFailed";
+	        return "redirect:signin?error=loginFailed";
 	    }
 	    
 	    if (uuid == null || uuid.isEmpty()) {
@@ -289,7 +289,7 @@ public class AuthController {
 
 	    session.setAttribute("user", user);
 	    System.out.println("Login successful for user: " + user.getEmail());
-	    return "redirect:home.htm";
+	    return "redirect:home";
 	}
 
 
@@ -301,7 +301,7 @@ public class AuthController {
 
 		System.out.println("Da logout!!!");
 
-		return "redirect:signin.htm";
+		return "redirect:signin";
 	}
 
 	// REGISTER
@@ -325,7 +325,7 @@ public class AuthController {
 			if (getUserByEmail(user.getEmail()) != null) {
 				model.addAttribute("alertMessage", "Email đã tồn tại vui lòng nhập email khác!");
 				model.addAttribute("alertType", "error");
-				return "redirect:signup.htm";
+				return "redirect:signup";
 			}
 			user.setEmail(EscapeHtmlUtil.encodeHtml(user.getEmail()));
 			user.setFullname(EscapeHtmlUtil.encodeHtml(user.getFullname()));
@@ -359,7 +359,7 @@ public class AuthController {
 
 			String emailContent = "<html><body>" + "<h5>Hello " + user.getEmail() + ",</h5>"
 					+ "<p>Click the following link to confirm and activate your account:</p>"
-					+ "<h5 style=\"color: #4CAF50;\">" + "http://localhost:8080/bookstore/verify-email.htm?code="
+					+ "<h5 style=\"color: #4CAF50;\">" + "http://localhost:8080/bookstore/verify-email?code="
 					+ otpCode + "</h5>"
 //	                + "<p>Bạn có 1 phút để xác thực tài khoản 😎</p>"
 					+ "<p>Regards,<br>BookStore</p>"
@@ -387,7 +387,7 @@ public class AuthController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("alertType", "error");
-			return "redirect:signup.htm";
+			return "redirect:signup";
 		}
 		return "auth/signup";
 	}
@@ -448,7 +448,7 @@ public class AuthController {
 		String emailContent = "<html><body>"
                 + "<h5>Hello " + email + ",</h5>"
                 + "<p>Click the following link to confirm and activate your account:</p>"
-                + "<h5 style=\"color: #4CAF50;\">" + "http://127.0.0.1:8080/bookstore/verify-email.htm?code="+ otpCode + "</h5>"
+                + "<h5 style=\"color: #4CAF50;\">" + "http://127.0.0.1:8080/bookstore/verify-email?code="+ otpCode + "</h5>"
                 + "<p>Bạn có 1 phút để xác thực tài khoản 😎</p>"
                 + "<p>Regards,<br>BookStore</p>"
                 + "<footer style=\"font-size: 0.8em; color: #777;\">This is an automated email. Please do not reply.</footer>"

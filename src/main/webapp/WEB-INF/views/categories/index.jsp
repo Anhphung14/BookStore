@@ -85,7 +85,7 @@
 								</button>
 							</div>
 							<a class="btn btn-primary text-nowrap btn-add"
-								href="category/new.htm">
+								href="category/new">
 								<i class="fa fa-plus me-2"></i>Add
 							</a>
 						</div>
@@ -144,12 +144,12 @@
 											<td class="text-end">
 												<div class="d-flex gap-1">
 													<a class="btn btn-rounded"
-														href="category/edit/${category.id}.htm">
+														href="category/edit/${category.id}">
 														<i class="fa fa-pencil"></i>
 													</a> 
 												<%-- 	<a class="btn btn-rounded btn-delete"
 														href="javascript:void(0);"
-														data-url="category/delete/${category.id}.htm">
+														data-url="category/delete/${category.id}">
 														<i class="fa fa-trash-alt"></i>
 													</a> --%>
 												</div>
@@ -164,7 +164,7 @@
 										<!-- Liên kết đến trang trước -->
 										<li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
 											<a class="page-link"
-											href="categories.htm?page=${currentPage > 1 ? currentPage - 1 : 1}&size=${size}"
+											href="categories?page=${currentPage > 1 ? currentPage - 1 : 1}&size=${size}"
 											aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 										</a>
 										</li>
@@ -173,7 +173,7 @@
 										<c:forEach var="i" begin="1" end="${totalPages}">
 											<li class="page-item ${i == currentPage ? 'active' : ''}">
 												<a class="page-link"
-												href="categories.htm?page=${i}&size=${size}">${i}</a>
+												href="categories?page=${i}&size=${size}">${i}</a>
 											</li>
 										</c:forEach>
 
@@ -181,7 +181,7 @@
 										<li
 											class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
 											<a class="page-link"
-											href="categories.htm?page=${currentPage < totalPages ? currentPage + 1 : totalPages}&size=${size}"
+											href="categories?page=${currentPage < totalPages ? currentPage + 1 : totalPages}&size=${size}"
 											aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 										</a>
 										</li>

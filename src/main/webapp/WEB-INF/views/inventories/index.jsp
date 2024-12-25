@@ -90,7 +90,7 @@
 								</button>
 							</div>
 <!-- 							<a class="btn btn-primary text-nowrap btn-add" -->
-<%-- 								href="${pageContext.request.contextPath}/product/new.htm"> <i --%>
+<%-- 								href="${pageContext.request.contextPath}/product/new"> <i --%>
 <!-- 								class="fa fa-plus me-2"></i>Add -->
 <!-- 							</a> -->
 
@@ -148,7 +148,7 @@
 											<td class="text-center align-middle"><fmt:formatDate value='${inventory.updated_at}' pattern='dd-MM-yyyy HH:mm' /></td>
 											<td class="text-center">
 												<div class="d-flex justify-content-center align-items-center gap-1">
-													<a class="btn btn-rounded" href="inventory/edit/${inventory.id}.htm"><i class="fa fa-pencil"></i></a>
+													<a class="btn btn-rounded" href="inventory/edit/${inventory.id}"><i class="fa fa-pencil"></i></a>
 <%-- 													<a class="btn btn-rounded"><i class="fa ${user.isActive ? 'fa-eye-slash' : 'fa-eye'}"></i></a> --%>
 <!-- 													<a class="btn btn-rounded"><i class="fa fa-eye-slash"></i></a> -->
 <!-- 													<a class="btn btn-rounded"><i class="fa fa-search"></i></a> -->
@@ -181,7 +181,7 @@
 			            </div>
 			            <div class="modal-body">
 			                <!-- Form used to send POST request -->
-			                <form id="deleteForm" method="POST" action="product/delete.htm">
+			                <form id="deleteForm" method="POST" action="product/delete">
 			                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			                    <p>Are you sure you want to delete this book?</p>
 			                    <p><strong>Book Id:</strong> <span id="bookIdToDelete"></span></p>
@@ -208,7 +208,7 @@
                 <h5 class="modal-title" id="addQuantityModalLabel">Add Quantity to Product</h5>
                 <button type="button" id="closeModalButton" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="addQuantityForm" method="POST" action="inventory/addQuantity.htm">
+            <form id="addQuantityForm" method="POST" action="inventory/addQuantity">
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <div class="modal-body">
                     <!-- Book ID (Read-Only) -->
@@ -269,7 +269,7 @@
 		        confirmButtonText: "OK"
 		    }).then((result) => {
 		        if (result.isConfirmed && alertType === "success") {
-		            window.location.href = 'inventories.htm';
+		            window.location.href = 'inventories';
 		        }
 		    });
 		}

@@ -39,7 +39,7 @@
 		<div class="container-fluid d-flex flex-column"
 			style="padding-left: 10px; padding-right: 10px;">
 			<form id="frm-admin" name="adminForm"
-				action="profile/save.htm"
+				action="profile/save"
 				method="POST" enctype="multipart/form-data">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				<div class="bg-light p-3 mt-3">

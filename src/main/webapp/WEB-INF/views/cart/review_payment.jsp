@@ -35,7 +35,7 @@
         <section class="tg-sectionspace tg-haslayout" style="margin-bottom: 24px;">
 		    <div class="container">
 		        <h1 class="text-center mb-4">Review Payment</h1>
-		        <form id="paymentForm" method="POST" action="${pageContext.servletContext.contextPath}/payment/pay.htm">
+		        <form id="paymentForm" method="POST" action="${pageContext.servletContext.contextPath}/payment/pay">
 		            <div class="row g-4">
 		                <!-- Thông Tin Nhận Hàng -->
 		                <div class="info-section col-lg-6">
@@ -128,7 +128,7 @@
 		                                <li class="list-group-item"><strong>Email:</strong> ${payer.email}</li>
 		                            </ul>
 		                            <input type="hidden" id="paymentMethod" name="paymentMethod" value="PayPal">
-		                            <a href="/bookstore/cart/view.htm" class="btn btn-secondary">Quay về giỏ hàng</a>
+		                            <a href="/bookstore/cart/view" class="btn btn-secondary">Quay về giỏ hàng</a>
 		                            <input name="totalPrice" type="hidden" value="${totalPrice}">
 		                            <button type="submit" class="btn btn-primary" onclick="submitPayment()">Thanh toán</button>
 		                        </div>

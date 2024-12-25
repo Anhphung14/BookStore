@@ -118,31 +118,31 @@ public class DiscountsController {
 		if (code.length() > 50 || discountType.length() > 50 || applyTo.length() > 50 || status.length() > 50) { 
 			redirectAttributes.addFlashAttribute("alertMessage", "One or more fields exceed the allowed length."); 
 			redirectAttributes.addFlashAttribute("alertType", "error"); 
-			return "redirect:/admin1337/discounts.htm"; 
+			return "redirect:/admin1337/discounts"; 
 		} 
 		
 		if ("percentage".equalsIgnoreCase(discountType) && (discountValue < 0 || discountValue > 100)) { 
 			redirectAttributes.addFlashAttribute("alertMessage", "Percentage discount value must be between 0 and 100."); 
 			redirectAttributes.addFlashAttribute("alertType", "error"); 
-			return "redirect:/admin1337/discounts.htm";
+			return "redirect:/admin1337/discounts";
 		}
 		
 		if (discountValue < 0 || discountValue >= 10000000.00) { 
 			redirectAttributes.addFlashAttribute("alertMessage", "Discount value must be between 0 and 10,000,000.00."); 
 			redirectAttributes.addFlashAttribute("alertType", "error"); 
-			return "redirect:/admin1337/discounts.htm"; 
+			return "redirect:/admin1337/discounts"; 
 		} 
 		
 		if ((minOrderValue < 0 || minOrderValue >= 10000000.00)) { 
 			redirectAttributes.addFlashAttribute("alertMessage", "Minimum order value must be between 0 and 10,000,000.00."); 
 			redirectAttributes.addFlashAttribute("alertType", "error"); 
-			return "redirect:/admin1337/discounts.htm";
+			return "redirect:/admin1337/discounts";
 		}
 		
 		if (maxUses < 0 || maxUses > 1000) { 
 		redirectAttributes.addFlashAttribute("alertMessage", "Max uses must be between 0 and 1000."); 
 		redirectAttributes.addFlashAttribute("alertType", "error"); 
-		return "redirect:/admin1337/discounts.htm"; 
+		return "redirect:/admin1337/discounts"; 
 		} 
 	    DiscountsEntity newDiscount = new DiscountsEntity();
 	    newDiscount.setCode(code);
@@ -164,16 +164,16 @@ public class DiscountsController {
 	        if ("success".equals(result)) {
 	            redirectAttributes.addFlashAttribute("alertMessage", "Successfully added a new Discount!");
 	            redirectAttributes.addFlashAttribute("alertType", "success");
-	            return "redirect:/admin1337/discounts.htm";
+	            return "redirect:/admin1337/discounts";
 	        } else {
 	            redirectAttributes.addFlashAttribute("alertMessage", result); // Trả về lỗi từ DAO
 	            redirectAttributes.addFlashAttribute("alertType", "error");
-	            return "redirect:/admin1337/discounts.htm";
+	            return "redirect:/admin1337/discounts";
 	        }
 	    } else {
 	        redirectAttributes.addFlashAttribute("alertMessage", "Code discount is exist!");
 	        redirectAttributes.addFlashAttribute("alertType", "error");
-	        return "redirect:/admin1337/discounts.htm";
+	        return "redirect:/admin1337/discounts";
 	    }
 	}
 
@@ -219,31 +219,31 @@ public class DiscountsController {
 		if (code.length() > 50 || discountType.length() > 50 || applyTo.length() > 50 || status.length() > 50) { 
 			redirectAttributes.addFlashAttribute("alertMessage", "One or more fields exceed the allowed length."); 
 			redirectAttributes.addFlashAttribute("alertType", "error"); 
-			return "redirect:/admin1337/discounts.htm"; 
+			return "redirect:/admin1337/discounts"; 
 		} 
 		
 		if ("percentage".equalsIgnoreCase(discountType) && (discountValue < 0 || discountValue > 100)) { 
 			redirectAttributes.addFlashAttribute("alertMessage", "Percentage discount value must be between 0 and 100."); 
 			redirectAttributes.addFlashAttribute("alertType", "error"); 
-			return "redirect:/admin1337/discounts.htm";
+			return "redirect:/admin1337/discounts";
 		}
 		
 		if (discountValue < 0 || discountValue >= 10000000.00) { 
 			redirectAttributes.addFlashAttribute("alertMessage", "Discount value must be between 0 and 10,000,000.00."); 
 			redirectAttributes.addFlashAttribute("alertType", "error"); 
-			return "redirect:/admin1337/discounts.htm"; 
+			return "redirect:/admin1337/discounts"; 
 		} 
 		
 		if ((minOrderValue < 0 || minOrderValue >= 10000000.00)) { 
 			redirectAttributes.addFlashAttribute("alertMessage", "Minimum order value must be between 0 and 10,000,000.00."); 
 			redirectAttributes.addFlashAttribute("alertType", "error"); 
-			return "redirect:/admin1337/discounts.htm";
+			return "redirect:/admin1337/discounts";
 		}
 		
 		if (maxUses < 0 || maxUses > 1000) { 
 		redirectAttributes.addFlashAttribute("alertMessage", "Max uses must be between 0 and 1000."); 
 		redirectAttributes.addFlashAttribute("alertType", "error"); 
-		return "redirect:/admin1337/discounts.htm"; 
+		return "redirect:/admin1337/discounts"; 
 		} 
 		
 	    // Tìm kiếm discount theo ID
@@ -251,7 +251,7 @@ public class DiscountsController {
 	    if (existingDiscount == null) {
 	        // Nếu không tìm thấy discount, chuyển hướng và thông báo lỗi
 	        redirectAttributes.addFlashAttribute("error", "Discount not found!");
-	        return "redirect:/admin1337/discounts.htm";
+	        return "redirect:/admin1337/discounts";
 	    }
 
 
@@ -274,7 +274,7 @@ public class DiscountsController {
 	    // Thêm thông báo thành công và chuyển hướng đến trang danh sách giảm giá
 	    redirectAttributes.addFlashAttribute("alertMessage", "Discount updated successfully!");
 	    redirectAttributes.addFlashAttribute("alertType", "success");
-	    return "redirect:/admin1337/discounts.htm";
+	    return "redirect:/admin1337/discounts";
 	}
 
 	@RequestMapping(value = "/discount/delete", method = RequestMethod.POST)
@@ -335,7 +335,7 @@ public class DiscountsController {
 	        redirectAttributes.addFlashAttribute("alertMessage", "Discount is not expired or does not exist!");
 	        redirectAttributes.addFlashAttribute("alertType", "error");
 	    }
-	    return "redirect:/admin1337/discounts.htm"; // Điều hướng về trang danh sách giảm giá
+	    return "redirect:/admin1337/discounts"; // Điều hướng về trang danh sách giảm giá
 	}
 
 

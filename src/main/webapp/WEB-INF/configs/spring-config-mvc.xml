@@ -25,10 +25,9 @@
 	<!-- Cấu hình package chứa các controller -->
 	<context:component-scan base-package="bookstore" />
 
-	<mvc:resources mapping="/images/**" location="/images/"></mvc:resources>
+	<mvc:resources mapping="/resources/images/**" location="/resources/images/" />
 	<mvc:resources mapping="/resources/**" location="/resources/assets/css/" />
 	<mvc:resources mapping="/resources/**" location="/resources/assets/js/" />
-	<mvc:resources mapping="/resources/**" location="/resources/assets/images/" />
-
+<!--	<mvc:resources mapping="/images/**" location="/images/"></mvc:resources>-->
 
 </beans>

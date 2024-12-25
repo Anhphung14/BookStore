@@ -29,7 +29,7 @@ public class CategoriesController {
 	@Autowired
     private BooksDAO booksDAO;
     
-    @RequestMapping("/{slug}/{slugSub}.htm")
+    @RequestMapping("/{slug}/{slugSub}")
     public String getSubCategoryPage(@PathVariable("slug") String slug, @PathVariable("slugSub") String slugSub,  @RequestParam(value = "page", defaultValue = "1") int page, 
     		@RequestParam(value = "pageSize", defaultValue = "16") int pageSize, @RequestParam(value = "sortBy", defaultValue = "newest", required = false) String sortBy,
     		ModelMap model) {
@@ -76,7 +76,7 @@ public class CategoriesController {
         return "client/Categories/SubCategoryBooks";
     }
     
-    @RequestMapping("{idCategory}.htm")
+    @RequestMapping("{idCategory}")
     public String getCategoryPage(@PathVariable("idCategory") Long idCategory,  @RequestParam(value = "page", defaultValue = "1") int page, 
     		@RequestParam(value = "pageSize", defaultValue = "16") int pageSize, @RequestParam(value = "sortBy", defaultValue = "newest", required = false) String sortBy, 
     		ModelMap model) {

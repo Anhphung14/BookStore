@@ -197,19 +197,19 @@ public class ProductsController {
 			if ( bookEntity.getTitle().length() > 255 || bookEntity.getAuthor().length() > 100 || bookEntity.getLanguage().length() > 50) { 
 				redirectAttributes.addFlashAttribute("alertMessage", "One or more fields exceed the allowed length."); 
 				redirectAttributes.addFlashAttribute("alertType", "warning"); 
-				return "redirect:/admin1337/products.htm"; 
+				return "redirect:/admin1337/products"; 
 			}
 			
 			if (bookEntity.getPrice() < 0 || bookEntity.getPrice() > 10000000.00) { 
 				redirectAttributes.addFlashAttribute("alertMessage", "Price must be between 0 and 10,000,000.00"); 
 				redirectAttributes.addFlashAttribute("alertType", "warning"); 
-				return "redirect:/admin1337/products.htm"; 
+				return "redirect:/admin1337/products"; 
 			}
 			
 			if(bookEntity.getQuantity() < 0 || bookEntity.getQuantity() > 1000) {
 				redirectAttributes.addFlashAttribute("alertMessage", "Quantity must be less than 1000"); 
 				redirectAttributes.addFlashAttribute("alertType", "warning"); 
-				return "redirect:/admin1337/products.htm"; 
+				return "redirect:/admin1337/products"; 
 			}
 			if (booksService.checkUpdateQuantity(model, bookGetById, bookEntity)) {
 				boolean result = booksService.updateBook(bookEntity);
@@ -218,7 +218,7 @@ public class ProductsController {
 					redirectAttributes.addFlashAttribute("alertMessage", "Successfully updated BookID: " + bookEntity.getId());
 					redirectAttributes.addFlashAttribute("alertType", "success");
 	
-					return "redirect:/admin1337/products.htm"; 
+					return "redirect:/admin1337/products"; 
 				}
 			}
 		}
@@ -296,19 +296,19 @@ public class ProductsController {
 			if ( bookEntity.getTitle().length() > 255 || bookEntity.getAuthor().length() > 100 || bookEntity.getLanguage().length() > 50) { 
 				redirectAttributes.addFlashAttribute("alertMessage", "One or more fields exceed the allowed length."); 
 				redirectAttributes.addFlashAttribute("alertType", "warning"); 
-				return "redirect:/admin1337/products.htm"; 
+				return "redirect:/admin1337/products"; 
 			}
 			
 			if (bookEntity.getPrice() < 0 || bookEntity.getPrice() > 10000000.00) { 
 				redirectAttributes.addFlashAttribute("alertMessage", "Price must be between 0 and 10,000,000.00"); 
 				redirectAttributes.addFlashAttribute("alertType", "warning"); 
-				return "redirect:/admin1337/products.htm"; 
+				return "redirect:/admin1337/products"; 
 			}
 			
 			if(bookEntity.getQuantity() < 0 || bookEntity.getQuantity() > 1000) {
 				redirectAttributes.addFlashAttribute("alertMessage", "Quantity must be less than 1000"); 
 				redirectAttributes.addFlashAttribute("alertType", "warning"); 
-				return "redirect:/admin1337/products.htm"; 
+				return "redirect:/admin1337/products"; 
 			}
 			if (listExistBooks.size() == 0) {
 				InventoryEntity inventory = new InventoryEntity(bookEntity, bookEntity.getQuantity(), new Date(), new Date());
@@ -320,7 +320,7 @@ public class ProductsController {
 					redirectAttributes.addFlashAttribute("alertMessage", "Successfully added a new book!");
 					redirectAttributes.addFlashAttribute("alertType", "success");
 					
-					return "redirect:/admin1337/products.htm";
+					return "redirect:/admin1337/products";
 				}				
 			} else {
 				BooksEntity book = listExistBooks.get(0);
@@ -342,7 +342,7 @@ public class ProductsController {
 					redirectAttributes.addFlashAttribute("alertMessage", "This book already exists, proceeding to update the quantity.");
 					redirectAttributes.addFlashAttribute("alertType", "warning");
 					
-					return "redirect:/admin1337/products.htm";
+					return "redirect:/admin1337/products";
 				}				
 			}
 			
@@ -370,7 +370,7 @@ public class ProductsController {
             model.addAttribute("alertType", "error");
         }
         
-        return "redirect:/admin1337/products.htm";
+        return "redirect:/admin1337/products";
     }
 	
 	@PreAuthorize("hasAuthority('UPDATE_PRODUCT')")
@@ -386,7 +386,7 @@ public class ProductsController {
 	        redirectAttributes.addFlashAttribute("alertType", "error");
 		}
 		
-		return "redirect:/admin1337/products.htm";
+		return "redirect:/admin1337/products";
 	}
 	
 	

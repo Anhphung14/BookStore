@@ -17,16 +17,16 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
         // Kiểm tra nếu người dùng đã đăng nhập và có thông tin trong SecurityContext
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             String role = authentication.getAuthorities().toString(); // Lấy vai trò của người dùng
-            // Nếu người dùng có vai trò USER, chuyển hướng về trang index.htm
+            // Nếu người dùng có vai trò USER, chuyển hướng về trang index
             if (role.contains("ROLE_USER")) {
-                response.sendRedirect("/bookstore/index.htm");
+                response.sendRedirect("/bookstore/index");
             } else {
-                // Nếu không phải USER (ví dụ ADMIN), chuyển hướng về signin.htm hoặc trang khác tùy thích
-                response.sendRedirect("/bookstore/signin.htm");
+                // Nếu không phải USER (ví dụ ADMIN), chuyển hướng về signin hoặc trang khác tùy thích
+                response.sendRedirect("/bookstore/signin");
             }
         } else {
-            // Nếu không có người dùng (đăng xuất chưa có session), chuyển về signin.htm
-            response.sendRedirect("/bookstore/signin.htm");
+            // Nếu không có người dùng (đăng xuất chưa có session), chuyển về signin
+            response.sendRedirect("/bookstore/signin");
         }
     }
 }

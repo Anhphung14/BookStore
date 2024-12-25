@@ -68,7 +68,7 @@
 					</div>
 				</div>
 			</div>
-			<form id="frm-admin" name="adminForm" action="orders.htm" method="GET">
+			<form id="frm-admin" name="adminForm" action="orders" method="GET">
 				<!-- Tìm kiếm theo tên khách hàng -->
 				<div class="card mx-3">
 					<div class="card-body">
@@ -241,7 +241,7 @@
 											
 											<td class="text-center" style="width: 10%">
 												<div class="d-flex justify-content-center align-items-center gap-1">
-													<a class="btn btn-rounded" href="order/edit/${order.id}.htm"><i class="fa fa-pencil"></i></a>
+													<a class="btn btn-rounded" href="order/edit/${order.id}"><i class="fa fa-pencil"></i></a>
 													<a class="btn btn-rounded"
 													 data-createdAt="<fmt:formatDate value='${order.createdAt}' pattern='dd-MM-yyyy HH:mm' />"
 													 data-fullname="${order.customerName}"
@@ -283,7 +283,7 @@
 				</div>
 			</form>
 			
-			<form id="orderUpdateForm" action="orders/updateOrderStatus.htm" method="POST" style="display: none;">
+			<form id="orderUpdateForm" action="orders/updateOrderStatus" method="POST" style="display: none;">
 			    <input type="hidden" name="orderId" id="orderId" />
 			    <input type="hidden" name="orderStatus" id="orderStatus" />
 			    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>

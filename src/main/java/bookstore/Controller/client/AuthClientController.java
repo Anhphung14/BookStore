@@ -56,16 +56,16 @@ public class AuthClientController {
 			HttpSession session) {
 
 		if (email.isEmpty() || password.isEmpty()) {
-			return "redirect:signin.htm";
+			return "redirect:signin";
 		}
 		
 		UsersEntity user = this.authenticateUser(email, password);
 
 		if (user == null) {
-			return "redirect:signin.htm";
+			return "redirect:signin";
 		} else {
 			session.setAttribute("user", user);
-			return "redirect:/index.htm";
+			return "redirect:/index";
 		}
 	}
 
@@ -104,7 +104,7 @@ public class AuthClientController {
 	 * ",</h5>" +
 	 * "<p>Click the following link to confirm and activate your account:</p>" +
 	 * "<h5 style=\"color: #4CAF50;\">" +
-	 * "http://127.0.0.1:8080/bookstore/client/verify-email.htm?code="+ otpCode +
+	 * "http://127.0.0.1:8080/bookstore/client/verify-email?code="+ otpCode +
 	 * "</h5>" + "<p>Bạn có 1 phút để xác thực tài khoản 😎</p>" +
 	 * "<p>Regards,<br>BookStore</p>" +
 	 * "<footer style=\"font-size: 0.8em; color: #777;\">This is an automated email. Please do not reply.</footer>"
@@ -126,7 +126,7 @@ public class AuthClientController {
 	 * "Đăng ký thành công, bạn có thể đăng nhập ngay bây giờ!");
 	 * model.addAttribute("alertType", "success"); } catch (Exception e) {
 	 * e.printStackTrace(); model.addAttribute("alertType", "error"); return
-	 * "redirect:client/signup.htm"; } return "client/auth/signup"; }
+	 * "redirect:client/signup"; } return "client/auth/signup"; }
 	 * 
 	 * @RequestMapping("/client/verify-email") public String verify_email(ModelMap
 	 * model, @RequestParam(value = "code", required = false) String code) { OTPDTO
@@ -167,7 +167,7 @@ public class AuthClientController {
 	 * String emailContent = "<html><body>" + "<h5>Hello " + email + ",</h5>" +
 	 * "<p>Click the following link to confirm and activate your account:</p>" +
 	 * "<h5 style=\"color: #4CAF50;\">" +
-	 * "http://127.0.0.1:8080/bookstore/client/verify-email.htm?code="+ otpCode +
+	 * "http://127.0.0.1:8080/bookstore/client/verify-email?code="+ otpCode +
 	 * "</h5>" + "<p>Bạn có 1 phút để xác thực tài khoản 😎</p>" +
 	 * "<p>Regards,<br>BookStore</p>" +
 	 * "<footer style=\"font-size: 0.8em; color: #777;\">This is an automated email. Please do not reply.</footer>"

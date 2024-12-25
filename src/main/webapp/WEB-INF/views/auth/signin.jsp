@@ -89,7 +89,7 @@
 											<div
 												class="form-check mb-3 d-flex justify-content-end align-items-end">
 												<a class="text-primary fw-medium ms-1"
-													href="forgotpassword.htm">Quên mật khẩu</a>
+													href="forgotpassword">Quên mật khẩu</a>
 											</div>
 											<div class="d-flex flex-column align-items-center">
 												<div class="g-recaptcha mb-3"
@@ -108,7 +108,7 @@
 											<div class="d-flex justify-content-center mx-3 my-1 py-2">
 												<div class="mx-2">
 													<a
-														href="https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&redirect_uri=http://localhost:8080/bookstore/login-google.htm&response_type=code&client_id=644611492314-nck1gv86bbn2a8jc97ivgf3viuaged1p.apps.googleusercontent.com&approval_prompt=force"
+														href="https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&redirect_uri=http://localhost:8080/bookstore/login-google&response_type=code&client_id=644611492314-nck1gv86bbn2a8jc97ivgf3viuaged1p.apps.googleusercontent.com&approval_prompt=force"
 														target="_blank" class="google-btn"> <img
 														src="resources/images/search.png" alt="Google Login"
 														style="max-width: 30px;">
@@ -129,7 +129,7 @@
 													<p class="text-muted">
 														Bạn chưa có tài khoản? <a
 															class="text-primary fw-medium ms-1"
-															href="${pageContext.request.contextPath}/signup.htm">Đăng
+															href="${pageContext.request.contextPath}/signup">Đăng
 															ký</a>
 													</p>
 												</div>

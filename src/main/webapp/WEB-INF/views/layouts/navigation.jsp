@@ -62,45 +62,45 @@
 	<div class="nav flex-column">
 		<ul class="side-menu" style="list-style-type: none; padding-left: 0;">
 			<li class="menu-title"><span>HOME</span></li>
-			<li class="side-nav-item"><a class="nav-link" href="home.htm"
+			<li class="side-nav-item"><a class="nav-link" href="home"
 				style="color: #212529; font-weight: 400"> <i class="fa fa-home"></i>
 					<span>Quick Start</span>
 			</a></li>
 		</ul>
 		<ul class="side-menu" style="list-style-type: none; padding-left: 0;">
 			<li class="menu-title"><span>APPLICATION</span></li>
-			<li><a class="nav-link" href="suppliers.htm"
+			<li><a class="nav-link" href="suppliers"
 				style="color: #343a40;"> <i class="fa fa-cubes"></i> <span>Suppliers</span>
 			</a></li>
-			<li><a class="nav-link" href="categories.htm"
+			<li><a class="nav-link" href="categories"
 				style="color: #343a40;"> <i class="fa fa-th-list"></i> <span>Categories</span>
 			</a></li>
-			<li><a class="nav-link" href="products.htm"
+			<li><a class="nav-link" href="products"
 				style="color: #343a40;"> <i class="fa fa-book"></i> <span>Products</span>
 			</a></li>
-			<li><a class="nav-link" href="discounts.htm"
+			<li><a class="nav-link" href="discounts"
 				style="color: #343a40;"> <i class="fa-solid fa-tag"></i> <span>Discounts</span>
 			</a></li>
-			<li><a class="nav-link" href="orders.htm" style="color: #343a40;"> <i
+			<li><a class="nav-link" href="orders" style="color: #343a40;"> <i
 					class="fa fa-shopping-cart"></i> <span>Orders</span>
 			</a></li>
-			<li><a class="nav-link" href="inventories.htm"
+			<li><a class="nav-link" href="inventories"
 				style="color: #343a40;"> <i class="fa fa-archive"></i> <span>Inventories</span>
 			</a></li>
-			<li><a class="nav-link" href="ratings.htm"
+			<li><a class="nav-link" href="ratings"
 				style="color: #343a40;"> <i class="fa fa-star"
 					aria-hidden="true"></i> <span>Ratings</span>
 			</a></li>
 		</ul>
 		<ul class="side-menu" style="list-style-type: none; padding-left: 0;">
 			<li class="menu-title"><span>ADMIN</span></li>
-			<li><a class="nav-link" href="users.htm" style="color: #343a40;">
+			<li><a class="nav-link" href="users" style="color: #343a40;">
 					<i class="fa fa-user"></i> <span>Users</span>
 			</a></li>
-			<li><a class="nav-link" href="roles.htm" style="color: #343a40;">
+			<li><a class="nav-link" href="roles" style="color: #343a40;">
 					<i class="fa fa-user-check"></i><span>Roles</span>
 			</a></li>
-			<li><a class="nav-link" href="permissions.htm"
+			<li><a class="nav-link" href="permissions"
 				style="color: #343a40;"> <i class="fa fa-shield-alt fa-fw"></i>
 					<span>Permissions</span>
 			</a></li>

@@ -54,7 +54,7 @@
 				</div>
 			</div>
 			<form id="userForm"
-				action="rating/update.htm"
+				action="rating/update"
 				method="POST">
 				<input type="hidden" id="id" name="id" value="${rating.id}">
 
@@ -111,7 +111,7 @@
 
 				<div class="mt-3">
 <!-- 					<button class="btn btn-primary btn-save" type="submit">Save</button> -->
-					<a href="<c:url value='/admin1337/ratings.htm' />"
+					<a href="<c:url value='/admin1337/ratings' />"
 						class="btn btn-light btn-cancel">Back</a>
 				</div>
 			</form>

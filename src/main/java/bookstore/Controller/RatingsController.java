@@ -72,10 +72,10 @@ public class RatingsController {
 		return "ratings/update";
 	}
 	
-	@RequestMapping(value = "/rating/update.htm", method = RequestMethod.POST)
+	@RequestMapping(value = "/rating/update", method = RequestMethod.POST)
 	public String submit_Update(@RequestParam("id") Long id, @RequestParam("status") int status) {
 		int rs = ratingsDAO.updateStatus(id, status);
-		return "redirect:/admin1337/ratings.htm";
+		return "redirect:/admin1337/ratings";
 	}
 	
 	

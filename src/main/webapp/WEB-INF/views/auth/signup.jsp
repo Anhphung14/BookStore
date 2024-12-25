@@ -52,7 +52,7 @@
 									</div>
 									<div class="mt-4">
 										<form id="signupform" class="needs-validation" novalidate
-											action="${pageContext.servletContext.contextPath}/saveSignup.htm"
+											action="${pageContext.servletContext.contextPath}/saveSignup"
 											method="POST">
 											<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 											<div class="mb-3">
@@ -136,7 +136,7 @@
 													<p class="text-muted">
 														Bạn đã có tài khoản? <a
 															class="text-primary fw-medium ms-1"
-															href="signin.htm"> Đăng nhập</a>
+															href="signin"> Đăng nhập</a>
 													</p>
 												</div>
 											</div>
@@ -329,9 +329,9 @@
             confirmButtonText: "OK"
         }).then((result) => {
             if (result.isConfirmed && alertType === "success") {
-                window.location.href = '${pageContext.servletContext.contextPath}/signin.htm';
+                window.location.href = '${pageContext.servletContext.contextPath}/signin';
             } else {
-	        	window.location.href = '${pageContext.servletContext.contextPath}/signin.htm';
+	        	window.location.href = '${pageContext.servletContext.contextPath}/signin';
 	        }
         });
     }

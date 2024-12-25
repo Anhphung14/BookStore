@@ -116,14 +116,14 @@ th, td {
 				</div>
 				<div class="wizard">
 					<nav class="list-group list-group-flush">
-						<a class="list-group-item" href="account/account_orders.htm">
+						<a class="list-group-item" href="account/account_orders">
 							<div class="d-flex justify-content-between align-items-center">
 								<div class="d-inline-block font-weight-medium text-uppercase">Danh
 									sách đơn hàng</div>
 							</div>
-						</a> <a class="list-group-item" href="account/profile_settings.htm">Chỉnh
+						</a> <a class="list-group-item" href="account/profile_settings">Chỉnh
 							sửa thông tin</a> <a class="list-group-item"
-							href="account/my_ratings.htm">Đánh giá của bạn</a>
+							href="account/my_ratings">Đánh giá của bạn</a>
 					</nav>
 				</div>
 			</div>
@@ -177,7 +177,7 @@ th, td {
 									<td><a class="btn btn-info btn-sm link-detail"
 										data-toggle="modal" data-target="#orderDetailsModal"
 										data-bs-backdrop="false"
-										href="${pageContext.servletContext.contextPath}/account/order_details/${order.uuid}.htm">Xem</a>
+										href="${pageContext.servletContext.contextPath}/account/order_details/${order.uuid}">Xem</a>
 										<c:if test="${order.orderStatus == 'Chờ xác nhận'}">
 											<button class="btn btn-danger btn-sm" data-toggle="modal"
 												data-target="#confirmCancelModal"
@@ -198,7 +198,7 @@ th, td {
 											</c:if>
 											<c:if test="${!isReviewed}">
 												<a class="btn btn-success btn-sm"
-													href="${pageContext.servletContext.contextPath}/account/ratings/${order.uuid}.htm">Đánh
+													href="${pageContext.servletContext.contextPath}/account/ratings/${order.uuid}">Đánh
 													giá</a>
 											</c:if>
 										</c:if></td>
@@ -274,15 +274,15 @@ th, td {
 /* function loadOrderDetails(orderId) {
     // Gửi AJAX request để lấy thông tin chi tiết của đơn hàng
     $.ajax({
-        url: '${pageContext.servletContext.contextPath}/client/account/order_details.htm',
+        url: '${pageContext.servletContext.contextPath}/client/account/order_details',
         method: 'GET',
         data: { orderId: orderId },
         success: function (data) {
             // Khi nhận được dữ liệu, chèn thông tin vào modal
-            $('#orderDetailsContent').html(data);
+            $('#orderDetailsContent')l(data);
         },
         error: function () {
-            $('#orderDetailsContent').html('<p class="text-danger">Failed to load order details. Please try again.</p>');
+            $('#orderDetailsContent')l('<p class="text-danger">Failed to load order details. Please try again.</p>');
         }
     });
 }
@@ -321,7 +321,7 @@ th, td {
 	        // Gửi yêu cầu POST để xóa order
 	        const form = document.createElement("form");
 	        form.method = "POST";
-	        form.action = "${pageContext.servletContext.contextPath}/account/cancel_order.htm";
+	        form.action = "${pageContext.servletContext.contextPath}/account/cancel_order";
 	
 	        const hiddenInput = document.createElement("input");
 	        hiddenInput.type = "hidden";

@@ -42,7 +42,7 @@
 				<div class="row">
 					<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
 
-						<strong class="tg-logo"><a href="index.htm"><img
+						<strong class="tg-logo"><a href="index"><img
 								src="${pageContext.servletContext.contextPath}/resources/images/ALDPT.png"
 								alt="BookStore"></a></strong>
 
@@ -86,7 +86,7 @@
 																	<c:if
 																		test="${subcategory.categoriesEntity.id == category.id}">
 																		<li style="list-style: none;"><a
-																			href="http://localhost:8080/bookstore/categories/${category.slug }/${subcategory.slug }.htm">${subcategory.name}</a></li>
+																			href="http://localhost:8080/bookstore/categories/${category.slug }/${subcategory.slug }">${subcategory.name}</a></li>
 																	</c:if>
 																</c:forEach>
 															</ul>
@@ -103,7 +103,7 @@
 						<div class="tg-wishlistandcart">
 							<div class="dropdown tg-themedropdown tg-minicartdropdown">
 								<a
-									href="${pageContext.servletContext.contextPath}/cart/view.htm"
+									href="${pageContext.servletContext.contextPath}/cart/view"
 									id="tg-minicart" class="tg-btnthemedropdown"
 									aria-haspopup="true" aria-expanded="false"> <span
 									class="tg-themebadge">${sessionScope.countBooksInCart}</span> <i
@@ -114,7 +114,7 @@
 
 						<div class="tg-searchbox">
 							<form class="tg-formtheme tg-formsearch"
-								action="${pageContext.servletContext.contextPath}/search.htm"
+								action="${pageContext.servletContext.contextPath}/search"
 								method="GET" onsubmit="return validateSearch();"
 								style="width: 550px">
 								<fieldset>
@@ -141,19 +141,19 @@
 											<c:if test="${sessionScope.role == 'ROLE_ADMIN' || sessionScope.role == 'ROLE_STAFF'}">
 												<li><i class="fa-solid fa-tachometer-alt"></i>&nbsp;&nbsp;
 													<a
-													href="${pageContext.servletContext.contextPath}/admin1337/home.htm">Trang
+													href="${pageContext.servletContext.contextPath}/admin1337/home">Trang
 														quản lý</a></li>
 											</c:if>
 
 											<li><i class="fa-solid fa-user"></i>&nbsp;&nbsp;<a
-												href="${pageContext.servletContext.contextPath}/account/profile_settings.htm">Trang
+												href="${pageContext.servletContext.contextPath}/account/profile_settings">Trang
 													cá nhân</a></li>
 											<li><i class="fa-solid fa-shop"></i>&nbsp;&nbsp;<a
-												href="${pageContext.servletContext.contextPath}/account/account_orders.htm">Đơn
+												href="${pageContext.servletContext.contextPath}/account/account_orders">Đơn
 													hàng của bạn</a></li>
 													
 											<form id="signoutForm"
-												action="${pageContext.servletContext.contextPath}/signout.htm"
+												action="${pageContext.servletContext.contextPath}/signout"
 												method="POST" style="display: none;">
 												<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 												<input type="hidden" name="signout" value="true">
@@ -166,7 +166,7 @@
 								</c:when>
 								<c:otherwise>
 									<div class="signin-container">
-										<a href="${pageContext.servletContext.contextPath}/signin.htm"
+										<a href="${pageContext.servletContext.contextPath}/signin"
 											class="btn-signin"> <span
 											style="font-weight: 600; line-height: 20px; color: #404040;">Đăng
 												nhập</span>

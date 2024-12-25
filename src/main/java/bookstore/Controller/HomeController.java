@@ -12,10 +12,13 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
+//import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,15 +39,23 @@ public class HomeController {
 
 	@Autowired
 	private OrderDetailDAO orderDetailDAO;
+	
+//	final static Logger logger = Logger.getLogger(HomeController.class);
+	
 
 	@RequestMapping(value = "/home")
 	public String home(ModelMap model, HttpSession session) {
 		UsersEntity user_session = (UsersEntity) session.getAttribute("user");
-
+		
+//		logger.info(">>>>>>>>>>>>>>>>>>>>>>>This is info: " + user_session.getFullname());
+//		logger.error(">>>>>>>>>>>>>>>>>>>>>>This is info: " + user_session.getFullname());
+//		
+//		logger.warn(">>>>>>>>>>>>>>>>>>>>>>>This is info: " + user_session.getFullname());
+		
 		if (user_session == null) {
-			return "redirect:/signin.htm";
+			return "redirect:/signin";
 		}
-
+		
 		long userCount = getUserCount();
 		model.addAttribute("userCount", userCount);
 

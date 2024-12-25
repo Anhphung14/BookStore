@@ -116,7 +116,7 @@ input[readonly] {
 						width="120px" alt="Page Icon">
 				</div>
 			</div>
-			<form id="orderForm" action="order/edit.htm" method="POST">
+			<form id="orderForm" action="order/edit" method="POST">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				<input type="hidden" name="orderId" value="${order.id }">
 				<div class="card mt-3">
@@ -286,13 +286,13 @@ input[readonly] {
 					</div>
 				<div class="mt-3">
 					<button class="btn btn-primary btn-save" type="submit" onclick="beforeSubmit()">Save</button>
-					<a href="<c:url value='/admin1337/orders.htm' />"
+					<a href="<c:url value='/admin1337/orders' />"
 						class="btn btn-light btn-cancel">Cancel</a>
 				</div>
 			</form>
 		</div>
 		<div>
-		<form id="orderItemsForm" action="order/updateOrderItems.htm" method="POST">
+		<form id="orderItemsForm" action="order/updateOrderItems" method="POST">
 			    <input type="hidden" name="orderId" value="${order.id }">
 			    <div class="card mt-3">
 			        <div class="card-body">
@@ -432,7 +432,7 @@ input[readonly] {
 	        confirmButtonText: "OK"
 	    }).then((result) => {
 	        if (result.isConfirmed && alertType === "success") {
-	            window.location.href = 'products.htm';
+	            window.location.href = 'products';
 	        }
 	    });
 	}

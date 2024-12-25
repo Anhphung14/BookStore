@@ -84,13 +84,13 @@
             </div>
             <div class="wizard">
                 <nav class="list-group list-group-flush">
-                    <a class="list-group-item" href="account/account_orders.htm">
+                    <a class="list-group-item" href="account/account_orders">
                         <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-inline-block font-weight-medium text-uppercase">Danh sách đơn hàng</div>
                         </div>
                     </a>
-                    <a class="list-group-item" href="account/profile_settings.htm">Chỉnh sửa thông tin</a>
-                  	<a class="list-group-item" href="account/my_ratings.htm">Đánh giá của bạn</a>
+                    <a class="list-group-item" href="account/profile_settings">Chỉnh sửa thông tin</a>
+                  	<a class="list-group-item" href="account/my_ratings">Đánh giá của bạn</a>
                 </nav>
             </div>
         </div>
@@ -101,7 +101,7 @@
 		        <div class="review">
 		            <div class="product-info">
 		            	<p>Mã đơn hàng: ${review.order.uuid}</p> <!-- Hiển thị mã đơn hàng -->
-		                <p>Book: <a href="productdetail/${review.book.id}.htm" target="_blank">${review.book.title}</a></p>
+		                <p>Book: <a href="productdetail/${review.book.id}" target="_blank">${review.book.title}</a></p>
 		                <p>Thời gian tạo: 
 		                    <fmt:formatDate value="${review.createdAt}" pattern="dd/MM/yyyy HH:mm:ss"/> <!-- Hiển thị thời gian -->
 		                </p>

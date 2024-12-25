@@ -113,7 +113,7 @@ iframe {
 										<div class="tg-bookimg">
 											<div class="tg-frontcover">
 												<a
-													href="${pageContext.request.contextPath}/productdetail/${book.id}.htm">
+													href="${pageContext.request.contextPath}/productdetail/${book.id}">
 													<img src="${book.thumbnail}" alt="${book.thumbnail}" />
 												</a>
 											</div>
@@ -138,7 +138,7 @@ iframe {
 												</div>
 											</c:if>
 											<h4>
-												<a href="productdetail/${book.id}.htm"> <c:choose>
+												<a href="productdetail/${book.id}"> <c:choose>
 														<c:when test="${fn:length(fn:split(book.title, ' ')) > 2}">
 															<c:forEach var="word" begin="0" end="2"
 																items="${fn:split(book.title, ' ')}">
@@ -207,7 +207,7 @@ iframe {
 									</div>
 									<div class="tg-booktitle">
 										<h3>
-											<a href="productdetail/${book.id}.htm"> <c:choose>
+											<a href="productdetail/${book.id}"> <c:choose>
 													<c:when
 														test="${fn:length(fn:split(bestSellingBook.title, ' ')) > 2}">
 														<c:forEach var="word" begin="0" end="2"
@@ -348,7 +348,7 @@ iframe {
 												<div class="tg-bookimg">
 													<div class="tg-frontcover">
 														<a
-															href="${pageContext.request.contextPath}/productdetail/${book.id}.htm">
+															href="${pageContext.request.contextPath}/productdetail/${book.id}">
 															<img src="${book.thumbnail}" alt="${book.title}" />
 														</a>
 													</div>
@@ -367,7 +367,7 @@ iframe {
 													</div>
 													<div class="tg-booktitle">
 														<h4>
-															<a href="productdetail/${book.id}.htm"> <c:choose>
+															<a href="productdetail/${book.id}"> <c:choose>
 																	<c:when
 																		test="${fn:length(fn:split(book.title, ' ')) > 2}">
 																		<c:forEach var="word" begin="0" end="2"
@@ -482,7 +482,7 @@ iframe {
              console.log("bookId:", bookId);
              console.log("quantity:", quantity);
             // Gửi GET request để thêm sách vào giỏ hàng
-            fetch('/bookstore/cart/add.htm?bookId=' + bookId + '&quantity=' + quantity, {
+            fetch('/bookstore/cart/add?bookId=' + bookId + '&quantity=' + quantity, {
                 method: 'GET', 
             })
             .then(response => response.text()) 
@@ -494,7 +494,7 @@ iframe {
 	              	 }
 	              	 else if (data != "error" && data != "Vui long dang nhap") {
                 	 var countBooksInCart = parseInt(data);  // Chuyển đổi dữ liệu trả về thành số
-                	 fetch('/bookstore/index.htm');
+                	 fetch('/bookstore/index');
                      document.querySelector('#tg-minicart .tg-themebadge').textContent = countBooksInCart;
                 	 toastr.success('Sản phẩm đã được thêm vào giỏ hàng!', 'Thành công');
                     

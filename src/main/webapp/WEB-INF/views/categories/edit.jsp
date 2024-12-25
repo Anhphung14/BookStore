@@ -88,7 +88,7 @@
 				</div>
 			</div>
 			<form id="categoryForm"
-				action="category/save.htm"
+				action="category/save"
 				method="POST">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				<input type="hidden" id="task" name="task" value="${task}">
@@ -137,7 +137,7 @@
 				</div>
 				<div class="mt-3">
 					<button class="btn btn-primary btn-save" type="submit">Save</button>
-					<a href="<c:url value='/admin1337/categories.htm' />"
+					<a href="<c:url value='/admin1337/categories' />"
 						class="btn btn-light btn-cancel">Cancel</a>
 				</div>
 			</form>
@@ -146,7 +146,7 @@
 				<hr>
 				<h6>Edit Subcategory</h6>
 				<form id="editSubcategoryForm"
-					action="category/saveSubcategory.htm"
+					action="category/saveSubcategory"
 					method="POST">
 					<input type="hidden" id="editSubcategoryId" name="subcategoryId">
 					<div class="form-floating mt-3">

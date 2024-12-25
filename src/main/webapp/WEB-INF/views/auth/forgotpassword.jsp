@@ -28,7 +28,7 @@
                                     <p class="text-muted mt-3">Enter your email address and we'll send you an email with instructions to reset your password.</p>
                                 </div>
                                 <div class="mt-4">
-                                    <form action="${pageContext.servletContext.contextPath}/forgotpassword.htm" method="POST" class="needs-validation" novalidate id="forgetpasswordform">
+                                    <form action="${pageContext.servletContext.contextPath}/forgotpassword" method="POST" class="needs-validation" novalidate id="forgetpasswordform">
                                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                         <div class="mb-3">
                                             <label for="email" class="form-label">Email</label>
@@ -47,7 +47,7 @@
                 </div>
                 <div class="mt-3 row">
                     <div class="text-center col-12">
-                        <p class="text-muted">Back to <a class="text-primary fw-medium ms-1" href="signin.htm">Sign In</a></p>
+                        <p class="text-muted">Back to <a class="text-primary fw-medium ms-1" href="signin">Sign In</a></p>
                     </div>
                 </div>
             </div>
@@ -67,7 +67,7 @@
             confirmButtonText: "OK"
         }).then((result) => {
             if (result.isConfirmed && alertType === "success") {
-                window.location.href = '${pageContext.servletContext.contextPath}/signin.htm';
+                window.location.href = '${pageContext.servletContext.contextPath}/signin';
             }
         });
     }

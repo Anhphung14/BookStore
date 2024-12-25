@@ -170,7 +170,7 @@
 															</c:if>
 
 															<h4>
-																<a href="productdetail/${book.id}.htm"> <c:choose>
+																<a href="productdetail/${book.id}"> <c:choose>
 																		<c:when
 																			test="${fn:length(fn:split(book.title, ' ')) > 2}">
 																			<c:forEach var="word" begin="0" end="2"
@@ -224,7 +224,7 @@
 												<c:choose>
 													<c:when test="${currentPage > 1}">
 														<li class="page-item"><a class="page-link"
-															href="allProduct.htm?q=${searchQuery }&sortBy=${sortBy}&page=${currentPage - 1}&pageSize=${pageSize}"
+															href="allProduct?q=${searchQuery }&sortBy=${sortBy}&page=${currentPage - 1}&pageSize=${pageSize}"
 															aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 														</a></li>
 													</c:when>
@@ -241,7 +241,7 @@
 													<li
 														class="page-item ${page == currentPage ? 'active' : ''}">
 														<a class="page-link"
-														href="allProduct.htm?q=${searchQuery }&sortBy=${sortBy}&page=${page}&pageSize=${pageSize}">${page}</a>
+														href="allProduct?q=${searchQuery }&sortBy=${sortBy}&page=${page}&pageSize=${pageSize}">${page}</a>
 													</li>
 												</c:forEach>
 
@@ -249,7 +249,7 @@
 												<c:choose>
 													<c:when test="${currentPage < totalPages}">
 														<li class="page-item"><a class="page-link"
-															href="allProduct.htm?q=${searchQuery }&sortBy=${sortBy}&page=${currentPage + 1}&pageSize=${pageSize}"
+															href="allProduct?q=${searchQuery }&sortBy=${sortBy}&page=${currentPage + 1}&pageSize=${pageSize}"
 															aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 														</a></li>
 													</c:when>
@@ -277,7 +277,7 @@
 												<li><a href=""><span>Tất cả sách</span><em>${countAllBooks }</em></a></li>
 												<c:forEach var="item" items="${countBookEachCategory }">
 													<li><a
-														href="http://localhost:8080/bookstore/categories/${item[3]}.htm"><span>${item[0]}</span><em>${item[2] }</em></a></li>
+														href="http://localhost:8080/bookstore/categories/${item[3]}"><span>${item[0]}</span><em>${item[2] }</em></a></li>
 
 												</c:forEach>
 											</ul>
@@ -335,11 +335,11 @@
 	        // Lấy thông tin `danhMuc` từ URL
 	        const pathParts = window.location.pathname.split("/");
 	        const danhMuc2 = pathParts[pathParts.length - 2] || ""; // Lấy danhMục[2]
-	        const danhMuc3 = pathParts[pathParts.length - 1].split(".")[0] || ""; // Lấy danhMục[3] (loại bỏ phần `.htm`)
+	        const danhMuc3 = pathParts[pathParts.length - 1].split(".")[0] || ""; // Lấy danhMục[3] (loại bỏ phần ``)
 	
 	        // Kiểm tra và tạo URL với giá trị pageSize
 	        if (pageSizeValue && pageSizeValue.trim() !== "") {
-	            const url = "http://localhost:8080/bookstore/allProduct.htm"
+	            const url = "http://localhost:8080/bookstore/allProduct"
 	            	+ "&q=" + "&page="
 	                + currentPage + "&pageSize="
 	                + pageSizeValue;
@@ -386,7 +386,7 @@
 	             console.log("bookId:", bookId);
 	             console.log("quantity:", quantity);
 	            // Gửi GET request để thêm sách vào giỏ hàng
-	            fetch('/bookstore/cart/add.htm?bookId=' + bookId + '&quantity=' + quantity, {
+	            fetch('/bookstore/cart/add?bookId=' + bookId + '&quantity=' + quantity, {
 	                method: 'GET', 
 	            })
 	            .then(response => response.text()) 
@@ -395,7 +395,7 @@
 	                // Xử lý phản hồi sau khi thêm vào giỏ hàng
 	                if (data != "error") {
 	                	 var countBooksInCart = parseInt(data);  // Chuyển đổi dữ liệu trả về thành số
-	                	 fetch('/bookstore/index.htm');
+	                	 fetch('/bookstore/index');
 	                     document.querySelector('#tg-minicart .tg-themebadge').textContent = countBooksInCart;
 	                	 toastr.success('Sản phẩm đã được thêm vào giỏ hàng!', 'Thành công');
 	                    

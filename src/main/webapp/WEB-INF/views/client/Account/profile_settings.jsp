@@ -53,12 +53,12 @@
             </div>
             <div class="wizard">
                 <nav class="list-group list-group-flush">
-                    <a class="list-group-item" href="account/account_orders.htm">
+                    <a class="list-group-item" href="account/account_orders">
                         <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-inline-block font-weight-medium text-uppercase">Danh sách đơn hàng</div>
                         </div>
-                    </a><a class="list-group-item" href="account/profile_settings.htm">Chỉnh sửa thông tin</a>
-                    <a class="list-group-item" href="account/my_ratings.htm">Đánh giá của bạn</a>
+                    </a><a class="list-group-item" href="account/profile_settings">Chỉnh sửa thông tin</a>
+                    <a class="list-group-item" href="account/my_ratings">Đánh giá của bạn</a>
                 </nav>
             </div>
         </div>
@@ -72,7 +72,7 @@
 			<c:if test="${not empty errorUpdate}">
 				<div class="alert alert-danger">${errorUpdate}</div>
 			</c:if>
-            <form class="row" action="account/update_profile.htm" method="POST" enctype="multipart/form-data" style="border: 1px solid #ccc; padding: 20px; border-radius: 8px;">
+            <form class="row" action="account/update_profile" method="POST" enctype="multipart/form-data" style="border: 1px solid #ccc; padding: 20px; border-radius: 8px;">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <div class="col-md-12">
                     <div class="form-group">
@@ -122,7 +122,7 @@
 			<c:if test="${not empty errorPassword}">
 				<div class="alert alert-danger">${errorPassword}</div>
 			</c:if>
-            <form action="account/change_password.htm" method="POST" id="change-password-form" style="border: 1px solid #ccc; padding: 20px; border-radius: 8px;">
+            <form action="account/change_password" method="POST" id="change-password-form" style="border: 1px solid #ccc; padding: 20px; border-radius: 8px;">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <div class="form-group">
                     <label for="old-password">Mật khẩu hiện tại</label>

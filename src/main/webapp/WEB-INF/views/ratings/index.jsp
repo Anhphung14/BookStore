@@ -81,7 +81,7 @@
             <!-- Card chứa thanh tìm kiếm -->
             <div class="card mx-3" style="flex-grow: 1;">
                 <div class="card-body">
-                    <form id="frm-admin" name="adminForm" action="ratings.htm" method="POST">
+                    <form id="frm-admin" name="adminForm" action="ratings" method="POST">
                         <div class="row g-2">
                             <div class="col">
                                 <input class="form-control search-input" name="search" id="search_text" value="${search}" placeholder="Search..." />
@@ -136,8 +136,8 @@
                                             <td class="text-center"><span class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">success</span></td>
                                             <td class="text-center">
                                                 <div class="d-flex gap-1">
-                                                    <a class="btn btn-rounded" href="rating/update/${rating.id}.htm"><i class="fa fa-eye"></i></a>
-<%--                                                     <a class="btn btn-rounded btn-delete" href="javascript:void(0);" data-url="${pageContext.request.contextPath}/rating/delete/${rating.id}.htm"><i class="fa fa-trash-alt"></i></a> --%>
+                                                    <a class="btn btn-rounded" href="rating/update/${rating.id}"><i class="fa fa-eye"></i></a>
+<%--                                                     <a class="btn btn-rounded btn-delete" href="javascript:void(0);" data-url="${pageContext.request.contextPath}/rating/delete/${rating.id}"><i class="fa fa-trash-alt"></i></a> --%>
                                                 </div>
                                             </td>
                                         </tr>
@@ -176,8 +176,8 @@
 <!--                                             <td class="text-center"><span class="small text-uppercase text-success bg-success bg-opacity-10 rounded px-2 py-1">approved</span></td> -->
 <!--                                             <td class="text-center"> -->
 <!--                                                 <div class="d-flex gap-1"> -->
-<%--                                                     <a class="btn btn-rounded" href="${pageContext.request.contextPath}/rating/update/${rating.id}.htm"><i class="fa fa-pencil"></i></a> --%>
-<%-- <%--                                                     <a class="btn btn-rounded btn-delete" href="javascript:void(0);" data-url="${pageContext.request.contextPath}/rating/delete/${rating.id}.htm"><i class="fa fa-trash-alt"></i></a> --%>
+<%--                                                     <a class="btn btn-rounded" href="${pageContext.request.contextPath}/rating/update/${rating.id}"><i class="fa fa-pencil"></i></a> --%>
+<%-- <%--                                                     <a class="btn btn-rounded btn-delete" href="javascript:void(0);" data-url="${pageContext.request.contextPath}/rating/delete/${rating.id}"><i class="fa fa-trash-alt"></i></a> --%>
 <!--                                                 </div> -->
 <!--                                             </td> -->
 <!--                                         </tr> -->
@@ -216,8 +216,8 @@
 <!--                                             <td class="text-center"><span class="small text-uppercase text-danger bg-danger bg-opacity-10 rounded px-2 py-1">rejected</span></td> -->
 <!--                                             <td class="text-center"> -->
 <!--                                                 <div class="d-flex gap-1"> -->
-<%--                                                     <a class="btn btn-rounded" href="${pageContext.request.contextPath}/rating/update/${rating.id}.htm"><i class="fa fa-pencil"></i></a> --%>
-<%-- <%--                                                     <a class="btn btn-rounded btn-delete" href="javascript:void(0);" data-url="${pageContext.request.contextPath}/rating/delete/${rating.id}.htm"><i class="fa fa-trash-alt"></i></a> --%>
+<%--                                                     <a class="btn btn-rounded" href="${pageContext.request.contextPath}/rating/update/${rating.id}"><i class="fa fa-pencil"></i></a> --%>
+<%-- <%--                                                     <a class="btn btn-rounded btn-delete" href="javascript:void(0);" data-url="${pageContext.request.contextPath}/rating/delete/${rating.id}"><i class="fa fa-trash-alt"></i></a> --%>
 <!--                                                 </div> -->
 <!--                                             </td> -->
 <!--                                         </tr> -->

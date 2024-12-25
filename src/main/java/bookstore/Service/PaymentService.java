@@ -185,8 +185,8 @@ public class PaymentService {
 	
 	private RedirectUrls getRedirectUrls() { 
 		RedirectUrls redirectUrls = new RedirectUrls(); 
-		redirectUrls.setCancelUrl("http://localhost:8080/bookstore/cancel_payment.htm"); 
-		redirectUrls.setReturnUrl("http://localhost:8080/bookstore/review_payment.htm"); 
+		redirectUrls.setCancelUrl("http://localhost:8080/bookstore/cancel_payment"); 
+		redirectUrls.setReturnUrl("http://localhost:8080/bookstore/review_payment"); 
 		return redirectUrls; 
 		}
 	

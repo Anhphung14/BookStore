@@ -57,7 +57,7 @@
 						width="120px" alt="Page Icon">
 				</div>
 			</div>
-			<form id="userForm" action="role/save.htm" method="POST">
+			<form id="userForm" action="role/save" method="POST">
 				<input type="hidden" id="task" name="task" value="${task}">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				<c:if test="${task != 'new'}">
@@ -85,7 +85,7 @@
 
 				<div class="mt-3">
 					<button class="btn btn-primary btn-save" type="submit">Save</button>
-					<a href="<c:url value='/admin1337/roles.htm' />"
+					<a href="<c:url value='/admin1337/roles' />"
 						class="btn btn-light btn-cancel">Cancel</a>
 				</div>
 			</form>

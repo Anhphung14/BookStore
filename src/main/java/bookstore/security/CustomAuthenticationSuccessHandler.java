@@ -38,15 +38,15 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         for (GrantedAuthority authority : authorities) {
         	System.out.println(authority.getAuthority());
             if (authority.getAuthority().equals("ROLE_ADMIN") || authority.getAuthority().equals("ROLE_STAFF")) {
-                response.sendRedirect("/bookstore/admin1337/home.htm");
+                response.sendRedirect("/bookstore/admin1337/home");
                 return;
             } else if (authority.getAuthority().equals("ROLE_USER")) {
-                response.sendRedirect("/bookstore/index.htm");
+                response.sendRedirect("/bookstore/index");
                 return;
             }
         }
         
         // Nếu không có vai trò nào khớp, chuyển hướng đến trang mặc định
-        response.sendRedirect("/bookstore/index.htm");
+        response.sendRedirect("/bookstore/index");
     }
 }

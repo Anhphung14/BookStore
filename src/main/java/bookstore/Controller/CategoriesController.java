@@ -97,7 +97,7 @@ public class CategoriesController {
 	}
 
 
-	@RequestMapping(value = "/category/delete/{id}.htm", method = RequestMethod.GET)
+	@RequestMapping(value = "/category/delete/{id}", method = RequestMethod.GET)
 	public String deleteCategory(@PathVariable("id") Long id) {
 		Session session = factory.getCurrentSession();
 		
@@ -106,7 +106,7 @@ public class CategoriesController {
 			session.delete(category);
 		}
 
-		return "redirect:/admin1337/categories.htm";
+		return "redirect:/admin1337/categories";
 	}
 
 	@RequestMapping(value = "/category/edit/{id}", method = RequestMethod.GET)
@@ -154,7 +154,7 @@ public class CategoriesController {
 	    if (category.getName().length() > 50) { 
 	    	redirectAttributes.addFlashAttribute("alertMessage", "Category name exceeds the allowed length of 50 characters."); 
 	    	redirectAttributes.addFlashAttribute("alertType", "error"); 
-	    	return "redirect:/admin1337/categories.htm"; } 
+	    	return "redirect:/admin1337/categories"; } 
 	    
 	    if (subcategoryNames != null) { 
 	    	String[] subcategoryArray = subcategoryNames.split(","); 
@@ -162,7 +162,7 @@ public class CategoriesController {
 	    		if (subcategoryName.trim().length() > 100) { 
 	    			redirectAttributes.addFlashAttribute("alertMessage", "One or more subcategory names exceed the allowed length of 100 characters."); 
 	    			redirectAttributes.addFlashAttribute("alertType", "error"); 
-	    			return "redirect:/admin1337/categories.htm"; 
+	    			return "redirect:/admin1337/categories"; 
     			} 
     		} 
     	}    
@@ -177,7 +177,7 @@ public class CategoriesController {
 	            if (!existingCategories.isEmpty()) {
 	                redirectAttributes.addFlashAttribute("alertMessage", "Category name already exists.");
 	                redirectAttributes.addFlashAttribute("alertType", "error");
-	                return "redirect:/admin1337/categories.htm";
+	                return "redirect:/admin1337/categories";
 	            }
 
 	            // Tạo mới category
@@ -241,10 +241,10 @@ public class CategoriesController {
 	        e.printStackTrace();
 	        redirectAttributes.addFlashAttribute("alertMessage", "Error occurred while saving the category.");
 	        redirectAttributes.addFlashAttribute("alertType", "error");
-	        return "redirect:/admin1337/categories.htm";
+	        return "redirect:/admin1337/categories";
 	    }
 
-	    return "redirect:/admin1337/categories.htm";
+	    return "redirect:/admin1337/categories";
 	}
 
 	@RequestMapping(value = "/category/saveSubcategory", method = RequestMethod.POST)
@@ -265,7 +265,7 @@ public class CategoriesController {
 
 	        if (!existingSubcategories.isEmpty()) {
 	            model.addAttribute("message", "Subcategory name already exists (case-insensitive, ignoring spaces).");
-	            return "redirect:/admin1337/categories.htm";
+	            return "redirect:/admin1337/categories";
 	        }
 
 	        // Tiến hành cập nhật nếu không trùng
@@ -276,12 +276,12 @@ public class CategoriesController {
 	            session.update(subcategory);
 	        } else {
 	            model.addAttribute("message", "Subcategory not found.");
-	            return "redirect:/admin1337/categories.htm";
+	            return "redirect:/admin1337/categories";
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        model.addAttribute("message", "An error occurred: " + e.getMessage());
-	        return "redirect:/admin1337/categories.htm";
+	        return "redirect:/admin1337/categories";
 	    }
 
 	    String referer = request.getHeader("Referer");

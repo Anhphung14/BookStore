@@ -130,7 +130,7 @@ public class RolesController {
 	}
 	
 	@PreAuthorize("hasAuthority('UPDATE_ROLE') or hasAuthority('ADD_ROLE')")
-	@RequestMapping(value = "/role/save.htm", method = RequestMethod.POST)
+	@RequestMapping(value = "/role/save", method = RequestMethod.POST)
 	public String saveRole(@ModelAttribute("role") RolesEntity role, @RequestParam("task") String task,
 	        @RequestParam(value = "id", required = false) Long id, RedirectAttributes redirectAttributes, ModelMap model) {
 	    Session session = factory.getCurrentSession();
@@ -172,14 +172,14 @@ public class RolesController {
 	        else if ("edit".equals(task) && hasUpdateAuthority) {
 	            if (id == null) {
 	                model.addAttribute("message", "Role ID is required to edit.");
-	                return "redirect:/admin1337/roles.htm"; 
+	                return "redirect:/admin1337/roles"; 
 	            }
 
 	            RolesEntity existingRole = getRoleById(id);
 
 	            if (existingRole == null) {
 	                model.addAttribute("message", "Role not found.");
-	                return "redirect:/admin1337/roles.htm";
+	                return "redirect:/admin1337/roles";
 	            }
 
 	            existingRole.setName(role.getName());
@@ -190,26 +190,26 @@ public class RolesController {
 	            session.merge(existingRole);
                 redirectAttributes.addFlashAttribute("alertMessage", "Role saved successfully!");
 	            redirectAttributes.addFlashAttribute("alertType", "success");
-	            return "redirect:/admin1337/roles.htm";
+	            return "redirect:/admin1337/roles";
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        redirectAttributes.addFlashAttribute("alertMessage", "Error occurred while saving the Role.");
 	        redirectAttributes.addFlashAttribute("alertType", "error");
-	        return "redirect:/admin1337/roles.htm";
+	        return "redirect:/admin1337/roles";
 	    }
 
-	    return "redirect:/admin1337/roles.htm";
+	    return "redirect:/admin1337/roles";
 	}
 
-	@RequestMapping(value = "/role/delete/{id}.htm", method = RequestMethod.GET)
+	@RequestMapping(value = "/role/delete/{id}", method = RequestMethod.GET)
 	public String deleteRole(@PathVariable("id") Long id) {
 		Session session = factory.getCurrentSession();
 		RolesEntity role = (RolesEntity) session.get(RolesEntity.class, id);
 		if (role != null) {
 			session.delete(role);
 		}
-		return "redirect:/admin1337/roles.htm";
+		return "redirect:/admin1337/roles";
 	}
 
 	private RolesEntity getRoleByName(String name) {

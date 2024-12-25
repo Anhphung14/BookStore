@@ -261,7 +261,7 @@
 								        </td>
 										<td class="text-end">
 											<div class="d-flex justify-content-center align-items-center gap-1">
-												<a class="btn btn-rounded" href="permission/edit/${role.id}.htm"> <i
+												<a class="btn btn-rounded" href="permission/edit/${role.id}"> <i
 													class="fa fa-pencil"></i>
 <!-- 												</a> <a class="btn btn-rounded"> <i class="fa fa-eye-slash"></i> -->
 <!-- 												</a> <a class="btn btn-rounded"> <i class="fa fa-arrow-up"></i> -->

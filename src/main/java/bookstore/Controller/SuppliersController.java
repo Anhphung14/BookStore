@@ -97,8 +97,16 @@ public class SuppliersController {
 	
 	@PreAuthorize("hasAuthority('UPDATE_SUPPLIER')")
 	@RequestMapping(value = "/supplier/edit/{id}", method = RequestMethod.GET)
-	public String supplierEdit(@PathVariable("id") Long id, ModelMap model) {
+	public String supplierEdit(@PathVariable("id") String idd, ModelMap model) {
+		 if (!idd.matches("\\d+")) {
+		    	return "redirect:/admin1337/suppliers";
+		    }
+		    
+	    Long id = Long.parseLong(idd);
 		SuppliersEntity supplier = getSupplierById(id);
+		if(supplier != null) {
+			return "redirect:/admin1337/suppliers";
+		}
 		model.addAttribute("supplier", supplier);
 		model.addAttribute("task", "edit");
 		return "suppliers/edit";

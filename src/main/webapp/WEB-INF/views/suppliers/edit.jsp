@@ -71,7 +71,7 @@
 				</div>
 			</div>
 			<form id="userForm"
-				action="supplier/save.htm"
+				action="supplier/save"
 				method="POST">
 				<input type="hidden" id="task" name="task" value="${task}">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
@@ -122,7 +122,7 @@
 
 				<div class="mt-3">
 					<button class="btn btn-primary btn-save" type="submit">Save</button>
-					<a href="<c:url value='/admin1337/suppliers.htm' />"
+					<a href="<c:url value='/admin1337/suppliers' />"
 						class="btn btn-light btn-cancel">Cancel</a>
 				</div>
 			</form>

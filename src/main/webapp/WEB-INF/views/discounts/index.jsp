@@ -71,7 +71,7 @@
 					</div>
 				</div>
 			</div>
-			<form id="frm-admin" name="adminForm" action="discounts.htm" method="GET">
+			<form id="frm-admin" name="adminForm" action="discounts" method="GET">
 				
 				<div class="card mx-3">
 					<div class="card-body">
@@ -139,7 +139,7 @@
 								
 								<div class="d-flex justify-content-end mb-3">
 							        <a class="btn btn-primary text-nowrap btn-add"
-										href="discount/create.htm"> <i
+										href="discount/create"> <i
 										class="fa fa-plus me-2"></i>Add
 									</a>
 							    </div>
@@ -262,7 +262,7 @@
 											
 											<td class="text-center">
 												<div class="d-flex justify-content-center align-items-center gap-1">
-													<a class="btn btn-rounded" href="discount/edit/${discount.id}.htm"><i class="fa fa-pencil"></i></a>
+													<a class="btn btn-rounded" href="discount/edit/${discount.id}"><i class="fa fa-pencil"></i></a>
 <%-- 													<a class="btn btn-rounded"><i class="fa ${user.isActive ? 'fa-eye-slash' : 'fa-eye'}"></i></a> --%>
 													<!-- <a class="btn btn-rounded"><i class="fa fa-eye-slash"></i></a> -->
 													<!-- <a class="btn btn-rounded"><i class="fa fa-search"></i></a> -->
@@ -294,7 +294,7 @@
 			            </div>
 			            <div class="modal-body">
 			                <!-- Form used to send POST request -->
-			                <form id="deleteForm" method="POST" action="discount/delete.htm">
+			                <form id="deleteForm" method="POST" action="discount/delete">
 			                	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			                    <p>Are you sure you want to delete this Discount?</p>
 			                    <p><strong>Discount Id:</strong> <span id="discountIdToDelete"></span></p>

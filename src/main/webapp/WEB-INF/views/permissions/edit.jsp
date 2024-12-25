@@ -69,7 +69,7 @@
 						width="120px" alt="Page Icon">
 				</div>
 			</div>
-			<form id="userForm" action="permission/edit.htm" method="POST">
+			<form id="userForm" action="permission/edit" method="POST">
 				<input type="hidden" id="id" name="id" value="${role.id}">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
@@ -116,7 +116,7 @@
 
 				<div class="mt-3">
 					<button class="btn btn-primary btn-save" type="submit">Save</button>
-					<a href="<c:url value='/admin1337/permissions.htm' />"
+					<a href="<c:url value='/admin1337/permissions' />"
 						class="btn btn-light btn-cancel">Cancel</a>
 				</div>
 			</form>

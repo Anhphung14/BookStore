@@ -81,7 +81,7 @@ public class AccountController {
 		HttpSession session = request.getSession();
 	    UsersEntity currentUser = (UsersEntity) session.getAttribute("user");
 	    if (currentUser == null) {
-	    	return "redirect:/signin.htm";
+	    	return "redirect:/signin";
 	    }
 	    UsersEntity user = userDAO.getUserById(currentUser.getId());
 	    model.addAttribute("user", user);
@@ -104,14 +104,16 @@ public class AccountController {
 	@RequestMapping(value = "order_details/{uuid}", method = RequestMethod.GET)
 	public String order_details(ModelMap model, @PathVariable("uuid") String uuid, HttpSession session) {
 		UsersEntity user = (UsersEntity) session.getAttribute("user");
-	    OrdersEntity order = orderDAO.getOrderByUuid(uuid);  
+	    OrdersEntity order = orderDAO.getOrderByUuid(uuid);
+	    
+	    if (order == null) {
+	    	return "redirect:/account/account_orders";
+	    }
 	    Long userIdCheck = order.getUser().getId();
 	    if(user.getId() != userIdCheck) {
 	    	return "error/403";
 	    }
-	    if (order == null) {
-	        return "error";  
-	    }
+	    
 	    model.addAttribute("order", order);
 	    
 	    List<OrdersDetailEntity> listOrderDetails = orderDAO.getOrderDetailsByOrderId(order.getId());
@@ -149,7 +151,7 @@ public class AccountController {
 	    	redirectAttributes.addFlashAttribute("alertMessage", "Có lỗi xảy ra khi hủy đơn hàng!");
 	        redirectAttributes.addFlashAttribute("alertType", "error");
 	    }
-		return "redirect:/account/account_orders.htm";
+		return "redirect:/account/account_orders";
 	}
 	
 	@RequestMapping(value = "profile_settings", method = RequestMethod.GET)
@@ -158,7 +160,7 @@ public class AccountController {
 		HttpSession session = request.getSession();
 	    UsersEntity currentUser = (UsersEntity) session.getAttribute("user");
 	    if (currentUser == null) {
-	    	return "redirect:/signin.htm";
+	    	return "redirect:/signin";
 	    }
 	    UsersEntity user = userDAO.getUserById(currentUser.getId());
 	    user.setEmail(user.getEmail().toLowerCase());
@@ -208,12 +210,12 @@ public class AccountController {
 		
 		if(isError > 0){
 			redirectAttributes.addFlashAttribute("errorUpdate", "Vui lòng sửa các lỗi sau đây !");
-			return "redirect:/account/profile_settings.htm";
+			return "redirect:/account/profile_settings";
 		}
 		String fullnameSafe = EscapeHtmlUtil.encodeHtml(fullname.trim());
 		if(fullnameSafe.length() > 50) {
 			redirectAttributes.addFlashAttribute("errorUpdate", "Tên không hợp lệ!");
-			return "redirect:/account/profile_settings.htm";
+			return "redirect:/account/profile_settings";
 		}
 	    user.setFullname(fullnameSafe);
 	    user.setPhone(phone.trim());
@@ -235,7 +237,7 @@ public class AccountController {
 		    	redirectAttributes.addFlashAttribute("errorUpdate", "Cập nhật thông tin không thành công!");
 		    }
 	    }
-	    return "redirect:/account/profile_settings.htm";
+	    return "redirect:/account/profile_settings";
 	}
 	
 	@RequestMapping(value = "change_password", method = RequestMethod.POST)
@@ -270,7 +272,7 @@ public class AccountController {
 	    		redirectAttributes.addFlashAttribute("alertType", "error");
 	    	}
 	    }
-		return "redirect:/account/profile_settings.htm";
+		return "redirect:/account/profile_settings";
 	}
 	
 	@RequestMapping(value = "my_ratings", method = RequestMethod.GET)
@@ -278,7 +280,7 @@ public class AccountController {
 		HttpSession session = request.getSession();
 	    UsersEntity currentUser = (UsersEntity) session.getAttribute("user");
 	    if (currentUser == null) {
-	    	return "redirect:/signin.htm";
+	    	return "redirect:/signin";
 	    }
 	    UsersEntity user = userDAO.getUserById(currentUser.getId());
 	    model.addAttribute("user", user);
@@ -335,8 +337,7 @@ public class AccountController {
 	            orderId = parts[0];  // Lấy Order ID từ tên trường
 	            bookId = parts[1];   // Lấy Book ID từ tên trường
 	            if (ratingsDAO.checkOrderInRatings(Long.valueOf(orderId), Long.valueOf(bookId)) == true) {
-	            	System.out.println("HJKHJKJHGSGKDFKKFHKJFKGFKGKFGGFKGFKGFKGFKGFKGFKG");
-	            	return "redirect:/account/my_ratings.htm";
+	            	return "redirect:/account/my_ratings";
 	            }
 	            // Lấy giá trị đánh giá
 	            if (allRequestParams.get(key) != null && allRequestParams.get(key).length() > 0) {
@@ -370,7 +371,7 @@ public class AccountController {
 			model.addAttribute("errorRating", "Thiếu thông tin đánh giá cho một vài sách!");
 			return "client/Account/ratings";
 		}
-		return "redirect:/account/my_ratings.htm"; 
+		return "redirect:/account/my_ratings"; 
 	}
 	
 }

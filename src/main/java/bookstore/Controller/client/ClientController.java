@@ -173,8 +173,22 @@ public class ClientController {
 	}
 
 	@RequestMapping(value = "productdetail/{productId}", method = RequestMethod.GET)
-	public String productdetail(ModelMap model, @PathVariable("productId") Long id) {
+	public String productdetail(ModelMap model, @PathVariable("productId") String ids) {
+		
+	    if (!ids.matches("\\d+")) {
+	    	return "redirect:/index";
+	    }
+	    
+	    Long id = Long.parseLong(ids);
+	    
 		BooksEntity book = booksDAO.getBookByIdHQL(id);
+
+		if (book == null) {
+			return "redirect:/index";
+		}
+		
+		
+		
 		model.addAttribute("book", book);
 		Double discount = discountsDAO.getDiscountValueByBookId(id);
 		model.addAttribute("discount", discount);

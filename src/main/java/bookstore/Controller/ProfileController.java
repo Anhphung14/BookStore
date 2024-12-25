@@ -35,7 +35,7 @@ public class ProfileController {
 	public String showProfile(HttpSession session, Model model) {
 		UsersEntity user = (UsersEntity) session.getAttribute("user");
 		if (user == null) {
-			return "redirect:/signin.htm";
+			return "redirect:/signin";
 		}
 		model.addAttribute("user", user);
 		return "account/profile";
@@ -86,7 +86,7 @@ public class ProfileController {
 		}
 
 		// Điều hướng về trang profile sau khi lưu thành công
-		return "redirect:/admin1337/profile.htm";
+		return "redirect:/admin1337/profile";
 	}
 
 }

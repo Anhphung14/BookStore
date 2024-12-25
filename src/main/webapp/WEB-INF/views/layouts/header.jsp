@@ -68,7 +68,7 @@ nav.navbar {
 		</div>
 
 		<div class="d-flex gap-3">
-			<a href="${pageContext.servletContext.contextPath}/index.htm"
+			<a href="${pageContext.servletContext.contextPath}/index"
 				class="btn btn-outline-dark d-flex align-items-center gap-2"> <i
 				class="fa fa-globe fa-lg"></i> <span>Trang chủ BookStore</span>
 			</a> <a href="https://dashboard.tawk.to/#/chat"
@@ -103,10 +103,10 @@ nav.navbar {
 							<div class="text-muted">${sessionScope.user.email}</div>
 						</div>
 					</li>
-					<li><a class="dropdown-item" href="profile.htm"><i
+					<li><a class="dropdown-item" href="profile"><i
 							class="fa fa-user"></i> Profile</a></li>
 					<form id="signoutForm"
-						action="${pageContext.servletContext.contextPath}/signout.htm"
+						action="${pageContext.servletContext.contextPath}/signout"
 						method="POST" style="display: none;">
 						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 						<input type="hidden" name="signout" value="true">

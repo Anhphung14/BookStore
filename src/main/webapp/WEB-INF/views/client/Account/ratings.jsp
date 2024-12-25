@@ -70,12 +70,12 @@
 		<div class="container my-5">
         <h1 class="text-center mb-4">Đánh Giá Đơn Hàng #${order.uuid }</h1>
 
-        <form id="ratingForm" action="account/submitRatings.htm" method="post">
+        <form id="ratingForm" action="account/submitRatings" method="post">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <!-- Sản phẩm 1 -->
             <c:forEach var="orderDetail" items="${orderDetails}">
 			    <div class="border mb-4 p-3">
-			        <h4><a href="client/productdetail/${orderDetail.book.id}.htm" target="_blank" class="text-decoration-none" style="font-size: 2.2rem;">${orderDetail.book.title}</a></h4>
+			        <h4><a href="client/productdetail/${orderDetail.book.id}" target="_blank" class="text-decoration-none" style="font-size: 2.2rem;">${orderDetail.book.title}</a></h4>
 			        <div class="row">
 			            <div class="col-md-2">
 			                <img src="${orderDetail.book.thumbnail }" alt="${orderDetail.book.title}" class="img-fluid">

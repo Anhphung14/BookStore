@@ -116,7 +116,7 @@
 						width="120px" alt="Page Icon">
 				</div>
 			</div>
-			<form id="productForm" action="product/edit.htm" method="POST" enctype="multipart/form-data">
+			<form id="productForm" action="product/edit" method="POST" enctype="multipart/form-data">
 				<input type="hidden" id="task" name="task" value="${task}">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				<c:if test="${task != 'new'}">
@@ -350,7 +350,7 @@
 
 				<div class="mt-3">
 					<button class="btn btn-primary btn-save" type="submit">Save</button>
-					<a href="<c:url value='/admin1337/products.htm' />"
+					<a href="<c:url value='/admin1337/products' />"
 						class="btn btn-light btn-cancel">Cancel</a>
 				</div>
 			</form>
@@ -454,7 +454,7 @@
 	        confirmButtonText: "OK"
 	    }).then((result) => {
 	        if (result.isConfirmed && alertType === "success") {
-	            window.location.href = 'products.htm';
+	            window.location.href = 'products';
 	        }
 	    });
 	}
@@ -483,7 +483,7 @@
 		    }
 
 		    // Gửi yêu cầu AJAX đến server
-		    fetch('/bookstore/admin1337/product/getSubcategories.htm?categoryId=' + categoryId)
+		    fetch('/bookstore/admin1337/product/getSubcategories?categoryId=' + categoryId)
 		    .then(response => response.text())
 		    .then(data => {
 		        const subcategorySelect = document.getElementById('subcategory_id');
@@ -496,7 +496,7 @@
 		function loadCategory(subcategoryId) {
 		    if (!subcategoryId) return;
 
-		    fetch(`/bookstore/admin1337/product/getCategory.htm?subcategoryId=` + subcategoryId)
+		    fetch(`/bookstore/admin1337/product/getCategory?subcategoryId=` + subcategoryId)
 		        .then(response => response.text()) // Đọc response dạng text
 		        .then(data => {
 		            const parser = new DOMParser();

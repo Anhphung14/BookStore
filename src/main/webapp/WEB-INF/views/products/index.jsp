@@ -128,7 +128,7 @@
 			                </button>
 										
 							<a class="btn btn-primary text-nowrap btn-add"
-								href="product/new.htm"> <i
+								href="product/new"> <i
 								class="fa fa-plus me-2"></i>Add
 							</a>
 
@@ -230,7 +230,7 @@
 											<td class="text-center align-middle"><fmt:formatDate value='${book.updatedAt}' pattern='dd-MM-yyyy HH:mm' /></td>
 											<td class="text-center">
 												<div class="d-flex justify-content-center align-items-center gap-1">
-													<a class="btn btn-rounded" href="product/edit/${book.id}.htm"><i class="fa fa-pencil"></i></a>
+													<a class="btn btn-rounded" href="product/edit/${book.id}"><i class="fa fa-pencil"></i></a>
 													<a class="btn btn-rounded" data-bs-toggle="modal" data-bs-target="#statusModal" 
 													   onclick="prepareStatusChange(${book.id}, '${book.status}')">
 													    <i class="fa ${book.status == '1' ? 'fa-eye-slash' : 'fa-eye'}"></i>
@@ -257,7 +257,7 @@
 										<!-- Liên kết đến trang trước -->
 										<li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
 											<a class="page-link"
-											href="products.htm?page=${currentPage > 1 ? currentPage - 1 : 1}&size=${size}"
+											href="products?page=${currentPage > 1 ? currentPage - 1 : 1}&size=${size}"
 											aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 										</a>
 										</li>
@@ -266,7 +266,7 @@
 										<c:forEach var="i" begin="1" end="${totalPages}">
 											<li class="page-item ${i == currentPage ? 'active' : ''}">
 												<a class="page-link"
-												href="products.htm?page=${i}&size=${size}">${i}</a>
+												href="products?page=${i}&size=${size}">${i}</a>
 											</li>
 										</c:forEach>
 
@@ -274,7 +274,7 @@
 										<li
 											class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
 											<a class="page-link"
-											href="products.htm?page=${currentPage < totalPages ? currentPage + 1 : totalPages}&size=${size}"
+											href="products?page=${currentPage < totalPages ? currentPage + 1 : totalPages}&size=${size}"
 											aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 										</a>
 										</li>
@@ -295,7 +295,7 @@
 			            </div>
 			            <div class="modal-body">
 			                <!-- Form used to send POST request -->
-			                <form id="deleteForm" method="POST" action="product/delete.htm">
+			                <form id="deleteForm" method="POST" action="product/delete">
 			                    <p>Are you sure you want to delete this book?</p>
 			                    <p><strong>Book Id:</strong> <span id="bookIdToDelete"></span></p>
 			                    <p><strong>Book title:</strong> <span id="bookTitleToDelete"></span></p>
@@ -425,7 +425,7 @@
 			                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			            </div>
 			            <div class="modal-body">
-			                <form id="statusForm" method="POST" action="product/changeStatus.htm">
+			                <form id="statusForm" method="POST" action="product/changeStatus">
 			                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			                
 			                    <p id="statusMessage">Do you want to change the status of this book?</p>
@@ -470,7 +470,7 @@
 		        confirmButtonText: "OK"
 		    }).then((result) => {
 		        if (result.isConfirmed && alertType === "success") {
-		            window.location.href = 'products.htm';
+		            window.location.href = 'products';
 		        }
 		    });
 		}

@@ -258,7 +258,7 @@
 														</div>
 														<div role="tabpanel" class="tg-tab-pane tab-pane"
 															id="review">
-															<jsp:include page="/productdetail/${book.id}/reviews.htm" />
+															<jsp:include page="/productdetail/${book.id}/reviews" />
 														</div>
 													</div>
 												</div>
@@ -269,7 +269,7 @@
 													<div class="tg-sectionhead">
 														<h2>Sản phẩm bạn có thể thích</h2>
 														<a style="text-decoration: none;" class="tg-btn"
-															href="allProduct.htm">Xem tất cả</a>
+															href="allProduct">Xem tất cả</a>
 													</div>
 												</div>
 												<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -305,7 +305,7 @@
 																		<div class="tg-booktitle">
 																			<h3>
 																				<a style="text-decoration: none;"
-																					href="${pageContext.servletContext.contextPath}/productdetail/${book.id}.htm">${book.title}</a>
+																					href="${pageContext.servletContext.contextPath}/productdetail/${book.id}">${book.title}</a>
 																			</h3>
 																		</div>
 																		<span class="tg-bookwriter">Tác giả: <a
@@ -362,7 +362,7 @@
 												<ul>
 													<c:forEach var="item" items="${countBookEachCategory }">
 														<li><a
-															href="http://localhost:8080/bookstore/categories/${item[3]}.htm"><span>${item[0]}</span><em>${item[2] }</em></a></li>
+															href="http://localhost:8080/bookstore/categories/${item[3]}"><span>${item[0]}</span><em>${item[2] }</em></a></li>
 
 													</c:forEach>
 												</ul>
@@ -442,7 +442,7 @@
              console.log("bookId:", bookId);
              console.log("quantity:", quantity);
             // Gửi GET request để thêm sách vào giỏ hàng
-            fetch('/bookstore/cart/add.htm?bookId=' + bookId + '&quantity=' + quantity, {
+            fetch('/bookstore/cart/add?bookId=' + bookId + '&quantity=' + quantity, {
                 method: 'GET', 
             })
             .then(response => response.text()) 
@@ -454,7 +454,7 @@
 	              	 }
 	              	 else if (data != "error" && data != "Vui long dang nhap") {
                 	 var countBooksInCart = parseInt(data);  // Chuyển đổi dữ liệu trả về thành số
-                	 fetch('/bookstore/index.htm');
+                	 fetch('/bookstore/index');
                      document.querySelector('#tg-minicart .tg-themebadge').textContent = countBooksInCart;
                 	 toastr.success('Sản phẩm đã được thêm vào giỏ hàng!', 'Thành công');
                     

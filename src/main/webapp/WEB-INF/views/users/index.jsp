@@ -116,7 +116,7 @@
 								</button>
 							</div>
 							<a class="btn btn-primary text-nowrap btn-add"
-								href="user/new.htm"> <i class="fa fa-plus me-2"></i>Add
+								href="user/new"> <i class="fa fa-plus me-2"></i>Add
 							</a>
 						</div>
 						<div class="d-flex gap-3"></div>
@@ -139,7 +139,7 @@
 											<tr>
 												<td class="text-end">${user.id}</td>
 												<td><a class="d-flex flex-nowrap align-items-center"
-													href="user/edit/${user.uuid}.htm">
+													href="user/edit/${user.uuid}">
 														<div>
 															<img alt="User Avatar" src="${user.avatar}"
 																class="rounded-circle bg-white border border-3 border-white"
@@ -164,7 +164,7 @@
 												<td class="text-end">
 													<div class="d-flex gap-1">
 														<a class="btn btn-rounded"
-															href="user/edit/${user.uuid}.htm"><i
+															href="user/edit/${user.uuid}"><i
 															class="fa fa-pencil"></i></a>
 													</div>
 												</td>
@@ -179,19 +179,19 @@
 									<ul class="pagination justify-content-center">
 										<li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
 											<a class="page-link"
-											href="users.htm?page=${currentPage > 1 ? currentPage - 1 : 1}&size=${size}"
+											href="users?page=${currentPage > 1 ? currentPage - 1 : 1}&size=${size}"
 											aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 										</a>
 										</li>
 										<c:forEach var="i" begin="1" end="${totalPages}">
 											<li class="page-item ${i == currentPage ? 'active' : ''}">
-												<a class="page-link" href="users.htm?page=${i}&size=${size}">${i}</a>
+												<a class="page-link" href="users?page=${i}&size=${size}">${i}</a>
 											</li>
 										</c:forEach>
 										<li
 											class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
 											<a class="page-link"
-											href="users.htm?page=${currentPage < totalPages ? currentPage + 1 : totalPages}&size=${size}"
+											href="users?page=${currentPage < totalPages ? currentPage + 1 : totalPages}&size=${size}"
 											aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 										</a>
 										</li>

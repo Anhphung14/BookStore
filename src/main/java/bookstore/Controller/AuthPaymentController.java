@@ -52,7 +52,7 @@ public class AuthPaymentController {
 	            if(discount == null && !discountCode.isEmpty()) {
 	            	redirectAttributes.addFlashAttribute("alertMessage", "Mã giảm giá không hợp lệ!");
 	        		redirectAttributes.addFlashAttribute("alertType", "error");
-	                return "redirect:/cart/view.htm";
+	                return "redirect:/cart/view";
 	            }
 	            
 			 List<DiscountsEntity> listDiscountsAvailable = new ArrayList<DiscountsEntity>();
@@ -71,7 +71,7 @@ public class AuthPaymentController {
 	                if (!isDiscountValid) {
 	                    redirectAttributes.addFlashAttribute("alertMessage", "Mã giảm giá không hợp lệ!");
 	                    redirectAttributes.addFlashAttribute("alertType", "error");
-	                    return "redirect:/cart/view.htm";
+	                    return "redirect:/cart/view";
 	                }
 	            }
 	        

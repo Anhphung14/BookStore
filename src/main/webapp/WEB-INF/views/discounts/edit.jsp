@@ -132,7 +132,7 @@
 						width="120px" alt="Page Icon">
 				</div>
 			</div>
-			<form id="discountForm" action="discount/edit.htm" method="POST" >
+			<form id="discountForm" action="discount/edit" method="POST" >
 				<input type="hidden" value="${discount.id }" name="discount_id">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				<div class="card mt-3">
@@ -275,7 +275,7 @@
 					</div>
 					<div class="mt-3">
 						<button class="btn btn-primary btn-save" type="submit">Save</button>
-						<a href="<c:url value='discounts.htm' />"
+						<a href="<c:url value='discounts' />"
 							class="btn btn-light btn-cancel">Cancel</a>
 					</div>
 			</form>
@@ -360,7 +360,7 @@
 	        confirmButtonText: "OK"
 	    }).then((result) => {
 	        if (result.isConfirmed && alertType === "success") {
-	            window.location.href = '${pageContext.servletContext.contextPath}/products.htm';
+	            window.location.href = '${pageContext.servletContext.contextPath}/products';
 	        }
 	    });
 	}
@@ -465,7 +465,7 @@
     }
 
     // Sử dụng fetch để lấy subcategories từ server, nối chuỗi bằng toán tử "+"
-    fetch("http://localhost:8080/bookstore/discount/getSubcategories.htm?categoryId=" + categoryId)
+    fetch("http://localhost:8080/bookstore/discount/getSubcategories?categoryId=" + categoryId)
         .then(response => {
             // Kiểm tra xem yêu cầu có thành công hay không
             if (!response.ok) {
