@@ -58,7 +58,12 @@ public class InventoriesController {
 	
 	@RequestMapping(value = "/inventory/edit", method = RequestMethod.POST)
 	public String edit(ModelMap model, RedirectAttributes redirectAttributes, @ModelAttribute("inventory") InventoryEntity inventory) {
-		
+		System.out.println("inventory.getStock_quantity(): " + inventory.getStock_quantity());
+		if(inventory.getStock_quantity() < 0 || inventory.getStock_quantity() > 1000) {
+			redirectAttributes.addFlashAttribute("alertMessage", "Stock quantity must be between 0 and 1000");
+			redirectAttributes.addFlashAttribute("alertType", "error");
+			return "redirect:/admin1337/inventories.htm";
+		}
 		InventoryEntity inventoryGetById = inventoryService.getInventoryById(inventory.getId());
 		
 		if (!inventoryService.handleErrors(model, inventoryGetById)) {
@@ -87,6 +92,12 @@ public class InventoriesController {
 			@RequestParam("stock_quantity") int stock_quantity, @RequestParam("bookId") Long bookId,
 			@RequestParam("totalQuantity") int totalQuantity, @RequestParam("id") Long inventoryId,
 			@RequestParam("addQuantity") Integer addQuantity) {
+		
+		if (totalQuantity + addQuantity > 1000) { 
+			redirectAttributes.addFlashAttribute("alertMessage", "Add quantity exceeds the allowed total quantity"); 
+			redirectAttributes.addFlashAttribute("alertType", "error"); 
+			return "redirect:/admin1337/inventories.htm";
+		}
 		
 		InventoryEntity inventory = inventoryService.getInventoryById(inventoryId);
 		BooksEntity book = booksService.getBookById(bookId);

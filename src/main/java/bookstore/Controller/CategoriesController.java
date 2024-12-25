@@ -138,6 +138,22 @@ public class CategoriesController {
 	    Session session = factory.getCurrentSession();
 	    category.setName(EscapeHtmlUtil.encodeHtml(category.getName()));
 	    subcategoryNames = EscapeHtmlUtil.encodeHtml(subcategoryNames);
+	    
+	    if (category.getName().length() > 50) { 
+	    	redirectAttributes.addFlashAttribute("alertMessage", "Category name exceeds the allowed length of 50 characters."); 
+	    	redirectAttributes.addFlashAttribute("alertType", "error"); 
+	    	return "redirect:/admin1337/categories.htm"; } 
+	    
+	    if (subcategoryNames != null) { 
+	    	String[] subcategoryArray = subcategoryNames.split(","); 
+	    	for (String subcategoryName : subcategoryArray) { 
+	    		if (subcategoryName.trim().length() > 100) { 
+	    			redirectAttributes.addFlashAttribute("alertMessage", "One or more subcategory names exceed the allowed length of 100 characters."); 
+	    			redirectAttributes.addFlashAttribute("alertType", "error"); 
+	    			return "redirect:/admin1337/categories.htm"; 
+    			} 
+    		} 
+    	}    
 	    try {
 	        if ("new".equals(task)) {
 	            // Kiểm tra tên category trùng

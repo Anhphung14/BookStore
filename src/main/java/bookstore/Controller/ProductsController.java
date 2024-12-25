@@ -184,6 +184,23 @@ public class ProductsController {
 			
 			bookEntity.setLanguage(EscapeHtmlUtil.encodeHtml(bookEntity.getLanguage()));
 			bookEntity.setTitle(EscapeHtmlUtil.encodeHtml(bookEntity.getTitle()));
+			if ( bookEntity.getTitle().length() > 255 || bookEntity.getAuthor().length() > 100 || bookEntity.getLanguage().length() > 50) { 
+				redirectAttributes.addFlashAttribute("alertMessage", "One or more fields exceed the allowed length."); 
+				redirectAttributes.addFlashAttribute("alertType", "warning"); 
+				return "redirect:/admin1337/products.htm"; 
+			}
+			
+			if (bookEntity.getPrice() < 0 || bookEntity.getPrice() > 10000000.00) { 
+				redirectAttributes.addFlashAttribute("alertMessage", "Price must be between 0 and 10,000,000.00"); 
+				redirectAttributes.addFlashAttribute("alertType", "warning"); 
+				return "redirect:/admin1337/products.htm"; 
+			}
+			
+			if(bookEntity.getQuantity() < 0 || bookEntity.getQuantity() > 1000) {
+				redirectAttributes.addFlashAttribute("alertMessage", "Quantity must be less than 1000"); 
+				redirectAttributes.addFlashAttribute("alertType", "warning"); 
+				return "redirect:/admin1337/products.htm"; 
+			}
 			if (booksService.checkUpdateQuantity(model, bookGetById, bookEntity)) {
 				boolean result = booksService.updateBook(bookEntity);
 				
@@ -271,6 +288,24 @@ public class ProductsController {
 
 			bookEntity.setLanguage(EscapeHtmlUtil.encodeHtml(bookEntity.getLanguage()));
 			bookEntity.setTitle(EscapeHtmlUtil.encodeHtml(bookEntity.getTitle()));
+			
+			if ( bookEntity.getTitle().length() > 255 || bookEntity.getAuthor().length() > 100 || bookEntity.getLanguage().length() > 50) { 
+				redirectAttributes.addFlashAttribute("alertMessage", "One or more fields exceed the allowed length."); 
+				redirectAttributes.addFlashAttribute("alertType", "warning"); 
+				return "redirect:/admin1337/products.htm"; 
+			}
+			
+			if (bookEntity.getPrice() < 0 || bookEntity.getPrice() > 10000000.00) { 
+				redirectAttributes.addFlashAttribute("alertMessage", "Price must be between 0 and 10,000,000.00"); 
+				redirectAttributes.addFlashAttribute("alertType", "warning"); 
+				return "redirect:/admin1337/products.htm"; 
+			}
+			
+			if(bookEntity.getQuantity() < 0 || bookEntity.getQuantity() > 1000) {
+				redirectAttributes.addFlashAttribute("alertMessage", "Quantity must be less than 1000"); 
+				redirectAttributes.addFlashAttribute("alertType", "warning"); 
+				return "redirect:/admin1337/products.htm"; 
+			}
 			if (listExistBooks.size() == 0) {
 				InventoryEntity inventory = new InventoryEntity(bookEntity, bookEntity.getQuantity(), new Date(), new Date());
 				

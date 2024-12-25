@@ -110,6 +110,12 @@ public class SuppliersController {
 	    supplier.setEmail(EscapeHtmlUtil.encodeHtml(supplier.getEmail()));
 	    supplier.setName(EscapeHtmlUtil.encodeHtml(supplier.getName()));
 	    supplier.setPhone(EscapeHtmlUtil.encodeHtml(supplier.getPhone()));
+	    
+	    if (supplier.getName().length() > 100 || supplier.getContactPerson().length() > 100 || supplier.getEmail().length() > 100 || supplier.getPhone().length() > 20 || supplier.getAddress().length() > 255) {
+	    	redirectAttributes.addFlashAttribute("alertMessage", "One or more fields exceed the allowed length.");
+	    	redirectAttributes.addFlashAttribute("alertType", "error");
+	    	return "redirect:/admin1337/suppliers.htm";
+	    }
 	    try {
 	        // Check if the supplier name already exists in the database
 	        SuppliersEntity existingSupplierByName = getSupplierByName(supplier.getName());
