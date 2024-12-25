@@ -341,7 +341,7 @@ public class PaymentController {
             // Redirect với thông báo thành công
             redirectAttributes.addFlashAttribute("alertMessage", "Thanh toán thành công!");
     		redirectAttributes.addFlashAttribute("alertType", "success");
-    		//sendMailOrderSuccess(order);
+    		sendMailOrderSuccess(order);
             return "redirect:/index.htm";
 
         } catch (Exception e) {
@@ -563,7 +563,7 @@ public class PaymentController {
     public void sendMailOrderSuccess(OrdersEntity order) {
         String emailContent = "<html><body>"
                 + "<h5>Hello " + order.getUser().getFullname() + ",</h5>"
-                + "<p>Congratulations! Your order with Order ID: " + order.getId() + " has been placed successfully.</p>"
+                + "<p>Congratulations! Your order with Order ID: <strong>" + order.getUuid() + "</strong> has been placed successfully.</p>"
                 + "<p>Order Details:</p>"
                 + "<ul>"
                 + "<li><strong>Customer Name:</strong> " + order.getCustomerName() + "</li>"
@@ -576,7 +576,7 @@ public class PaymentController {
                 + "<p>Book Store ALDPT</p>"
                 + "</body></html>";
 
-        mailService.sendMail(emailContent, order.getUser().getEmail(), "Order Confirmation - Order ID: " + order.getId());
+        mailService.sendMail(emailContent, order.getUser().getEmail(), "Order Confirmation - Order ID: " + order.getUuid());
     }
 
 }

@@ -102,8 +102,13 @@ public class AccountController {
 	}
 	
 	@RequestMapping(value = "order_details/{uuid}", method = RequestMethod.GET)
-	public String order_details(ModelMap model, @PathVariable("uuid") String uuid) {
+	public String order_details(ModelMap model, @PathVariable("uuid") String uuid, HttpSession session) {
+		UsersEntity user = (UsersEntity) session.getAttribute("user");
 	    OrdersEntity order = orderDAO.getOrderByUuid(uuid);  
+	    Long userIdCheck = order.getUser().getId();
+	    if(user.getId() != userIdCheck) {
+	    	return "error/403";
+	    }
 	    if (order == null) {
 	        return "error";  
 	    }
