@@ -63,7 +63,7 @@
 			</div>
 			<form id="userForm" action="user/save.htm" method="POST">
 				<input type="hidden" id="task" name="task" value="${task}">
-
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				<!-- UUID handling -->
 				<c:if test="${task != 'new'}">
 					<input type="hidden" id="uuid" name="uuid" value="${user.uuid}">

@@ -76,6 +76,7 @@
 					type="hidden" id="orderby" name="orderby"
 					value="${param.orderby != null ? param.orderby : 'desc'}" /> <input
 					type="hidden" id="boxchecked" name="boxchecked" value="0" />
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
 				<div class="card mx-3">
 					<div class="card-body">
@@ -181,6 +182,7 @@
 			            <div class="modal-body">
 			                <!-- Form used to send POST request -->
 			                <form id="deleteForm" method="POST" action="product/delete.htm">
+			                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			                    <p>Are you sure you want to delete this book?</p>
 			                    <p><strong>Book Id:</strong> <span id="bookIdToDelete"></span></p>
 			                    <p><strong>Book title:</strong> <span id="bookTitleToDelete"></span></p>
@@ -207,6 +209,7 @@
                 <button type="button" id="closeModalButton" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="addQuantityForm" method="POST" action="inventory/addQuantity.htm">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <div class="modal-body">
                     <!-- Book ID (Read-Only) -->
                     <div class="mb-3">

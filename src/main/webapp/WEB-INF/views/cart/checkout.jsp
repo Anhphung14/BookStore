@@ -38,6 +38,7 @@
                 <div class="content-wrapper row">
                     <!-- Thông Tin Nhận Hàng -->
                     <form id="paymentForm" method="POST" action="${pageContext.servletContext.contextPath}/payment/pay.htm">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     <div class="info-section col-md-6">
                         <h2>Thông Tin Nhận Hàng</h2>
                             <input type="hidden" name="userId" value="${user.id}">

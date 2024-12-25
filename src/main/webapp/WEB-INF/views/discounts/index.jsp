@@ -72,7 +72,7 @@
 				</div>
 			</div>
 			<form id="frm-admin" name="adminForm" action="discounts.htm" method="GET">
-
+				
 				<div class="card mx-3">
 					<div class="card-body">
 						<div class="d-flex gap-3">
@@ -295,6 +295,7 @@
 			            <div class="modal-body">
 			                <!-- Form used to send POST request -->
 			                <form id="deleteForm" method="POST" action="discount/delete.htm">
+			                	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			                    <p>Are you sure you want to delete this Discount?</p>
 			                    <p><strong>Discount Id:</strong> <span id="discountIdToDelete"></span></p>
 			                    <p><strong>Discount code:</strong> <span id="discountTitleToDelete"></span></p>

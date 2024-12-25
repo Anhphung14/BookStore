@@ -108,6 +108,7 @@ nav.navbar {
 					<form id="signoutForm"
 						action="${pageContext.servletContext.contextPath}/signout.htm"
 						method="POST" style="display: none;">
+						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 						<input type="hidden" name="signout" value="true">
 					</form>
 					<li><a class="dropdown-item" href="javascript:void(0);"

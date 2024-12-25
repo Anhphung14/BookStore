@@ -129,6 +129,7 @@
 				</div>
 			</div>
 			<form id="discountForm" action="discount/create.htm" method="POST">
+			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				<div class="card mt-3">
 					<div class="card-body">
 						<h6 class="small text-muted">GENERAL INFORMATION</h6>

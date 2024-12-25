@@ -173,6 +173,28 @@ public class InventoryDAO {
 	        return false; // Trả về false nếu có lỗi
 	    }
 	}
+	
+	public boolean updateInventoryStock2(InventoryEntity inventory, Integer newStockQuantity) {
+	    Session session = factory.getCurrentSession();
+	    try {
+	    	
+	        // Chuỗi SQL để gọi stored procedure
+	        String sql = "EXEC UpdateInventoryStock :bookId, :newStockQuantity";
+
+	        // Tạo Query và thiết lập tham số
+	        Query query = session.createSQLQuery(sql)
+	                             .setParameter("bookId", inventory.getBook().getId())
+	                             .setParameter("newStockQuantity", newStockQuantity);
+
+	        // Thực thi stored procedure
+	        query.executeUpdate();
+
+	        return true; // Nếu không có lỗi, trả về true
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false; // Trả về false nếu có lỗi
+	    }
+	}
 
 	
 }

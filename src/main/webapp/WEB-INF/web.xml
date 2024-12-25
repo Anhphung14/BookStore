@@ -5,23 +5,8 @@
 	id="WebApp_ID" version="3.1">
 	<display-name>Java5</display-name>
 
-	<!-- DispatcherServlet -->
-	<servlet>
-		<servlet-name>spring</servlet-name>
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-		<init-param>
-			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/configs/*.xml</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>spring</servlet-name>
-		<url-pattern>*.htm</url-pattern>
-	</servlet-mapping>
 
-
-	<!-- CharacterEncodingFilter -->
+<!-- CharacterEncodingFilter -->
 	<filter>
 		<filter-name>utf8</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -38,6 +23,39 @@
 		<filter-name>utf8</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
+	<filter>
+		<filter-name>multipartFilter</filter-name>
+		<filter-class>org.springframework.web.multipart.support.MultipartFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>multipartFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- DispatcherServlet -->
+	<servlet>
+		<servlet-name>spring</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/configs/*.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+		<multipart-config>
+<!--			<location>/tmpp</location>-->
+			<max-file-size>10485760</max-file-size> <!-- 10MB -->
+			<max-request-size>20971520</max-request-size> <!-- 20MB -->
+			<file-size-threshold>5120</file-size-threshold> <!-- 5KB -->
+		</multipart-config>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>spring</servlet-name>
+		<url-pattern>*.htm</url-pattern>
+	</servlet-mapping>
+
+
+	
 
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
@@ -61,20 +79,19 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/configs/*.xml</param-value>
 	</context-param>
-	
+
 	<error-page>
-        <error-code>404</error-code>
-        <location>/WEB-INF/views/error/404.jsp</location>
-    </error-page>
-    
-    <error-page>
-        <error-code>403</error-code>
-        <location>/WEB-INF/views/error/403.jsp</location>
-    </error-page>
+		<error-code>404</error-code>
+		<location>/WEB-INF/views/error/404.jsp</location>
+	</error-page>
+
+	<error-page>
+		<error-code>403</error-code>
+		<location>/WEB-INF/views/error/403.jsp</location>
+	</error-page>
 
 	<session-config>
-		<session-timeout>30</session-timeout> <!-- Thời gian session hết hạn sau
-		30 phút không hoạt động -->
+		<session-timeout>30</session-timeout>
 	</session-config>
 </web-app>
 

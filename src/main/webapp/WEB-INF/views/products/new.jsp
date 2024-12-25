@@ -127,7 +127,7 @@ select.form-control {
 				action="product/add.htm"
 				method="POST" enctype="multipart/form-data">
 				<input type="hidden" id="task" name="task" value="${task}">
-
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				<div class="card mt-3">
 					<div class="card-body">
 						<h6 class="small text-muted">GENERAL INFORMATION</h6>

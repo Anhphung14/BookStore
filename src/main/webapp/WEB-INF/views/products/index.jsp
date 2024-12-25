@@ -426,6 +426,8 @@
 			            </div>
 			            <div class="modal-body">
 			                <form id="statusForm" method="POST" action="product/changeStatus.htm">
+			                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+			                
 			                    <p id="statusMessage">Do you want to change the status of this book?</p>
 			                    <p id="currentStatus">Current Status: <span id="statusText"></span></p>
 			

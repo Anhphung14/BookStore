@@ -69,7 +69,7 @@ public class BooksService {
 	
 	public void editThumbnail_Images(BooksDTO bookDTO, BooksEntity bookEntity, BooksEntity bookGetById) {
 		try {
-			if (!bookDTO.getThumbnail().isEmpty()) {
+			if (bookDTO.getThumbnail() != null && !bookDTO.getThumbnail().isEmpty()) {
 //				String thumbnailPath = saveThumbnail(thumbnail, "resources/images/thumbnails/" + toSlug(title) + "/");
 				String thumbnailPath = uploadService.uploadByCloudinary(bookDTO.getThumbnail(), "images/thumbnails/" + uploadService.toSlug(bookEntity.getTitle()));
 				bookEntity.setThumbnail(thumbnailPath);

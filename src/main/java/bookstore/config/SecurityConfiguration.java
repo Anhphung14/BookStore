@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,13 +19,20 @@ import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.web.multipart.support.MultipartFilter;
 
 import bookstore.Service.CustomUserDetailsService;
+import bookstore.security.CustomAccessDeniedHandler;
 import bookstore.security.CustomAuthenticationSuccessHandler;
 import bookstore.security.CustomLogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
@@ -35,6 +43,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
     private CustomLogoutSuccessHandler customLogoutSuccessHandler;
+	
+	@Autowired
+	private CustomAccessDeniedHandler customeAccessDeniedHandler;
 	
 	@Autowired private 
 	CustomUserDetailsService userDetailsService;
@@ -76,11 +87,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-	    http.csrf().disable()
+		HttpSessionCsrfTokenRepository csrfTokenRepository = new HttpSessionCsrfTokenRepository();
+		csrfTokenRepository.setHeaderName("X-XSRF-TOKEN");
+		
+	    http
+		    .addFilterBefore(multipartFilter(), CsrfFilter.class)
+		    .csrf()
+//	    	.csrfTokenRepository(csrfTokenRepository)
+	    	.csrfTokenRepository(new HttpSessionCsrfTokenRepository())
+	    	.and()
 	        .authorizeRequests()
-	            .antMatchers("/login-github.htm**", "/login-google.htm**", "/signup.htm","/index.htm", "/categories/**", "/productdetail/**", "/cart/add.htm/**", "/verify-email.htm/**", "/resend-link.htm/**", "/saveSignup.htm/**", "/search.htm/**", "/allProduct.htm/**").permitAll()
-	            .antMatchers("/admin1337/**").hasRole("ADMIN")
-	            .antMatchers("/**").hasAnyRole("USER", "ADMIN")
+	            .antMatchers("/login-github.htm**", "/login-google.htm**", "/signup.htm","/index.htm", "/categories/**", "/productdetail/**", "/cart/add.htm/**", "/verify-email.htm/**", "/resend-link.htm/**", "/saveSignup.htm/**", "/search.htm/**", "/allProduct.htm/**", "/forgotpassword.htm").permitAll()
+//	            .antMatchers("/admin1337/**").hasRole("ADMIN")
+//	            .antMatchers("/admin1337/product/new.htm").hasAuthority("UPDATE_BOOK")
+	            .antMatchers("/admin1337/**").hasAnyRole("STAFF", "ADMIN")
+	            .antMatchers("/**").hasAnyRole("USER", "ADMIN", "STAFF")
 	            .anyRequest().authenticated()
 	            .and()
 	        .formLogin()
@@ -93,22 +114,30 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	            .and()
 	        .sessionManagement()
 	        	.sessionFixation().newSession()
-                .and()
+	        	.and()
 	        .logout()
-		        .logoutUrl("/signout.htm")            // Đặt URL logout cho phương thức POST
-//	            .logoutSuccessUrl("/signin.htm")     // Chuyển hướng sau khi đăng xuất thành công
+		        .logoutUrl("/signout.htm")
 		        .logoutSuccessHandler(customLogoutSuccessHandler)
 	            .permitAll()
 	            .and()
 	        .exceptionHandling()
-	            .accessDeniedPage("/signin.htm?error=true");
+	            .accessDeniedHandler(customeAccessDeniedHandler)
+	            .and();
 	}
-	
-
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/resources/**", "/admin1337/resources/**");
 	}
+	
+	@Bean
+	public HttpSessionEventPublisher httpSessionEventPublisher() { 
+		return new HttpSessionEventPublisher();
+	}
+	
+	@Bean
+    public MultipartFilter multipartFilter() {
+        return new MultipartFilter();
+    }
 	
 }

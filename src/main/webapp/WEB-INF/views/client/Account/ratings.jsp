@@ -71,6 +71,7 @@
         <h1 class="text-center mb-4">Đánh Giá Đơn Hàng #${orderId }</h1>
 
         <form id="ratingForm" action="account/submitRatings.htm" method="post">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             <!-- Sản phẩm 1 -->
             <c:forEach var="orderDetail" items="${orderDetails}">
 			    <div class="border mb-4 p-3">

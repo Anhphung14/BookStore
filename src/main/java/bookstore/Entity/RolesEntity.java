@@ -10,6 +10,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -43,7 +45,7 @@ public class RolesEntity {
     @Column(name = "updated_at", nullable = false)
     private Date updatedAt;
 
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     private Set<UsersEntity> users = new HashSet<>();
 
     // Getters and setters
@@ -54,6 +56,15 @@ public class RolesEntity {
     public void setUsers(Set<UsersEntity> users) {
         this.users = users;
     }
+    
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "Role_Permission",
+        joinColumns = @JoinColumn(name = "role_id"),
+        inverseJoinColumns = @JoinColumn(name = "permission_id")
+    )
+    
+    private Set<PermissionsEntity> permissions = new HashSet<>();
 
     @Transient
     private long userCount;
@@ -106,4 +117,12 @@ public class RolesEntity {
     public void setUserCount(long userCount) {
         this.userCount = userCount;
     }
+
+	public Set<PermissionsEntity> getPermissions() {
+		return permissions;
+	}
+
+	public void setPermissions(Set<PermissionsEntity> permissions) {
+		this.permissions = permissions;
+	}
 }

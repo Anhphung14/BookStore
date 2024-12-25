@@ -21,6 +21,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,7 +53,8 @@ public class UsersController {
 
 	@Autowired
 	private UserDAO userDAO;
-
+	
+	@PreAuthorize("hasAuthority('VIEW_USER')")
 	@RequestMapping(value = "/users")
 	public String users(ModelMap model, @RequestParam(value = "page", defaultValue = "1") int page,
 			@RequestParam(value = "size", defaultValue = "10") int size,
@@ -84,7 +86,8 @@ public class UsersController {
 
 		return "users/index";
 	}
-
+	
+	@PreAuthorize("hasAuthority('ADD_USER')")
 	@RequestMapping(value = "/user/new", method = RequestMethod.GET)
 	public String userNew(ModelMap model) {
 		model.addAttribute("user", new UsersEntity());
@@ -98,7 +101,8 @@ public class UsersController {
 
 		return "users/edit";
 	}
-
+	
+	@PreAuthorize("hasAuthority('UPDATE_USER')")
 	@RequestMapping(value = "/user/edit/{uuid}", method = RequestMethod.GET)
 	public String userEdit(@PathVariable("uuid") String uuid, ModelMap model) {
 		UsersEntity user = getUserByUuid(uuid);
@@ -121,7 +125,8 @@ public class UsersController {
 		model.addAttribute("task", "edit");
 		return "users/edit";
 	}
-
+	
+	@PreAuthorize("hasAuthority('ADD_USER') or hasAuthority('UPDATE_USER')")
 	@RequestMapping(value = "/user/save", method = RequestMethod.POST)
 	public String saveUser(@ModelAttribute("user") UsersEntity user, @RequestParam("task") String task,
 			@RequestParam(value = "uuid", required = false) String uuid,
@@ -129,6 +134,13 @@ public class UsersController {
 			@RequestParam(value = "enabled", required = false) Integer enabled, RedirectAttributes redirectAttributes,
 			ModelMap model) {
 		Session session = factory.getCurrentSession();
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    boolean hasUpdateAuthority = auth.getAuthorities().stream()
+	            .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("UPDATE_SUPPLIER"));
+	    boolean hasAddAuthority = auth.getAuthorities().stream()
+	            .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADD_SUPPLIER"));
+	    
 		
 		try {
 			if (uuid == null || uuid.isEmpty()) {
@@ -154,7 +166,7 @@ public class UsersController {
 				return "users/edit";
 			}
 
-			if ("new".equals(task)) {
+			if ("new".equals(task) && hasAddAuthority) {
 				if (getUserByEmail(user.getEmail()) != null) {
 					model.addAttribute("message", "This email is already registered.");
 					return "users/edit";
@@ -180,7 +192,7 @@ public class UsersController {
 
 				session.save(cart);
 
-			} else if ("edit".equals(task)) {
+			} else if ("edit".equals(task) && hasUpdateAuthority) {
 				UsersEntity existingUser = getUserByUuid(uuid); // Sử dụng UUID để tìm người dùng
 
 

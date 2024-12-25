@@ -54,6 +54,7 @@
 					<c:otherwise>
 						<form action="/bookstore/payment/checkout.htm" method="POST"
 							style="width: 1170px">
+							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 							<table class="cart-table table table-hover table-bordered">
 								<thead class="table-light">
 									<tr>

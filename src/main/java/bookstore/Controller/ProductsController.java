@@ -105,6 +105,7 @@ public class ProductsController {
 	BooksDAO booksDAO;
 	
 	
+	@PreAuthorize("hasAuthority('VIEW_PRODUCT')")
 	@RequestMapping("/products")
 	public String products(ModelMap model, 
 	        @RequestParam(value = "page", defaultValue = "1") int page,
@@ -140,7 +141,7 @@ public class ProductsController {
 	    return "products/index";
 	}
 
-//	@PreAuthorize("hasAuthority('UPDATE_PRODUCT')")
+	@PreAuthorize("hasAuthority('UPDATE_PRODUCT')")
 	@RequestMapping("/product/edit/{id}")
 	public String productEdit(@PathVariable("id") Long id, ModelMap model) {
 		
@@ -168,11 +169,12 @@ public class ProductsController {
 		return "products/new";
 	}
 	
-//	@PreAuthorize("hasAuthority('UPDATE_PRODUCT')")
+	@PreAuthorize("hasAuthority('UPDATE_PRODUCT')")
 	@RequestMapping(value = "/product/edit", method = RequestMethod.POST)
 	public String productEdit (ModelMap model, RedirectAttributes redirectAttributes, @ModelAttribute BooksDTO bookDTO) {
 		
 		BooksMapper booksMapper = new BooksMapper();
+		System.out.println(bookDTO.getTitle() + "0");
 		BooksEntity bookEntity = booksMapper.DTOtoEntity(bookDTO);
 		BooksEntity bookGetById = booksService.getBookById(bookEntity.getId());
 		SubcategoriesEntity subcategory = subcategoriesService.getSubcategoryBySubcategoryId(bookDTO.getSubcategory_id());
@@ -182,12 +184,16 @@ public class ProductsController {
 		bookEntity.setSupplier(supplier);
 		
 		booksService.editThumbnail_Images(bookDTO, bookEntity, bookGetById);
+		
+		System.out.println(bookEntity.getTitle() + "1");
+		
 
 		if (!booksService.handleBookErrors(model, bookEntity)) {
 			bookEntity.setAuthor(EscapeHtmlUtil.encodeHtml(bookEntity.getAuthor()));
+			System.out.println(bookEntity.getTitle() + "2");
 			
 			bookEntity.setLanguage(EscapeHtmlUtil.encodeHtml(bookEntity.getLanguage()));
-			bookEntity.setTitle(EscapeHtmlUtil.encodeHtml(bookEntity.getTitle()));
+//			bookEntity.setTitle(EscapeHtmlUtil.encodeHtml(bookEntity.getTitle()));
 			if (booksService.checkUpdateQuantity(model, bookGetById, bookEntity)) {
 				boolean result = booksService.updateBook(bookEntity);
 				

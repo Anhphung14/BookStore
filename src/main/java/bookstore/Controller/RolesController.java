@@ -13,6 +13,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -53,7 +55,8 @@ public class RolesController {
 	    
 	    return query.list();
 	}
-
+	
+	@PreAuthorize("hasAuthority('VIEW_ROLE')")
 	@RequestMapping(value = "/roles")
 	public String roles(ModelMap model, 
 	                    @RequestParam(value = "page", defaultValue = "1") int page,
@@ -108,7 +111,8 @@ public class RolesController {
 		Session session = factory.getCurrentSession();
 		return (RolesEntity) session.get(RolesEntity.class, id);
 	}
-
+	
+	@PreAuthorize("hasAuthority('UPDATE_ROLE')")
 	@RequestMapping(value = "/role/edit/{id}", method = RequestMethod.GET)
 	public String userEdit(@PathVariable("id") Long id, ModelMap model) {
 		RolesEntity role = getRoleById(id);
@@ -117,21 +121,31 @@ public class RolesController {
 		return "roles/edit";
 	}
 
+	@PreAuthorize("hasAuthority('ADD_ROLE')")
 	@RequestMapping(value = "role/new", method = RequestMethod.GET)
 	public String newRole(ModelMap model) {
 		model.addAttribute("role", new RolesEntity());
 		model.addAttribute("task", "new");
 		return "roles/edit";
 	}
-
+	
+	@PreAuthorize("hasAuthority('UPDATE_ROLE') or hasAuthority('ADD_ROLE')")
 	@RequestMapping(value = "/role/save.htm", method = RequestMethod.POST)
 	public String saveRole(@ModelAttribute("role") RolesEntity role, @RequestParam("task") String task,
 	        @RequestParam(value = "id", required = false) Long id, RedirectAttributes redirectAttributes, ModelMap model) {
 	    Session session = factory.getCurrentSession();
 	    role.setDescription(EscapeHtmlUtil.encodeHtml(role.getDescription()));
 	    role.setName(EscapeHtmlUtil.encodeHtml(role.getName()));
+	    
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    boolean hasUpdateAuthority = auth.getAuthorities().stream()
+	            .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("UPDATE_SUPPLIER"));
+	    boolean hasAddAuthority = auth.getAuthorities().stream()
+	            .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADD_SUPPLIER"));
+	    
+	    
 	    try {
-	        if ("new".equals(task)) {
+	        if ("new".equals(task) && hasAddAuthority) {
 	            RolesEntity existingRole = getRoleByName(role.getName());
 	            if (existingRole != null) {
 	                redirectAttributes.addFlashAttribute("alertMessage", "Role name already exists.");
@@ -155,7 +169,7 @@ public class RolesController {
 	                return "roles/edit";
 	            }
 	        }
-	        else if ("edit".equals(task)) {
+	        else if ("edit".equals(task) && hasUpdateAuthority) {
 	            if (id == null) {
 	                model.addAttribute("message", "Role ID is required to edit.");
 	                return "redirect:/admin1337/roles.htm"; 

@@ -3,6 +3,7 @@ package bookstore.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
@@ -20,6 +21,7 @@ public class RatingsController {
 	@Autowired
 	private RatingsDAO ratingsDAO;
 	
+	@PreAuthorize("hasAuthority('VIEW_RATING')")
 	@RequestMapping(value = "/ratings", method = RequestMethod.GET)
 	public String ratings(ModelMap model) {
 //		List<RatingsEntity> listUn = ratingsDAO.getRatingsByStatus0();
@@ -31,6 +33,7 @@ public class RatingsController {
 		return "ratings/index";
 	}
 	
+	@PreAuthorize("hasAuthority('VIEW_RATING')")
 	@RequestMapping(value = "/ratings", method = RequestMethod.POST)
 	public String ratingsSearch(ModelMap model, @RequestParam(value = "search", required = false) String search,
             @RequestParam(value = "searchOption", required = false) String searchOption) {

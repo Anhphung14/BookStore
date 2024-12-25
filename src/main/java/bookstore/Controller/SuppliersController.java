@@ -11,6 +11,9 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -35,7 +38,8 @@ public class SuppliersController {
 
 	@Autowired
 	private SessionFactory factory;
-
+	
+	@PreAuthorize("hasAuthority('VIEW_SUPPLIER')")
 	@RequestMapping(value = "/suppliers")
 	public String providers(Model model, 
 			@RequestParam(value = "page", defaultValue = "1") int page,
@@ -83,13 +87,15 @@ public class SuppliersController {
 		return supplier;
 	}
 
+	@PreAuthorize("hasAuthority('ADD_SUPPLIER')")
 	@RequestMapping(value = "supplier/new", method = RequestMethod.GET)
 	public String newSupplier(ModelMap model) {
 		model.addAttribute("supplier", new SuppliersEntity());
 		model.addAttribute("task", "new");
 		return "suppliers/edit";
 	}
-
+	
+	@PreAuthorize("hasAuthority('UPDATE_SUPPLIER')")
 	@RequestMapping(value = "/supplier/edit/{id}", method = RequestMethod.GET)
 	public String supplierEdit(@PathVariable("id") Long id, ModelMap model) {
 		SuppliersEntity supplier = getSupplierById(id);
@@ -97,7 +103,8 @@ public class SuppliersController {
 		model.addAttribute("task", "edit");
 		return "suppliers/edit";
 	}
-
+	
+	@PreAuthorize("hasAuthority('UPDATE_SUPPLIER') or hasAuthority('ADD_SUPPLIER')")
 	@RequestMapping(value = "/supplier/save.htm", method = RequestMethod.POST)
 	public String saveSupplier(@ModelAttribute("supplier") SuppliersEntity supplier, 
 	                            @RequestParam("task") String task,
@@ -110,6 +117,13 @@ public class SuppliersController {
 	    supplier.setEmail(EscapeHtmlUtil.encodeHtml(supplier.getEmail()));
 	    supplier.setName(EscapeHtmlUtil.encodeHtml(supplier.getName()));
 	    supplier.setPhone(EscapeHtmlUtil.encodeHtml(supplier.getPhone()));
+	    
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    boolean hasUpdateAuthority = auth.getAuthorities().stream()
+	            .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("UPDATE_SUPPLIER"));
+	    boolean hasAddAuthority = auth.getAuthorities().stream()
+	            .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADD_SUPPLIER"));
+	    
 	    try {
 	        // Check if the supplier name already exists in the database
 	        SuppliersEntity existingSupplierByName = getSupplierByName(supplier.getName());
@@ -121,7 +135,7 @@ public class SuppliersController {
 	        }
 
 	        // If task is 'new', create a new supplier
-	        if ("new".equals(task)) {
+	        if ("new".equals(task) && hasAddAuthority) {
 	            LocalDateTime now = LocalDateTime.now();
 	            Timestamp currentDate = Timestamp.valueOf(now);
 
@@ -131,7 +145,7 @@ public class SuppliersController {
 	            isSuccess = true; // Set to true if the operation is successful
 	        }
 	        // If task is 'edit', update an existing supplier
-	        else if ("edit".equals(task)) {
+	        else if ("edit".equals(task) && hasUpdateAuthority) {
 	            SuppliersEntity existingSupplier = (SuppliersEntity) session.get(SuppliersEntity.class, id);
 	            if (existingSupplier != null) {
 	                existingSupplier.setName(supplier.getName());

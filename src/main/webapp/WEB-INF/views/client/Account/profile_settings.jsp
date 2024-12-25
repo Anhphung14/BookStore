@@ -73,6 +73,7 @@
 				<div class="alert alert-danger">${errorUpdate}</div>
 			</c:if>
             <form class="row" action="account/update_profile.htm" method="POST" enctype="multipart/form-data" style="border: 1px solid #ccc; padding: 20px; border-radius: 8px;">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="account-fn">Họ tên</label>
@@ -122,6 +123,7 @@
 				<div class="alert alert-danger">${errorPassword}</div>
 			</c:if>
             <form action="account/change_password.htm" method="POST" id="change-password-form" style="border: 1px solid #ccc; padding: 20px; border-radius: 8px;">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <div class="form-group">
                     <label for="old-password">Mật khẩu hiện tại</label>
                     <input type="password" class="form-control" id="old-password" name="oldPassword" required>

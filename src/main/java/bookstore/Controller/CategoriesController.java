@@ -13,6 +13,9 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -48,7 +51,8 @@ public class CategoriesController {
 	
 	@Autowired
 	private CartDAO cartDAO;
-
+	
+	@PreAuthorize("hasAuthority('VIEW_CATEGORY')")
 	@RequestMapping("/categories")
 	public String showCategories(
 	        Model model,
@@ -119,14 +123,16 @@ public class CategoriesController {
 
 		return "categories/edit";
 	}
-
+	
+	@PreAuthorize("hasAuthority('ADD_CATEGORY')")
 	@RequestMapping(value = "/category/new", method = RequestMethod.GET)
 	public String newCategory(Model model) {
 		model.addAttribute("category", new CategoriesEntity());
 		model.addAttribute("task", "new");
 		return "categories/edit";
 	}
-
+	
+	@PreAuthorize("hasAuthority('UPDATE_CATEGORY') or hasAuthority('ADD_CATEGORY')")
 	@RequestMapping(value = "/category/save", method = RequestMethod.POST)
 	public String saveCategory(@ModelAttribute("category") CategoriesEntity category, @RequestParam("task") String task,
 	                           @RequestParam(value = "id", required = false) Long id,
@@ -138,8 +144,15 @@ public class CategoriesController {
 	    Session session = factory.getCurrentSession();
 	    category.setName(EscapeHtmlUtil.encodeHtml(category.getName()));
 	    subcategoryNames = EscapeHtmlUtil.encodeHtml(subcategoryNames);
+	    
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    boolean hasUpdateAuthority = auth.getAuthorities().stream()
+	            .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("UPDATE_CATEGORY"));
+	    boolean hasAddAuthority = auth.getAuthorities().stream()
+	            .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADD_CATEGORY"));
+	    
 	    try {
-	        if ("new".equals(task)) {
+	        if ("new".equals(task) && hasAddAuthority) {
 	            // Kiểm tra tên category trùng
 	            String hql = "FROM CategoriesEntity WHERE name = :name";
 	            Query query = session.createQuery(hql);
@@ -174,7 +187,7 @@ public class CategoriesController {
 	            redirectAttributes.addFlashAttribute("alertMessage", "Category saved successfully!");
 	            redirectAttributes.addFlashAttribute("alertType", "success");
 
-	        } else if ("edit".equals(task)) {
+	        } else if ("edit".equals(task) && hasUpdateAuthority) {
 	            // Chỉnh sửa category hiện có
 	            CategoriesEntity existingCategory = getCategoryById(id);
 	            existingCategory.setName(category.getName());

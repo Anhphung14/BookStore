@@ -21,7 +21,7 @@
 
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" >
 	<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
-	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
 .main-content {
 	display: flex;
@@ -134,6 +134,7 @@
 			</div>
 			<form id="discountForm" action="discount/edit.htm" method="POST" >
 				<input type="hidden" value="${discount.id }" name="discount_id">
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				<div class="card mt-3">
 					<div class="card-body">
 						<h6 class="small text-muted">GENERAL INFORMATION</h6>

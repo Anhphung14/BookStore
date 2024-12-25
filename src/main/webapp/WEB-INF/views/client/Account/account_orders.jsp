@@ -189,7 +189,7 @@ th, td {
 												</c:if>
 											</c:forEach>
 											<c:if test="${isReviewed}">
-												<button class="btn btn-success btn-sm" disabled>Đánh giá</button>
+												<button class="btn btn-success btn-sm" disabled>Đã đánh giá</button>
 											</c:if>
 											<c:if test="${!isReviewed}">
 												<a class="btn btn-success btn-sm"
@@ -211,7 +211,7 @@ th, td {
 		</div>
 		<%@ include file="../layouts/footer.jsp"%>
 	</div>
-
+	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 	<!-- Modal Order Details -->
 	<div class="modal fade" id="orderDetailsModal" tabindex="-1"
 		aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
@@ -237,8 +237,7 @@ th, td {
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
 						data-dismiss="modal">No</button>
-					<button type="button" class="btn btn-danger" id="confirmCancelBtn">Yes,
-						Cancel</button>
+					<button type="button" class="btn btn-danger" id="confirmCancelBtn">Yes</button>
 				</div>
 			</div>
 		</div>
@@ -321,7 +320,17 @@ th, td {
 	        hiddenInput.name = "orderId";
 	        hiddenInput.value = orderIdToCancel;
 	        form.appendChild(hiddenInput);
-	
+	        
+	     	// Lấy CSRF token từ thẻ input hidden trong trang HTML
+	        const csrfToken = document.querySelector('input[name="${_csrf.parameterName}"]').value;
+
+	        // Thêm input hidden cho CSRF token
+	        const hiddenInputCsrf = document.createElement("input");
+	        hiddenInputCsrf.type = "hidden";
+	        hiddenInputCsrf.name = "${_csrf.parameterName}";
+	        hiddenInputCsrf.value = csrfToken;
+	        form.appendChild(hiddenInputCsrf);
+			
 	        document.body.appendChild(form);
 	        form.submit();
 	    }

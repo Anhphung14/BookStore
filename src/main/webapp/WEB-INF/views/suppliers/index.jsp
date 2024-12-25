@@ -64,6 +64,7 @@
 				</div>
 			</div>
 			<form id="frm-admin" name="adminForm" action="" method="POST">
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				<input type="hidden" id="task" name="task" value="${param.task}">
 				<input type="hidden" id="sortby" name="sortby"
 					value="${param.sortby != null ? param.sortby : 'updated_at'}" /> <input

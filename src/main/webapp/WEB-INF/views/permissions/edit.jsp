@@ -1,7 +1,14 @@
+<%@page import="bookstore.Entity.RolesEntity"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="bookstore.Entity.PermissionsEntity"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ page import="java.util.HashSet" %>
+<%@ page import="java.util.Set" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,12 +19,17 @@
 	</c:choose></title>
 
 <base href="${pageContext.servletContext.contextPath}/admin1337/">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link
+	href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"
+	rel="stylesheet">
+	<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	
 <style>
 .main-content {
 	display: flex;
@@ -57,12 +69,9 @@
 						width="120px" alt="Page Icon">
 				</div>
 			</div>
-			<form id="userForm" action="role/save.htm" method="POST">
-				<input type="hidden" id="task" name="task" value="${task}">
+			<form id="userForm" action="permission/edit.htm" method="POST">
+				<input type="hidden" id="id" name="id" value="${role.id}">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-				<c:if test="${task != 'new'}">
-					<input type="hidden" id="id" name="id" value="${role.id}">
-				</c:if>
 
 				<div class="card">
 					<div class="card-body">
@@ -70,22 +79,44 @@
 
 						<div class="form-floating mt-3">
 							<input class="form-control" id="name" name="name"
-								value="${role.name }" required> <label
+								value="${role.name}" required> <label
 								class="form-label" for="name">Name <span
 								class="text-danger">*</span></label>
 						</div>
+					
+						<br>
+						
+						
+						<%
+						    // Chuyển đổi Set<PermissionsEntity> thành ArrayList
+						    RolesEntity role = (RolesEntity) request.getAttribute("role");
+						    
+							List<String> permissionsList = new ArrayList<>();
+						    
+						    for (PermissionsEntity per : role.getPermissions()) {
+						    	permissionsList.add(per.getName());
+						    }
+						    
+						    request.setAttribute("permissionsList", permissionsList);
+						%>
 						<div class="form-floating mt-3">
-							<input class="form-control" id="description" name="description"
-								value="${role.description}" required> <label
-								class="form-label" for="description">Description<span
-								class="text-danger">*</span></label>
+							<div class="ms-2">Roles</div>
+							<select class="w-100 selectpicker" id="permissions" name="permissionIds"
+								multiple data-coreui-search="true" data-live-search="true">
+								<c:forEach var="permission" items="${permissions}">
+									<option value="${permission.id}"
+										${role.permissions != null && permissionsList.contains(permission.name) ? 'selected' : ''}>
+										${permission.name}
+									</option>
+								</c:forEach>
+							</select>
 						</div>
 					</div>
 				</div>
 
 				<div class="mt-3">
 					<button class="btn btn-primary btn-save" type="submit">Save</button>
-					<a href="<c:url value='/admin1337/roles.htm' />"
+					<a href="<c:url value='/admin1337/permissions.htm' />"
 						class="btn btn-light btn-cancel">Cancel</a>
 				</div>
 			</form>
@@ -97,7 +128,10 @@
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-	<script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+	
+	<script>	
 		document.getElementById("userForm").addEventListener("submit",
 				function(event) {
 					const email = document.getElementById("email").value;
@@ -114,6 +148,15 @@
 						event.preventDefault();
 					}
 				});
+		
+		document.addEventListener('DOMContentLoaded', function() {
+			var element = document.getElementById('permissions');
+			var choices = new Choices(element, {
+				removeItemButton : true,
+				searchEnabled : true,
+				searchChoices : true
+			});
+		});
 	</script>
 </body>
 </html>

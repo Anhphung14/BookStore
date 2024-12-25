@@ -13,10 +13,7 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<script src="${pageContext.request.contextPath}/resources/js/app.js"
-	defer></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
@@ -64,6 +61,7 @@
 			</div>
 			<form id="frm-admin" name="adminForm" action="" method="POST">
 				<input type="hidden" id="task" name="task" value="${param.task}">
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				<input type="hidden" id="sortby" name="sortby"
 					value="${param.sortby != null ? param.sortby : 'updated_at'}" /> <input
 					type="hidden" id="orderby" name="orderby"
@@ -101,9 +99,6 @@
 							<div class="table-responsive">
 								<table class="table table-centered">
 									<tr>
-										<th width="30px"><input class="form-check-input"
-											type="checkbox" id="toggle" name="toggle"
-											onclick="checkAll()" /></th>
 										<th width="30px" class="text-end">#</th>
 										<th>Name</th>
 										<th width="60px">Users</th>
@@ -112,9 +107,6 @@
 									</tr>
 									<c:forEach var="role" items="${roles}" varStatus="status">
 										<tr>
-											<td><input type="checkbox" class="form-check-input"
-												id="cb1" name="cid[]" value="${role.id}"
-												onclick="isChecked(this.checked)"></td>
 											<td class="text-end">${role.id}</td>
 											<td><span class="text-decoration-underline">${role.name}</span>
 												<div class="text-muted small">${role.description}</div></td>
@@ -127,14 +119,15 @@
 											<td class="text-center align-middle">${role.updatedAt}</td>
 											<td class="text-end">
 												<div class="d-flex gap-1">
-													<a class="btn btn-rounded"
+													<a class="btn btn-rounded" style="text-decoration: none;"
 														href="role/edit/${role.id}.htm"><i
-														class="fa fa-pencil"></i></a> <a
-														class="btn btn-rounded btn-delete"
-														href="javascript:void(0);"
-														data-url="role/delete/${role.id}.htm">
-														<i class="fa fa-trash-alt"></i>
-													</a>
+														class="fa fa-pencil"></i></a>
+<!-- 														<a -->
+<!-- 													    class="btn btn-rounded btn-delete" -->
+<!-- 														href="javascript:void(0);" -->
+<%-- 														data-url="role/delete/${role.id}.htm"> --%>
+<!-- 														<i class="fa fa-trash-alt"></i> -->
+<!-- 													</a> -->
 												</div>
 											</td>
 										</tr>

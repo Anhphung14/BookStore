@@ -286,6 +286,7 @@
 			<form id="orderUpdateForm" action="orders/updateOrderStatus.htm" method="POST" style="display: none;">
 			    <input type="hidden" name="orderId" id="orderId" />
 			    <input type="hidden" name="orderStatus" id="orderStatus" />
+			    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			    <button type="submit" id="submitButton" style="display:none;">Submit</button> <!-- Nút ẩn -->
 			</form>
 

@@ -25,6 +25,7 @@
 	src="${pageContext.request.contextPath}/resources/js/confirmBox.js"></script>
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
 .main-content {
 	display: flex;
@@ -89,6 +90,7 @@
 			<form id="categoryForm"
 				action="category/save.htm"
 				method="POST">
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				<input type="hidden" id="task" name="task" value="${task}">
 				<c:if test="${task != 'new'}">
 					<input type="hidden" id="id" name="id" value="${category.id}">

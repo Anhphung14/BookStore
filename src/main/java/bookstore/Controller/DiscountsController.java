@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -46,6 +47,7 @@ public class DiscountsController {
 	@Autowired
 	OrderDAO orderDAO;
 	
+	@PreAuthorize("hasAuthority('VIEW_DISCOUNT')")
 	@RequestMapping("/discounts")
 	public String index(ModelMap modelMap, @RequestParam(value = "discountCode", required = false) String discountCode, @RequestParam(value = "discountType", required = false) String discountType,
 			@RequestParam(value = "minValue", required = false) String minValue, @RequestParam(value = "maxValue", required = false) String maxValue,
@@ -93,6 +95,7 @@ public class DiscountsController {
 		return "discounts/index";
 	}
 	
+	@PreAuthorize("hasAuthority('ADD_DISCOUNT')")
 	@RequestMapping("/discount/create")
 	public String createDiscount(ModelMap modelMap) {
 		List<CategoriesEntity> listCategories = categoriesDAO.getAllCategories();
@@ -100,6 +103,7 @@ public class DiscountsController {
 		return "discounts/new";
 	}
 	
+	@PreAuthorize("hasAuthority('ADD_DISCOUNT')")
 	@RequestMapping(value = "/discount/create", method = RequestMethod.POST)
 	public String createDiscountPost(@RequestParam("code") String code, @RequestParam("discountType") String discountType, 
 	        @RequestParam("discountValue") Long discountValue, @RequestParam("applyTo") String applyTo,  
@@ -143,7 +147,7 @@ public class DiscountsController {
 	    }
 	}
 
-	
+	@PreAuthorize("hasAuthority('UPDATE_DISCOUNT')")
 	@RequestMapping("/discount/edit/{discount_id}")
 	public String editDiscount(ModelMap modelMap, @PathVariable(value = "discount_id") Long discount_id) {
 		modelMap.addAttribute("task", "edit");
@@ -165,6 +169,7 @@ public class DiscountsController {
 	    return "discounts/edit";
 	}
 	
+	@PreAuthorize("hasAuthority('UPDATE_DISCOUNT')")
 	@RequestMapping(value = "/discount/edit", method = RequestMethod.POST)
 	public String editDiscountPost(@RequestParam("discount_id") Long discount_id, 
 	                               @RequestParam("code") String code, 

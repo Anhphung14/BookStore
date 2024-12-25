@@ -19,6 +19,7 @@
 	rel="stylesheet">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <link
 	href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"
 	rel="stylesheet">
@@ -73,7 +74,8 @@
 				action="supplier/save.htm"
 				method="POST">
 				<input type="hidden" id="task" name="task" value="${task}">
-
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+				
 				<c:if test="${task != 'new'}">
 					<input type="hidden" id="id" name="id" value="${supplier.id}">
 				</c:if>

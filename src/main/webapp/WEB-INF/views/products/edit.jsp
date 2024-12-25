@@ -118,7 +118,7 @@
 			</div>
 			<form id="productForm" action="product/edit.htm" method="POST" enctype="multipart/form-data">
 				<input type="hidden" id="task" name="task" value="${task}">
-
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				<c:if test="${task != 'new'}">
 					<input type="hidden" id="id" name="id" value="${book.id}" />
 				</c:if>
@@ -440,6 +440,8 @@
 	        input.value = input.value.replace(/\./g, '');
 	    });
 	}
+
+
 	
 	const alertMessage = "${alertMessage}";
 	const alertType = "${alertType}";

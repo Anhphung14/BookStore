@@ -275,11 +275,17 @@ public class BooksDAO {
 			    }
 
 			    // Bắt đầu câu truy vấn HQL cơ bản
+//			    String hql = "FROM BooksEntity b " +
+//			                 "LEFT JOIN FETCH b.supplier s " +
+//			                 "WHERE (LOWER(b.title) LIKE :searchQuery " +  // Tìm theo tên sách
+//			                 "   OR LOWER(b.author) LIKE :searchQuery) " + // Tìm theo tên tác giả
+//			                 "   AND b.status = 1";  // Tìm theo tên tác giả
+			    
 			    String hql = "FROM BooksEntity b " +
-			                 "LEFT JOIN FETCH b.supplier s " +
-			                 "WHERE (LOWER(b.title) LIKE :searchQuery " +  // Tìm theo tên sách
-			                 "   OR LOWER(b.author) LIKE :searchQuery) " + // Tìm theo tên tác giả
-			                 "   AND b.status = 1";  // Tìm theo tên tác giả
+		                 "LEFT JOIN FETCH b.supplier s " +
+		                 "WHERE (LOWER(b.title) LIKE :searchQuery " +  // Tìm theo tên sách
+		                 "   OR LOWER(b.author) LIKE :searchQuery) " + // Tìm theo tên tác giả
+		                 "   AND b.status = 1";  // Tìm theo tên tác giả
 
 			    // Thêm điều kiện lọc theo giá (nếu có khoảng giá)
 			    if (minPrice != null && maxPrice != null) {
@@ -315,8 +321,9 @@ public class BooksDAO {
 
 			    // Tạo và thực thi câu truy vấn
 			    Query query = session.createQuery(hql);
+			    
 			    query.setParameter("searchQuery", "%" + searchQuery.toLowerCase() + "%");
-
+			    System.out.print("TRUY VAN SEARCH: " + query.toString());
 			    // Nếu có khoảng giá, thêm tham số cho giá
 			    if (minPrice != null && maxPrice != null) {
 			        query.setParameter("minPrice", minPrice);

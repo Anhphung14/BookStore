@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -31,6 +32,7 @@ public class InventoriesController {
 	@Autowired
 	BooksService booksService;
 	
+	@PreAuthorize("hasAuthority('VIEW_INVENTORY')")
 	@RequestMapping("/inventories")
 	public String inventories(ModelMap model) {
 		
@@ -45,6 +47,7 @@ public class InventoriesController {
 		return "inventories/index";
 	}
 	
+	@PreAuthorize("hasAuthority('UPDATE_INVENTORY')")
 	@RequestMapping("/inventory/edit/{id}")
 	public String productEdit(@PathVariable("id") Long id, ModelMap model) {
 		
@@ -56,6 +59,7 @@ public class InventoriesController {
 		return "inventories/edit";
 	}
 	
+	@PreAuthorize("hasAuthority('UPDATE_INVENTORY')")
 	@RequestMapping(value = "/inventory/edit", method = RequestMethod.POST)
 	public String edit(ModelMap model, RedirectAttributes redirectAttributes, @ModelAttribute("inventory") InventoryEntity inventory) {
 		
@@ -82,6 +86,7 @@ public class InventoriesController {
 		
 	}
 	
+	@PreAuthorize("hasAuthority('ADD_STOCKQUANTITY_INVENTORY')")
 	@RequestMapping(value = "/inventory/addQuantity", method = RequestMethod.POST)
 	public String addQuantity(ModelMap model, RedirectAttributes redirectAttributes,
 			@RequestParam("stock_quantity") int stock_quantity, @RequestParam("bookId") Long bookId,

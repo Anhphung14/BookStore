@@ -151,8 +151,15 @@
 											<li><i class="fa-solid fa-shop"></i>&nbsp;&nbsp;<a
 												href="${pageContext.servletContext.contextPath}/account/account_orders.htm">Đơn
 													hàng của bạn</a></li>
+													
+											<form id="signoutForm"
+												action="${pageContext.servletContext.contextPath}/signout.htm"
+												method="POST" style="display: none;">
+												<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+												<input type="hidden" name="signout" value="true">
+											</form>
 											<li><i class="fa-solid fa-right-from-bracket"></i>&nbsp;&nbsp;<a
-												href="${pageContext.servletContext.contextPath}/signout.htm">Đăng
+												onclick="document.getElementById('signoutForm').submit();">Đăng
 													xuất</a></li>
 										</ul>
 									</div>

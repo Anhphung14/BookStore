@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 import org.hibernate.Hibernate;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -45,7 +46,7 @@ public class OrdersController {
 	@Autowired
 	MailService mailService;
 	
-	
+	@PreAuthorize("hasAuthority('VIEW_ORDER')")
 	@RequestMapping("/orders")
 	public String index(ModelMap modelMap, @RequestParam(value = "customerName", required = false) String customerName, @RequestParam(value = "fromDate", required = false) String fromDate, @RequestParam(value = "toDate", required = false) String toDate, 
 			@RequestParam(value = "minPrice", required = false) Double minPrice, @RequestParam(value = "maxPrice", required = false) Double maxPrice, @RequestParam(value = "paymentStatus", required = false) String paymentStatus,
@@ -113,6 +114,7 @@ public class OrdersController {
 		return "orders/index";
 	}
 	
+	@PreAuthorize("hasAuthority('UPDATE_ORDER')")
 	@RequestMapping(value = "/orders/updateOrderStatus", method = RequestMethod.POST)
 	public String updateOrderStatus(@RequestParam("orderId") Long orderId, @RequestParam("orderStatus") String orderStatus, RedirectAttributes redirectAttributes) {
 		if(orderDAO.updateOrderStatus(orderId, orderStatus)) {
@@ -126,6 +128,7 @@ public class OrdersController {
 		return "redirect:/admin1337/orders.htm";
 	}
 	
+	@PreAuthorize("hasAuthority('UPDATE_ORDER')")
 	@RequestMapping("/order/edit/{orderId}")
 	public String editOrder(@PathVariable("orderId") Long orderId, ModelMap modelMap) {
 		OrdersEntity order = orderDAO.getOrderWithDetails(orderId);
@@ -146,6 +149,7 @@ public class OrdersController {
 		return "orders/edit";
 	}
 	
+	@PreAuthorize("hasAuthority('UPDATE_ORDER')")
 	@RequestMapping(value = "/order/edit", method = RequestMethod.POST)
 	public String updateOrder(@RequestParam("orderId") Long orderId ,@RequestParam("totalPrice") Double totalPrice, @RequestParam("paymentMethod") String paymentMethod,
 			@RequestParam("paymentStatus") String paymentStatus, @RequestParam("orderStatus") String orderStatus,
@@ -187,6 +191,7 @@ public class OrdersController {
 		return "redirect:/admin1337/orders.htm";
 	}
 	
+	@PreAuthorize("hasAuthority('UPDATE_ORDER')")
 	@RequestMapping(value = "/order/updateOrderItems", method = RequestMethod.POST)
 	public String updateOrderItems(@RequestParam("orderId") Long orderId,
 	                                @RequestParam Map<String, String> formParams, 

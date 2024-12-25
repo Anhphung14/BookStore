@@ -7,13 +7,10 @@
 <meta charset="UTF-8">
 <title>Profile</title>
 <base href="${pageContext.servletContext.contextPath}/admin1337/">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
 .main-content {
 	display: flex;
@@ -44,6 +41,7 @@
 			<form id="frm-admin" name="adminForm"
 				action="profile/save.htm"
 				method="POST" enctype="multipart/form-data">
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				<div class="bg-light p-3 mt-3">
 					<div class="d-flex align-items-center">
 						<div class="flex-shrink-0 avatar avatar-xl me-3">
@@ -165,6 +163,9 @@
 			</form>
 		</div>
 	</div>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
 	<script>
 		function showPasswordStrength() {
 			var passwordInput = document.getElementById('password');

@@ -36,7 +36,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         
         // Kiểm tra vai trò của người dùng và chuyển hướng tương ứng
         for (GrantedAuthority authority : authorities) {
-            if (authority.getAuthority().equals("ROLE_ADMIN")) {
+        	System.out.println(authority.getAuthority());
+            if (authority.getAuthority().equals("ROLE_ADMIN") || authority.getAuthority().equals("ROLE_STAFF")) {
                 response.sendRedirect("/bookstore/admin1337/home.htm");
                 return;
             } else if (authority.getAuthority().equals("ROLE_USER")) {
@@ -46,6 +47,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         }
         
         // Nếu không có vai trò nào khớp, chuyển hướng đến trang mặc định
-        response.sendRedirect("/index.htm");
+        response.sendRedirect("/bookstore/index.htm");
     }
 }
