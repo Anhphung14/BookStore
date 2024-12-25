@@ -328,6 +328,7 @@ public class AuthController {
 				return "redirect:signup.htm";
 			}
 			user.setEmail(EscapeHtmlUtil.encodeHtml(user.getEmail()));
+			user.setFullname(EscapeHtmlUtil.encodeHtml(user.getFullname()));
 			  if (uuid == null || uuid.isEmpty()) {
 			        uuid = UUID.randomUUID().toString();
 			    }
