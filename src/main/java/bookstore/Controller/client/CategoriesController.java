@@ -77,9 +77,19 @@ public class CategoriesController {
     }
     
     @RequestMapping("{idCategory}")
-    public String getCategoryPage(@PathVariable("idCategory") Long idCategory,  @RequestParam(value = "page", defaultValue = "1") int page, 
+    public String getCategoryPage(@PathVariable("idCategory") String iddCategory,  @RequestParam(value = "page", defaultValue = "1") int page, 
     		@RequestParam(value = "pageSize", defaultValue = "16") int pageSize, @RequestParam(value = "sortBy", defaultValue = "newest", required = false) String sortBy, 
     		ModelMap model) {
+    	
+    	if (!iddCategory.matches("\\d+")) {
+	    	return "redirect:/index";
+	    }
+	    
+    	Long idCategory = Long.parseLong(iddCategory);
+		CategoriesEntity checkCate = categoriesDAO.findCategoryById(idCategory);
+		if(checkCate == null) {
+			return "redirect:/index";
+		}
 		//List<BooksEntity> bookList = booksDAO.listBookOfCategory(idCategory, page, pageSize);
     	List<BooksEntity> bookList = booksDAO.listBookOfCategorySorted(idCategory, page, pageSize, sortBy);
 		List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();

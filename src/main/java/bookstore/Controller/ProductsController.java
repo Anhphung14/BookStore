@@ -143,11 +143,19 @@ public class ProductsController {
 
 	@PreAuthorize("hasAuthority('UPDATE_PRODUCT')")
 	@RequestMapping("/product/edit/{id}")
-	public String productEdit(@PathVariable("id") Long id, ModelMap model) {
+	public String productEdit(@PathVariable("id") String idd, ModelMap model) {
 		
 		model.addAttribute("task", "edit");
-	
+		if (!idd.matches("\\d+")) {
+	    	return "redirect:/admin1337/products";
+	    }
+	    
+		Long id = Long.parseLong(idd);
 		BooksEntity book = booksService.getBookById(id);
+		if(book == null) {
+			return "redirect:/admin1337/products";
+		}
+		
 		
 		model.addAttribute("book", book); 
 		

@@ -6,6 +6,7 @@ import bookstore.DAO.CartDAO;
 import bookstore.Entity.CategoriesEntity;
 import bookstore.Entity.RolesEntity;
 import bookstore.Entity.SubcategoriesEntity;
+import bookstore.Entity.SuppliersEntity;
 import bookstore.Entity.UsersEntity;
 
 import org.hibernate.Hibernate;
@@ -110,8 +111,17 @@ public class CategoriesController {
 	}
 
 	@RequestMapping(value = "/category/edit/{id}", method = RequestMethod.GET)
-	public String categoryEdit(@PathVariable("id") Long id, ModelMap model) {
+	public String categoryEdit(@PathVariable("id") String idd, ModelMap model) {
+		if (!idd.matches("\\d+")) {
+	    	return "redirect:/admin1337/categories";
+	    }
+	    
+		Long id = Long.parseLong(idd);
 		CategoriesEntity category = getCategoryById(id);
+		if(category == null) {
+			return "redirect:/admin1337/categories";
+		}
+		
 
 		Hibernate.initialize(((CategoriesEntity) category).getSubcategoriesEntity());
 

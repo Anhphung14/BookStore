@@ -116,8 +116,17 @@ public class PermissionsController {
     
     @PreAuthorize("hasAuthority('UPDATE_PERMISSION')")
     @RequestMapping("/permission/edit/{id}")
-    public String editPermission(@PathVariable("id") Long id, ModelMap model) {
+    public String editPermission(@PathVariable("id") String idd, ModelMap model) {
+    	if (!idd.matches("\\d+")) {
+	    	return "redirect:/admin1337/permissions";
+	    }
+	    
+    	Long id = Long.parseLong(idd);
     	RolesEntity role = rolesService.getRoleById(id);
+		if(role == null) {
+			return "redirect:/admin1337/permissions";
+		}
+    	
     	
     	model.addAttribute("role", role);
     	model.addAttribute("permissions", permissionsService.getListPermission());

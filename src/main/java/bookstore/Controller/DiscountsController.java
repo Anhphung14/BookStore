@@ -179,9 +179,18 @@ public class DiscountsController {
 
 	@PreAuthorize("hasAuthority('UPDATE_DISCOUNT')")
 	@RequestMapping("/discount/edit/{discount_id}")
-	public String editDiscount(ModelMap modelMap, @PathVariable(value = "discount_id") Long discount_id) {
+	public String editDiscount(ModelMap modelMap, @PathVariable(value = "discount_id") String discount_idd) {
 		modelMap.addAttribute("task", "edit");
-	    DiscountsEntity discount = discountsDAO.findDiscountById(discount_id);
+		if (!discount_idd.matches("\\d+")) {
+	    	return "redirect:/admin1337/discounts";
+	    }
+	    
+		Long discount_id = Long.parseLong(discount_idd);
+		DiscountsEntity discount = discountsDAO.findDiscountById(discount_id);
+		if(discount == null) {
+			return "redirect:/admin1337/discounts";
+		}
+	    
 	    if(discount.getApplyTo().equals("categories")) {
     		List<Long> idCategoryAndSubcategory = discountsDAO.foundCategoryOfDiscount(discount_id);
 	    	Long category = idCategoryAndSubcategory.get(0);

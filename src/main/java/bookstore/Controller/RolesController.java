@@ -114,8 +114,17 @@ public class RolesController {
 	
 	@PreAuthorize("hasAuthority('UPDATE_ROLE')")
 	@RequestMapping(value = "/role/edit/{id}", method = RequestMethod.GET)
-	public String userEdit(@PathVariable("id") Long id, ModelMap model) {
+	public String userEdit(@PathVariable("id") String idd, ModelMap model) {
+		if (!idd.matches("\\d+")) {
+	    	return "redirect:/admin1337/roles";
+	    }
+	    
+		Long id = Long.parseLong(idd);
 		RolesEntity role = getRoleById(id);
+		if(role == null) {
+			return "redirect:/admin1337/roles";
+		}
+		
 		model.addAttribute("role", role);
 		model.addAttribute("task", "edit");
 		return "roles/edit";

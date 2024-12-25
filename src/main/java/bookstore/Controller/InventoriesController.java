@@ -49,11 +49,19 @@ public class InventoriesController {
 	
 	@PreAuthorize("hasAuthority('UPDATE_INVENTORY')")
 	@RequestMapping("/inventory/edit/{id}")
-	public String productEdit(@PathVariable("id") Long id, ModelMap model) {
+	public String productEdit(@PathVariable("id") String idd, ModelMap model) {
 		
 		model.addAttribute("task", "edit");
-	
+		if (!idd.matches("\\d+")) {
+	    	return "redirect:/admin1337/inventories";
+	    }
+	    
+		Long id = Long.parseLong(idd);
 		InventoryEntity inventory = inventoryService.getInventoryById(id);
+		if(inventory == null) {
+			return "redirect:/admin1337/inventories";
+		}
+		
 		
 		model.addAttribute("inventory", inventory);
 		return "inventories/edit";

@@ -66,8 +66,17 @@ public class RatingsController {
 	}
 	
 	@RequestMapping(value = "/rating/update/{ratingId}", method = RequestMethod.GET)
-	public String update_Rating(@PathVariable("ratingId") Long id, ModelMap model) {
+	public String update_Rating(@PathVariable("ratingId") String idd, ModelMap model) {
+		if (!idd.matches("\\d+")) {
+	    	return "redirect:/admin1337/ratings";
+	    }
+	    
+		Long id = Long.parseLong(idd);
 		RatingsEntity rating = ratingsDAO.getRatingById(id);
+		if(rating == null) {
+			return "redirect:/admin1337/ratings";
+		}
+		
 		model.addAttribute("rating", rating);
 		return "ratings/update";
 	}

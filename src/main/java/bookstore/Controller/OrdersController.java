@@ -131,7 +131,17 @@ public class OrdersController {
 	
 	@PreAuthorize("hasAuthority('UPDATE_ORDER')")
 	@RequestMapping("/order/edit/{orderId}")
-	public String editOrder(@PathVariable("orderId") Long orderId, ModelMap modelMap) {
+	public String editOrder(@PathVariable("orderId") String orderIdd, ModelMap modelMap) {
+		if (!orderIdd.matches("\\d+")) {
+	    	return "redirect:/admin1337/orders";
+	    }
+	    
+		Long orderId = Long.parseLong(orderIdd);
+		OrdersEntity checkOrder = orderDAO.getOrderById(orderId);
+		if(checkOrder == null) {
+			return "redirect:/admin1337/orders";
+		}
+		
 		OrdersEntity order = orderDAO.getOrderWithDetails(orderId);
 		Map<String, Map<String, List<String>>> locationData = shippingAddressDAO.getProvincesWithDistrictsAndWards();
 		ObjectMapper objectMapper = new ObjectMapper();

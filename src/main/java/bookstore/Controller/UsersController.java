@@ -106,6 +106,10 @@ public class UsersController {
 	@RequestMapping(value = "/user/edit/{uuid}", method = RequestMethod.GET)
 	public String userEdit(@PathVariable("uuid") String uuid, ModelMap model) {
 		UsersEntity user = getUserByUuid(uuid);
+		
+		if (user == null) {
+			return "redirect:/admin1337/users";
+		}
 
 		Hibernate.initialize(user.getRoles());
 
