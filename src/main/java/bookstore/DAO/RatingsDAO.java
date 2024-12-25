@@ -210,5 +210,12 @@ public class RatingsDAO {
         return ratings;
     }
 
-
+    public boolean checkOrderInRatings(Long orderId) {
+    	Session session = factory.getCurrentSession();
+    	String hql = "SELECT COUNT(r) FROM RatingsEntity r WHERE r.order.id = :orderId";
+        Long count = (Long) session.createQuery(hql)
+                                   .setParameter("orderId", orderId)
+                                   .uniqueResult();
+        return count > 0;
+    }
 }
