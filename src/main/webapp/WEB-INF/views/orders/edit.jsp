@@ -126,6 +126,12 @@ input[readonly] {
 						<div class="row">
 							<!-- Cột 1 -->
 							<div class="col-md-6">
+							<div class="form-floating mt-3">
+									<input type="text" class="form-control" id="uuid" name="uuid"
+										value="${order.uuid }" readonly="readonly"> <label
+										class="form-label" for="uuid"><span
+										class="text-danger">Order Code</span></label>
+								</div>
 								<div class="form-floating mt-3">
 									<input type="datetime-local" class="form-control" id="createdAt" name="createdAt"
 										value="<fmt:formatDate value='${order.createdAt}' pattern='yyyy-MM-dd\'T\'HH:mm' />" readonly="readonly"> <label
@@ -280,7 +286,7 @@ input[readonly] {
 					</div>
 				<div class="mt-3">
 					<button class="btn btn-primary btn-save" type="submit" onclick="beforeSubmit()">Save</button>
-					<a href="<c:url value='/admin1337/products.htm' />"
+					<a href="<c:url value='/admin1337/orders.htm' />"
 						class="btn btn-light btn-cancel">Cancel</a>
 				</div>
 			</form>

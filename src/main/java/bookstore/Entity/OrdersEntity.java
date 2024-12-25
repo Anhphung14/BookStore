@@ -14,6 +14,9 @@ public class OrdersEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "uuid", nullable = false, unique = true)
+    private String uuid;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
@@ -86,6 +89,14 @@ public class OrdersEntity {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public String getUuid() {
+		return uuid;
+	}
+	
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	public UsersEntity getUser() {

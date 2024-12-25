@@ -43,9 +43,11 @@
 	crossorigin="anonymous"></script>
 <script
 	src="resources/assets/js/client/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
-	<!-- Toastr JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<!-- Toastr JS -->
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <style>
 .modal-content {
 	background-color: white;
@@ -131,6 +133,7 @@ th, td {
 					<table class="table table-striped table-bordered">
 						<thead>
 							<tr>
+								<th scope="col">Mã đơn hàng</th>
 								<th scope="col">Ngày</th>
 								<th scope="col">Tổng</th>
 								<th scope="col">Trạng thái</th>
@@ -140,6 +143,7 @@ th, td {
 						<tbody>
 							<c:forEach var="order" items="${orders}">
 								<tr>
+									<td>${order.uuid}</td>
 									<td><fmt:formatDate value="${order.createdAt}"
 											pattern=" HH:mm dd/MM/yyyy" /></td>
 									<td><fmt:formatNumber value="${order.totalPrice}"
@@ -173,7 +177,7 @@ th, td {
 									<td><a class="btn btn-info btn-sm link-detail"
 										data-toggle="modal" data-target="#orderDetailsModal"
 										data-bs-backdrop="false"
-										href="${pageContext.servletContext.contextPath}/account/order_details/${order.id}.htm">Xem</a>
+										href="${pageContext.servletContext.contextPath}/account/order_details/${order.uuid}.htm">Xem</a>
 										<c:if test="${order.orderStatus == 'Chờ xác nhận'}">
 											<button class="btn btn-danger btn-sm" data-toggle="modal"
 												data-target="#confirmCancelModal"
@@ -189,18 +193,20 @@ th, td {
 												</c:if>
 											</c:forEach>
 											<c:if test="${isReviewed}">
-												<button class="btn btn-success btn-sm" disabled>Đã đánh giá</button>
+												<button class="btn btn-success btn-sm" disabled>Đã
+													đánh giá</button>
 											</c:if>
 											<c:if test="${!isReviewed}">
 												<a class="btn btn-success btn-sm"
-													href="${pageContext.servletContext.contextPath}/account/ratings/${order.id}.htm">Đánh giá</a>
+													href="${pageContext.servletContext.contextPath}/account/ratings/${order.uuid}.htm">Đánh
+													giá</a>
 											</c:if>
 										</c:if></td>
 								</tr>
 							</c:forEach>
 						</tbody>
 					</table>
-				<%-- 	<c:if test="${not empty successMessage}">
+					<%-- 	<c:if test="${not empty successMessage}">
 						<div class="alert alert-success">${successMessage}</div>
 					</c:if>
 					<c:if test="${not empty errorMessage}">
@@ -211,7 +217,8 @@ th, td {
 		</div>
 		<%@ include file="../layouts/footer.jsp"%>
 	</div>
-	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+	<input type="hidden" name="${_csrf.parameterName}"
+		value="${_csrf.token}" />
 	<!-- Modal Order Details -->
 	<div class="modal fade" id="orderDetailsModal" tabindex="-1"
 		aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
@@ -227,7 +234,8 @@ th, td {
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="confirmCancelModalLabel">Xác nhận huỷ</h5>
+					<h5 class="modal-title" id="confirmCancelModalLabel">Xác nhận
+						huỷ</h5>
 					<button type="button" class="close" data-dismiss="modal"
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -391,7 +399,7 @@ th, td {
     }
     
 </script>
-<script type="text/javascript">
+	<script type="text/javascript">
 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
 (function(){
 var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];

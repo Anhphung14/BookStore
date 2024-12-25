@@ -101,25 +101,31 @@ public class AccountController {
 		return "client/Account/account_orders";
 	}
 	
-	@RequestMapping(value = "order_details/{orderId}", method = RequestMethod.GET) 
-	public String order_details(ModelMap model, @PathVariable("orderId") Long id) {
-		OrdersEntity order = orderDAO.getOrderByOrderId(id);
-		model.addAttribute("order", order);
-		List<OrdersDetailEntity> listOrderDetails = orderDAO.getOrderDetailsByOrderId(id);
-	     // Lấy thông tin giảm giá cho đơn hàng (OrderDiscount)
-		List<Order_DiscountsEntity> listOrderDiscounts = orderDAO.getOrderDiscountsByOrderId(id);
-		  // Thêm dữ liệu vào model để gửi tới view
-		model.addAttribute("orderDetails", listOrderDetails);
-		if (listOrderDiscounts != null && !listOrderDiscounts.isEmpty()) {
-			model.addAttribute("orderDiscounts", listOrderDiscounts);
-		}
-		
-		List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
-        List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
-        model.addAttribute("Categories", listCategories);
-        model.addAttribute("SubCategories", listSubCategories);
-		return "client/Account/order_detail";
+	@RequestMapping(value = "order_details/{uuid}", method = RequestMethod.GET)
+	public String order_details(ModelMap model, @PathVariable("uuid") String uuid) {
+	    OrdersEntity order = orderDAO.getOrderByUuid(uuid);  
+	    if (order == null) {
+	        return "error";  
+	    }
+	    model.addAttribute("order", order);
+	    
+	    List<OrdersDetailEntity> listOrderDetails = orderDAO.getOrderDetailsByOrderId(order.getId());
+	    
+	    List<Order_DiscountsEntity> listOrderDiscounts = orderDAO.getOrderDiscountsByOrderId(order.getId());
+	    
+	    model.addAttribute("orderDetails", listOrderDetails);
+	    if (listOrderDiscounts != null && !listOrderDiscounts.isEmpty()) {
+	        model.addAttribute("orderDiscounts", listOrderDiscounts);
+	    }
+	    
+	    List<CategoriesEntity> listCategories = categoriesDAO.findAllCategories();
+	    List<SubcategoriesEntity> listSubCategories = subcategoriesDAO.findAll();
+	    model.addAttribute("Categories", listCategories);
+	    model.addAttribute("SubCategories", listSubCategories);
+	    
+	    return "client/Account/order_detail";
 	}
+
 	
 	@RequestMapping(value = "cancel_order", method = RequestMethod.POST)
 	public String cancel_order(@RequestParam("orderId") Long orderId, RedirectAttributes redirectAttributes) {
@@ -282,14 +288,17 @@ public class AccountController {
 		return "client/Account/my_ratings";
 	}
 	
-	@RequestMapping(value = "ratings/{orderId}", method = RequestMethod.GET) 
-	public String rating_order(ModelMap model, @PathVariable("orderId") Long id) {
-		model.addAttribute("orderId", id);
-		OrdersEntity order = orderDAO.getOrderByOrderId(id);
+	@RequestMapping(value = "ratings/{uuid}", method = RequestMethod.GET) 
+	public String rating_order(ModelMap model, @PathVariable("uuid") String uuid) {
+		 OrdersEntity order = orderDAO.getOrderByUuid(uuid);
+		    if (order == null) {
+		        // Xử lý nếu không tìm thấy đơn hàng
+		        return "redirect:/error_page";
+		    }
 		model.addAttribute("order", order);
-		List<OrdersDetailEntity> listOrderDetails = orderDAO.getOrderDetailsByOrderId(id);
+		List<OrdersDetailEntity> listOrderDetails = orderDAO.getOrderDetailsByOrderId((order.getId()));
 	     // Lấy thông tin giảm giá cho đơn hàng (OrderDiscount)
-		List<Order_DiscountsEntity> listOrderDiscounts = orderDAO.getOrderDiscountsByOrderId(id);
+		List<Order_DiscountsEntity> listOrderDiscounts = orderDAO.getOrderDiscountsByOrderId((order.getId()));
 		  // Thêm dữ liệu vào model để gửi tới view
 		model.addAttribute("orderDetails", listOrderDetails);
 		

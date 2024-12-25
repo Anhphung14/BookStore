@@ -55,7 +55,7 @@
 
 	<h3>Thông tin thanh toán</h3>
 	<p>
-		<strong>Mã đơn hàng:</strong> ${order.id}
+		<strong>Mã đơn hàng:</strong> ${order.uuid}
 	</p>
 	<p>
 		<strong>Khách hàng:</strong> ${order.customerName}

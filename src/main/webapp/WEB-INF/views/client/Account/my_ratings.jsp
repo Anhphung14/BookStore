@@ -100,7 +100,7 @@
 			<c:forEach var="review" items="${reviews}">
 		        <div class="review">
 		            <div class="product-info">
-		            	<p>Mã đơn hàng: ${review.order.id}</p> <!-- Hiển thị mã đơn hàng -->
+		            	<p>Mã đơn hàng: ${review.order.uuid}</p> <!-- Hiển thị mã đơn hàng -->
 		                <p>Book: <a href="productdetail/${review.book.id}.htm" target="_blank">${review.book.title}</a></p>
 		                <p>Thời gian tạo: 
 		                    <fmt:formatDate value="${review.createdAt}" pattern="dd/MM/yyyy HH:mm:ss"/> <!-- Hiển thị thời gian -->

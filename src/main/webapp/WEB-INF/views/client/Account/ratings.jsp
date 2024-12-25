@@ -68,7 +68,7 @@
 				Main Start
 		*************************************-->
 		<div class="container my-5">
-        <h1 class="text-center mb-4">Đánh Giá Đơn Hàng #${orderId }</h1>
+        <h1 class="text-center mb-4">Đánh Giá Đơn Hàng #${order.uuid }</h1>
 
         <form id="ratingForm" action="account/submitRatings.htm" method="post">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>

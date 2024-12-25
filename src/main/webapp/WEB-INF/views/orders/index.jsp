@@ -147,7 +147,7 @@
 										<th width="15px"><input class="text-end	form-check-input"
 											type="checkbox" id="toggle" name="toggle"
 											onclick="checkAll()" /></th>
-										<th width="30px" class="text-start">#</th>
+										<th width="30px" class="text-start">Mã đơn hàng</th>
 										<th width="10%" class="text-center">Created At</th>
 										<th width="64px" class="text-center">Account</th>
 										<th width="90px" class="text-center">Total Price</th>
@@ -163,7 +163,7 @@
 												<input type="checkbox" class="form-check-input" id="cb${status.index}" name="cid[]" value="${order.id}" onclick="isChecked(this.checked)">
 											</td>
 <%-- 											<td class="text-end">${(users.page - 1) * users.pageSize + status.index + 1}</td> --%>
-											<td class="text-start align-middle">${order.id}</td>
+											<td class="text-start align-middle">${order.uuid}</td>
 											
 											<td>
 											    <a class="d-flex flex-nowrap align-items-center" style="text-decoration: none;" href="javascript:void(0);">

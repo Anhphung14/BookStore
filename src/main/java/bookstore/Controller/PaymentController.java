@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -49,6 +50,7 @@ import bookstore.Entity.*;
 import bookstore.Service.MailService;
 import bookstore.Service.VNPAYService;
 import bookstore.Utils.EscapeHtmlUtil;
+import bookstore.Utils.UUIDUtil;
 import bookstore.config.VNPAYConfig;
 
 @Controller
@@ -270,11 +272,16 @@ public class PaymentController {
 
             // Tạo một đơn hàng mới
             OrdersEntity newOrder = new OrdersEntity();
-            newOrder.setUser(user); // Gán đối tượng UsersEntity vào OrdersEntity
+            
+            newOrder.setUser(user);
             newOrder.setCustomerName(name);
             newOrder.setCustomerPhone(phone);
             newOrder.setShippingAddress(address);
             newOrder.setTotalPrice(totalPrice);
+            
+            String uuid = UUID.randomUUID().toString().replace("-", "").toUpperCase().substring(0, 20);
+            newOrder.setUuid(uuid);
+            
             newOrder.setPaymentMethod(paymentMethod);
             if(paymentMethod.equals("PayPal") || paymentMethod.equals("VnPay")) {
             	newOrder.setPaymentStatus("Đã thanh toán");

@@ -153,8 +153,8 @@ public class OrderDAO {
         try {
             // Tạo SQL để gọi stored procedure
             String sql = "DECLARE @orderId BIGINT; " +
-                         "EXEC CreateNewOrder :userId, :customerName, :customerPhone, :shippingAddress, " +
-                         ":totalPrice, :paymentMethod, :paymentStatus, :orderStatus, :createdAt, :updatedAt, @orderId OUTPUT; " +
+                         "EXEC CreateNewOrder :userId,  :customerName, :customerPhone, :shippingAddress, " +
+                         ":totalPrice, :uuid, :paymentMethod, :paymentStatus, :orderStatus, :createdAt, :updatedAt, @orderId OUTPUT; " +
                          "SELECT @orderId AS orderId";
 
             // Tạo Query và thiết lập tham số
@@ -164,6 +164,7 @@ public class OrderDAO {
                                  .setParameter("customerPhone", newOrder.getCustomerPhone())
                                  .setParameter("shippingAddress", newOrder.getShippingAddress())
                                  .setParameter("totalPrice", newOrder.getTotalPrice())
+                                 .setParameter("uuid", newOrder.getUuid())
                                  .setParameter("paymentMethod", newOrder.getPaymentMethod())
                                  .setParameter("paymentStatus", newOrder.getPaymentStatus())
                                  .setParameter("orderStatus", newOrder.getOrderStatus())
@@ -444,5 +445,10 @@ public class OrderDAO {
 	    }
 	}
 
-
+	public OrdersEntity getOrderByUuid(String uuid) {
+	    Session session = sessionFactory.getCurrentSession();
+	    Query query = session.createQuery("FROM OrdersEntity WHERE uuid = :uuid");
+	    query.setParameter("uuid", uuid);
+	    return (OrdersEntity) query.uniqueResult();
+	}
 }
