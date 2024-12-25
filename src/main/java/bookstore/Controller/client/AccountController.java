@@ -320,7 +320,8 @@ public class AccountController {
 	            String[] parts = key.substring(6).split("_");
 	            orderId = parts[0];  // Lấy Order ID từ tên trường
 	            bookId = parts[1];   // Lấy Book ID từ tên trường
-	            if (ratingsDAO.checkOrderInRatings(Long.valueOf(orderId)) == true) {
+	            if (ratingsDAO.checkOrderInRatings(Long.valueOf(orderId), Long.valueOf(bookId)) == true) {
+	            	System.out.println("HJKHJKJHGSGKDFKKFHKJFKGFKGKFGGFKGFKGFKGFKGFKGFKG");
 	            	return "redirect:/account/my_ratings.htm";
 	            }
 	            // Lấy giá trị đánh giá
