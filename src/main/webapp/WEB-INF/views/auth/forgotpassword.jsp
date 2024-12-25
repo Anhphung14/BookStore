@@ -29,6 +29,7 @@
                                 </div>
                                 <div class="mt-4">
                                     <form action="${pageContext.servletContext.contextPath}/forgotpassword.htm" method="POST" class="needs-validation" novalidate id="forgetpasswordform">
+                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                         <div class="mb-3">
                                             <label for="email" class="form-label">Email</label>
                                             <input type="email" class="form-control validation" name="email" id="email" placeholder="Enter your email">

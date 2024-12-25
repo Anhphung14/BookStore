@@ -54,6 +54,7 @@
 										<form id="signupform" class="needs-validation" novalidate
 											action="${pageContext.servletContext.contextPath}/saveSignup.htm"
 											method="POST">
+											<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 											<div class="mb-3">
 												<label for="fullname" class="form-label">Họ tên</label> <input
 													type="text" class="form-control" name="fullname"
