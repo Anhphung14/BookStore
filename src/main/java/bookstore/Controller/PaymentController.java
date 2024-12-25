@@ -168,6 +168,17 @@ public class PaymentController {
     	phone = EscapeHtmlUtil.encodeHtml(phone);
     	street = EscapeHtmlUtil.encodeHtml(street);
     	String discountCode = EscapeHtmlUtil.encodeHtml(discountCoded);
+    	
+    	// Kiểm tra độ dài của các trường 
+    	if (name.length() > 50 || province.length() > 50 || district.length() > 50 || ward.length() > 50 || 
+    			street.length() > 255 || paymentMethod.length() > 255 || discountCode.length() > 50) { 
+    		redirectAttributes.addFlashAttribute("alertMessage", "One or more fields exceed the allowed length."); 
+    		redirectAttributes.addFlashAttribute("alertType", "error"); 
+    		return "redirect:/cart/view.htm"; 
+    	} 
+    	
+    	
+    	
     	StringBuilder shippingAddressBuilder = new StringBuilder();
 		shippingAddressBuilder.append(street).append(", ")
 		                      .append(ward).append(", ")

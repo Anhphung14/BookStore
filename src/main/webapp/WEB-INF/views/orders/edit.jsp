@@ -133,7 +133,7 @@ input[readonly] {
 
 								<div class="form-floating mt-3 position-relative">
 									<input class="form-control pr-4 numeric-input" id="totalPrice" name="totalPrice" oninput="validateNumberInput(this)"
-										type="text" value="${order.totalPrice}" required> <span class="currency-symbol">₫</span> <label
+										type="text" value="${order.totalPrice}" readonly="readonly"> <span class="currency-symbol">₫</span> <label
 										class="form-label" for="totalPrice">Total Price <span class="text-danger">*</span>
 									</label>
 								</div>

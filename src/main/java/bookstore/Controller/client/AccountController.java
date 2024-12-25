@@ -200,6 +200,10 @@ public class AccountController {
 			return "redirect:/account/profile_settings.htm";
 		}
 		String fullnameSafe = EscapeHtmlUtil.encodeHtml(fullname.trim());
+		if(fullnameSafe.length() > 50) {
+			redirectAttributes.addFlashAttribute("errorUpdate", "Tên không hợp lệ!");
+			return "redirect:/account/profile_settings.htm";
+		}
 	    user.setFullname(fullnameSafe);
 	    user.setPhone(phone.trim());
 	    if (!avatar.isEmpty()) {
