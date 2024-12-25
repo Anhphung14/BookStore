@@ -124,6 +124,11 @@ public class SuppliersController {
 	    boolean hasAddAuthority = auth.getAuthorities().stream()
 	            .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADD_SUPPLIER"));
 	    
+	    if (supplier.getName().length() > 100 || supplier.getContactPerson().length() > 100 || supplier.getEmail().length() > 100 || supplier.getPhone().length() > 20 || supplier.getAddress().length() > 255) {
+	    	redirectAttributes.addFlashAttribute("alertMessage", "One or more fields exceed the allowed length.");
+	    	redirectAttributes.addFlashAttribute("alertType", "error");
+	    	return "redirect:/admin1337/suppliers.htm";
+	    }
 	    try {
 	        // Check if the supplier name already exists in the database
 	        SuppliersEntity existingSupplierByName = getSupplierByName(supplier.getName());

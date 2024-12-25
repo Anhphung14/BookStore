@@ -117,6 +117,7 @@ public class OrdersController {
 	@PreAuthorize("hasAuthority('UPDATE_ORDER')")
 	@RequestMapping(value = "/orders/updateOrderStatus", method = RequestMethod.POST)
 	public String updateOrderStatus(@RequestParam("orderId") Long orderId, @RequestParam("orderStatus") String orderStatus, RedirectAttributes redirectAttributes) {
+		orderStatus = EscapeHtmlUtil.encodeHtml(orderStatus);
 		if(orderDAO.updateOrderStatus(orderId, orderStatus)) {
 			redirectAttributes.addFlashAttribute("alertMessage", "Order status updated successfully!");
 	        redirectAttributes.addFlashAttribute("alertType", "success");

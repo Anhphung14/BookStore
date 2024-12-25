@@ -112,8 +112,38 @@ public class DiscountsController {
 	        @RequestParam(value = "minOrderValue", required = false) Long minOrderValue, @RequestParam(value = "maxUses", required = false) Integer maxUses, 
 	        @RequestParam("status") String status, @RequestParam(value = "category", required = false) Long category_id, 
 	        @RequestParam(value = "subcategory[]", required = false) List<Long> subcategories_id, RedirectAttributes redirectAttributes) {
+		
 		code = EscapeHtmlUtil.encodeHtml(code);
 		
+		if (code.length() > 50 || discountType.length() > 50 || applyTo.length() > 50 || status.length() > 50) { 
+			redirectAttributes.addFlashAttribute("alertMessage", "One or more fields exceed the allowed length."); 
+			redirectAttributes.addFlashAttribute("alertType", "error"); 
+			return "redirect:/admin1337/discounts.htm"; 
+		} 
+		
+		if ("percentage".equalsIgnoreCase(discountType) && (discountValue < 0 || discountValue > 100)) { 
+			redirectAttributes.addFlashAttribute("alertMessage", "Percentage discount value must be between 0 and 100."); 
+			redirectAttributes.addFlashAttribute("alertType", "error"); 
+			return "redirect:/admin1337/discounts.htm";
+		}
+		
+		if (discountValue < 0 || discountValue >= 10000000.00) { 
+			redirectAttributes.addFlashAttribute("alertMessage", "Discount value must be between 0 and 10,000,000.00."); 
+			redirectAttributes.addFlashAttribute("alertType", "error"); 
+			return "redirect:/admin1337/discounts.htm"; 
+		} 
+		
+		if ((minOrderValue < 0 || minOrderValue >= 10000000.00)) { 
+			redirectAttributes.addFlashAttribute("alertMessage", "Minimum order value must be between 0 and 10,000,000.00."); 
+			redirectAttributes.addFlashAttribute("alertType", "error"); 
+			return "redirect:/admin1337/discounts.htm";
+		}
+		
+		if (maxUses < 0 || maxUses > 1000) { 
+		redirectAttributes.addFlashAttribute("alertMessage", "Max uses must be between 0 and 1000."); 
+		redirectAttributes.addFlashAttribute("alertType", "error"); 
+		return "redirect:/admin1337/discounts.htm"; 
+		} 
 	    DiscountsEntity newDiscount = new DiscountsEntity();
 	    newDiscount.setCode(code);
 	    newDiscount.setDiscountType(discountType);
@@ -184,7 +214,38 @@ public class DiscountsController {
 	                               @RequestParam("category") Long category_id, 
 	                               @RequestParam(value = "subcategory[]", required = false) List<Long> subcategories_id, 
 	                               RedirectAttributes redirectAttributes) {
-
+		
+		code = EscapeHtmlUtil.encodeHtml(code);
+		if (code.length() > 50 || discountType.length() > 50 || applyTo.length() > 50 || status.length() > 50) { 
+			redirectAttributes.addFlashAttribute("alertMessage", "One or more fields exceed the allowed length."); 
+			redirectAttributes.addFlashAttribute("alertType", "error"); 
+			return "redirect:/admin1337/discounts.htm"; 
+		} 
+		
+		if ("percentage".equalsIgnoreCase(discountType) && (discountValue < 0 || discountValue > 100)) { 
+			redirectAttributes.addFlashAttribute("alertMessage", "Percentage discount value must be between 0 and 100."); 
+			redirectAttributes.addFlashAttribute("alertType", "error"); 
+			return "redirect:/admin1337/discounts.htm";
+		}
+		
+		if (discountValue < 0 || discountValue >= 10000000.00) { 
+			redirectAttributes.addFlashAttribute("alertMessage", "Discount value must be between 0 and 10,000,000.00."); 
+			redirectAttributes.addFlashAttribute("alertType", "error"); 
+			return "redirect:/admin1337/discounts.htm"; 
+		} 
+		
+		if ((minOrderValue < 0 || minOrderValue >= 10000000.00)) { 
+			redirectAttributes.addFlashAttribute("alertMessage", "Minimum order value must be between 0 and 10,000,000.00."); 
+			redirectAttributes.addFlashAttribute("alertType", "error"); 
+			return "redirect:/admin1337/discounts.htm";
+		}
+		
+		if (maxUses < 0 || maxUses > 1000) { 
+		redirectAttributes.addFlashAttribute("alertMessage", "Max uses must be between 0 and 1000."); 
+		redirectAttributes.addFlashAttribute("alertType", "error"); 
+		return "redirect:/admin1337/discounts.htm"; 
+		} 
+		
 	    // Tìm kiếm discount theo ID
 	    DiscountsEntity existingDiscount = discountsDAO.findDiscountById(discount_id);
 	    if (existingDiscount == null) {

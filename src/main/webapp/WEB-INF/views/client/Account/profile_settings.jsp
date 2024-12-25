@@ -140,7 +140,7 @@
                 </div>
                 <div class="form-group password-strength" id="password-strength" style="display: none;">
 					<ul class="no-bullet">
-					<li id="minLength"><i class="fas fa-times text-danger"></i> Tối thiểu 8 ký tự</li>
+					<li id="minLength"><i class="fas fa-times text-danger"></i> Tối thiểu 12 ký tự</li>
 					<li id="uppercase"><i class="fas fa-times text-danger"></i> Ít nhất một chữ cái viết hoa</li>
 					<li id="lowercase"><i class="fas fa-times text-danger"></i> Ít nhất một chữ cái viết thường</li>
 					<li id="symbol"><i class="fas fa-times text-danger"></i> Ít nhất một ký tự đặc biệt (@$!%*?&)</li>
@@ -179,9 +179,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
 	function validatePassword(password) {
-	    document.getElementById('minLength').innerHTML = password.length >= 8 
-	        ? '<i class="fas fa-check text-success"></i> Tối thiểu 8 ký tự'
-	        : '<i class="fas fa-times text-danger"></i> Tối thiểu 8 ký tự';
+	    document.getElementById('minLength').innerHTML = password.length >= 12 
+	        ? '<i class="fas fa-check text-success"></i> Tối thiểu 12 ký tự'
+	        : '<i class="fas fa-times text-danger"></i> Tối thiểu 12 ký tự';
 	
 	    document.getElementById('uppercase').innerHTML = /[A-Z]/.test(password) 
 	        ? '<i class="fas fa-check text-success"></i> Ít nhất một chữ cái viết hoa'
@@ -237,7 +237,7 @@
         } else {
             // Kiểm tra điều kiện mật khẩu mới
             const password = newPasswordField.value;
-            if (password.length < 8 ||                // Tối thiểu 8 ký tự
+            if (password.length < 12 ||                // Tối thiểu 12 ký tự
                 !/[A-Z]/.test(password) ||           // Ít nhất một chữ hoa
                 !/[a-z]/.test(password) ||           // Ít nhất một chữ thường
                 !/\d/.test(password) ||              // Ít nhất một chữ số

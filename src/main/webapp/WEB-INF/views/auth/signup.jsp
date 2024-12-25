@@ -95,7 +95,7 @@
 													id="password-strength" style="display: none;">
 													<ul class="no-bullet">
 														<li id="minLength"><i
-															class="fas fa-times text-danger"></i> Tối thiểu 8 ký tự</li>
+															class="fas fa-times text-danger"></i> Tối thiểu 12 ký tự</li>
 														<li id="uppercase"><i
 															class="fas fa-times text-danger"></i> Ít nhất một chữ cái
 															viết hoa</li>
@@ -239,7 +239,7 @@
 		        }
 		        // Kiểm tra mật khẩu có đủ mạnh không
 		        else if (!validatePassword(value)) {
-		            validateField($(this), false, "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.");
+		            validateField($(this), false, "Mật khẩu phải có ít nhất 12 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.");
 		        }
 		        // Mật khẩu hợp lệ
 		        else {
@@ -352,10 +352,10 @@
 	function validatePassword(password) {
         let isValid = true;
 
-        const minLengthValid = password.length >= 8;
+        const minLengthValid = password.length >= 12;
         document.getElementById('minLength').innerHTML = minLengthValid 
-            ? '<i class="fas fa-check text-success"></i> Tối thiểu 8 ký tự'
-            : '<i class="fas fa-times text-danger"></i> Tối thiểu 8 ký tự';
+            ? '<i class="fas fa-check text-success"></i> Tối thiểu 12 ký tự'
+            : '<i class="fas fa-times text-danger"></i> Tối thiểu 12 ký tự';
         isValid = isValid && minLengthValid;
 
         const uppercaseValid = /[A-Z]/.test(password);

@@ -130,8 +130,7 @@ public class AccountController {
 	        for(OrdersDetailEntity orderDetail : order.getOrderDetails()) {
 	        	InventoryEntity inventoryOfCurrentBook = inventoryDAO.getInventoryByBookId(orderDetail.getBook().getId());
                 Integer currentStockQuantity = inventoryOfCurrentBook.getStock_quantity();
-                inventoryOfCurrentBook.setStock_quantity(currentStockQuantity + orderDetail.getQuantity());
-                boolean isUpdateStockQuantity = inventoryDAO.updateInventoryStock(inventoryOfCurrentBook);
+                boolean isUpdateStockQuantity = inventoryDAO.updateInventoryStock2(inventoryOfCurrentBook, currentStockQuantity + orderDetail.getQuantity());
 	        }
 	        redirectAttributes.addFlashAttribute("alertMessage", "Đơn hàng đã hủy thành công!");
 	        redirectAttributes.addFlashAttribute("alertType", "success");
@@ -200,8 +199,12 @@ public class AccountController {
 			redirectAttributes.addFlashAttribute("errorUpdate", "Vui lòng sửa các lỗi sau đây !");
 			return "redirect:/account/profile_settings.htm";
 		}
-		
-	    user.setFullname(fullname.trim());
+		String fullnameSafe = EscapeHtmlUtil.encodeHtml(fullname.trim());
+		if(fullnameSafe.length() > 50) {
+			redirectAttributes.addFlashAttribute("errorUpdate", "Tên không hợp lệ!");
+			return "redirect:/account/profile_settings.htm";
+		}
+	    user.setFullname(fullnameSafe);
 	    user.setPhone(phone.trim());
 	    if (!avatar.isEmpty()) {
 	    	String avatarPath = uploadService.uploadByCloudinary(avatar, "images/avatar/" + uploadService.toSlug(fullname));
@@ -317,7 +320,10 @@ public class AccountController {
 	            String[] parts = key.substring(6).split("_");
 	            orderId = parts[0];  // Lấy Order ID từ tên trường
 	            bookId = parts[1];   // Lấy Book ID từ tên trường
-	            
+	            if (ratingsDAO.checkOrderInRatings(Long.valueOf(orderId), Long.valueOf(bookId)) == true) {
+	            	System.out.println("HJKHJKJHGSGKDFKKFHKJFKGFKGKFGGFKGFKGFKGFKGFKGFKG");
+	            	return "redirect:/account/my_ratings.htm";
+	            }
 	            // Lấy giá trị đánh giá
 	            if (allRequestParams.get(key) != null && allRequestParams.get(key).length() > 0) {
 	                ratingValue = allRequestParams.get(key);  // Lấy giá trị đầu tiên từ mảng

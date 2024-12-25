@@ -231,7 +231,7 @@
 							</div>
 							
 							<div class="form-floating mt-3 ">
-								<input type="number" class="form-control numeric-input" id="maxUses" name="maxUses" oninput="validateNumberInput(this)"
+								<input type="number" class="form-control numeric-input" id="maxUses" name="maxUses" "
 									required> <label class="form-label"
 									for="maxUses">Max Uses <span
 									class="text-danger">*</span></label>
